@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b13a6c67a8182d4f2a72f1844115ca2",
+    "content-hash": "f76f6220a0820e36b9ecc0fe6705d09d",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -308,21 +308,21 @@
         },
         {
             "name": "cache/namespaced-cache",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-cache/namespaced-cache.git",
-                "reference": "c36d9105c44d6cbbf905b7aafebcb29d488f397c"
+                "reference": "1f97e08d46572295099b6c4503f99c25a54b1599"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-cache/namespaced-cache/zipball/c36d9105c44d6cbbf905b7aafebcb29d488f397c",
-                "reference": "c36d9105c44d6cbbf905b7aafebcb29d488f397c",
+                "url": "https://api.github.com/repos/php-cache/namespaced-cache/zipball/1f97e08d46572295099b6c4503f99c25a54b1599",
+                "reference": "1f97e08d46572295099b6c4503f99c25a54b1599",
                 "shasum": ""
             },
             "require": {
                 "cache/hierarchical-cache": "^1.0",
-                "php": "^5.6 || ^7.0",
+                "php": "^5.6 || ^7.0 || ^8.0",
                 "psr/cache": "^1.0"
             },
             "require-dev": {
@@ -332,7 +332,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -351,7 +351,7 @@
                 {
                     "name": "Tobias Nyholm",
                     "email": "tobias.nyholm@gmail.com",
-                    "homepage": "https://github.com/Nyholm"
+                    "homepage": "https://github.com/nyholm"
                 }
             ],
             "description": "A decorator that makes your cache support namespaces",
@@ -361,7 +361,10 @@
                 "namespace",
                 "psr-6"
             ],
-            "time": "2017-07-16T20:20:51+00:00"
+            "support": {
+                "source": "https://github.com/php-cache/namespaced-cache/tree/1.1.0"
+            },
+            "time": "2020-12-14T12:17:39+00:00"
         },
         {
             "name": "cache/redis-adapter",
