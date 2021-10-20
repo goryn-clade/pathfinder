@@ -122,7 +122,7 @@ define([
                         wSpaceLinkModifier = 'w-space/';
                     }
 
-                    let url = `${Init.url.zKillboard}/no-items/${wSpaceLinkModifier}no-attackers/npc/0/solarSystemID/${this._systemData.systemId}/pastSeconds/${timeFrameInSeconds}/`;
+                    let url = `${Init.url.zKillboard}/${wSpaceLinkModifier}npc/0/solarSystemID/${this._systemData.systemId}/pastSeconds/${timeFrameInSeconds}/`;
 
                     this.request(url).then(result => {
                         if(result.error){
