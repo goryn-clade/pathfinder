@@ -1186,7 +1186,7 @@ class CharacterModel extends AbstractPathfinderModel {
             $ssoController = new Sso();
             if(
                 !empty( $verificationCharacterData = $ssoController->verifyCharacterData($accessToken) ) &&
-                $verificationCharacterData['characterId'] === $this->_id
+                $verificationCharacterData->characterId === $this->_id
             ){
                 // get character data from API
                 $characterData = $ssoController->getCharacterData($this->_id);

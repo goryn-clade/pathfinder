@@ -190,12 +190,6 @@ class Sso extends Api\User{
                 if(isset($accessData->accessToken, $accessData->esiAccessTokenExpires, $accessData->refreshToken)){
                     // login succeeded -> get basic character data for current login
 
-                    // $jwks = json_decode(file_get_contents('https://login.eveonline.com/oauth/jwks'),JSON_OBJECT_AS_ARRAY);
-                    // $alg = $jwks->keys[0]->alg;
-
-                    // $decoded = JWT::decode($accessData->accessToken, JWK::parseKeySet($jwks), ['RS256', 'ES256']);
-                    // $verificationDataToCheck = $decoded->iss;
-                    // $characterId = explode(':',$decoded->sub)[2];
                     $verificationCharacterData = $this->verifyCharacterData($accessData->accessToken);
 
                     if( !empty($verificationCharacterData) ){
@@ -205,15 +199,15 @@ class Sso extends Api\User{
                         // verification available data. Data is needed for "ownerHash" check
 
                         // get character data from ESI
-                        $characterData = $this->getCharacterData((int)$verificationCharacterData['characterId']);
+                        $characterData = $this->getCharacterData((int)$verificationCharacterData->characterId);
 
                         if( isset($characterData->character) ){
                             // add "ownerHash" and SSO tokens
-                            $characterData->character['ownerHash']              = $verificationCharacterData['characterOwnerHash'];
+                            $characterData->character['ownerHash']              = $verificationCharacterData->owner;
                             $characterData->character['esiAccessToken']         = $accessData->accessToken;
                             $characterData->character['esiAccessTokenExpires']  = $accessData->esiAccessTokenExpires;
                             $characterData->character['esiRefreshToken']        = $accessData->refreshToken;
-                            $characterData->character['esiScopes']              = $decoded->scp;
+                            $characterData->character['esiScopes']              = $verificationCharacterData->scp;
 
                             // add/update static character data
                             $characterModel = $this->updateCharacter($characterData);
@@ -435,14 +429,13 @@ class Sso extends Api\User{
      * -> verify against CCP JWK
      * -> get some basic information (like character id)     
      * @param string $accessToken
-     * @return array
+     * @return object
      */
-    public function verifyCharacterData(string $accessToken) : array {
+    public function verifyCharacterData(string $accessToken) : object {
         $characterData = $this->verifyJwtAccessToken($accessToken);
 
         if( !empty($characterData) ){
-            // convert sub to characterId
-            $characterData['characterId'] = explode(':',$characterData->sub)[2];            
+            $characterData->characterId = explode(':',$characterData->sub)[2];
         }else{
             self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
         }
@@ -454,14 +447,14 @@ class Sso extends Api\User{
      * verify JWT by comparing to CCP public JWK
      * TODO: move acepted iss values to constant
      * @param string $accessToken
-     * @return array
+     * @return object
     */
-    public function verifyJwtAccessToken(string $accessToken) : array {
+    public function verifyJwtAccessToken(string $accessToken) : object {
         $ccpJwks = $this->getCcpJwkData();
         
         if( !empty($ccpJwks) ){
             $supportedAlgs = array_column($ccpJwks['keys'], 'alg');
-            $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($jwks), $supportedAlgs);
+            $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks), $supportedAlgs);
             if ($decodedJwt->iss != 'login.eveonline.com') {
                 self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
             }
