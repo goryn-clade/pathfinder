@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13caad63b97936ebca523ac384fd4de0",
+    "content-hash": "f836ce1bc633b2a6ac2fe828e17c9eaf",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -899,6 +899,63 @@
                 "source": "https://github.com/igorw/evenement/tree/master"
             },
             "time": "2017-07-23T21:35:13+00:00"
+        },
+        {
+            "name": "firebase/php-jwt",
+            "version": "v5.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firebase/php-jwt.git",
+                "reference": "d2113d9b2e0e349796e72d2a63cf9319100382d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/d2113d9b2e0e349796e72d2a63cf9319100382d2",
+                "reference": "d2113d9b2e0e349796e72d2a63cf9319100382d2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.8 <=9"
+            },
+            "suggest": {
+                "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Firebase\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Neuman Vong",
+                    "email": "neuman+pear@twilio.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Anant Narayanan",
+                    "email": "anant@php.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+            "homepage": "https://github.com/firebase/php-jwt",
+            "keywords": [
+                "jwt",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/firebase/php-jwt/issues",
+                "source": "https://github.com/firebase/php-jwt/tree/v5.4.0"
+            },
+            "time": "2021-06-23T19:00:23+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2853,16 +2910,16 @@
         },
         {
             "name": "tyrheimdaleve/pathfinder_esi",
-            "version": "v2.1.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TyrHeimdalEVE/pathfinder_esi.git",
-                "reference": "79cceecaa33b693149a07ee2d647703bd3369244"
+                "reference": "f5866694869f0ab9e0e1e8e2a887221cfe79cf54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TyrHeimdalEVE/pathfinder_esi/zipball/79cceecaa33b693149a07ee2d647703bd3369244",
-                "reference": "79cceecaa33b693149a07ee2d647703bd3369244",
+                "url": "https://api.github.com/repos/TyrHeimdalEVE/pathfinder_esi/zipball/f5866694869f0ab9e0e1e8e2a887221cfe79cf54",
+                "reference": "f5866694869f0ab9e0e1e8e2a887221cfe79cf54",
                 "shasum": ""
             },
             "require": {
@@ -2872,6 +2929,7 @@
                 "guzzlehttp/guzzle": "6.5.*",
                 "php-64bit": ">=7.2"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2889,11 +2947,11 @@
                 }
             ],
             "description": "ESI API library for Pathfinder",
-            "homepage": "https://github.com/exodus4d/pathfinder_esi",
+            "homepage": "https://github.com/tyrheimdaleve/pathfinder_esi",
             "support": {
-                "source": "https://github.com/TyrHeimdalEVE/pathfinder_esi/tree/v2.1.1"
+                "source": "https://github.com/TyrHeimdalEVE/pathfinder_esi/tree/master"
             },
-            "time": "2021-09-07T19:41:45+00:00"
+            "time": "2021-10-07T18:53:32+00:00"
         },
         {
             "name": "xfra35/f3-cron",
@@ -2941,7 +2999,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ikkez/f3-cortex": 20
+        "ikkez/f3-cortex": 20,
+        "tyrheimdaleve/pathfinder_esi": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

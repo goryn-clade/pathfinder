@@ -100,7 +100,7 @@ class CharacterModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'esiAccessToken' => [
-            'type' => Schema::DT_VARCHAR256
+            'type' => Schema::DT_TEXT
         ],
         'esiAccessTokenExpires' => [
             'type' => Schema::DT_TIMESTAMP,

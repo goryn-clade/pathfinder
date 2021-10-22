@@ -17,6 +17,8 @@ use Exodus4D\Pathfinder\Controller;
 use Exodus4D\Pathfinder\Controller\Api as Api;
 use Exodus4D\Pathfinder\Model\Pathfinder;
 use Exodus4D\Pathfinder\Lib;
+use Firebase\JWT\JWT;
+use Firebase\JWT\JWK;
 
 class Sso extends Api\User{
 
@@ -187,6 +189,13 @@ class Sso extends Api\User{
 
                 if(isset($accessData->accessToken, $accessData->esiAccessTokenExpires, $accessData->refreshToken)){
                     // login succeeded -> get basic character data for current login
+
+                    // $jwks = json_decode(file_get_contents('https://login.eveonline.com/oauth/jwks'),JSON_OBJECT_AS_ARRAY);
+                    // $alg = $jwks->keys[0]->alg;
+
+                    // $decoded = JWT::decode($accessData->accessToken, JWK::parseKeySet($jwks), ['RS256', 'ES256']);
+                    // $verificationDataToCheck = $decoded->iss;
+                    // $characterId = explode(':',$decoded->sub)[2];
                     $verificationCharacterData = $this->verifyCharacterData($accessData->accessToken);
 
                     if( !empty($verificationCharacterData) ){
@@ -204,7 +213,7 @@ class Sso extends Api\User{
                             $characterData->character['esiAccessToken']         = $accessData->accessToken;
                             $characterData->character['esiAccessTokenExpires']  = $accessData->esiAccessTokenExpires;
                             $characterData->character['esiRefreshToken']        = $accessData->refreshToken;
-                            $characterData->character['esiScopes']              = $verificationCharacterData['scopes'];
+                            $characterData->character['esiScopes']              = $decoded->scp;
 
                             // add/update static character data
                             $characterModel = $this->updateCharacter($characterData);
@@ -422,23 +431,53 @@ class Sso extends Api\User{
     }
 
     /**
-     * verify character data by "access_token"
-     * -> get some basic information (like character id)
-     * -> if more character information is required, use ESI "characters" endpoints request instead
+     * verify character data by decloding JWT "access_token"
+     * -> verify against CCP JWK
+     * -> get some basic information (like character id)     
      * @param string $accessToken
      * @return array
      */
     public function verifyCharacterData(string $accessToken) : array {
-        $characterData = $this->getF3()->ssoClient()->send('getVerifyCharacter', $accessToken);
+        $characterData = $this->verifyJwtAccessToken($accessToken);
 
         if( !empty($characterData) ){
-            // convert string with scopes to array
-            $characterData['scopes'] = Lib\Util::convertScopesString($characterData['scopes']);
+            // convert sub to characterId
+            $characterData['characterId'] = explode(':',$characterData->sub)[2];            
         }else{
             self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
         }
 
         return $characterData;
+    }
+
+    /** 
+     * verify JWT by comparing to CCP public JWK
+     * TODO: move acepted iss values to constant
+     * @param string $accessToken
+     * @return array
+    */
+    public function verifyJwtAccessToken(string $accessToken) : array {
+        $ccpJwks = $this->getCcpJwkData();
+        
+        if( !empty($ccpJwks) ){
+            $supportedAlgs = array_column($ccpJwks['keys'], 'alg');
+            $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($jwks), $supportedAlgs);
+            if ($decodedJwt->iss != 'login.eveonline.com') {
+                self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
+            }
+        }else{
+            self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
+        }
+
+        return $decodedJwt;
+    }
+
+    /**
+     * get JWK from CCP and return decoded json object
+     * TODO: move jwks url to constant
+    */
+    protected function getCcpJwkData() : array {
+        return json_decode(file_get_contents('https://login.eveonline.com/oauth/jwks'),JSON_OBJECT_AS_ARRAY);
     }
 
     /**
