@@ -44,6 +44,8 @@ class Sso extends Api\User{
     const ERROR_CHARACTER_FORBIDDEN                 = 'Character "%s" is not authorized to log in. Reason: %s';
     const ERROR_SERVICE_TIMEOUT                     = 'CCP SSO service timeout (%ss). Try again later';
     const ERROR_COOKIE_LOGIN                        = 'Login from Cookie failed (data not found). Please retry by CCP SSO';
+    const ERROR_CCP_JWK_CLAIM                       = 'Invalid "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_JWK_CLAIM" url. %s';
+    const ERROR_TOKEN_VERIFICATION                  = 'Could not validate the authenticity of the Access Token';
 
     /**
      * redirect user to CCP SSO page and request authorization
@@ -445,7 +447,9 @@ class Sso extends Api\User{
 
     /** 
      * verify JWT by comparing to CCP public JWK
-     * TODO: move acepted iss values to constant
+     * -> get Ccp JWKs
+     * -> decode accessToken using JWKs
+     * -> Verify token claim is correct
      * @param string $accessToken
      * @return object
     */
@@ -455,11 +459,11 @@ class Sso extends Api\User{
         if( !empty($ccpJwks) ){
             $supportedAlgs = array_column($ccpJwks['keys'], 'alg');
             $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks), $supportedAlgs);
-            if ($decodedJwt->iss != 'login.eveonline.com') {
-                self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
+            if (strpos($decodedJwt->iss, $this->getSsoJwkClaim()) !== true) {            
+                self::getSSOLogger()->write(sprintf(self::ERROR_TOKEN_VERIFICATION, __METHOD__));
             }
         }else{
-            self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
+            self::getSSOLogger()->write(sprintf(self::ERROR_LOGIN_FAILED, __METHOD__));
         }
 
         return $decodedJwt;
@@ -576,6 +580,23 @@ class Sso extends Api\User{
         }
 
         return $url;
+    }
+
+    /**
+     * get CCP SSO JWK CLAIM from configuration file
+     * -> throw error if string is missing
+     * @return string
+     */
+    static function getSsoJwkClaim() : string {
+        $str = self::getEnvironmentData('CCP_SSO_JWK_CLAIM');
+        
+        if( empty($str)){
+            $error = sprintf(self::ERROR_CCP_JWK_CLAIM, __METHOD__);
+            self::getSSOLogger()->write($error);
+            \Base::instance()->error(502, $error);
+        }
+
+        return $str;
     }
 
     /**
