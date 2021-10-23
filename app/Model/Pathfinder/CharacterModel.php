@@ -1191,8 +1191,8 @@ class CharacterModel extends AbstractPathfinderModel {
                 // get character data from API
                 $characterData = $ssoController->getCharacterData($this->_id);
                 if( !empty($characterData->character) ){
-                    $characterData->character['ownerHash'] = $verificationCharacterData['characterOwnerHash'];
-                    $characterData->character['esiScopes'] = $verificationCharacterData['scopes'];
+                    $characterData->character['ownerHash'] = $verificationCharacterData->owner;
+                    $characterData->character['esiScopes'] = $verificationCharacterData->scp;
 
                     $this->copyfrom($characterData->character, ['ownerHash', 'esiScopes', 'securityStatus']);
                     $this->corporationId = $characterData->corporation;
