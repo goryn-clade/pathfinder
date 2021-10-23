@@ -437,7 +437,7 @@ class Sso extends Api\User{
         $characterData = $this->verifyJwtAccessToken($accessToken);
 
         if( !empty($characterData) ){
-            $characterData->characterId = explode(':',$characterData->sub)[2];
+            $characterData->characterId = (int)explode(':',$characterData->sub)[2];
         }else{
             self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
         }
