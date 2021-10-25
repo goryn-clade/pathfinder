@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f836ce1bc633b2a6ac2fe828e17c9eaf",
+    "content-hash": "1d2297f696ea64b10ef5cdc5ff8688c2",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -958,6 +958,51 @@
             "time": "2021-06-23T19:00:23+00:00"
         },
         {
+            "name": "goryn-clade/pathfinder_esi",
+            "version": "v2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/goryn-clade/pathfinder_esi.git",
+                "reference": "784c9d846a6c7f8f8be016f9f88ed559969d2e2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/784c9d846a6c7f8f8be016f9f88ed559969d2e2e",
+                "reference": "784c9d846a6c7f8f8be016f9f88ed559969d2e2e",
+                "shasum": ""
+            },
+            "require": {
+                "cache/void-adapter": "1.0.*",
+                "caseyamcl/guzzle_retry_middleware": "2.3.*",
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "6.5.*",
+                "php-64bit": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Exodus4D\\ESI\\": "app/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sam O'Neill",
+                    "email": "samuel.p.oneill@gmail.com"
+                }
+            ],
+            "description": "ESI API library for Pathfinder",
+            "homepage": "https://github.com/goryn-clade/pathfinder_esi",
+            "support": {
+                "issues": "https://github.com/goryn-clade/pathfinder_esi/issues",
+                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v2.1.2"
+            },
+            "time": "2021-10-25T00:32:18+00:00"
+        },
+        {
             "name": "guzzlehttp/guzzle",
             "version": "6.5.5",
             "source": {
@@ -1030,16 +1075,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.4.1",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d"
+                "reference": "fe752aedc9fd8fcca3fe7ad05d419d32998a06da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/8e7d04f1f6450fef59366c399cfad4b9383aa30d",
-                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/fe752aedc9fd8fcca3fe7ad05d419d32998a06da",
+                "reference": "fe752aedc9fd8fcca3fe7ad05d419d32998a06da",
                 "shasum": ""
             },
             "require": {
@@ -1051,7 +1096,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -1068,9 +1113,24 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
+                    "homepage": "https://github.com/Tobion"
                 }
             ],
             "description": "Guzzle promises library",
@@ -1079,22 +1139,36 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/1.4.1"
+                "source": "https://github.com/guzzle/promises/tree/1.5.1"
             },
-            "time": "2021-03-07T09:25:29+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/promises",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-10-22T20:56:57+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.8.2",
+            "version": "1.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "dc960a912984efb74d0a90222870c72c87f10c91"
+                "reference": "1afdd860a2566ed3c2b0b4a3de6e23434a79ec85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/dc960a912984efb74d0a90222870c72c87f10c91",
-                "reference": "dc960a912984efb74d0a90222870c72c87f10c91",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/1afdd860a2566ed3c2b0b4a3de6e23434a79ec85",
+                "reference": "1afdd860a2566ed3c2b0b4a3de6e23434a79ec85",
                 "shasum": ""
             },
             "require": {
@@ -1132,12 +1206,33 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 },
                 {
+                    "name": "George Mponos",
+                    "email": "gmponos@gmail.com",
+                    "homepage": "https://github.com/gmponos"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://github.com/sagikazarmark"
+                },
+                {
                     "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
                     "homepage": "https://github.com/Tobion"
                 }
             ],
@@ -1154,9 +1249,23 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/1.8.2"
+                "source": "https://github.com/guzzle/psr7/tree/1.8.3"
             },
-            "time": "2021-04-26T09:17:50+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/psr7",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-10-05T13:56:00+00:00"
         },
         {
             "name": "ikkez/f3-cortex",
@@ -2909,51 +3018,6 @@
             "time": "2021-05-27T09:17:38+00:00"
         },
         {
-            "name": "tyrheimdaleve/pathfinder_esi",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/TyrHeimdalEVE/pathfinder_esi.git",
-                "reference": "05c87abb66cba32782d732ac149e35b8b67da766"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/TyrHeimdalEVE/pathfinder_esi/zipball/05c87abb66cba32782d732ac149e35b8b67da766",
-                "reference": "05c87abb66cba32782d732ac149e35b8b67da766",
-                "shasum": ""
-            },
-            "require": {
-                "cache/void-adapter": "1.0.*",
-                "caseyamcl/guzzle_retry_middleware": "2.3.*",
-                "ext-json": "*",
-                "guzzlehttp/guzzle": "6.5.*",
-                "php-64bit": ">=7.2"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Exodus4D\\ESI\\": "app/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mark Friedrich",
-                    "email": "pathfinder@exodus4d.de"
-                }
-            ],
-            "description": "ESI API library for Pathfinder",
-            "homepage": "https://github.com/tyrheimdaleve/pathfinder_esi",
-            "support": {
-                "source": "https://github.com/TyrHeimdalEVE/pathfinder_esi/tree/master"
-            },
-            "time": "2021-10-24T23:24:11+00:00"
-        },
-        {
             "name": "xfra35/f3-cron",
             "version": "v1.2.1",
             "source": {
@@ -2999,8 +3063,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ikkez/f3-cortex": 20,
-        "tyrheimdaleve/pathfinder_esi": 20
+        "ikkez/f3-cortex": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
