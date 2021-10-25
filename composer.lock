@@ -2914,12 +2914,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/TyrHeimdalEVE/pathfinder_esi.git",
-                "reference": "f5866694869f0ab9e0e1e8e2a887221cfe79cf54"
+                "reference": "05c87abb66cba32782d732ac149e35b8b67da766"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TyrHeimdalEVE/pathfinder_esi/zipball/f5866694869f0ab9e0e1e8e2a887221cfe79cf54",
-                "reference": "f5866694869f0ab9e0e1e8e2a887221cfe79cf54",
+                "url": "https://api.github.com/repos/TyrHeimdalEVE/pathfinder_esi/zipball/05c87abb66cba32782d732ac149e35b8b67da766",
+                "reference": "05c87abb66cba32782d732ac149e35b8b67da766",
                 "shasum": ""
             },
             "require": {
@@ -2951,7 +2951,7 @@
             "support": {
                 "source": "https://github.com/TyrHeimdalEVE/pathfinder_esi/tree/master"
             },
-            "time": "2021-10-07T18:53:32+00:00"
+            "time": "2021-10-24T23:24:11+00:00"
         },
         {
             "name": "xfra35/f3-cron",
