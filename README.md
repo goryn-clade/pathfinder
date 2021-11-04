@@ -15,7 +15,7 @@ If you wish to contribute please join the [Pathfinder Slack](https://join.slack.
 
 #### Development
 - Developer [Slack](https://slack.com) chat:
-  - https://pathfinder-eve-online.slack.com
+  - ~~https://pathfinder-eve-online.slack.com~~ *webserver down 2021-11-04*
   - Join channel [pathfinder-eve-online.slack.com](https://join.slack.com/t/pathfinder-eve-online/shared_invite/enQtMzMyOTkyMjczMTA3LWI2NGE1OTY5ODBmNDZlMDY3MDIzYjk5ZTljM2JjZjIwNDRkNzMyMTEwMDUzOGQwM2E3ZjE1NGEwNThlMzYzY2Y)
   - Can´t join? pathfinder@exodus4d.de
 
