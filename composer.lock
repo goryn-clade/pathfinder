@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ace6a7ea8a64f7e31fef1f94828423a",
+    "content-hash": "d3b5649c7fbb9f015a1352673ee89b59",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -376,27 +376,28 @@
         },
         {
             "name": "cache/redis-adapter",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-cache/redis-adapter.git",
-                "reference": "95ab6c72739951c6cb44d0051b338bfd5aff806b"
+                "reference": "80645507231494f9daa874e7bc1bf85d72443188"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-cache/redis-adapter/zipball/95ab6c72739951c6cb44d0051b338bfd5aff806b",
-                "reference": "95ab6c72739951c6cb44d0051b338bfd5aff806b",
+                "url": "https://api.github.com/repos/php-cache/redis-adapter/zipball/80645507231494f9daa874e7bc1bf85d72443188",
+                "reference": "80645507231494f9daa874e7bc1bf85d72443188",
                 "shasum": ""
             },
             "require": {
                 "cache/adapter-common": "^1.0",
                 "cache/hierarchical-cache": "^1.0",
-                "php": "^5.6 || ^7.0",
+                "php": "^5.6 || ^7.0 || ^8.0",
                 "psr/cache": "^1.0",
                 "psr/simple-cache": "^1.0"
             },
             "provide": {
-                "psr/cache-implementation": "^1.0"
+                "psr/cache-implementation": "^1.0",
+                "psr/simple-cache-implementation": "^1.0"
             },
             "require-dev": {
                 "cache/integration-tests": "^0.16",
@@ -408,7 +409,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -432,7 +433,7 @@
                 {
                     "name": "Tobias Nyholm",
                     "email": "tobias.nyholm@gmail.com",
-                    "homepage": "https://github.com/Nyholm"
+                    "homepage": "https://github.com/nyholm"
                 }
             ],
             "description": "A PSR-6 cache implementation using Redis (PhpRedis). This implementation supports tags",
@@ -445,9 +446,9 @@
                 "tag"
             ],
             "support": {
-                "source": "https://github.com/php-cache/redis-adapter/tree/master"
+                "source": "https://github.com/php-cache/redis-adapter/tree/1.1.0"
             },
-            "time": "2017-07-16T21:09:25+00:00"
+            "time": "2020-12-14T12:17:39+00:00"
         },
         {
             "name": "cache/tag-interop",
