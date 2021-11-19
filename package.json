@@ -23,7 +23,7 @@
     "gulp-gzip": "1.x.x",
     "gulp-if": "^3.0.0",
     "gulp-image-resize": "^0.13.1 ",
-    "gulp-imagemin": "^7.1.0",
+    "gulp-imagemin": "^8.0.0",
     "gulp-jshint": "2.1.x",
     "gulp-rename": "^2.0.0",
     "gulp-requirejs-optimize": "1.3.x",
