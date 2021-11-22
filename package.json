@@ -19,7 +19,7 @@
     "gulp-bytediff": "1.0.x",
     "gulp-clean-css": "^4.3.0",
     "gulp-debug": "^4.0.0",
-    "gulp-filter": "^6.0.0",
+    "gulp-filter": "^7.0.0",
     "gulp-gzip": "1.x.x",
     "gulp-if": "^3.0.0",
     "gulp-image-resize": "^0.13.1 ",
