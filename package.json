@@ -14,7 +14,7 @@
     "file-extension": "^4.0.5",
     "flat": "^5.0.0",
     "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^7.0.1",
+    "gulp-autoprefixer": "^8.0.0",
     "gulp-brotli": "^3.0.0",
     "gulp-bytediff": "1.0.x",
     "gulp-clean-css": "^4.3.0",
