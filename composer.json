@@ -37,7 +37,7 @@
     "monolog/monolog": "2.3.5",
     "swiftmailer/swiftmailer": "6.2.*",
     "league/html-to-markdown": "5.0.*",
-    "cache/redis-adapter": "1.1.*",
+    "cache/redis-adapter": "1.2.*",
     "cache/filesystem-adapter": "1.1.*",
     "cache/array-adapter": "1.1.*",
     "cache/void-adapter": "1.0.*",
