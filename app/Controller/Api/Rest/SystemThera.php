@@ -47,14 +47,9 @@ class SystemThera extends AbstractRestController {
             $systemData = [
                 'id' => (int)$eveScoutSystem['id'],
                 'name' => (string)$eveScoutSystem['name'],
-                'trueSec' => round((float)$eveScoutSystem['security'], 4)
+                'trueSec' => round((float)$eveScoutSystem['security'], 4),
+                'region' => ['id' => (int)$eveScoutSystem['region_id'], 'name' => (string)$eveScoutSystem['region_name']]
             ];
-            if(!empty($eveScoutSystem['constellationID'])){
-                $systemData['constellation'] = ['id' => (int)$eveScoutSystem['constellationID']];
-            }
-            if(!empty($region = (array)$eveScoutSystem['region']) && !empty($region['id'])){
-                $systemData['region'] = ['id' => (int)$region['id'], 'name' => (string)$region['name']];
-            }
             $connectionData[$key] = $systemData;
         };
 
@@ -66,11 +61,9 @@ class SystemThera extends AbstractRestController {
         $enrichWithSignatureData = function(string $key, array $eveScoutConnection, array &$connectionData) : void {
             $eveScoutSignature = (array)$eveScoutConnection[$key];
             $signatureData = [
-                'name' => $eveScoutSignature['name'] ? : null
-            ];
-            if(!empty($sigType = (array)$eveScoutSignature['type']) && !empty($sigType['name'])){
-                $signatureData['type'] = ['name' => strtoupper((string)$sigType['name'])];
-            }
+                'name' => $eveScoutSignature['name'],
+                'type' => ['name' => strtoupper((string)$eveScoutSignature['type'])]
+          ];
             $connectionData[$key] = $signatureData;
         };
 
@@ -93,7 +86,7 @@ class SystemThera extends AbstractRestController {
                 $type[] = 'wh_eol';
             }
             $connectionsData['type'] = $type;
-            $connectionsData['estimatedEol'] = $wormholeData['estimatedEol'];
+            $connectionsData['estimatedEol'] = (new \DateTime())->add(new \DateInterval('PT' . $wormholeData['estimatedEol'] . 'H'))->format('Y-m-d H:i:s');
         };
 
         $eveScoutResponse = $this->getF3()->eveScoutClient()->send('getTheraConnections');
