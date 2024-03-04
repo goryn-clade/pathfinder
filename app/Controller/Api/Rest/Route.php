@@ -255,6 +255,26 @@ class Route extends AbstractRestController {
         }
     }
 
+    private function getUniverseSystemInfo(string $systemId) {
+        $systemInfo = [];
+        if ($universeDB = $this->getDB('UNIVERSE')) {
+            $query = "SELECT * FROM system WHERE id = :systemId";
+            $params = [':systemId' => $systemId];
+            $systemInfo = $universeDB->exec($query, $params);
+        }
+        return $systemInfo;
+    }
+
+    private function getRegionFromConstellation(string $constellationId) {
+        $regionId = "";
+        if ($universeDB = $this->getDB('UNIVERSE')) {
+            $query = "SELECT regionId FROM constellation WHERE id = :constellationId";
+            $params = [':constellationId' => $constellationId];
+            $regionId = $universeDB->exec($query, $params);
+        }
+        return $regionId;
+    }
+    
     /**
      * set current Thera connections jump data for this instance
      * -> Connected wormholes pulled from eve-scout.com
@@ -271,26 +291,35 @@ class Route extends AbstractRestController {
                  * @param string $systemSourceKey
                  * @param string $systemTargetKey
                  */
+
                 $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData) {
                     // check if response data is valid
+                    $systemSource = $row[$systemSourceKey];
+                    $systemTarget = $row[$systemTargetKey];
                     if(
-                        is_object($systemSource = $row[$systemSourceKey]) && !empty((array)$systemSource) &&
-                        is_object($systemTarget = $row[$systemTargetKey]) && !empty((array)$systemTarget)
+                        !empty((array)$systemSource) && !empty((array)$systemTarget)
                     ){
-                        if(!array_key_exists($systemSource->id, $jumpData)){
-                            $jumpData[$systemSource->id] = [
-                                'systemId'          => (int)$systemSource->id,
-                                'systemName'        => $systemSource->name,
-                                'constellationId'   => (int)$systemSource->constellationID,
-                                'regionId'          => (int)$systemSource->regionId,
-                                'trueSec'           => $systemSource->security,
+                        $sourceSystemId = (int)$systemSource['id'];
+                        $targetSystemId = (int)$systemTarget['id'];
+
+                        if(!array_key_exists($sourceSystemId, $jumpData)){
+                            $DB_System_Info = self::getUniverseSystemInfo($sourceSystemId)[0];
+                            $constellationId = $DB_System_Info['constellationId'] ?? 'Unknown';
+                            $regionId = self::getRegionFromConstellation($constellationId)[0]['regionId'];
+
+                            $jumpData[$sourceSystemId] = [
+                                'systemId'          => $sourceSystemId,
+                                'systemName'        => $systemSource['name'],
+                                'constellationId'   => $constellationId,
+                                'regionId'          => $regionId,
+                                'trueSec'           => $DB_System_Info['trueSec'],
                             ];
                         }
 
-                        if( !in_array((int)$systemTarget->id, (array)$jumpData[$systemSource->id]['jumpNodes']) ){
-                            $jumpData[$systemSource->id]['jumpNodes'][] = (int)$systemTarget->id;
+                        if( !in_array($targetSystemId, (array)$jumpData[$sourceSystemId]['jumpNodes']) ){
+                            $jumpData[$sourceSystemId]['jumpNodes'][] = $targetSystemId;
                         }
-                    }
+                    } 
                 };
 
                 foreach((array)$connectionsData['connections'] as $connectionData){

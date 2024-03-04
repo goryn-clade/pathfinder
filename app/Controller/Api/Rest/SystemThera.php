@@ -17,7 +17,7 @@ class SystemThera extends AbstractRestController {
      * @param \Base $f3
      */
     public function get(\Base $f3){
-        $ttl = 60 * 3;
+        $ttl = 60 * 1;
         if(!$exists = $f3->exists(self::CACHE_KEY_THERA_CONNECTIONS, $connectionsData)){
             $connectionsData = $this->getEveScoutTheraConnections();
             $f3->set(self::CACHE_KEY_THERA_CONNECTIONS, $connectionsData, $ttl);
@@ -26,6 +26,16 @@ class SystemThera extends AbstractRestController {
         $f3->expire(Config::ttlLeft($exists, $ttl));
 
         $this->out($connectionsData);
+    }
+
+    private function getUniverseSystemInfo(string $systemId) {
+        $systemInfo = []; // Initialize as an empty array in case the query fails or no data is found
+        if ($universeDB = $this->getDB('UNIVERSE')) {
+            $query = "SELECT * FROM system WHERE id = :systemId";
+            $params = [':systemId' => $systemId];
+            $systemInfo = $universeDB->exec($query, $params);
+        }
+        return $systemInfo;
     }
 
     /**
@@ -43,14 +53,17 @@ class SystemThera extends AbstractRestController {
          * @param array  $connectionData
          */
         $enrichWithSystemData = function(string $key, array $eveScoutConnection, array &$connectionData) : void {
+            // source or target
             $eveScoutSystem = (array)$eveScoutConnection[$key];
+            $universeSystemData = self::getUniverseSystemInfo((int)$eveScoutSystem['id'])[0];
             $systemData = [
                 'id' => (int)$eveScoutSystem['id'],
                 'name' => (string)$eveScoutSystem['name'],
-                'trueSec' => round((float)$eveScoutSystem['security'], 4)
+                'trueSec' => isset($universeSystemData['trueSec']) ? (float)$universeSystemData['trueSec'] : -1
             ];
-            if(!empty($eveScoutSystem['constellationID'])){
-                $systemData['constellation'] = ['id' => (int)$eveScoutSystem['constellationID']];
+        
+            if(!empty($universeSystemData['constellationID'])){
+                $systemData['constellation'] = ['id' => (int)$universeSystemData['constellationID']];
             }
             if(!empty($region = (array)$eveScoutSystem['region']) && !empty($region['id'])){
                 $systemData['region'] = ['id' => (int)$region['id'], 'name' => (string)$region['name']];
@@ -65,12 +78,13 @@ class SystemThera extends AbstractRestController {
          */
         $enrichWithSignatureData = function(string $key, array $eveScoutConnection, array &$connectionData) : void {
             $eveScoutSignature = (array)$eveScoutConnection[$key];
+            $signatureName = isset($eveScoutSignature['name']) ? $eveScoutSignature['name'] : null;
+            $signatureType = isset($eveScoutSignature['type']) ? strtoupper($eveScoutSignature['type']) : null;
             $signatureData = [
-                'name' => $eveScoutSignature['name'] ? : null
+                'name' => $signatureName,
+                'type' => $signatureType,
             ];
-            if(!empty($sigType = (array)$eveScoutSignature['type']) && !empty($sigType['name'])){
-                $signatureData['type'] = ['name' => strtoupper((string)$sigType['name'])];
-            }
+
             $connectionData[$key] = $signatureData;
         };
 
