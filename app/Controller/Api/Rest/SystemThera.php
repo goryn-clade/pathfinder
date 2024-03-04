@@ -17,7 +17,7 @@ class SystemThera extends AbstractRestController {
      * @param \Base $f3
      */
     public function get(\Base $f3){
-        $ttl = 60 * 1;
+        $ttl = 60 * 3;
         if(!$exists = $f3->exists(self::CACHE_KEY_THERA_CONNECTIONS, $connectionsData)){
             $connectionsData = $this->getEveScoutTheraConnections();
             $f3->set(self::CACHE_KEY_THERA_CONNECTIONS, $connectionsData, $ttl);
