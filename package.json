@@ -18,7 +18,7 @@
     "gulp-brotli": "^3.0.0",
     "gulp-bytediff": "1.0.x",
     "gulp-clean-css": "^4.3.0",
-    "gulp-debug": "^4.0.0",
+    "gulp-debug": "^5.0.1",
     "gulp-filter": "^7.0.0",
     "gulp-gzip": "1.x.x",
     "gulp-if": "^3.0.0",
