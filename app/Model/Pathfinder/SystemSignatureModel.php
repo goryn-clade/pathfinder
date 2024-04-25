@@ -248,7 +248,10 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param $pkeys
      */
     public function afterInsertEvent($self, $pkeys){
-        $self->logActivity('signatureCreate');
+        // don't log activity if combat site
+        if($self->groupId != 1){
+            $self->logActivity('signatureCreate');
+        }
     }
 
     /**
@@ -274,7 +277,10 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param $pkeys
      */
     public function afterUpdateEvent($self, $pkeys){
-        $self->logActivity('signatureUpdate');
+        // don't log activity if combat site
+        if($self->groupId != 1){
+            $self->logActivity('signatureUpdate');
+        }
     }
 
     /**
@@ -284,7 +290,10 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param $pkeys
      */
     public function afterEraseEvent($self, $pkeys){
-        $self->logActivity('signatureDelete');
+        // don't log activity if combat site
+        if($self->groupId != 1){
+            $self->logActivity('signatureDelete');
+        }
 
         if(
             $self->connectionIdDeleteCascade === true &&
