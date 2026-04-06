@@ -1,7 +1,9 @@
 {* config *}
+<set registrationStatusButton="" />
+<set registrationStatusTitle="" />
 <check if="{{ @PATHFINDER.REGISTRATION.STATUS != '1' }}">
     <set registrationStatusButton="disabled" />
-    <set registrationStatusTitle= "User registration is currently disabled" />
+    <set registrationStatusTitle="User registration is currently disabled" />
 </check>
 
 {* splash page *}
