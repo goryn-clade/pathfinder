@@ -790,6 +790,10 @@ class Controller {
                 // set error data for template rendering
                 $error->redirectUrl = $this->getRouteUrl();
                 $f3->set('errorData', $error);
+                // PHP 8: ensure template vars have safe defaults on error paths
+                if(!$f3->exists('tplBodyClass')) $f3->set('tplBodyClass', 'pf-landing');
+                if(!$f3->exists('tplJsView')) $f3->set('tplJsView', 'login');
+                if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
 
                 // 4xx/5xx error -> set error page template
                 if( preg_match('/^4[0-9]{2}$/', $error->code) ){
