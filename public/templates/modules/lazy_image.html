@@ -6,6 +6,7 @@
     <set src="{{ @src . '.jpg' }}" />
 </check>
 
+<set size="{{ @size ?? 160 }}" />
 <switch expr="{{ @size }}">
     <case value="256" break="true">
         <set class = "pf-landing-image-preview-medium" />
