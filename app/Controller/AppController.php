@@ -33,6 +33,9 @@ class AppController extends Controller {
         // JS main file
         $f3->set('tplJsView', 'login');
 
+        // character id (set by MapController when authenticated; default null for unauthenticated pages)
+        $f3->set('tplCharacterId', null);
+
         if($return = parent::beforeroute($f3, $params)){
             // href for SSO Auth
             $f3->set('tplAuthType', $f3->get('BASE') . $f3->alias( 'sso', ['action' => 'requestAuthorization'] ));
