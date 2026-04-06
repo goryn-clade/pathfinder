@@ -36,6 +36,11 @@ class AppController extends Controller {
         // character id (set by MapController when authenticated; default null for unauthenticated pages)
         $f3->set('tplCharacterId', null);
 
+        // PHP 8: ensure SESSION.SSO.ERROR is always defined so templates can safely access it
+        if (!$f3->exists('SESSION.SSO.ERROR')) {
+            $f3->set('SESSION.SSO.ERROR', null);
+        }
+
         if($return = parent::beforeroute($f3, $params)){
             // href for SSO Auth
             $f3->set('tplAuthType', $f3->get('BASE') . $f3->alias( 'sso', ['action' => 'requestAuthorization'] ));
