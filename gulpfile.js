@@ -42,8 +42,6 @@ let del                 = require('promised-del');
 
 let minify = composer(uglifyjs, console);
 
-sass.compiler           = require('node-sass');
-
 // == Settings ========================================================================================================
 
 // build/src directories
