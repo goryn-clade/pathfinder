@@ -42,8 +42,7 @@ class Monolog extends \Prefab {
     const FORMATTER = [
         'line'          => 'Monolog\Formatter\LineFormatter',
         'json'          => 'Monolog\Formatter\JsonFormatter',
-        'html'          => 'Monolog\Formatter\HtmlFormatter',
-        'mail'          => 'Exodus4D\Pathfinder\Lib\Logging\Formatter\MailFormatter'
+        'html'          => 'Monolog\Formatter\HtmlFormatter'
     ];
 
     /**
@@ -51,7 +50,6 @@ class Monolog extends \Prefab {
      */
     const HANDLER = [
         'stream'        => 'Monolog\Handler\StreamHandler',
-        'mail'          => 'Monolog\Handler\SwiftMailerHandler',
         'socket'        => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SocketHandler',
         'slackMap'      => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SlackMapWebhookHandler',
         'slackRally'    => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SlackRallyWebhookHandler',
