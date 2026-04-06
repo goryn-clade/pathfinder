@@ -274,21 +274,22 @@ class Route extends AbstractRestController {
                 $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData) {
                     // check if response data is valid
                     if(
-                        is_object($systemSource = $row[$systemSourceKey]) && !empty((array)$systemSource) &&
-                        is_object($systemTarget = $row[$systemTargetKey]) && !empty((array)$systemTarget)
+                        is_array($systemSource = $row[$systemSourceKey]) && !empty($systemSource) &&
+                        is_array($systemTarget = $row[$systemTargetKey]) && !empty($systemTarget)
                     ){
-                        if(!array_key_exists($systemSource->id, $jumpData)){
-                            $jumpData[$systemSource->id] = [
-                                'systemId'          => (int)$systemSource->id,
-                                'systemName'        => $systemSource->name,
-                                'constellationId'   => (int)$systemSource->constellationID,
-                                'regionId'          => (int)$systemSource->regionId,
-                                'trueSec'           => $systemSource->security,
+                        $srcId = $systemSource['id'];
+                        $targetId = $systemTarget['id'];
+                        if(!array_key_exists($srcId, $jumpData)){
+                            $jumpData[$srcId] = [
+                                'systemId'          => $srcId,
+                                'systemName'        => $systemSource['name'],
+                                'jumpNodes'         => [],
                             ];
                         }
 
-                        if( !in_array((int)$systemTarget->id, (array)$jumpData[$systemSource->id]['jumpNodes']) ){
-                            $jumpData[$systemSource->id]['jumpNodes'][] = (int)$systemTarget->id;
+                        $jumpNodes = $jumpData[$srcId]['jumpNodes'];
+                        if( !in_array($targetId, $jumpData[$srcId]['jumpNodes']) ){
+                            $jumpData[$srcId]['jumpNodes'][] = $targetId;
                         }
                     }
                 };
