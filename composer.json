@@ -13,7 +13,10 @@
   ],
   "config": {
     "optimize-autoloader": true,
-    "lock": true
+    "lock": true,
+    "audit": {
+      "ignore": ["PKSA-y2cr-5h3j-g3ys"]
+    }
   },
   "autoload": {
     "psr-4": {
@@ -39,7 +42,7 @@
     "cache/redis-adapter": "^1.2",
     "cache/filesystem-adapter": "1.1.*",
     "cache/array-adapter": "1.1.*",
-    "cache/void-adapter": "1.0.*",
+    "cache/void-adapter": "^1.1",
     "cache/namespaced-cache": "1.1.*",
     "react/socket": "1.9.*",
     "react/promise-stream": "1.3.*",
