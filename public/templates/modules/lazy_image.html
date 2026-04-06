@@ -1,6 +1,9 @@
 <set path="{{ @tplResource->getPath('image') }}" />
 <set srcPlaceholder="{{ @path . '/svg/logo_simple.svg' }}" />
-<check if="{{ !isset(@src) }}">
+<set srcWebp="" />
+<set src="{{ @src ?? '' }}" />
+<set alt="{{ @alt ?? '' }}" />
+<check if="{{ !isset(@src) || !@src }}">
     <set src="{{ @path . '/gallery/thumbs/' . @image }}" />
     <set srcWebp="{{ @src . '.webp' }}" />
     <set src="{{ @src . '.jpg' }}" />
