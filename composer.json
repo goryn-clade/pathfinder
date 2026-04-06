@@ -22,7 +22,7 @@
   },
   "readme": "README.md",
   "require": {
-    "php-64bit": ">=7.2",
+    "php-64bit": ">=8.2",
     "ext-pdo": "*",
     "ext-openssl": "*",
     "ext-curl": "*",
@@ -35,9 +35,8 @@
     "ikkez/f3-sheet": "0.4.*",
     "xfra35/f3-cron": "1.2.*",
     "monolog/monolog": "2.9.2",
-    "swiftmailer/swiftmailer": "6.2.*",
     "league/html-to-markdown": "5.0.*",
-    "cache/redis-adapter": "1.1.*",
+    "cache/redis-adapter": "^1.2",
     "cache/filesystem-adapter": "1.1.*",
     "cache/array-adapter": "1.1.*",
     "cache/void-adapter": "1.0.*",
@@ -45,8 +44,8 @@
     "react/socket": "1.9.*",
     "react/promise-stream": "1.3.*",
     "clue/ndjson-react": "1.2.*",
-    "firebase/php-jwt": "~6.3.0",
-    "goryn-clade/pathfinder_esi": "2.1.4"
+    "firebase/php-jwt": "^6",
+    "goryn-clade/pathfinder_esi": "3.0.0"
   },
   "suggest": {
     "ext-redis": "Redis can be used as cache backend."
