@@ -1,6 +1,6 @@
 {
   "name": "pathfinder-eve",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "engines": {
     "node": ">=18"
   },
