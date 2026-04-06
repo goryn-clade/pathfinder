@@ -40,7 +40,7 @@
     "sass": "^1.62.0",
     "slash": "4.0.0",
     "terminal-table": "0.0.x",
-    "uglify-es": "^3.0.x"
+    "gulp-terser": "^2.1.0"
   },
   "scripts": {
     "gulp": "gulp"

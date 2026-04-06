@@ -14,8 +14,7 @@ let sourcemaps          = require('gulp-sourcemaps');
 let zlib                = require('zlib');
 let gzip                = require('gulp-gzip');
 let brotli              = require('gulp-brotli');
-let uglifyjs            = require('uglify-es');
-let composer            = require('gulp-uglify/composer');
+let terser              = require('gulp-terser');
 let sass                = require('gulp-sass')(require('sass'));
 let autoprefixer        = require('gulp-autoprefixer');
 let cleanCSS            = require('gulp-clean-css');
@@ -40,7 +39,7 @@ let Table               = require('terminal-table');
 let prettyBytes         = require('pretty-bytes');
 let del                 = require('promised-del');
 
-let minify = composer(uglifyjs, console);
+let minify = (options) => terser(options);
 
 // == Settings ========================================================================================================
 
@@ -626,7 +625,7 @@ gulp.task('task:concatJS', () => {
             };
         }))
         .pipe(bytediff.start())
-        .pipe(gulpif(CONF.JS.UGLIFY, minify(uglifyJsOptions).on('warnings', log)))
+        .pipe(gulpif(CONF.JS.UGLIFY, minify(uglifyJsOptions)))
         .pipe(gulpif(CONF.JS.SOURCEMAPS, sourcemaps.write('.', {includeContent: false, sourceRoot: '/js'}))) // prod (minify)
         .pipe(bytediff.stop(data => {
             trackFile(data, {src: 'startSize', src_percent: 'percent', uglify: 'endSize'});
