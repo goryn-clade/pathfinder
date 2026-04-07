@@ -287,10 +287,10 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * set corporation for this character
      * -> corp change resets admin actions (e.g. kick/ban)
-     * @param $corporationId
+     * @param CorporationModel|int $corporationId
      * @return mixed
      */
-    public function set_corporationId($corporationId){
+    public function set_corporationId(CorporationModel|int $corporationId){
         $currentCorporationId = (int)$this->get('corporationId', true);
 
         if($currentCorporationId !== $corporationId){
@@ -325,11 +325,11 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * setter for "kicked" until time
-     * @param $minutes
+     * @param int|bool|null $minutes
      * @return mixed|null|string
      * @throws \Exception
      */
-    public function set_kicked($minutes){
+    public function set_kicked(int|bool|null $minutes){
         if($this->allowKickChange){
             // allowed to set/change -> reset "allowed" property
             $this->allowKickChange = false;
@@ -354,11 +354,11 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * setter for "banned" status
-     * @param $status
+     * @param bool|int $status
      * @return mixed|string|null
      * @throws \Exception
      */
-    public function set_banned($status){
+    public function set_banned(bool|int $status){
         if($this->allowBanChange){
             // allowed to set/change -> reset "allowed" property
             $this->allowBanChange = false;
@@ -379,10 +379,10 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * logLocation specifies whether the current system should be tracked or not
-     * @param $logLocation
+     * @param bool $logLocation
      * @return bool
      */
-    public function set_logLocation($logLocation){
+    public function set_logLocation(bool $logLocation){
         $logLocation = (bool)$logLocation;
         if(
             !$logLocation &&
@@ -421,27 +421,27 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent(self $self, array $pkeys){
         $self->clearCacheData();
     }
 
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent(self $self, array $pkeys){
         $self->clearCacheData();
     }
 
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent(self $self, array $pkeys){
         $self->clearCacheData();
     }
 
@@ -836,11 +836,11 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * update character log (active system, ...)
      * -> API request for character log data
-     * @param array $additionalOptions (optional) request options for cURL request
+     * @param array<string, mixed> $additionalOptions (optional) request options for cURL request
      * @return CharacterModel
      * @throws \Exception
      */
-    public function updateLog($additionalOptions = []) : self {
+    public function updateLog(array $additionalOptions = []) : self {
         $deleteLog = false;
         $invalidResponse = false;
 
@@ -1134,7 +1134,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * try to update existing 'character log' history entry (replace data)
      * -> matched by 'stamp' timestamp
-     * @param array $historyEntry
+     * @param array<string, mixed> $historyEntry
      * @return bool
      */
     protected function updateLogHistoryEntry(array $historyEntry) : bool {
@@ -1443,7 +1443,7 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * merges two multidimensional characterSession arrays by checking characterID
-     * @param array $characterDataBase
+     * @param array<int, array<string, mixed>> $characterDataBase
      * @return array
      */
     public static function mergeSessionCharacterData(array $characterDataBase = []) : array {
@@ -1468,10 +1468,10 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * get all characters
-     * @param array $characterIds
+     * @param array<int> $characterIds
      * @return \DB\CortexCollection
      */
-    public static function getAll($characterIds = []){
+    public static function getAll(array $characterIds = []){
         $query = [
             'active = :active AND id IN :characterIds',
             ':active' => 1,
