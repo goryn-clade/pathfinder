@@ -320,7 +320,7 @@ class CorporationModel extends AbstractPathfinderModel {
                 $this->filter('corporationRights', ['active = ?', 1]);
             }
 
-            foreach($rights as $i => $tempRight){
+            foreach($rights as $tempRight){
                 $corporationRight = false;
                 if($this->corporationRights){
                     foreach($this->corporationRights as $tempCorporationRight){

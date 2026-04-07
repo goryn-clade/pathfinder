@@ -18,6 +18,47 @@ use Exodus4D\Pathfinder\Db\Sql\Mysql;
 use Exodus4D\Pathfinder\Exception\ValidationException;
 use Exodus4D\Pathfinder\Exception\DatabaseException;
 
+/**
+ * @property int $_id
+ * @property string|int|null $id
+ * @property string $name
+ * @property string $description
+ * @property int $typeId
+ * @property int $characterId
+ * @property int $corporationId
+ * @property int $allianceId
+ * @property int $mapId
+ * @property int $systemId
+ * @property int $scopeId
+ * @property int $roleId
+ * @property int $rightId
+ * @property int $db
+ * @property int $table
+ * @property int $fieldConf
+ * @property int $shipTypeId
+ * @property int $shipMass
+ * @property string $shipTypeName
+ * @property int $structureId
+ * @property int $updated
+ * @property int $created
+ * @property int $updatedCharacterId
+ * @property mixed $type
+ * @property mixed $scope
+ * @property int $shared
+ * @property int $security
+ * @property float $trueSec
+ * @property string|null $target
+ * @property bool $trackAbyssalJumps
+ * @property float $posX
+ * @property float $posY
+ * @property int $stationId
+ * @property int $cloneLocationId
+ * @property string $cloneLocationType
+ * @property int $cloneLocationTypeId
+ * @property int $lastExecStart
+ * @property int $lastExecEnd
+ * @property mixed $userCharacter
+ */
 abstract class AbstractModel extends Cortex {
 
     /**
@@ -169,7 +210,7 @@ abstract class AbstractModel extends Cortex {
             return $self->beforeInsertEvent($self, $pkeys);
         });
 
-        $this->afterinsert(function($self, $pkeys){
+        $this->afterinsert(function($self, $pkeys): void{
             $self->afterInsertEvent($self, $pkeys);
         });
 
@@ -178,7 +219,7 @@ abstract class AbstractModel extends Cortex {
             return $self->beforeUpdateEvent($self, $pkeys);
         });
 
-        $this->afterupdate(function($self, $pkeys){
+        $this->afterupdate(function($self, $pkeys): void{
             $self->afterUpdateEvent($self, $pkeys);
         });
 
@@ -187,7 +228,7 @@ abstract class AbstractModel extends Cortex {
             return $self->beforeEraseEvent($self, $pkeys);
         });
 
-        $this->aftererase(function($self, $pkeys){
+        $this->aftererase(function($self, $pkeys): void{
             $self->afterEraseEvent($self, $pkeys);
         });
     }

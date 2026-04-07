@@ -1082,7 +1082,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @return \Closure
      */
     protected function getLogFormatter(){
-        return function(&$rowDataObj){
+        return function(&$rowDataObj): void{
             unset($rowDataObj['extra']);
         };
     }

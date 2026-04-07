@@ -234,7 +234,7 @@ class Config extends \Prefab {
             $environmentData = (array)$this->serverConfigData['ENV'];
 
             // some environment variables should be parsed as array
-            array_walk($environmentData, function(&$item, $key){
+            array_walk($environmentData, function(&$item, $key): void{
                 $item = (in_array($key, self::ARRAY_KEYS)) ? explode(',', $item) : $item;
             });
 
@@ -244,7 +244,7 @@ class Config extends \Prefab {
             $customConfDir = $f3->get('CONF');
 
             // check "custom" ini dir, of not found check default ini dir
-            foreach($customConfDir as $type => $path){
+            foreach($customConfDir as $path){
                 $envConfFile = $path . 'environment.ini';
                 $f3->config($envConfFile, true);
 

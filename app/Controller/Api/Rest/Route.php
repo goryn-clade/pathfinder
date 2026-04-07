@@ -98,7 +98,7 @@ class Route extends AbstractRestController {
             $rows = $universeDB->exec($query, null, $this->staticJumpDataCacheTime);
 
             if(count($rows) > 0){
-                array_walk($rows, function(&$row){
+                array_walk($rows, function(&$row): void{
                     $row['jumpNodes'] = array_map('intval', explode(':', $row['jumpNodes']));
                 });
                 $this->updateJumpData($rows);
@@ -225,7 +225,7 @@ class Route extends AbstractRestController {
                      * @param string $systemSourceKey
                      * @param string $systemTargetKey
                      */
-                    $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData, &$universe) {
+                    $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData, &$universe): void {
                         if(
                             !array_key_exists($row[$systemSourceKey], $jumpData) &&
                             !is_null($staticData = $universe->getSystemData($row[$systemSourceKey]))
@@ -271,7 +271,7 @@ class Route extends AbstractRestController {
                  * @param string $systemSourceKey
                  * @param string $systemTargetKey
                  */
-                $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData) {
+                $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData): void {
                     // check if response data is valid
                     if(
                         is_array($systemSource = $row[$systemSourceKey]) && !empty($systemSource) &&
@@ -772,7 +772,7 @@ class Route extends AbstractRestController {
                 $mapData = array_flip( array_map('intval', $mapData) );
 
                 // check map access (filter requested mapIDs and format) ----------------------------------------------
-                array_walk($mapData, function(&$item, &$key, $data){
+                array_walk($mapData, function(&$item, &$key, $data): void{
                     /**
                      * @var Pathfinder\MapModel $data[0]
                      */

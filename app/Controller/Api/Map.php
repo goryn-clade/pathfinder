@@ -500,7 +500,7 @@ class Map extends Controller\AccessController {
         $f3->webSocket()
             ->write('mapConnectionAccess', $return->data)
             ->then(
-                function($payload) use (&$status) {
+                function($payload) use (&$status): void {
                     $status = (string)$payload['load'];
                 });
 

@@ -50,7 +50,7 @@ class Cache extends AbstractCron {
         $deletedSize = 0;
         $notWritableFiles = 0;
         $deleteErrors = 0;
-        foreach($expiredFiles as $filename => $file) {
+        foreach($expiredFiles as $file) {
             /**
              * @var $file \SplFileInfo
              */

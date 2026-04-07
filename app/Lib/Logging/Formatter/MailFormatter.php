@@ -44,7 +44,7 @@ class MailFormatter implements Formatter\FormatterInterface {
      */
     public function formatBatch(array $records){
         $message = '';
-        foreach ($records as $key => $record) {
+        foreach ($records as $record) {
             $message .= $this->format($record);
         }
 

@@ -41,7 +41,7 @@ class FileHandler extends \Prefab {
                 $file = new ReverseSplFileObject($sourceFile, $offset);
                 $file->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
-                foreach( new \LimitIterator($file, 0, $limit) as $i => $rowData){
+                foreach( new \LimitIterator($file, 0, $limit) as $rowData){
                     if(is_callable($rowParser)){
                         // custom parser for row data -> manipulate $data by ref
                         $rowParser($rowData, $data);

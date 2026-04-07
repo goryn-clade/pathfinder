@@ -217,7 +217,7 @@ class Statistic extends Controller\AccessController {
 
             if( !empty($result) ){
                 // group result by characterId
-                foreach ($result as $key => &$entry) {
+                foreach ($result as &$entry) {
                     $tmp = $entry;
                     unset($tmp['characterId']);
                     unset($tmp['name']);

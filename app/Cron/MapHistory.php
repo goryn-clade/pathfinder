@@ -84,7 +84,7 @@ class MapHistory extends AbstractCron {
             // limit files count for truncate
             $files = new \LimitIterator($files, 0, self::LOG_COUNT);
 
-            foreach($files as $filename => $file){
+            foreach($files as $file){
                 /**
                  * @var $file \SplFileInfo
                  */

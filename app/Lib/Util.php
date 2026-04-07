@@ -36,7 +36,7 @@ class Util {
      */
     static function arrayFlattenByValue(array $array) : array {
         $return = [];
-        array_walk_recursive($array, function($value) use (&$return) { $return[] = $value; });
+        array_walk_recursive($array, function($value) use (&$return): void { $return[] = $value; });
         return $return;
     }
 
@@ -48,7 +48,7 @@ class Util {
      */
     static function arrayFlattenByKey(array $array) : array {
         $return = [];
-        array_walk_recursive($array, function($value, $key) use (&$return) { $return[$key] = $value; });
+        array_walk_recursive($array, function($value, $key) use (&$return): void { $return[$key] = $value; });
         return $return;
     }
 

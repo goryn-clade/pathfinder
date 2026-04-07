@@ -110,8 +110,8 @@ class Monolog extends \Prefab {
      */
     public function log(){
 
-        foreach($this->logs as $logType => $logs){
-            foreach($logs as $logKey => $log){
+        foreach($this->logs as $logs){
+            foreach($logs as $log){
                 $groupHash      = $log->getGroupHash();
                 $level          = Logger::toMonologLevel($log->getLevel());
 

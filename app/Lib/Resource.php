@@ -151,8 +151,8 @@ class Resource extends \Prefab {
     public function buildLinks(){
         $this->build();
         $links = [];
-        foreach($this->resources as $group => $resources){
-            foreach($resources as $file => $conf){
+        foreach($this->resources as $resources){
+            foreach($resources as $conf){
                 $resourceHeader = '<link';
                 foreach($conf['options'] as $attr => $value){
                     $resourceHeader .= ' ' . $attr . '="' . $value . '"';
@@ -176,8 +176,8 @@ class Resource extends \Prefab {
     public function buildHeader() : string {
         $this->build();
         $headers = [];
-        foreach($this->resources as $group => $resources){
-            foreach($resources as $file => $conf){
+        foreach($this->resources as $resources){
+            foreach($resources as $conf){
                 $resourceHeader = '<' . $conf['link'] . '>';
                 foreach($conf['options'] as $attr => $value){
                     $resourceHeader .= '; ' . $attr . '="' . $value . '"';
@@ -210,7 +210,7 @@ class Resource extends \Prefab {
                 }
 
                 if( !empty($additionalAttr = $this->getAdditionalAttrs($group)) ){
-                    $conf['options'] = $conf['options'] + $additionalAttr;
+                    $conf['options'] += $additionalAttr;
                 }
             }
         }

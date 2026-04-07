@@ -478,7 +478,7 @@ class Sso extends Api\User{
 
         if( !empty($jwkJson) ){
             // ensure items in 'keys' are arrays and not objects
-            array_walk($jwkJson['keys'], function(&$item){$item = (array) $item;});
+            array_walk($jwkJson['keys'], function(&$item): void{$item = (array) $item;});
             return $jwkJson;
         }else{
             self::getSSOLogger()->write(sprintf(self::ERROR_LOGIN_FAILED, __METHOD__));

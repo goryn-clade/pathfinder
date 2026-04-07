@@ -55,7 +55,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
      */
     protected function getValues() : array {
         $valueColumnNames = range(1, static::DATA_COLUMN_COUNT);
-        $preFixer = function(&$value, $key, $prefix){
+        $preFixer = function(&$value, $key, $prefix): void{
             $value = $prefix . $value;
         };
         array_walk($valueColumnNames, $preFixer, static::DATA_COLUMN_PREFIX);
