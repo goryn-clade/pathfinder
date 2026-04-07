@@ -1327,14 +1327,14 @@
                                     <true>
                                         </tbody>
                                             </table>
-                                            <div class="panel-footer txt-color {{ @indexData.class }}">
+                                            <div class="panel-footer txt-color {{ @indexData.class ?? '' }}">
                                                 <h3 class="panel-title">
-                                                    <check if="{{ @indexData.icon }}">
-                                                        <i class="fas {{ @indexData.icon }}"></i>&nbsp;&nbsp;
+                                                    <check if="{{ @indexData.icon ?? null }}">
+                                                        <i class="fas {{ @indexData.icon ?? '' }}"></i>&nbsp;&nbsp;
                                                     </check>
-                                                    {{@indexData.label}}
-                                                    <check if="{{ @indexData.tooltip }}">
-                                                        <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip }}" data-container="body"></i>
+                                                    {{@indexData.label ?? ''}}
+                                                    <check if="{{ @indexData.tooltip ?? null }}">
+                                                        <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip ?? '' }}" data-container="body"></i>
                                                     </check>
                                                 </h3>
                                             </div>
@@ -1343,39 +1343,39 @@
                                     </true>
                                     <false>
                                         <tr>
-                                            <td>{{ @indexData.label }}
-                                                <check if="{{ @indexData.tooltip }}">
-                                                    <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip }}" data-container="body"></i>
+                                            <td>{{ @indexData.label ?? '' }}
+                                                <check if="{{ @indexData.tooltip ?? null }}">
+                                                    <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip ?? '' }}" data-container="body"></i>
                                                 </check>
                                             </td>
                                             <td class="col-xs-2 col-md-2 text-right">
                                                 <check if="{{ isset(@indexData.countAll) }}">
-                                                    <check if="{{ @indexData.countBuild > 0 && @indexData.countBuild  >= @indexData.countAll }}">
-                                                        <kbd class="txt-color txt-color-success">{{ @indexData.countBuild }}/{{ @indexData.countAll }}</kbd>
+                                                    <check if="{{ (@indexData.countBuild ?? 0) > 0 && (@indexData.countBuild ?? 0) >= @indexData.countAll }}">
+                                                        <kbd class="txt-color txt-color-success">{{ @indexData.countBuild ?? 0 }}/{{ @indexData.countAll }}</kbd>
                                                     </check>
-                                                    <check if="{{ @indexData.countBuild > 0 && @indexData.countBuild < @indexData.countAll}}">
-                                                        <kbd class="txt-color txt-color-warning">{{ @indexData.countBuild }}/{{ @indexData.countAll }}</kbd>
+                                                    <check if="{{ (@indexData.countBuild ?? 0) > 0 && (@indexData.countBuild ?? 0) < @indexData.countAll}}">
+                                                        <kbd class="txt-color txt-color-warning">{{ @indexData.countBuild ?? 0 }}/{{ @indexData.countAll }}</kbd>
                                                         {{ @tplCounter('increment', 'administration_warning') }}
                                                     </check>
-                                                    <check if="{{ @indexData.countBuild <= 0 }}">
-                                                        <kbd class="txt-color txt-color-danger">{{ @indexData.countBuild }}/{{ @indexData.countAll }}</kbd>
+                                                    <check if="{{ (@indexData.countBuild ?? 0) <= 0 }}">
+                                                        <kbd class="txt-color txt-color-danger">{{ @indexData.countBuild ?? 0 }}/{{ @indexData.countAll }}</kbd>
                                                         {{ @tplCounter('increment', 'administration_danger') }}
                                                     </check>
                                                 </check>
                                             </td>
                                             <td class="col-xs-2 col-md-2 text-right">
-                                                <check if="{{ @indexData.subCount }}">
-                                                    <kbd data-countAll="{{ @indexData.subCount.countAll }}">{{ @indexData.subCount.countBuild }}/{{ @indexData.subCount.countAll }}</kbd>
+                                                <check if="{{ @indexData.subCount ?? null }}">
+                                                    <kbd data-countAll="{{ @indexData.subCount.countAll ?? 0 }}">{{ @indexData.subCount.countBuild ?? 0 }}/{{ @indexData.subCount.countAll ?? 0 }}</kbd>
                                                 </check>
                                             </td>
                                             <td class="col-xs-4 col-md-4 no-padding">
                                                 <div class="btn-group btn-group-justified">
-                                                    <repeat group="{{ @indexData.task }}" key="{{ @taskKey }}" value="{{ @taskData }}">
+                                                    <repeat group="{{ @indexData.task ?? [] }}" key="{{ @taskKey }}" value="{{ @taskData }}">
                                                         <a
                                                             data-action="{{ @taskData.action }}" data-callback="updateIndexCount"
-                                                            data-payload="{{ htmlspecialchars(json_encode(['type' => @type, 'countAll' => @indexData.countAll, 'count' => 0, 'offset' => 0])) }}"
+                                                            data-payload="{{ htmlspecialchars(json_encode(['type' => @type, 'countAll' => @indexData.countAll ?? 0, 'count' => 0, 'offset' => 0])) }}"
                                                             data-loading-text="<i class='fas fa-sync fa-spin'></i>&nbsp;&nbsp;wait&hellip;<div class='btn-progress'></div>" autocomplete="off"
-                                                            class="btn {{ @taskData.btn }} {{ @taskData.btn=='btn-default' && !@indexData.countBuild ?'disabled':'' }} {{ @tplCounter('get', 'database_warning_all') ?'disabled':'' }}" role="button"
+                                                            class="btn {{ @taskData.btn }} {{ @taskData.btn=='btn-default' && !(@indexData.countBuild ?? 0) ?'disabled':'' }} {{ @tplCounter('get', 'database_warning_all') ?'disabled':'' }}" role="button"
                                                         >
                                                             <i class="fas fa-fw {{ @taskData.icon }}"></i>&nbsp;{{ @taskData.label }}
                                                         </a>
