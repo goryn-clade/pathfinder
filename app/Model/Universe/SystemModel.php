@@ -169,7 +169,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param $name
      * @return mixed
      */
-    public function set_name($name){
+    public function set_name(string $name){
         // name should never change
         // -> important for "Abyssal" systems where ESI don´t have correct system name
         if(!empty($this->name)){
@@ -183,7 +183,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param $secStatus
      * @return double
      */
-    public function set_securityStatus($secStatus){
+    public function set_securityStatus(string|int|float $secStatus){
         $secStatus = (double)$secStatus;
         // round for trueSec
         $positive = ($secStatus > 0);
@@ -229,7 +229,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param $effect
      * @return string|null
      */
-    public function set_effect($effect){
+    public function set_effect(string $effect){
         $effect = (string)$effect;
         return $effect ? : null;
     }
@@ -378,7 +378,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent(self $self, array $pkeys){
         // build search index
         $self->buildIndex();
         return parent::afterUpdateEvent($self, $pkeys);
