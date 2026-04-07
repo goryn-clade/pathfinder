@@ -195,7 +195,7 @@ class Setup extends Controller {
         // enables automatic column fix
         $fixColumns = false;
 
-        switch($params['action']){
+        switch($params['action'] ?? null){
             case 'createDB':
                 $this->createDB($f3, $params['db']);
                 break;
