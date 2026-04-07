@@ -206,7 +206,7 @@ class Pool extends \Prefab {
      * @param \Exception $e
      */
     protected function pushError(string $alias, \Exception $e){
-        if(!is_array($this->errors[$alias])){
+        if(!isset($this->errors[$alias]) || !is_array($this->errors[$alias])){
             $this->errors[$alias] = [];
         }
 
