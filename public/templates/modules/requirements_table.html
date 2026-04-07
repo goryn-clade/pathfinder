@@ -27,7 +27,7 @@
                 <tr>
                     <td>
                         {{@requirement.label | raw }}
-                        <check if="{{ @requirement.tooltip }}">
+                        <check if="{{ @requirement.tooltip ?? null }}">
                             <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @requirement.tooltip }}"></i>
                         </check>
                     </td>
@@ -53,7 +53,7 @@
                         </check>
                     </td>
 
-                    <check if="{{ @requirement.task }}">
+                    <check if="{{ @requirement.task ?? null }}">
                         <true>
                             <td class="text-right col-xs-{{ count(@requirement.task) * 2 }} col-md-{{ count(@requirement.task) * 2 }} no-padding text-right">
                                 <div class="btn-group btn-group-justified">
