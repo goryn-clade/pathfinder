@@ -305,7 +305,7 @@ class Config extends \Prefab {
      * @param $key
      * @return string|null
      */
-    static function getEnvironmentData($key){
+    static function getEnvironmentData(string $key){
         $hiveKey = self::HIVE_KEY_ENVIRONMENT . '.' . $key;
         \Base::instance()->exists($hiveKey, $data);
         return $data;
@@ -423,7 +423,7 @@ class Config extends \Prefab {
      * @param $key
      * @return mixed
      */
-    static function getNotificationMail($key){
+    static function getNotificationMail(string $key){
         return self::getPathfinderData('notification' . ($key ? '.' . $key : ''));
     }
 
@@ -657,7 +657,7 @@ class Config extends \Prefab {
      * @param int $ttlMax
      * @return int
      */
-    static function ttlLeft($fromExists, int $ttlMax) : int {
+    static function ttlLeft(bool|array $fromExists, int $ttlMax) : int {
         $ttlMax = max($ttlMax, 0);
         if($fromExists){
             // == true || array
