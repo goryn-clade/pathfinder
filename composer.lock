@@ -1359,12 +1359,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ikkez/f3-cortex.git",
-                "reference": "af035616ae8d708776117e05603dac43835f3d9a"
+                "reference": "47d2596914776877ef4d87706d1faa812d1398f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ikkez/f3-cortex/zipball/af035616ae8d708776117e05603dac43835f3d9a",
-                "reference": "af035616ae8d708776117e05603dac43835f3d9a",
+                "url": "https://api.github.com/repos/ikkez/f3-cortex/zipball/47d2596914776877ef4d87706d1faa812d1398f2",
+                "reference": "47d2596914776877ef4d87706d1faa812d1398f2",
                 "shasum": ""
             },
             "require": {
@@ -1394,7 +1394,7 @@
                 "issues": "https://github.com/ikkez/f3-cortex/issues",
                 "source": "https://github.com/ikkez/f3-cortex/tree/v1.7.7"
             },
-            "time": "2024-03-06T16:05:14+00:00"
+            "time": "2026-04-07T03:00:00+00:00"
         },
         {
             "name": "ikkez/f3-schema-builder",
