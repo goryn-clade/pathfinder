@@ -352,10 +352,10 @@ abstract class AbstractModel extends Cortex {
     /**
      * validates a table column based on validation settings
      * @param string $key
-     * @param $val
+     * @param mixed $val
      * @return bool
      */
-    protected function validateField(string $key, $val) : bool {
+    protected function validateField(string $key, mixed $val) : bool {
         $valid = true;
         if($fieldConf = $this->fieldConf[$key]){
             if($method = $this->fieldConf[$key]['validate']){
@@ -377,12 +377,12 @@ abstract class AbstractModel extends Cortex {
 
     /**
      * validates a model field to be a valid relational model
-     * @param $key
-     * @param $val
+     * @param string|int $key
+     * @param mixed $val
      * @return bool
      * @throws ValidationException
      */
-    protected function validate_notDry($key, $val) : bool {
+    protected function validate_notDry(string|int $key, mixed $val) : bool {
         $valid = true;
         if($colConf = $this->fieldConf[$key]){
             if(isset($colConf['belongs-to-one'])){
@@ -403,11 +403,11 @@ abstract class AbstractModel extends Cortex {
 
     /**
      * validates a model field to be not empty
-     * @param $key
-     * @param $val
+     * @param string|int $key
+     * @param mixed $val
      * @return bool
      */
-    protected function validate_notEmpty($key, $val) : bool {
+    protected function validate_notEmpty(string|int $key, mixed $val) : bool {
         $valid = false;
         if($colConf = $this->fieldConf[$key]){
             switch($colConf['type']){
@@ -483,11 +483,11 @@ abstract class AbstractModel extends Cortex {
 
     /**
      * update/set the getData() cache for this object
-     * @param $cacheData
+     * @param mixed $cacheData
      * @param string $dataCacheKeyPrefix
      * @param int $data_ttl
      */
-    public function updateCacheData($cacheData, string $dataCacheKeyPrefix = '', int $data_ttl = self::DEFAULT_CACHE_TTL){
+    public function updateCacheData(mixed $cacheData, string $dataCacheKeyPrefix = '', int $data_ttl = self::DEFAULT_CACHE_TTL){
         $cacheDataTmp = (array)$cacheData;
 
         // check if data should be cached
@@ -522,9 +522,9 @@ abstract class AbstractModel extends Cortex {
 
     /**
      * unset object cached data (if exists)
-     * @param $cacheKey
+     * @param string|null $cacheKey
      */
-    private function clearCache($cacheKey){
+    private function clearCache(string|null $cacheKey){
         if(!empty($cacheKey)){
             $f3 = self::getF3();
             if($f3->exists($cacheKey)){
@@ -587,13 +587,13 @@ abstract class AbstractModel extends Cortex {
     /**
      * get dataSet by foreign column (single result)
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @param array $options
      * @param int $ttl
      * @param bool $isActive
      * @return bool
      */
-    public function getByForeignKey(string $key, $value, array $options = [], int $ttl = 0, bool $isActive = true) : bool {
+    public function getByForeignKey(string $key, mixed $value, array $options = [], int $ttl = 0, bool $isActive = true) : bool {
         $filters = [self::getFilter($key, $value)];
 
         if($isActive && $this->exists('active')){
@@ -615,7 +615,7 @@ abstract class AbstractModel extends Cortex {
     /**
      * get first model from a relation that matches $filter
      * @param string $key
-     * @param array $filter
+     * @param array<string, mixed> $filter
      * @return mixed|null
      */
     protected function relFindOne(string $key, array $filter){
@@ -642,7 +642,7 @@ abstract class AbstractModel extends Cortex {
     /**
      * get all models from a relation that match $filter
      * @param string $key
-     * @param array $filter
+     * @param array<string, mixed> $filter
      * @return CortexCollection|null
      */
     protected function relFind(string $key, array $filter) : ?CortexCollection {
@@ -671,10 +671,10 @@ abstract class AbstractModel extends Cortex {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      * @return bool
      */
-    public function beforeInsertEvent($self, $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array $pkeys) : bool {
         if($this->exists('updated')){
             $this->touch('updated');
         }
@@ -686,9 +686,9 @@ abstract class AbstractModel extends Cortex {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent(self $self, array $pkeys){
     }
 
     /**
@@ -696,10 +696,10 @@ abstract class AbstractModel extends Cortex {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent($self, $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
         return true;
     }
 
@@ -708,19 +708,19 @@ abstract class AbstractModel extends Cortex {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent(self $self, array $pkeys){
     }
 
     /**
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      * @return bool
      */
-    public function beforeEraseEvent($self, $pkeys) : bool {
+    public function beforeEraseEvent(self $self, array $pkeys) : bool {
         return true;
     }
 
@@ -728,9 +728,9 @@ abstract class AbstractModel extends Cortex {
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent(self $self, array $pkeys){
     }
 
     /**
@@ -761,18 +761,18 @@ abstract class AbstractModel extends Cortex {
 
     /**
      * format dateTime column
-     * @param $column
+     * @param string $column
      * @param string $format
      * @return false|null|string
      */
-    public function getFormattedColumn($column, $format = 'Y-m-d H:i'){
+    public function getFormattedColumn(string $column, string $format = 'Y-m-d H:i'){
         return $this->get($column) ? date($format, strtotime( $this->get($column) )) : null;
     }
 
     /**
      * export and download table data as *.csv
      * this is primarily used for static tables
-     * @param array $fields
+     * @param array<string> $fields
      * @return bool
      */
     public function exportData(array $fields = []) : bool {
@@ -898,7 +898,7 @@ abstract class AbstractModel extends Cortex {
     /**
      * insert/update static data into this table
      * WARNING: rows will be deleted if not part of $tableData !
-     * @param array $tableData
+     * @param array<int, array<string, mixed>> $tableData
      * @return array
      */
     protected function importStaticData(array $tableData = []) : array {
@@ -1042,10 +1042,10 @@ abstract class AbstractModel extends Cortex {
 
     /**
      * get model data as array
-     * @param $data
+     * @param mixed $data
      * @return array
      */
-    public static function toArray($data) : array {
+    public static function toArray(mixed $data) : array {
         return json_decode(json_encode($data), true);
     }
 
@@ -1071,10 +1071,10 @@ abstract class AbstractModel extends Cortex {
      * This can result in high RAM usage if a great number of key->values should be stored in Cache
      * (like the search index for system data)
      * @param string $key
-     * @param $data
+     * @param mixed $data
      * @param int $ttl
      */
-    public static function setCacheValue(string $key, $data, int $ttl = 0){
+    public static function setCacheValue(string $key, mixed $data, int $ttl = 0){
         $cache = \Cache::instance();
         $cache->set(self::getF3()->hash($key).'.var', $data, $ttl);
     }
@@ -1114,7 +1114,7 @@ abstract class AbstractModel extends Cortex {
     /**
      * Check whether a (multi)-column index exists or not on a table
      * related to this model
-     * @param array $columns
+     * @param array<string> $columns
      * @return bool|array
      */
     public static function indexExists(array $columns = []){
@@ -1135,12 +1135,12 @@ abstract class AbstractModel extends Cortex {
 
     /**
      * set a multi-column index for this table
-     * @param array $columns Column(s) to be indexed
+     * @param array<string> $columns Column(s) to be indexed
      * @param bool $unique Unique index
      * @param int $length index length for text fields in mysql
      * @return bool
      */
-    public static function setMultiColumnIndex(array $columns = [], $unique = false, $length = 20) : bool {
+    public static function setMultiColumnIndex(array $columns = [], bool $unique = false, int $length = 20) : bool {
         $status = false;
         $tableModifier = self::getTableModifier();
 

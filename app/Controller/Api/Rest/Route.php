@@ -110,11 +110,11 @@ class Route extends AbstractRestController {
      * set/add dynamic system jump data for specific "mapId"´s
      * -> this data is dynamic and could change on any map change
      * -> (e.g. new system added, connection added/updated, ...)
-     * @param array $mapIds
-     * @param array $filterData
+     * @param array<int> $mapIds
+     * @param array<string, mixed> $filterData
      * @throws \Exception
      */
-    private function setDynamicJumpData($mapIds = [], $filterData = []){
+    private function setDynamicJumpData(array $mapIds = [], array $filterData = []){
         // make sure, mapIds are integers (protect against SQL injections)
         $mapIds = array_unique( array_map('intval', $mapIds), SORT_NUMERIC);
 
@@ -315,9 +315,9 @@ class Route extends AbstractRestController {
     /**
      * update jump data for this instance
      * -> data is either coming from CCPs [SDE] OR from map specific data
-     * @param array $rows
+     * @param array<int, array<string, mixed>> $rows
      */
-    private function updateJumpData(&$rows = []){
+    private function updateJumpData(array &$rows = []){
         foreach($rows as &$row){
             $regionId       = (int)$row['regionId'];
             $constId        = (int)$row['constellationId'];
@@ -353,10 +353,10 @@ class Route extends AbstractRestController {
 
     /**
      * filter systems (remove some systems) e.g. WH,LS,0.0 for "secure search"
-     * @param array $filterData
-     * @param array $keepSystems
+     * @param array<string, mixed> $filterData
+     * @param array<int> $keepSystems
      */
-    private function filterJumpData($filterData = [], $keepSystems = []){
+    private function filterJumpData(array $filterData = [], array $keepSystems = []){
         if($filterData['flag'] == 'secure'){
             // remove all systems (TrueSec < 0.5) from search arrays
             $this->jumpArray = array_filter($this->jumpArray, function($systemId) use ($keepSystems) {
@@ -381,11 +381,11 @@ class Route extends AbstractRestController {
 
     /**
      * get system data by systemId and dataName
-     * @param $systemId
-     * @param $option
+     * @param int $systemId
+     * @param string $option
      * @return null
      */
-    private function getSystemInfoBySystemId($systemId, $option){
+    private function getSystemInfoBySystemId(int $systemId, string $option){
         $info = null;
         switch($option){
             case 'systemName':
@@ -407,13 +407,13 @@ class Route extends AbstractRestController {
 
     /**
      * recursive search function within a undirected graph
-     * @param $G
-     * @param $A
-     * @param $B
+     * @param array<string, array<string>> $G
+     * @param string $A
+     * @param string $B
      * @param int $M
      * @return array
      */
-    private function graph_find_path(&$G, $A, $B, $M = 50000){
+    private function graph_find_path(array &$G, string $A, string $B, int $M = 50000){
         $maxDepth = $M;
 
         // $P will hold the result path at the end.
@@ -494,12 +494,12 @@ class Route extends AbstractRestController {
      * @param int $systemFromId
      * @param int $systemToId
      * @param int $searchDepth
-     * @param array $mapIds
-     * @param array $filterData
+     * @param array<int> $mapIds
+     * @param array<string, mixed> $filterData
      * @return array
      * @throws \Exception
      */
-    public function searchRoute(int $systemFromId, int $systemToId, $searchDepth = 0, array $mapIds = [], array $filterData = []) : array {
+    public function searchRoute(int $systemFromId, int $systemToId, int $searchDepth = 0, array $mapIds = [], array $filterData = []) : array {
         // search root by ESI API
         $routeData = $this->searchRouteESI($systemFromId, $systemToId, $searchDepth, $mapIds, $filterData);
 
@@ -518,12 +518,12 @@ class Route extends AbstractRestController {
      * @param int $systemFromId
      * @param int $systemToId
      * @param int $searchDepth
-     * @param array $mapIds
-     * @param array $filterData
+     * @param array<int> $mapIds
+     * @param array<string, mixed> $filterData
      * @return array
      * @throws \Exception
      */
-    private function searchRouteCustom(int $systemFromId, int $systemToId, $searchDepth = 0, array $mapIds = [], array $filterData = []) : array {
+    private function searchRouteCustom(int $systemFromId, int $systemToId, int $searchDepth = 0, array $mapIds = [], array $filterData = []) : array {
         // reset all previous set jump data
         $this->resetJumpData();
 
@@ -602,8 +602,8 @@ class Route extends AbstractRestController {
      * @param int $systemFromId
      * @param int $systemToId
      * @param int $searchDepth
-     * @param array $mapIds
-     * @param array $filterData
+     * @param array<int> $mapIds
+     * @param array<string, mixed> $filterData
      * @return array
      * @throws \Exception
      */
