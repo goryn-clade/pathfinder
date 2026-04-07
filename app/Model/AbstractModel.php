@@ -780,6 +780,9 @@ abstract class AbstractModel extends Cortex {
 
         if(static::$enableDataExport){
             $tableModifier = static::getTableModifier();
+            if(!$tableModifier){
+                return [];
+            }
             $headers = $tableModifier->getCols();
 
             if($fields){
@@ -905,6 +908,9 @@ abstract class AbstractModel extends Cortex {
         $deletedCount = 0;
 
         $tableModifier = static::getTableModifier();
+        if(!$tableModifier){
+            return [];
+        }
         $fields = $tableModifier->getCols();
 
         foreach($tableData as $rowData){
@@ -981,9 +987,11 @@ abstract class AbstractModel extends Cortex {
                     $this->updated,
                     $timezone
                 );
-                $interval = $updateTime->diff($currentTime);
-                if($interval->days < self::CACHE_MAX_DAYS){
-                    $outdated = false;
+                if($updateTime){
+                    $interval = $updateTime->diff($currentTime);
+                    if($interval->days < self::CACHE_MAX_DAYS){
+                        $outdated = false;
+                    }
                 }
             }catch(\Exception $e){
                 self::getF3()->error($e->getCode(), $e->getMessage(), $e->getTrace());
@@ -1114,10 +1122,12 @@ abstract class AbstractModel extends Cortex {
         $df = parent::resolveConfiguration();
 
         $check = false;
-        $indexKey = $df['table'] . '___' . implode('__', $columns);
-        $indexList = $tableModifier->listIndex();
-        if(array_key_exists( $indexKey, $indexList)){
-            $check = $indexList[$indexKey];
+        if($tableModifier){
+            $indexKey = $df['table'] . '___' . implode('__', $columns);
+            $indexList = $tableModifier->listIndex();
+            if(array_key_exists( $indexKey, $indexList)){
+                $check = $indexList[$indexKey];
+            }
         }
 
         return $check;
@@ -1134,7 +1144,7 @@ abstract class AbstractModel extends Cortex {
         $status = false;
         $tableModifier = self::getTableModifier();
 
-        if( self::indexExists($columns) === false ){
+        if($tableModifier && self::indexExists($columns) === false ){
             $tableModifier->addIndex($columns, $unique, $length);
             $buildStatus = $tableModifier->build();
             if($buildStatus === 0){
