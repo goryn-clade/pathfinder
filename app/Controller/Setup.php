@@ -917,7 +917,7 @@ class Setup extends Controller {
                 ($parts = parse_url(session_save_path()))
             ){
                 // parse URL parameters
-                parse_str((string)$parts['query'], $params);
+                parse_str((string)($parts['query'] ?? ''), $params);
 
                 $conf = [
                     'type' => 'redis',
