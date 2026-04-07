@@ -1011,24 +1011,24 @@
         },
         {
             "name": "goryn-clade/pathfinder_esi",
-            "version": "v2.1.4",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goryn-clade/pathfinder_esi.git",
-                "reference": "c7c92adb26457fcf954fa88f9273df7409687031"
+                "reference": "f0551dc6a821e503fcc2b9d7ecfd6ad99a6cbfd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/c7c92adb26457fcf954fa88f9273df7409687031",
-                "reference": "c7c92adb26457fcf954fa88f9273df7409687031",
+                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/f0551dc6a821e503fcc2b9d7ecfd6ad99a6cbfd3",
+                "reference": "f0551dc6a821e503fcc2b9d7ecfd6ad99a6cbfd3",
                 "shasum": ""
             },
             "require": {
-                "cache/void-adapter": "1.0.*",
-                "caseyamcl/guzzle_retry_middleware": "2.3.*",
+                "php-64bit": ">=8.2",
                 "ext-json": "*",
-                "guzzlehttp/guzzle": "6.5.*",
-                "php-64bit": ">=7.2"
+                "guzzlehttp/guzzle": "^7.0",
+                "caseyamcl/guzzle_retry_middleware": "^2.9",
+                "cache/void-adapter": "^1.1"
             },
             "type": "library",
             "autoload": {
@@ -1050,9 +1050,9 @@
             "homepage": "https://github.com/goryn-clade/pathfinder_esi",
             "support": {
                 "issues": "https://github.com/goryn-clade/pathfinder_esi/issues",
-                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v2.1.4"
+                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.3"
             },
-            "time": "2024-03-16T09:12:11+00:00"
+            "time": "2026-04-07T00:20:30+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
