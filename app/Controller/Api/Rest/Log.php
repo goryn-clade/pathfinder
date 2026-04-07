@@ -55,7 +55,9 @@ class Log extends AbstractRestController {
         $connectionData = [];
 
         if($log = $this->update($logId, ['active' => false])){
-            $connectionData[] =  $log->getConnection()->getData(true, true);
+            if($connection = $log->getConnection()){
+                $connectionData[] =  $connection->getData(true, true);
+            }
         }
 
         $this->out($connectionData);
@@ -73,7 +75,9 @@ class Log extends AbstractRestController {
         $connectionData = [];
 
         if($log = $this->update($logId, $requestData)){
-            $connectionData[] =  $log->getConnection()->getData(true, true);
+            if($connection = $log->getConnection()){
+                $connectionData[] =  $connection->getData(true, true);
+            }
         }
 
         $this->out($connectionData);

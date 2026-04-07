@@ -621,13 +621,17 @@ class Map extends Controller\AccessController {
         $userDataRequired = (bool)$postData['getUserData'];
 
         $activeCharacter = $this->getCharacter();
+        if(!$activeCharacter){
+            echo json_encode([]);
+            return;
+        }
 
         $return = $this->updateMapsData($activeCharacter, $mapsData);
 
         // if userData is requested -> add it as well
         // -> Only first trigger call should request this data!
-        if($userDataRequired) {
-            $return->userData = $activeCharacter->getUser()->getData();
+        if($userDataRequired && ($user = $activeCharacter->getUser())) {
+            $return->userData = $user->getData();
         }
 
         echo json_encode($return);
@@ -666,6 +670,11 @@ class Map extends Controller\AccessController {
         $systemData = (array)$postData['systemData'];
         $newSystemPositions = (array)$postData['newSystemPositions'];
         $activeCharacter = $this->getCharacter();
+
+        if(!$activeCharacter){
+            echo json_encode(['error' => 'No active character']);
+            return;
+        }
 
         $return = (object)[];
 
@@ -713,7 +722,9 @@ class Map extends Controller\AccessController {
 
         // get current user data -> this should not be cached because each user has different personal data
         // even if they have multiple characters using the same map!
-        $return->userData = $activeCharacter->getUser()->getData();
+        if($user = $activeCharacter->getUser()){
+            $return->userData = $user->getData();
+        }
 
         // add error (if exists)
         $return->error = [];

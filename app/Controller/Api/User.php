@@ -330,7 +330,9 @@ class User extends Controller\Controller{
                     }
 
                     // get fresh updated user object
-                    $newUserData = $user->getData();
+                    if($user){
+                        $newUserData = $user->getData();
+                    }
                 }
 
             }catch(Exception\ValidationException $e){

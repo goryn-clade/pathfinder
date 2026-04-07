@@ -28,6 +28,9 @@ class System extends AbstractRestController {
             ($mapId = (int)$requestData['mapId'])
         ){
             $activeCharacter = $this->getCharacter();
+            if(!$activeCharacter){
+                return;
+            }
             $isCcpId = (bool)$requestData['isCcpId'];
 
             if(
