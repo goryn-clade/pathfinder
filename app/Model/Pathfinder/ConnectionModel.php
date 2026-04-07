@@ -156,10 +156,10 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * setter for connection type
-     * @param $type
+     * @param array<string> $type
      * @return array
      */
-    public function set_type($type){
+    public function set_type(array $type){
         // remove unwanted types -> they should not be send from client
         // -> reset keys! otherwise JSON format results in object and not in array
         $type = array_values(array_intersect(array_unique((array)$type), self::$connectionTypeWhitelist));
@@ -180,9 +180,9 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * setter for endpoints data (data for source/target endpoint)
-     * @param $endpointsData
+     * @param array<string, mixed> $endpointsData
      */
-    public function set_endpoints($endpointsData){
+    public function set_endpoints(array $endpointsData){
         if(!empty($endpointData = (array)$endpointsData['source'])){
             $this->setEndpointData('source', $endpointData);
         }
@@ -194,7 +194,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * set connection endpoint related data
      * @param string $label (source||target)
-     * @param array $endpointData
+     * @param array<string, mixed> $endpointData
      */
     public function setEndpointData(string $label, array $endpointData = []){
         if($this->exists($field = $label . 'EndpointType')){
@@ -282,12 +282,12 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * can be overwritten
      * return false will stop any further action
      * @param \Exodus4D\Pathfinder\Model\AbstractModel $self
-     * @param $pkeys
+     * @param array $pkeys
      * @return bool
      * @throws Exception\DatabaseException
      * @throws \Exception
      */
-    public function beforeInsertEvent($self, $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array $pkeys) : bool {
         // check for "default" connection type and add them if missing
         // -> get() with "true" returns RAW data! important for JSON table column check!
         $types = (array)json_decode($this->get('type', true));
@@ -305,9 +305,9 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent(self $self, array $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionCreate');
     }
@@ -316,9 +316,9 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent(self $self, array $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionUpdate');
     }
@@ -327,9 +327,9 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent(self $self, array $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionDelete');
     }
