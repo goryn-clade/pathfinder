@@ -172,6 +172,8 @@ class Setup extends Controller {
         // js view (file)
         $f3->set('tplJsView', 'setup');
 
+        if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
+
         $f3->set('tplCounter', $this->counter());
 
         $f3->set('tplConvertBytes', function(){
