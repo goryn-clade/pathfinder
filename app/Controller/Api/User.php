@@ -218,7 +218,11 @@ class User extends Controller\Controller{
         if( $targetId = (int)$data['targetId']){
             $activeCharacter = $this->getCharacter();
 
-            $response =  $f3->ccpClient()->send('openWindow', $targetId, $activeCharacter->getAccessToken());
+            if($activeCharacter){
+                $response =  $f3->ccpClient()->send('openWindow', $targetId, $activeCharacter->getAccessToken());
+            }else{
+                $response = null;
+            }
 
             if(empty($response)){
                 $return->targetId = $targetId;
@@ -258,39 +262,39 @@ class User extends Controller\Controller{
 
             try{
                 if($activeCharacter = $this->getCharacter()){
-                    $user = $activeCharacter->getUser();
+                    if($user = $activeCharacter->getUser()){
+                        // captcha is send -> check captcha ---------------------------------------------------------------
+                        if(isset($formData['captcha']) && !empty($formData['captcha'])){
+                            if($formData['captcha'] === $captcha){
+                                // change/set sensitive user data requires captcha!
 
-                    // captcha is send -> check captcha ---------------------------------------------------------------
-                    if(isset($formData['captcha']) && !empty($formData['captcha'])){
-                        if($formData['captcha'] === $captcha){
-                            // change/set sensitive user data requires captcha!
+                                // set username
+                                if(isset($formData['name']) && !empty($formData['name'])){
+                                    $user->name = $formData['name'];
+                                }
 
-                            // set username
-                            if(isset($formData['name']) && !empty($formData['name'])){
-                                $user->name = $formData['name'];
+                                // set email
+                                if(
+                                    isset($formData['email']) &&
+                                    isset($formData['email_confirm']) &&
+                                    !empty($formData['email']) &&
+                                    !empty($formData['email_confirm']) &&
+                                    $formData['email'] == $formData['email_confirm']
+                                ){
+                                    $user->email = $formData['email'];
+                                }
+
+                                // save/update user model
+                                // this will fail if model validation fails!
+                                $user->save();
+
+                            }else{
+                                // captcha was send but not valid -> return error
+                                $captchaError = (object)[];
+                                $captchaError->type = 'error';
+                                $captchaError->text = 'Captcha does not match';
+                                $return->error[] = $captchaError;
                             }
-
-                            // set email
-                            if(
-                                isset($formData['email']) &&
-                                isset($formData['email_confirm']) &&
-                                !empty($formData['email']) &&
-                                !empty($formData['email_confirm']) &&
-                                $formData['email'] == $formData['email_confirm']
-                            ){
-                                $user->email = $formData['email'];
-                            }
-
-                            // save/update user model
-                            // this will fail if model validation fails!
-                            $user->save();
-
-                        }else{
-                            // captcha was send but not valid -> return error
-                            $captchaError = (object)[];
-                            $captchaError->type = 'error';
-                            $captchaError->text = 'Captcha does not match';
-                            $return->error[] = $captchaError;
                         }
                     }
 

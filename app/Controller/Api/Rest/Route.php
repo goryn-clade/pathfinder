@@ -213,7 +213,11 @@ class Route extends AbstractRestController {
                               `connection`.`mapId` " . $whereMapIdsQuery . "
                               ";
 
-                $rows = $this->getDB()->exec($query,  null, $this->dynamicJumpDataCacheTime);
+                if($db = $this->getDB()){
+                    $rows = $db->exec($query,  null, $this->dynamicJumpDataCacheTime);
+                }else{
+                    $rows = [];
+                }
 
                 if(count($rows) > 0){
                     $jumpData = [];

@@ -501,14 +501,15 @@ class Controller {
         $sessionCharacterData = (array)$f3->get(Api\User::SESSION_KEY_CHARACTERS);
 
         if($sessionCharacterData){
-            $activeCharacterId = ($activeCharacter = $this->getCharacter()) ? $activeCharacter->_id : 0;
+            $activeCharacter = $this->getCharacter();
+            $activeCharacterId = $activeCharacter ? $activeCharacter->_id : 0;
             /**
              * @var Pathfinder\CharacterModel $character
              */
             $character = Pathfinder\AbstractPathfinderModel::getNew('CharacterModel');
             $characterIds = [];
             foreach($sessionCharacterData as $characterData){
-                if($characterData['ID'] === $activeCharacterId){
+                if($characterData['ID'] === $activeCharacterId && $activeCharacter){
                     $characterIds[] = $activeCharacter->_id;
                     $activeCharacter->logout($deleteSession, $deleteLog, $deleteCookie);
                 }elseif($all){

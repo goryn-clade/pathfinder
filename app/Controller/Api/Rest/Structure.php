@@ -75,35 +75,39 @@ class Structure extends AbstractRestController {
         $data = [];
 
         $activeCharacter = $this->getCharacter();
-        if($activeCharacter->hasCorporation()){
-            // structures always belong to a corporation
-            /**
-             * @var Pathfinder\StructureModel $structure
-             */
-            $structure = Pathfinder\AbstractPathfinderModel::getNew('StructureModel');
-            foreach($structuresData as $structureData){
-                // reset on loop start because of potential "continue"
-                $structure->reset();
+        if(!$activeCharacter || !($corporation = $activeCharacter->getCorporation())){
+            $this->out($data);
+            return;
+        }
 
-                if(!empty($structureData['id']) && $structureId = (int)$structureData['id']){
-                    // update specific structure
-                    $structure->getById($structureId);
-                    if(!$structure->hasAccess($activeCharacter)){
-                        continue;
-                    }
-                }elseif(!isset($structureData['id'])){
-                    // from clipboard -> search by structure by name
-                    $structure->getByName($activeCharacter->getCorporation(), (string)$structureData['name'], (int)$structureData['systemId']);
+        // structures always belong to a corporation
+        /**
+         * @var Pathfinder\StructureModel $structure
+         */
+        $structure = Pathfinder\AbstractPathfinderModel::getNew('StructureModel');
+        foreach($structuresData as $structureData){
+            // reset on loop start because of potential "continue"
+            $structure->reset();
+
+            if(!empty($structureData['id']) && $structureId = (int)$structureData['id']){
+                // update specific structure
+                $structure->getById($structureId);
+                if(!$structure->hasAccess($activeCharacter)){
+                    continue;
                 }
+            }elseif(!isset($structureData['id'])){
+                // from clipboard -> search by structure by name
+                $structure->getByName($corporation, (string)$structureData['name'], (int)$structureData['systemId']);
+            }
 
-                $isNew = $structure->dry();
+            $isNew = $structure->dry();
 
-                $structure->setData($structureData);
-                $structure->save();
+            $structure->setData($structureData);
+            $structure->save();
 
-                if($isNew){
-                    $activeCharacter->getCorporation()->saveStructure($structure);
-                }
+            if($isNew){
+                $corporation->saveStructure($structure);
+            }
 
                 // group all updated structures by corporation -> just for return
                 $corporationsStructureData = $structure->getDataByCorporations();

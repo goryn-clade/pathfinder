@@ -294,7 +294,9 @@ class Admin extends Controller{
                     $characters = $filterCharacters;
                 }
             }else{
-                $characters = $character->getCorporation()->getCharacters($characterIds);
+                if($corporation = $character->getCorporation()){
+                    $characters = $corporation->getCharacters($characterIds);
+                }
             }
         }
         return $characters;
@@ -337,7 +339,9 @@ class Admin extends Controller{
                 $maps = $filterMaps;
             }
         }else{
-            $maps = $character->getCorporation()->getMaps($mapId, ['addInactive' => true, 'ignoreMapCount' => true]);
+            if($corporation = $character->getCorporation()){
+                $maps = $corporation->getMaps($mapId, ['addInactive' => true, 'ignoreMapCount' => true]);
+            }
         }
 
         return $maps;

@@ -292,6 +292,10 @@ class Map extends Controller\AccessController {
         ){
             $activeCharacter = $this->getCharacter();
 
+            if(!$activeCharacter){
+                return $return;
+            }
+
             /**
              * @var Pathfinder\MapModel $map
              */
@@ -466,6 +470,10 @@ class Map extends Controller\AccessController {
         $return = (object) [];
 
         $activeCharacter = $this->getCharacter();
+        if(!$activeCharacter){
+            return $return;
+        }
+
         $characterData = $activeCharacter->getData(true);
         $maps = $activeCharacter->getMaps();
 

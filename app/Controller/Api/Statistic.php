@@ -213,7 +213,11 @@ class Statistic extends Controller\AccessController {
                 ORDER BY
                     `log`.`year` DESC, `log`.`week` DESC";
 
-            $result = $this->getDB()->exec($sql, $queryData);
+            if(!($db = $this->getDB())){
+                return $data;
+            }
+
+            $result = $db->exec($sql, $queryData);
 
             if( !empty($result) ){
                 // group result by characterId

@@ -322,7 +322,9 @@ class Setup extends Controller\Controller {
      */
     protected function setupSystemJumpTable(int $offset = 0, int $length = 0) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
-        $universeDB = $this->getDB('UNIVERSE');
+        if(!($universeDB = $this->getDB('UNIVERSE'))){
+            return $info;
+        }
 
         $query = "SELECT SQL_CALC_FOUND_ROWS
                       `system`.`id` `systemId`,

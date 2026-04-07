@@ -82,9 +82,11 @@ class Map extends AbstractRestController {
                 // check if character has delete right for map type
                 $hasRight = true;
                 if($map->isCorporation()){
-                    if($corpRight = $activeCharacter->getCorporation()->getRights(['map_delete'])){
-                        if($corpRight[0]->get('roleId', true) !== $activeCharacter->get('roleId', true)){
-                            $hasRight = false;
+                    if($corporation = $activeCharacter->getCorporation()){
+                        if($corpRight = $corporation->getRights(['map_delete'])){
+                            if($corpRight[0]->get('roleId', true) !== $activeCharacter->get('roleId', true)){
+                                $hasRight = false;
+                            }
                         }
                     }
                 }

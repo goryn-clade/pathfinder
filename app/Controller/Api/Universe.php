@@ -28,6 +28,7 @@ class Universe extends Controller\AccessController {
         $activeCharacter = $this->getCharacter();
 
         if(
+            $activeCharacter &&
             array_key_exists('arg1', $params) &&
             !empty($search = strtolower($params['arg1'])) &&
             !empty($categories)

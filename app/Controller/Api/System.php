@@ -29,10 +29,9 @@ class System extends Controller\AccessController {
         if(!empty($destData = (array)$postData['destData'])){
             $activeCharacter = $this->getCharacter();
 
-            $return->clearOtherWaypoints = (bool)$postData['clearOtherWaypoints'];
-            $return->first = (bool)$postData['first'];
-
-            if($accessToken = $activeCharacter->getAccessToken()){
+            if($activeCharacter && ($accessToken = $activeCharacter->getAccessToken())){
+                $return->clearOtherWaypoints = (bool)$postData['clearOtherWaypoints'];
+                $return->first = (bool)$postData['first'];
                 $options = [
                     'clearOtherWaypoints' => $return->clearOtherWaypoints,
                     'addToBeginning' => $return->first,
