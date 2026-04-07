@@ -967,28 +967,28 @@ class Setup extends Controller {
             $systemConf = [
                 'git' => [
                     'label' => 'Git',
-                    'version' => $gitOut[0] ? 'installed' : 'missing',
+                    'version' => ($gitOut[0] ?? '') ? 'installed' : 'missing',
                     'check' => $gitStatus == 0,
-                    'tooltip' => 'Git # git --version : ' . $gitOut[0]
+                    'tooltip' => 'Git # git --version : ' . ($gitOut[0] ?? '')
                 ],
                 'composer' => [
                     'label' => 'Composer',
-                    'version' => $composerOut[0] ? 'installed' : 'missing',
+                    'version' => ($composerOut[0] ?? '') ? 'installed' : 'missing',
                     'check' => $composerStatus == 0,
-                    'tooltip' => 'Composer # composer -V : ' . $composerOut[0]
+                    'tooltip' => 'Composer # composer -V : ' . ($composerOut[0] ?? '')
                 ],
                 'node' => [
                     'label' => 'NodeJs',
                     'required' => number_format((float)$f3->get('REQUIREMENTS.PATH.NODE'), 1, '.', ''),
-                    'version' => $normalizeVersion($nodeOut[0]) ?: 'missing',
-                    'check' => version_compare( $normalizeVersion($nodeOut[0]), number_format((float)$f3->get('REQUIREMENTS.PATH.NODE'), 1, '.', ''), '>='),
+                    'version' => $normalizeVersion($nodeOut[0] ?? '') ?: 'missing',
+                    'check' => version_compare( $normalizeVersion($nodeOut[0] ?? ''), number_format((float)$f3->get('REQUIREMENTS.PATH.NODE'), 1, '.', ''), '>='),
                     'tooltip' => 'NodeJs # node -v'
                 ],
                 'npm' => [
                     'label' => 'npm',
                     'required' => $f3->get('REQUIREMENTS.PATH.NPM'),
-                    'version' => $normalizeVersion($npmOut[0]) ?: 'missing',
-                    'check' => version_compare( $normalizeVersion($npmOut[0]), $f3->get('REQUIREMENTS.PATH.NPM'), '>='),
+                    'version' => $normalizeVersion($npmOut[0] ?? '') ?: 'missing',
+                    'check' => version_compare( $normalizeVersion($npmOut[0] ?? ''), $f3->get('REQUIREMENTS.PATH.NPM'), '>='),
                     'tooltip' => 'npm # npm -v'
                 ]
             ];
