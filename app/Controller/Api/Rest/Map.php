@@ -28,7 +28,7 @@ class Map extends AbstractRestController {
         $requestData = $this->getRequestData($f3);
 
         /**
-         * @var $map Pathfinder\MapModel
+         * @var Pathfinder\MapModel $map
          */
         $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
         $mapData = $this->update($map, $requestData)->getData();
@@ -49,7 +49,7 @@ class Map extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
@@ -73,7 +73,7 @@ class Map extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);

@@ -150,7 +150,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      */
     public function loadById(int $id, string $accessToken = '', array $additionalOptions = []){
         /**
-         * @var $model self
+         * @var self $model
          */
         $this->getById($id, 0);
         if($this->isOutdated()){

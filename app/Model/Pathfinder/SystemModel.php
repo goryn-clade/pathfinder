@@ -557,7 +557,7 @@ class SystemModel extends AbstractMapTrackingModel {
      */
     public function getNewSignature() : SystemSignatureModel {
         /**
-         * @var $signature SystemSignatureModel
+         * @var SystemSignatureModel $signature
          */
         $signature = self::getNew('SystemSignatureModel');
         $signature->systemId = $this;
@@ -799,7 +799,7 @@ class SystemModel extends AbstractMapTrackingModel {
         }
 
         /**
-         * @var $type MapTypeModel
+         * @var MapTypeModel $type
          */
         $type = $this->rel('typeId');
         $type->getById($typeId);

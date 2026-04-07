@@ -1108,7 +1108,7 @@ class Setup extends Controller {
             // collection for errors
             $dbErrors = [];
             /**
-             * @var $db Sql
+             * @var Sql $db
              */
             $db = $f3->DB->getDB($dbAlias);
 
@@ -1723,7 +1723,7 @@ class Setup extends Controller {
         // active DB and tables are required for obtain index data
         if(!$this->databaseHasError){
             /**
-             * @var $categoryUniverseModel Universe\CategoryModel
+             * @var Universe\CategoryModel $categoryUniverseModel
              */
             $categoryUniverseModel = Universe\AbstractUniverseModel::getNew('CategoryModel');
             $categoryUniverseModel->getById(Config::ESI_CATEGORY_STRUCTURE_ID, 0);
@@ -1735,7 +1735,7 @@ class Setup extends Controller {
             $typesCountShip = $categoryUniverseModel->getTypesCount(false);
 
             /**
-             * @var $groupUniverseModel Universe\GroupModel
+             * @var Universe\GroupModel $groupUniverseModel
              */
 
             $groupUniverseModel = Universe\AbstractUniverseModel::getNew('GroupModel');
@@ -1743,12 +1743,12 @@ class Setup extends Controller {
             $wormholeCount = $groupUniverseModel->getTypesCount(false);
 
             /**
-             * @var $systemNeighbourModel Universe\SystemNeighbourModel
+             * @var Universe\SystemNeighbourModel $systemNeighbourModel
              */
             $systemNeighbourModel = Universe\AbstractUniverseModel::getNew('SystemNeighbourModel');
 
             /**
-             * @var $systemStaticModel Universe\SystemStaticModel
+             * @var Universe\SystemStaticModel $systemStaticModel
              */
             $systemStaticModel = Universe\AbstractUniverseModel::getNew('SystemStaticModel');
 
@@ -1972,7 +1972,7 @@ class Setup extends Controller {
         $files = Search::getFilesByMTime($path);
         foreach($files as $file){
             /**
-             * @var $file \SplFileInfo
+             * @var \SplFileInfo $file
              */
             if($file->isFile()){
                 if($file->isWritable()){

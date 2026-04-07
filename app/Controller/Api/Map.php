@@ -214,13 +214,13 @@ class Map extends Controller\AccessController {
 
             // get available wormhole types ---------------------------------------------------------------------------
             /**
-             * @var $groupUniverseModel Universe\GroupModel
+             * @var Universe\GroupModel $groupUniverseModel
              */
             $groupUniverseModel = Universe\AbstractUniverseModel::getNew('GroupModel');
             $groupUniverseModel->getById(Config::ESI_GROUP_WORMHOLE_ID);
             $wormholesData = [];
             /**
-             * @var $typeModel Universe\TypeModel
+             * @var Universe\TypeModel $typeModel
              */
             foreach($types = $groupUniverseModel->getTypes(false) as $typeModel){
                 if(
@@ -237,7 +237,7 @@ class Map extends Controller\AccessController {
 
             // universe category data ---------------------------------------------------------------------------------
             /**
-             * @var $categoryUniverseModel Universe\CategoryModel
+             * @var Universe\CategoryModel $categoryUniverseModel
              */
             $categoryUniverseModel = Universe\AbstractUniverseModel::getNew('CategoryModel');
             $return->universeCategories = [
@@ -293,12 +293,12 @@ class Map extends Controller\AccessController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
 
             /**
-             * @var $mapType Pathfinder\MapTypeModel
+             * @var Pathfinder\MapTypeModel $mapType
              */
             $mapType = Pathfinder\AbstractPathfinderModel::getNew('MapTypeModel');
             $mapType->getById((int)$importData['typeId']);
@@ -315,7 +315,7 @@ class Map extends Controller\AccessController {
                         $mapDataData = (array)$mapData['data'];
 
                         /**
-                         * @var $mapScope Pathfinder\MapScopeModel
+                         * @var Pathfinder\MapScopeModel $mapScope
                          */
                         $mapScope = Pathfinder\AbstractPathfinderModel::getNew('MapScopeModel');
                         $mapScope->getById((int)$mapDataConfig['scope']['id']);
@@ -353,7 +353,7 @@ class Map extends Controller\AccessController {
                                     }
 
                                     /**
-                                     * @var $connection Pathfinder\ConnectionModel
+                                     * @var Pathfinder\ConnectionModel $connection
                                      */
                                     $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
                                     $connection->setActivityLogging(false);
@@ -998,7 +998,7 @@ class Map extends Controller\AccessController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
@@ -1054,7 +1054,7 @@ class Map extends Controller\AccessController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);

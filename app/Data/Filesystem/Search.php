@@ -28,7 +28,7 @@ class Search {
 
         $filterCallback = function($current, $key, $iterator) use ($mTime) {
             /**
-             * @var $current \RecursiveDirectoryIterator
+             * @var \RecursiveDirectoryIterator $current
              */
             if (
                 !$current->isFile() || // allow recursion
@@ -56,7 +56,7 @@ class Search {
 
         $filterCallback = function($current, $key, $iterator) use ($size) {
             /**
-             * @var $current \RecursiveDirectoryIterator
+             * @var \RecursiveDirectoryIterator $current
              */
             if (
                 !$current->isFile() || // allow recursion

@@ -126,14 +126,14 @@ class StationModel extends AbstractUniverseModel {
         $data = self::getF3()->ccpClient()->send('getUniverseStation', $id);
         if(!empty($data) && !isset($data['error'])){
             /**
-             * @var $system SystemModel
+             * @var SystemModel $system
              */
             $system = $this->rel('systemId');
             $system->loadById($data['systemId'], $accessToken, $additionalOptions);
             $data['systemId'] = $system;
 
             /**
-             * @var $type TypeModel
+             * @var TypeModel $type
              */
             $type = $this->rel('typeId');
             $type->loadById($data['typeId'], $accessToken, $additionalOptions);
@@ -141,7 +141,7 @@ class StationModel extends AbstractUniverseModel {
 
             if($data['corporationId']){
                 /**
-                 * @var $faction CorporationModel
+                 * @var CorporationModel $faction
                  */
                 $corporation = $this->rel('corporationId');
                 $corporation->loadById($data['corporationId'], $accessToken, $additionalOptions);
@@ -150,7 +150,7 @@ class StationModel extends AbstractUniverseModel {
 
             if($data['raceId']){
                 /**
-                 * @var $race RaceModel
+                 * @var RaceModel $race
                  */
                 $race = $this->rel('raceId');
                 $race->loadById($data['raceId'], $accessToken, $additionalOptions);

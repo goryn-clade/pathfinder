@@ -51,7 +51,7 @@ class LogCollection extends AbstractLog {
         $this->collection->rewind();
         if($this->collection->valid()){
             /**
-             * @var $log AbstractLog
+             * @var AbstractLog $log
              */
             $log = $this->collection->current();
         }else{

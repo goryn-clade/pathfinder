@@ -72,7 +72,7 @@ class RegionModel extends AbstractUniverseModel {
             if(!empty($data)){
                 foreach((array)$data['constellations'] as $constellationsId){
                     /**
-                     * @var $constellation ConstellationModel
+                     * @var ConstellationModel $constellation
                      */
                     $constellation = $this->rel('constellations');
                     $constellation->loadById($constellationsId);

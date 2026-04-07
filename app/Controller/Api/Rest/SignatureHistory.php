@@ -27,7 +27,7 @@ class SignatureHistory extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
@@ -69,7 +69,7 @@ class SignatureHistory extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId, 0);

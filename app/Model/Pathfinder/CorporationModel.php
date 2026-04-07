@@ -325,7 +325,7 @@ class CorporationModel extends AbstractPathfinderModel {
                 if($this->corporationRights){
                     foreach($this->corporationRights as $tempCorporationRight){
                         /**
-                         * @var $tempCorporationRight CorporationRightModel
+                         * @var CorporationRightModel $tempCorporationRight
                          */
                         if($tempCorporationRight->get('rightId', true) === $tempRight->_id){
                             $corporationRight = $tempCorporationRight;

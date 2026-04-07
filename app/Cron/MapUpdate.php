@@ -122,7 +122,7 @@ class MapUpdate extends AbstractCron {
                 if($connectionsData){
                     $total = count($connectionsData);
                     /**
-                     * @var $connection Pathfinder\ConnectionModel
+                     * @var Pathfinder\ConnectionModel $connection
                      */
                     $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
                     foreach($connectionsData as $data){
@@ -178,7 +178,7 @@ class MapUpdate extends AbstractCron {
                 if($connectionsData){
                     $total = count($connectionsData);
                     /**
-                     * @var $connection Pathfinder\ConnectionModel
+                     * @var Pathfinder\ConnectionModel $connection
                      */
                     $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
                     foreach($connectionsData as $data){

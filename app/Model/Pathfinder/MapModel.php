@@ -494,7 +494,7 @@ class MapModel extends AbstractMapTrackingModel {
         if(is_null($system)){
             /**
              * NO ->rel() here! we work with unsaved models
-             * @var $system SystemModel
+             * @var SystemModel $system
              */
             $system = self::getNew('SystemModel');
             $system->systemId = $systemId;
@@ -516,7 +516,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function getNewConnection(SystemModel $sourceSystem, SystemModel $targetSystem) : ConnectionModel {
         /**
-         * @var $connection ConnectionModel
+         * @var ConnectionModel $connection
          */
         $connection = self::getNew('ConnectionModel');
         $connection->mapId = $this;
@@ -532,7 +532,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function getSystemById(int $id) : ?SystemModel {
         /**
-         * @var $system SystemModel
+         * @var SystemModel $system
          */
         $system = $this->rel('systems');
         $system->filterRel();
@@ -556,7 +556,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function getSystemByCCPId(int $systemId, array $addFilters = []) : ?SystemModel {
         /**
-         * @var $system SystemModel
+         * @var SystemModel $system
          */
         $system = $this->rel('systems');
         $system->filterRel();
@@ -595,7 +595,7 @@ class MapModel extends AbstractMapTrackingModel {
 
         foreach($this->getSystems() as $system){
             /**
-             * @var $system SystemModel
+             * @var SystemModel $system
              */
             $systemsData[] = $system->getData();
         }
@@ -615,7 +615,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function getConnectionById(int $id) : ?ConnectionModel {
         /**
-         * @var $connection ConnectionModel
+         * @var ConnectionModel $connection
          */
         $connection = $this->rel('connections');
         $connection->filterRel();
@@ -662,7 +662,7 @@ class MapModel extends AbstractMapTrackingModel {
 
         foreach($this->getConnections() as $connection){
             /**
-             * @var $connection ConnectionModel
+             * @var ConnectionModel $connection
              */
             $connectionsData[] = $connection->getData(true);
         }
@@ -1459,7 +1459,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function save(CharacterModel $characterModel = null){
         /**
-         * @var $mapModel MapModel
+         * @var MapModel $mapModel
          */
         $mapModel = parent::save($characterModel);
 

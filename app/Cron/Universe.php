@@ -270,7 +270,7 @@ class Universe extends AbstractCron {
             $this->echoStart();
 
             /**
-             * @var $model Model\Universe\SystemModel
+             * @var Model\Universe\SystemModel $model
              */
             $model = Model\Universe\AbstractUniverseModel::getNew($modelClass);
             foreach($ids as $id){
@@ -306,7 +306,7 @@ class Universe extends AbstractCron {
         $msg = '';
 
         /**
-         * @var $system Model\Universe\SystemModel
+         * @var Model\Universe\SystemModel $system
          */
         $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
 
@@ -379,8 +379,8 @@ class Universe extends AbstractCron {
     function updateUniverseSystems(\Base $f3){
         $this->logStart(__FUNCTION__);
         /**
-         * @var $systemModel Model\Universe\SystemModel
-         * @var $system Model\Universe\SystemModel
+         * @var Model\Universe\SystemModel $systemModel
+         * @var Model\Universe\SystemModel $system
          */
         $systemModel = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
         $systems = $systemModel->find( null, ['order' => 'updated', 'limit' => 2]);

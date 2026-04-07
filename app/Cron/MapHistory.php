@@ -86,7 +86,7 @@ class MapHistory extends AbstractCron {
 
             foreach($files as $file){
                 /**
-                 * @var $file \SplFileInfo
+                 * @var \SplFileInfo $file
                  */
                 if($file->isFile()){
                     $largeFiles++;

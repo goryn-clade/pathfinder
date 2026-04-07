@@ -308,7 +308,7 @@ class Controller {
             !empty($cookieData)
         ){
             /**
-             * @var $characterAuth Pathfinder\CharacterAuthenticationModel
+             * @var Pathfinder\CharacterAuthenticationModel $characterAuth
              */
             $characterAuth = Pathfinder\AbstractPathfinderModel::getNew('CharacterAuthenticationModel');
 
@@ -336,7 +336,7 @@ class Controller {
                             // -> try to update character information from ESI
                             // e.g. Corp has changed, this also ensures valid "access_token"
                             /**
-                             * @var $character Pathfinder\CharacterModel
+                             * @var Pathfinder\CharacterModel $character
                              */
                             $updateStatus = $characterAuth->characterId->updateFromESI();
 
@@ -447,7 +447,7 @@ class Controller {
 
         if($this->getF3()->exists(Api\User::SESSION_KEY_USER_ID, $userId)){
             /**
-             * @var $userModel Pathfinder\UserModel
+             * @var Pathfinder\UserModel $userModel
              */
             $userModel = Pathfinder\AbstractPathfinderModel::getNew('UserModel');
             $userModel->getById($userId, $ttl);
@@ -503,7 +503,7 @@ class Controller {
         if($sessionCharacterData){
             $activeCharacterId = ($activeCharacter = $this->getCharacter()) ? $activeCharacter->_id : 0;
             /**
-             * @var $character Pathfinder\CharacterModel
+             * @var Pathfinder\CharacterModel $character
              */
             $character = Pathfinder\AbstractPathfinderModel::getNew('CharacterModel');
             $characterIds = [];
@@ -554,7 +554,7 @@ class Controller {
             $return->error = [];
 
             /**
-             * @var $client CcpClient
+             * @var CcpClient $client
              */
             if($client = $f3->ccpClient()){
                 $return->server = [

@@ -124,7 +124,7 @@ class GroupModel extends AbstractUniverseModel {
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         if(!empty($data = self::getUniverseGroupData($id))){
             /**
-             * @var $category CategoryModel
+             * @var CategoryModel $category
              */
             $category = $this->rel('categoryId');
             $category->loadById($data['categoryId'], $accessToken, $additionalOptions);
@@ -158,7 +158,7 @@ class GroupModel extends AbstractUniverseModel {
             $info['countChunk'] = count($data['types']);
             foreach($data['types'] as $typeId){
                 /**
-                 * @var $type TypeModel
+                 * @var TypeModel $type
                  */
                 $type = $this->rel('types');
                 $type->storeDogmaAttributes = $this->storeDogmaAttributes;

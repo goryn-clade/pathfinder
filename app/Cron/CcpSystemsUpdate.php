@@ -113,7 +113,7 @@ class CcpSystemsUpdate extends AbstractCron {
 
         // switch DB for data import..
         /**
-         * @var $pfDB Sql
+         * @var Sql $pfDB
          */
         $pfDB = $f3->DB->getDB('PF');
 

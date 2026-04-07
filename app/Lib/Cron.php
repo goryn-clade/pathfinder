@@ -128,7 +128,7 @@ class Cron extends \Cron {
         $job = null;
         try{
             /**
-             * @var $job Pathfinder\CronModel
+             * @var Pathfinder\CronModel $job
              */
             $jobModel = Pathfinder\AbstractPathfinderModel::getNew('CronModel');
             // we need to check if table exists here

@@ -101,7 +101,7 @@ class StargateModel extends AbstractUniverseModel {
             if($this->get('systemId', true) !== $data['systemId']){
                 // new stargate or system changed
                 /**
-                 * @var $system SystemModel
+                 * @var SystemModel $system
                  */
                 $system = $this->rel('systemId');
                 $system->loadById($data['systemId'], $accessToken, $additionalOptions);
@@ -110,7 +110,7 @@ class StargateModel extends AbstractUniverseModel {
 
             if($this->get('typeId', true) !== $data['typeId']){
                 /**
-                 * @var $type TypeModel
+                 * @var TypeModel $type
                  */
                 $type = $this->rel('typeId');
                 $type->loadById($data['typeId'], $accessToken, $additionalOptions);
@@ -120,7 +120,7 @@ class StargateModel extends AbstractUniverseModel {
             if($this->get('destinationSystemId', true) !== $data['destination']->system_id){
                 // new stargate or destinationSystem changed
                 /**
-                 * @var $destinationSystem SystemModel
+                 * @var SystemModel $destinationSystem
                  */
                 $destinationSystem = $this->rel('destinationSystemId');
                 // no loadById() here! we don´t want to insert/update systems that do not exist yet

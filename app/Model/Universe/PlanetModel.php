@@ -90,14 +90,14 @@ class PlanetModel extends AbstractUniverseModel {
         $data = self::getF3()->ccpClient()->send('getUniversePlanet', $id);
         if(!empty($data)){
             /**
-             * @var $system SystemModel
+             * @var SystemModel $system
              */
             $system = $this->rel('systemId');
             $system->loadById($data['systemId'], $accessToken, $additionalOptions);
             $data['systemId'] = $system;
 
             /**
-             * @var $type TypeModel
+             * @var TypeModel $type
              */
             $type = $this->rel('typeId');
             $type->loadById($data['typeId'], $accessToken, $additionalOptions);

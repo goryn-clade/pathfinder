@@ -252,7 +252,7 @@ class SystemModel extends AbstractUniverseModel {
                 if($validSovData){
                     // at least one of these Ids must exist for a sovereignty relation
                     /**
-                     * @var $sovereignty SovereigntyMapModel
+                     * @var SovereigntyMapModel $sovereignty
                      */
                     if(!$sovereignty = $this->sovereignty){
                         // insert new sovereignty data
@@ -267,7 +267,7 @@ class SystemModel extends AbstractUniverseModel {
                         $sovData['corporationId'] = null;
 
                         /**
-                         * @var $faction FactionModel
+                         * @var FactionModel $faction
                          */
                         $faction = $sovereignty->rel('factionId');
                         $faction->loadById($factionId);
@@ -277,7 +277,7 @@ class SystemModel extends AbstractUniverseModel {
                         $sovData['factionId'] = null;
 
                         /**
-                         * @var $alliance AllianceModel|null
+                         * @var AllianceModel|null $alliance
                          */
                         $alliance = null;
                         if($allianceId){
@@ -286,7 +286,7 @@ class SystemModel extends AbstractUniverseModel {
                         }
 
                         /**
-                         * @var $corporation CorporationModel|null
+                         * @var CorporationModel|null $corporation
                          */
                         $corporation = null;
                         if($corporationId){
@@ -331,7 +331,7 @@ class SystemModel extends AbstractUniverseModel {
         if($this->valid()){
             if($systemId === $this->_id){
                 /**
-                 * @var $factionWar FactionWarSystemModel
+                 * @var FactionWarSystemModel $factionWar
                  */
                 if(!$factionWar = $this->factionWar){
                     // insert new faction war data
@@ -342,7 +342,7 @@ class SystemModel extends AbstractUniverseModel {
 
                 if($ownerFactionId){
                     /**
-                     * @var $ownerFaction FactionModel
+                     * @var FactionModel $ownerFaction
                      */
                     $ownerFaction = $factionWar->rel('ownerFactionId');
                     $ownerFaction->loadById($ownerFactionId);
@@ -351,7 +351,7 @@ class SystemModel extends AbstractUniverseModel {
 
                 if($occupierFactionId){
                     /**
-                     * @var $occupierFaction FactionModel
+                     * @var FactionModel $occupierFaction
                      */
                     $occupierFaction = $factionWar->rel('occupierFactionId');
                     $occupierFaction->loadById($occupierFactionId);
@@ -393,7 +393,7 @@ class SystemModel extends AbstractUniverseModel {
 
         if($this->planets){
             /**
-             * @var $planet PlanetModel
+             * @var PlanetModel $planet
              */
             foreach($this->planets as &$planet){
                 $planetsData[] = $planet->getData();
@@ -411,7 +411,7 @@ class SystemModel extends AbstractUniverseModel {
 
         if($this->statics){
             /**
-             * @var $static SystemStaticModel
+             * @var SystemStaticModel $static
              */
             foreach($this->statics as &$static){
                 $staticsData[] = $static->getData();
@@ -429,7 +429,7 @@ class SystemModel extends AbstractUniverseModel {
 
         if($this->stargates){
             /**
-             * @var $stargate StargateModel
+             * @var StargateModel $stargate
              */
             foreach($this->stargates as &$stargate){
                 $stargatesData[] = $stargate->getData();
@@ -447,7 +447,7 @@ class SystemModel extends AbstractUniverseModel {
 
         if($this->stations){
             /**
-             * @var $station StationModel
+             * @var StationModel $station
              */
             foreach($this->stations as &$station){
                 $data = $station->getData();
@@ -495,7 +495,7 @@ class SystemModel extends AbstractUniverseModel {
 
         if(!empty($data)){
             /**
-             * @var $constellation ConstellationModel
+             * @var ConstellationModel $constellation
              */
             $constellation = $this->rel('constellationId');
             $constellation->loadById($data['constellationId'], $accessToken, $additionalOptions);
@@ -504,7 +504,7 @@ class SystemModel extends AbstractUniverseModel {
             // starId is optional since ESI v4 (e.g. Abyssal systems)
             if($data['starId']){
                 /**
-                 * @var $star StarModel
+                 * @var StarModel $star
                  */
                 $star = $this->rel('starId');
                 $star->loadById($data['starId'], $accessToken, $additionalOptions);
@@ -526,7 +526,7 @@ class SystemModel extends AbstractUniverseModel {
                 // planets are optional since ESI v4 (e.g. Abyssal systems)
                 foreach((array)$data['planets'] as $planetData){
                     /**
-                     * @var $planet PlanetModel
+                     * @var PlanetModel $planet
                      */
                     $planet = $this->rel('planets');
                     $planet->loadById($planetData->planet_id);
@@ -546,7 +546,7 @@ class SystemModel extends AbstractUniverseModel {
             if($data['stargates']){
                 foreach((array)$data['stargates'] as $stargateId){
                     /**
-                     * @var $stargate StargateModel
+                     * @var StargateModel $stargate
                      */
                     $stargate = $this->rel('stargates');
                     $stargate->loadById($stargateId);
@@ -565,7 +565,7 @@ class SystemModel extends AbstractUniverseModel {
             if($data['stations']){
                 foreach((array)$data['stations'] as $stationId){
                     /**
-                     * @var $station SystemModel
+                     * @var SystemModel $station
                      */
                     $station = $this->rel('stations');
                     $station->loadById($stationId);

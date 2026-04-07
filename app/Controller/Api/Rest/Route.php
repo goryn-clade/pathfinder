@@ -758,7 +758,7 @@ class Route extends AbstractRestController {
             $validMaps = [];
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
 

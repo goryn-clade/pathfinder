@@ -58,7 +58,7 @@ class System extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
@@ -85,7 +85,7 @@ class System extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
@@ -112,7 +112,7 @@ class System extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
@@ -181,7 +181,7 @@ class System extends AbstractRestController {
 
         // get data from "fresh" model (e.g. some relational data has changed: "statusId")
         /**
-         * @var $newSystem Pathfinder\SystemModel
+         * @var Pathfinder\SystemModel $newSystem
          */
         $newSystem = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
         $newSystem->getById($system->_id, 0);

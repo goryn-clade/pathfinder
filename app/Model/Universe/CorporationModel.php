@@ -112,7 +112,7 @@ class CorporationModel extends AbstractUniverseModel {
 
             if($data['factionId']){
                 /**
-                 * @var $faction FactionModel
+                 * @var FactionModel $faction
                  */
                 $faction = $this->rel('factionId');
                 $faction->loadById($data['factionId'], $accessToken, $additionalOptions);
@@ -121,7 +121,7 @@ class CorporationModel extends AbstractUniverseModel {
 
             if($data['allianceId']){
                 /**
-                 * @var $alliance AllianceModel
+                 * @var AllianceModel $alliance
                  */
                 $alliance = $this->rel('allianceId');
                 $alliance->loadById($data['allianceId'], $accessToken, $additionalOptions);

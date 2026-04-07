@@ -41,7 +41,7 @@ class LogController extends \Prefab  {
             $f3 = \Base::instance();
             if(!$f3->exists(self::CACHE_KEY_ACTIVITY_COLUMNS, $this->activityLogColumns)){
                 /**
-                 * @var $activityLogModel Pathfinder\ActivityLogModel
+                 * @var Pathfinder\ActivityLogModel $activityLogModel
                  */
                 $activityLogModel = Pathfinder\AbstractPathfinderModel::getNew('ActivityLogModel');
                 $this->activityLogColumns = $activityLogModel->getCountableColumnNames();

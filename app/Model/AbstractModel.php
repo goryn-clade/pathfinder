@@ -631,7 +631,7 @@ abstract class AbstractModel extends Cortex {
             }
 
             /**
-             * @var $relModel self|bool
+             * @var self|bool $relModel
              */
             $relModel = $this->rel($key)->findone($this->mergeFilter([$relFilter, $this->mergeWithRelFilter($key, $filter)]));
         }
@@ -658,7 +658,7 @@ abstract class AbstractModel extends Cortex {
             }
 
             /**
-             * @var $relModel CortexCollection|bool
+             * @var CortexCollection|bool $relModel
              */
             $relModel = $this->rel($key)->find($this->mergeFilter([$relFilter, $this->mergeWithRelFilter($key, $filter)]));
         }
@@ -1152,7 +1152,7 @@ abstract class AbstractModel extends Cortex {
      * @return AbstractModel|null
      * @throws \Exception
      */
-    public static function getNew(string $className, int $ttl = self::DEFAULT_TTL) : ?self {
+    public static function getNew(string $className, int $ttl = self::DEFAULT_TTL) : self {
         $model = null;
         $className = self::refClass(static::class)->getNamespaceName() . '\\' . $className;
         if(class_exists($className)){

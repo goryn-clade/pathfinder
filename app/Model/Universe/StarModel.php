@@ -89,7 +89,7 @@ class StarModel extends AbstractUniverseModel {
         $data = self::getF3()->ccpClient()->send('getUniverseStar', $id);
         if(!empty($data)){
             /**
-             * @var $type TypeModel
+             * @var TypeModel $type
              */
             $type = $this->rel('typeId');
             $type->loadById($data['typeId'], $accessToken, $additionalOptions);

@@ -267,7 +267,7 @@ class Setup extends Controller\Controller {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
 
         /**
-         * @var $systemStaticModel Model\Universe\SystemStaticModel
+         * @var Model\Universe\SystemStaticModel $systemStaticModel
          */
         $systemStaticModel = Model\Universe\AbstractUniverseModel::getNew('SystemStaticModel');
         if(!empty($csvData = $systemStaticModel::getCSVData($systemStaticModel->getTable()))){

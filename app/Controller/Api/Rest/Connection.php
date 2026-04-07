@@ -29,7 +29,7 @@ class Connection extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
@@ -72,7 +72,7 @@ class Connection extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
@@ -85,7 +85,7 @@ class Connection extends AbstractRestController {
                     !is_null($target)
                 ){
                     /**
-                     * @var $connection Pathfinder\ConnectionModel
+                     * @var Pathfinder\ConnectionModel $connection
                      */
                     $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
                     $connection->getById((int)$requestData['id']);
@@ -131,7 +131,7 @@ class Connection extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);

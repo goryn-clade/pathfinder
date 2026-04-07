@@ -93,7 +93,7 @@ class StructureModel extends AbstractUniverseModel {
         $data = self::getF3()->ccpClient()->send('getUniverseStructure', $id, $accessToken);
         if(!empty($data) && !isset($data['error'])){
             /**
-             * @var $type TypeModel
+             * @var TypeModel $type
              */
             $type = $this->rel('typeId');
             $type->loadById($data['typeId'], $accessToken, $additionalOptions);

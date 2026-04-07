@@ -55,7 +55,7 @@ class Structure extends AbstractRestController {
         if($structureId = (int)$params['id']){
             $activeCharacter = $this->getCharacter();
             /**
-             * @var $structure Pathfinder\StructureModel
+             * @var Pathfinder\StructureModel $structure
              */
             $structure = Pathfinder\AbstractPathfinderModel::getNew('StructureModel');
             $structure->getById($structureId);
@@ -78,7 +78,7 @@ class Structure extends AbstractRestController {
         if($activeCharacter->hasCorporation()){
             // structures always belong to a corporation
             /**
-             * @var $structure Pathfinder\StructureModel
+             * @var Pathfinder\StructureModel $structure
              */
             $structure = Pathfinder\AbstractPathfinderModel::getNew('StructureModel');
             foreach($structuresData as $structureData){

@@ -478,7 +478,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      */
     public function getNewLog() : ConnectionLogModel {
         /**
-         * @var $log ConnectionLogModel
+         * @var ConnectionLogModel $log
          */
         $log = self::getNew('ConnectionLogModel');
         $log->connectionId = $this;

@@ -243,7 +243,7 @@ class TypeModel extends AbstractUniverseModel {
         if($this->attributes){
             foreach($this->attributes as $typeAttribute){
                 /**
-                 * @var $typeAttribute TypeAttributeModel
+                 * @var TypeAttributeModel $typeAttribute
                  */
                 $attributesData[] = get_object_vars($typeAttribute->getData());
             }
@@ -301,8 +301,8 @@ class TypeModel extends AbstractUniverseModel {
             // add new dogmaTypes
             foreach($dogmaAttributesData as $dogmaAttributeData){
                 /**
-                 * @var $typeAttribute TypeAttributeModel
-                 * @var $dogmaAttribute DogmaAttributeModel
+                 * @var TypeAttributeModel $typeAttribute
+                 * @var DogmaAttributeModel $dogmaAttribute
                  */
                 $typeAttribute = $this->rel('attributes');
                 $dogmaAttribute = $typeAttribute->rel('attributeId');
@@ -358,7 +358,7 @@ class TypeModel extends AbstractUniverseModel {
             $this->manipulateDogmaAttributes($data);
 
             /**
-             * @var $group GroupModel
+             * @var GroupModel $group
              */
             $group = $this->rel('groupId');
             $group->loadById($data['groupId'], $accessToken, $additionalOptions);

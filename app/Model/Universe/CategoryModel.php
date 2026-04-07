@@ -84,7 +84,7 @@ class CategoryModel extends AbstractUniverseModel {
         $groups = $this->getGroups();
 
         /**
-         * @var $group GroupModel
+         * @var GroupModel $group
          */
         foreach($groups as $group){
             $groupsData[] = $group->getData($additionalData);
@@ -111,7 +111,7 @@ class CategoryModel extends AbstractUniverseModel {
         $count = 0;
         if($this->valid()){
             /**
-             * @var $group GroupModel
+             * @var GroupModel $group
              */
             foreach($groups = $this->getGroups($published) as $group){
                 $count += $group->getTypesCount($published);
@@ -156,7 +156,7 @@ class CategoryModel extends AbstractUniverseModel {
             $info['countChunk'] = count($data['groups']);
             foreach($data['groups'] as $groupId){
                 /**
-                 * @var $group GroupModel
+                 * @var GroupModel $group
                  */
                 $group = $this->rel('groups');
                 $group->loadById($groupId);

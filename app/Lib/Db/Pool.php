@@ -213,7 +213,7 @@ class Pool extends \Prefab {
         // prevent adding same errors twice
         if(!empty($this->errors[$alias])){
             /**
-             * @var $lastError \Exception
+             * @var \Exception $lastError
              */
             $lastError = array_values($this->errors[$alias])[0];
             if($lastError->getMessage() === $e->getMessage()){

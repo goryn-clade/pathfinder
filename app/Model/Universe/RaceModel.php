@@ -69,7 +69,7 @@ class RaceModel extends AbstractUniverseModel {
         $data = self::getF3()->ccpClient()->send('getUniverseRace', $id);
         if(!empty($data) && !isset($data['error'])){
             /**
-             * @var $faction FactionModel
+             * @var FactionModel $faction
              */
             $faction = $this->rel('factionId');
             $faction->loadById($data['factionId'], $accessToken, $additionalOptions);

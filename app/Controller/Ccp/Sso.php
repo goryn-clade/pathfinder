@@ -78,7 +78,7 @@ class Sso extends Api\User{
             $characterId = (int)trim((string)$params['characterId']);
 
             /**
-             * @var $character Pathfinder\CharacterModel
+             * @var Pathfinder\CharacterModel $character
              */
             $character = Pathfinder\AbstractPathfinderModel::getNew('CharacterModel');
             $character->getById($characterId, 0);
@@ -227,7 +227,7 @@ class Sso extends Api\User{
                                         if(is_null($user = $characterModel->getUser())){
                                             // no user found (new character) -> create new user and connect to character
                                             /**
-                                             * @var $user Pathfinder\UserModel
+                                             * @var Pathfinder\UserModel $user
                                              */
                                             $user = Pathfinder\AbstractPathfinderModel::getNew('UserModel');
                                             $user->name = $characterModel->name;
@@ -236,7 +236,7 @@ class Sso extends Api\User{
                                     }
 
                                     /**
-                                     * @var $userCharactersModel Pathfinder\UserCharacterModel
+                                     * @var Pathfinder\UserCharacterModel $userCharactersModel
                                      */
                                     if( is_null($userCharactersModel = $characterModel->userCharacter) ){
                                         $userCharactersModel = $characterModel->rel('userCharacter');
@@ -505,7 +505,7 @@ class Sso extends Api\User{
                 $characterData->corporation = null;
                 $characterData->alliance = null;
                 /**
-                 * TODO: Move to -> @var $corporation Pathfinder\CorporationModel
+                 * TODO: Move to -> @var Pathfinder\CorporationModel $corporation
                  * REF: https://github.com/goryn-clade/pathfinder/pull/157/files
                  */
                 $characterAffiliation = $this->getF3()->ccpClient()->send('getCharacterAffiliation', [$characterId]);
@@ -515,7 +515,7 @@ class Sso extends Api\User{
 
                     if($corporationId = (int)$characterCorporationId){
                         /**
-                         * @var $corporation Pathfinder\CorporationModel
+                         * @var Pathfinder\CorporationModel $corporation
                          */
                         $corporation = Pathfinder\AbstractPathfinderModel::getNew('CorporationModel');
                         $corporation->getById($corporationId, 0);
@@ -526,7 +526,7 @@ class Sso extends Api\User{
 
                     if($allianceId = (int)$characterAllianceId){
                         /**
-                         * @var $alliance Pathfinder\AllianceModel
+                         * @var Pathfinder\AllianceModel $alliance
                          */
                         $alliance = Pathfinder\AbstractPathfinderModel::getNew('AllianceModel');
                         $alliance->getById($allianceId, 0);
@@ -552,7 +552,7 @@ class Sso extends Api\User{
 
         if(!empty($characterData->character)){
             /**
-             * @var $character Pathfinder\CharacterModel
+             * @var Pathfinder\CharacterModel $character
              */
             $character = Pathfinder\AbstractPathfinderModel::getNew('CharacterModel');
             $character->getById((int)$characterData->character['id'], 0);

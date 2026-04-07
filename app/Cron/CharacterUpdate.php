@@ -45,7 +45,7 @@ class CharacterUpdate extends AbstractCron {
         $logInactiveTime = $this->getCharacterLogInactiveTime($f3);
 
         /**
-         * @var $characterLogModel Pathfinder\CharacterLogModel
+         * @var Pathfinder\CharacterLogModel $characterLogModel
          */
         $characterLogModel = Pathfinder\AbstractPathfinderModel::getNew('CharacterLogModel');
 
@@ -65,7 +65,7 @@ class CharacterUpdate extends AbstractCron {
             $total = count($characterLogs);
             foreach($characterLogs as $characterLog){
                 /**
-                 * @var $characterLog Pathfinder\CharacterLogModel
+                 * @var Pathfinder\CharacterLogModel $characterLog
                  */
                 if(is_object($characterLog->characterId)){
                     if($accessToken = $characterLog->characterId->getAccessToken()){
@@ -104,7 +104,7 @@ class CharacterUpdate extends AbstractCron {
         $this->logStart(__FUNCTION__, false);
 
         /**
-         * @var $characterModel Pathfinder\CharacterModel
+         * @var Pathfinder\CharacterModel $characterModel
          */
         $characterModel = Pathfinder\AbstractPathfinderModel::getNew('CharacterModel');
 
@@ -116,7 +116,7 @@ class CharacterUpdate extends AbstractCron {
         if(is_object($characters)){
             foreach($characters as $character){
                 /**
-                 * @var $character Pathfinder\CharacterModel
+                 * @var Pathfinder\CharacterModel $character
                  */
                 $character->kick();
                 $character->save();
@@ -137,7 +137,7 @@ class CharacterUpdate extends AbstractCron {
         $this->logStart(__FUNCTION__, false);
 
         /**
-         * @var $authenticationModel Pathfinder\CharacterAuthenticationModel
+         * @var Pathfinder\CharacterAuthenticationModel $authenticationModel
          */
         $authenticationModel = Pathfinder\AbstractPathfinderModel::getNew('CharacterAuthenticationModel');
 

@@ -139,7 +139,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
             $systemId = (int) $this->get('systemId', true);
 
             /**
-             * @var $connection ConnectionModel
+             * @var ConnectionModel $connection
              */
             $connection = $this->rel('connectionId');
             $connection->getById($connectionId);

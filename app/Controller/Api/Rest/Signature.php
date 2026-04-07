@@ -26,7 +26,7 @@ class Signature extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId, 0);
@@ -121,7 +121,7 @@ class Signature extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
@@ -152,7 +152,7 @@ class Signature extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $signature Pathfinder\SystemSignatureModel
+             * @var Pathfinder\SystemSignatureModel $signature
              */
             $signature = Pathfinder\AbstractPathfinderModel::getNew('SystemSignatureModel');
             $signature->getById($signatureId);
@@ -192,7 +192,7 @@ class Signature extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
@@ -206,7 +206,7 @@ class Signature extends AbstractRestController {
                 $updateSignaturesHistory = false;
 
                 /**
-                 * @var $signature Pathfinder\SystemSignatureModel
+                 * @var Pathfinder\SystemSignatureModel $signature
                  */
                 $signature = $system->rel('signatures');
                 foreach($signatureIds as $signatureId){

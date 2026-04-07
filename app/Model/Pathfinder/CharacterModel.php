@@ -918,7 +918,7 @@ class CharacterModel extends AbstractPathfinderModel {
                             // get "more" data for stationId
                             if($lookupStationId > 0){
                                 /**
-                                 * @var $stationModel Universe\StationModel
+                                 * @var Universe\StationModel $stationModel
                                  */
                                 $stationModel = Universe\AbstractUniverseModel::getNew('StationModel');
                                 $stationModel->loadById($lookupStationId, $accessToken, $additionalOptions);
@@ -950,7 +950,7 @@ class CharacterModel extends AbstractPathfinderModel {
                             // get "more" data for structureId
                             if($lookupStructureId > 0){
                                 /**
-                                 * @var $structureModel Universe\StructureModel
+                                 * @var Universe\StructureModel $structureModel
                                  */
                                 $structureModel = Universe\AbstractUniverseModel::getNew('StructureModel');
                                 $structureModel->loadById($lookupStructureId, $accessToken, $additionalOptions);
@@ -989,7 +989,7 @@ class CharacterModel extends AbstractPathfinderModel {
                             // get "more" data for shipTypeId
                             if($lookupShipTypeId > 0){
                                 /**
-                                 * @var $typeModel Universe\TypeModel
+                                 * @var Universe\TypeModel $typeModel
                                  */
                                 $typeModel = Universe\AbstractUniverseModel::getNew('TypeModel');
                                 $typeModel->loadById($lookupShipTypeId, '', $additionalOptions);
@@ -1263,7 +1263,7 @@ class CharacterModel extends AbstractPathfinderModel {
                 is_array($historyEntry['mapIds'])
             ){
                 /**
-                 * @var $characterLog CharacterLogModel
+                 * @var CharacterLogModel $characterLog
                  */
                 $characterLog = $this->rel('characterLog');
                 $characterLog->setData($historyEntry['log']);
@@ -1286,7 +1286,7 @@ class CharacterModel extends AbstractPathfinderModel {
      */
     public function getMap(int $mapId) : ?MapModel {
         /**
-         * @var $map MapModel
+         * @var MapModel $map
          */
         $map = self::getNew('MapModel');
         $map->getById($mapId);
@@ -1390,7 +1390,7 @@ class CharacterModel extends AbstractPathfinderModel {
         if(is_object($this->characterAuthentications)){
             foreach($this->characterAuthentications as $characterAuthentication){
                 /**
-                 * @var $characterAuthentication CharacterAuthenticationModel
+                 * @var CharacterAuthenticationModel $characterAuthentication
                  */
                 $characterAuthentication->erase();
             }

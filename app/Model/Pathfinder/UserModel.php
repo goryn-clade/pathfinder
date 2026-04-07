@@ -70,7 +70,7 @@ class UserModel extends AbstractPathfinderModel {
         $characters = $this->getCharacters();
         foreach($characters as $character){
             /**
-             * @var $character CharacterModel
+             * @var CharacterModel $character
              */
             $userData->characters[] = $character->getData();
         }
@@ -231,7 +231,7 @@ class UserModel extends AbstractPathfinderModel {
             // check if character still exists on DB (e.g. was manually removed in the meantime)
             // -> This should NEVER happen just for security and "local development"
             /**
-             * @var $character CharacterModel
+             * @var CharacterModel $character
              */
             $character = AbstractPathfinderModel::getNew('CharacterModel');
             $character->getById($characterId, $ttl);
@@ -317,7 +317,7 @@ class UserModel extends AbstractPathfinderModel {
 
         foreach($userCharacters as $userCharacter){
             /**
-             * @var $userCharacter UserCharacterModel
+             * @var UserCharacterModel $userCharacter
              */
             if( $currentCharacter = $userCharacter->getCharacter() ){
                 // check if userCharacter has a valid character
@@ -339,7 +339,7 @@ class UserModel extends AbstractPathfinderModel {
 
         foreach($this->getUserCharacters() as $userCharacter){
             /**
-             * @var $userCharacter UserCharacterModel
+             * @var UserCharacterModel $userCharacter
              */
             $characterModel = $userCharacter->getCharacter();
             if($characterLog = $characterModel->getLog()){

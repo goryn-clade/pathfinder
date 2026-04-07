@@ -26,7 +26,7 @@ class Log extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $connection Pathfinder\ConnectionModel
+             * @var Pathfinder\ConnectionModel $connection
              */
             $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
             $connection->getById($connectionId);
@@ -93,7 +93,7 @@ class Log extends AbstractRestController {
         if($logId){
             $activeCharacter = $this->getCharacter();
             /**
-             * @var $log Pathfinder\ConnectionLogModel
+             * @var Pathfinder\ConnectionLogModel $log
              */
             $log = Pathfinder\AbstractPathfinderModel::getNew('ConnectionLogModel');
             $log->getById($logId, 0, false);

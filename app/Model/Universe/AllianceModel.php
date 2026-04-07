@@ -89,7 +89,7 @@ class AllianceModel extends AbstractUniverseModel {
         if(!empty($data) && !isset($data['error'])){
             if($data['factionId']){
                 /**
-                 * @var $faction FactionModel
+                 * @var FactionModel $faction
                  */
                 $faction = $this->rel('factionId');
                 $faction->loadById($data['factionId'], $accessToken, $additionalOptions);

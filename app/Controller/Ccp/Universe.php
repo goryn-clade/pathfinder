@@ -86,7 +86,7 @@ class Universe extends Controller\Controller {
 
         if($categoryId){
             /**
-             * @var $category Model\Universe\CategoryModel
+             * @var Model\Universe\CategoryModel $category
              */
             $category = Model\Universe\AbstractUniverseModel::getNew('CategoryModel');
             $category->loadById($categoryId);
@@ -130,7 +130,7 @@ class Universe extends Controller\Controller {
 
         if($groupId){
             /**
-             * @var $group Model\Universe\GroupModel
+             * @var Model\Universe\GroupModel $group
              */
             $group = Model\Universe\AbstractUniverseModel::getNew('GroupModel');
             $group->storeDogmaAttributes = $storeDogmaAttributes;
@@ -156,7 +156,7 @@ class Universe extends Controller\Controller {
         $systemIds = array_slice($systemIds, $offset, $length);
 
         /**
-         * @var $system Model\Universe\SystemModel
+         * @var Model\Universe\SystemModel $system
          */
         $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
         $indexData = [];
@@ -190,7 +190,7 @@ class Universe extends Controller\Controller {
         $systemIds = [];
         if($ignoreCache || !$f3->exists(self::SESSION_KEY_SYSTEM_IDS, $systemIds)){
             /**
-             * @var $system Model\Universe\SystemModel
+             * @var Model\Universe\SystemModel $system
              */
             $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
             if($systems = $system->find()){
@@ -251,7 +251,7 @@ class Universe extends Controller\Controller {
             if(!$data = $this->get($cacheKeyRow)){
                 // .. try to build index
                 /**
-                 * @var $system Model\Universe\SystemModel
+                 * @var Model\Universe\SystemModel $system
                  */
                 $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
                 if($system->getById($systemId)){

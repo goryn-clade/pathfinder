@@ -253,7 +253,7 @@ class StructureModel extends AbstractPathfinderModel {
      */
     protected function getUniverseTypeData(int $structureId) : \stdClass {
         /**
-         * @var $type Universe\TypeModel
+         * @var Universe\TypeModel $type
          */
         $type = Universe\AbstractUniverseModel::getNew('TypeModel');
         $type->getById($structureId);
