@@ -410,7 +410,7 @@
                 <set dbConnectionStatus="OK" />
                 <set dbStatusCheck="OK" />
 
-                <check if="{{ @dbInformation.info.dbCreate }}">
+                <check if="{{ @dbInformation.info.dbCreate ?? null }}">
                     <true>
                         <set dbConnectionStatus="Database not found" />
                         {{ @tplCounter('increment', 'database_danger') }}
@@ -504,14 +504,14 @@
                                     </td>
                                 </tr>
                                 {* Connection/PDOExceptions *}
-                                <repeat group="{{ @dbInformation.info.errors }}" value="{{ @connectionError }}">
+                                <repeat group="{{ @dbInformation.info.errors ?? [] }}" value="{{ @connectionError }}">
                                     <tr>
                                         <td colspan="3" class="text-center txt-color txt-color-danger">{{ @connectionError }}</td>
                                         <td class="text-right"></td>
                                     </tr>
                                 </repeat>
 
-                                <check if="{{ @dbInformation.info.dbConfig }}">
+                                <check if="{{ @dbInformation.info.dbConfig ?? null }}">
                                     <tr>
                                         <td data-target=".{{ @dbInformation.info.name }}_dbConfig_col" data-toggle="collapse">
                                             <i class="fas fa-fw fa-chevron-right pf-animate-rotate"></i>
@@ -520,7 +520,7 @@
                                         <td class="col-sm-3 col-md-3 text-right">installed</td>
                                         <td class="col-sm-1 col-md-1 text-right"></td>
                                     </tr>
-                                    <repeat group="{{ @dbInformation.info.dbConfig.data }}" value="{{ @setting }}">
+                                    <repeat group="{{ @dbInformation.info.dbConfig.data ?? [] }}" value="{{ @setting }}">
                                         <tr class="{{ @dbInformation.info.name }}_dbConfig_col {{ @dbInformation.info.dbConfig.meta.check ? 'collapse' : '' }}">
                                             <td class="bg-color bg-color-tealDarker">{{ @setting.label }}</td>
                                             <td class="text-right bg-color bg-color-tealDarker">
@@ -574,7 +574,7 @@
                                 </check>
                             </div>
 
-                            <check if="{{ @dbInformation.info.tableData }}">
+                            <check if="{{ @dbInformation.info.tableData ?? null }}">
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -597,7 +597,7 @@
                                     {* Show Tables *}
                                     <repeat group="{{ @dbInformation.info.tableData }}" key="{{ @tableName }}" value="{{ @tableData }}" counter="{{ @countTable }}">
                                         <tr>
-                                            <check if="{{ @tableData.fieldConf }}">
+                                            <check if="{{ @tableData.fieldConf ?? null }}">
                                                 <true>
                                                     <td class="text-center" data-target=".{{ @dbInformation.info.name }}_{{ @tableName }}_col" data-toggle="collapse" aria-expanded="false" aria-controls="{{ @dbInformation.info.name }}_{{ @tableName }}_col">
                                                         <i class="fas fa-fw fa-chevron-right pf-animate-rotate"></i>
@@ -661,7 +661,7 @@
                                         </tr>
 
                                         {* Show Columns *}
-                                        <check if="{{ @tableData.fieldConf }}">
+                                        <check if="{{ @tableData.fieldConf ?? null }}">
                                             <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                 <td class="text-right bg-color bg-color-tealDarkest">
                                                     <i class="fas fa-fw fa-hashtag"></i>
@@ -793,7 +793,7 @@
                                         </check>
 
                                         {* Show Foreign Keys *}
-                                        <check if="{{ @tableData.foreignKeys }}">
+                                        <check if="{{ @tableData.foreignKeys ?? null }}">
                                             <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                 <td class="text-right bg-color bg-color-tealDarkest">
                                                     <i class="fas fa-fw fa-hashtag"></i>
@@ -806,7 +806,7 @@
                                                 <td class="bg-color bg-color-tealDarkest"></td>
                                                 <td class="bg-color bg-color-tealDarkest"></td>
                                             </tr>
-                                            <repeat group="{{ @tableData.foreignKeys }}" value="{{ @keyData }}" counter="{{ @countForeignKey }}">
+                                            <repeat group="{{ @tableData.foreignKeys ?? [] }}" value="{{ @keyData }}" counter="{{ @countForeignKey }}">
                                                 <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                     <td class="text-right bg-color bg-color-tealDarker">{{@countForeignKey}}.</td>
                                                     <td class="bg-color bg-color-tealDarker" colspan="6">
@@ -868,7 +868,7 @@
                                     </thead>
                                     <tbody>
 
-                                    <repeat group="{{ @dbInformation.info.columnQueries }}" value="{{ @columnQuery }}" counter="{{ @countQuery }}">
+                                    <repeat group="{{ @dbInformation.info.columnQueries ?? [] }}" value="{{ @columnQuery }}" counter="{{ @countQuery }}">
                                         <tr>
                                             <td class="text-right col-sm-1 col-md-1">{{ @countQuery }}.</td>
                                             <td>{{ @columnQuery }}</td>
@@ -880,7 +880,7 @@
                         </check>
 
                         <div class="panel-footer btn-group btn-group-justified">
-                            <check if="{{ @dbInformation.info.dbCreate }}">
+                            <check if="{{ @dbInformation.info.dbCreate ?? null }}">
                                 <true>
                                     <a href="?action=createDB&db={{ @dbKey }}#pf-setup-database" class="btn btn-success {{ true ?'':'disabled' }}" title="Try to create new '{{ @dbInformation.info.name }}' database." data-container="body">
                                         <i class="fas fa-fw fa-plus"></i> Create database
@@ -961,7 +961,7 @@
                                                 </check>
                                             </td>
                                         </tr>
-                                        <repeat group="{{ @redisInformation.errors }}"  value="{{ @redisError }}">
+                                        <repeat group="{{ @redisInformation.errors ?? [] }}"  value="{{ @redisError }}">
                                             <tr>
                                                 <td colspan="2">{{ @redisError.label | raw}}: {{ @redisError.error }}</td>
                                                 <td class="text-right"><kbd class="txt-color txt-color-danger">error</kbd></td>
@@ -1071,7 +1071,7 @@
                         <div class="panel-body no-padding text-left">
                             <table class="table">
                                 <thead>
-                                    <repeat group="{{ @socketData.data }}" value="{{ @entry }}">
+                                    <repeat group="{{ @socketData.data ?? [] }}" value="{{ @entry }}">
                                         <tr>
                                             <td>{{ @entry.label }}</td>
                                             <td class="text-right col-md-8">
@@ -1126,7 +1126,7 @@
                                     <tbody>
 
                                     <set logsCheck = 'OK' />
-                                    <repeat group="{{ @socketData.stats.logs }}" value="{{ @logData }}">
+                                    <repeat group="{{ @socketData.stats.logs ?? [] }}" value="{{ @logData }}">
                                         <set logTypeClass = "" />
                                         <check if="{{ in_array('info', @logData.logTypes) }}">
                                             <set logTypeClass = "txt-color-info" />
