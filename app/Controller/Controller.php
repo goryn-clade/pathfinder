@@ -845,9 +845,9 @@ class Controller {
         return function(string $action = 'increment', string $type = 'default', $val = 0) use (&$store){
             $return = null;
             switch($action){
-                case 'increment': $store[$type]++; break;
-                case 'add': $store[$type] += (int)$val; break;
-                case 'get': $return = $store[$type] ? : null; break;
+                case 'increment': $store[$type] = ($store[$type] ?? 0) + 1; break;
+                case 'add': $store[$type] = ($store[$type] ?? 0) + (int)$val; break;
+                case 'get': $return = ($store[$type] ?? null) ?: null; break;
                 case 'reset': unset($store[$type]); break;
             }
             return $return;
