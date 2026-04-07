@@ -83,7 +83,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function setData(array $data){
         $this->copyfrom($data, ['name', 'groupId', 'typeId', 'description', 'connectionId']);
@@ -127,10 +127,10 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
 
     /**
      * setter for connectionId
-     * @param $connectionId
+     * @param ConnectionModel|int $connectionId
      * @return int|null
      */
-    public function set_connectionId($connectionId){
+    public function set_connectionId(ConnectionModel|int $connectionId){
         $connectionId = (int)$connectionId;
         $validConnectionId = null;
 
@@ -202,7 +202,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
     /**
      * compares a new data set (array) with the current values
      * and checks if something has changed
-     * @param array $signatureData
+     * @param array<string, mixed> $signatureData
      * @return bool
      */
     public function hasChanged(array $signatureData) : bool {
@@ -245,9 +245,9 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent(self $self, array $pkeys){
         $self->logActivity('signatureCreate');
     }
 
@@ -256,10 +256,10 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent($self, $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
         // "updated" column should always be updated if no changes made this signature
         // -> makes it easier to see what signatures have not been updated
         $this->touch('updated');
@@ -271,9 +271,9 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent(self $self, array $pkeys){
         $self->logActivity('signatureUpdate');
     }
 
@@ -281,9 +281,9 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent(self $self, array $pkeys){
         $self->logActivity('signatureDelete');
 
         if(
