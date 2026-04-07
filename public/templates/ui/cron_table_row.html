@@ -12,8 +12,8 @@
     <set memPeakPercentage="{{ @memPeakMaxValue ? (100 / @memPeakMaxValue) : 0 }}" />
     <set durationPercentage="{{ @durationMaxValue ? (100 / @durationMaxValue) : 0 }}" />
 
-    <set durationWarning="{{ @jobConf->lastExecDuration > @durationAvgValue * @durationAvgBuffer }}" />
-    <set memPeakWarning="{{ @jobConf->lastExecMemPeak > @memPeakAvgValue * @memPeakAvgBuffer }}" />
+    <set durationWarning="{{ (@jobConf->lastExecDuration ?? 0) > @durationAvgValue * @durationAvgBuffer }}" />
+    <set memPeakWarning="{{ (@jobConf->lastExecMemPeak ?? 0) > @memPeakAvgValue * @memPeakAvgBuffer }}" />
 
     <tr class="{{ isset(@jobConf->status['inProgress']) ? 'pf-cron-row-active' : '' }}">
         <td>
@@ -34,8 +34,8 @@
             </check>
             <kbd>{{ @jobConf->expr }}</kbd>
         </td>
-        <td class="text-center pf-table-cell-progress" data-container="body" style="--width: {{ @jobConf->lastExecState.percent ? : 0 }};">
-            <check if="{{ @jobConf->lastExecStart }}">
+        <td class="text-center pf-table-cell-progress" data-container="body" style="--width: {{ (@jobConf->lastExecState ?? null) ? @jobConf->lastExecState->percent ?? 0 : 0 }};">
+            <check if="{{ @jobConf->lastExecStart ?? null }}">
                 <true>
                     <set lastExecStart="{{ DateTime::createFromFormat('U.u', number_format(@jobConf->lastExecStart, 6, '.', '')) }}" />
                     <kbd title="{{ @lastExecStart->format('Y-m-d H:i:s.u') }}">{{ @lastExecStart->format('H:i:s') }}</kbd>
@@ -46,10 +46,10 @@
             </check>
         </td>
         <td class="text-right">
-            <check if="{{ @jobConf->lastExecDuration }}">
+            <check if="{{ @jobConf->lastExecDuration ?? null }}">
                 <true>
                     <kbd class="txt-color {{ @durationWarning ? 'txt-color-warning' : '' }}" data-level="{{ @durationWarning ? 'warning' : '' }}" title="{{ @durationWarning ? '> avg. + ' . @cronConfig.settings.BUFFER_EXEC_TIME . '%' : '' }}">
-                        <check if="{{ @durationWarning }}"><i class="fas fa-caret-up txt-color txt-color-warning"></i>&nbsp;</check>{{ number_format(@jobConf->lastExecDuration, 3) }}s
+                        <check if="{{ @durationWarning }}"><i class="fas fa-caret-up txt-color txt-color-warning"></i>&nbsp;</check>{{ number_format(@jobConf->lastExecDuration ?? 0, 3) }}s
                     </kbd>
                 </true>
                 <false>
@@ -58,10 +58,10 @@
             </check>
         </td>
         <td class="text-right">
-            <check if="{{ @jobConf->lastExecMemPeak }}">
+            <check if="{{ @jobConf->lastExecMemPeak ?? null }}">
                 <true>
                     <kbd class="txt-color {{ @memPeakWarning ? 'txt-color-warning' : '' }}" data-level="{{ @memPeakWarning ? 'warning' : '' }}" title="{{ @memPeakWarning ? '> avg. + ' . @cronConfig.settings.BUFFER_MEM_PEAK . '%' : '' }}">
-                        <check if="{{ @memPeakWarning }}"><i class="fas fa-caret-up txt-color txt-color-warning"></i>&nbsp;</check>{{ @tplConvertBytes(@jobConf->lastExecMemPeak) }}
+                        <check if="{{ @memPeakWarning }}"><i class="fas fa-caret-up txt-color txt-color-warning"></i>&nbsp;</check>{{ @tplConvertBytes(@jobConf->lastExecMemPeak ?? 0) }}
                     </kbd>
                 </true>
                 <false>
@@ -118,15 +118,15 @@
                 <check if="{{ @jobConf->logFile }}">
                     <i class="fas fa-fw fa-file-alt pf-help-light" title="{{ @jobConf->logFile }}"></i>
                 </check>
-                <check if="{{ @jobConf->lastExecState }}">
-                    <i class="fas fa-fw fa-exclamation-circle pf-help-light pf-json-popover" data-json="{{ htmlspecialchars(json_encode(@jobConf->lastExecState)) }}"></i>
+                <check if="{{ @jobConf->lastExecState ?? null }}">
+                    <i class="fas fa-fw fa-exclamation-circle pf-help-light pf-json-popover" data-json="{{ htmlspecialchars(json_encode(@jobConf->lastExecState ?? null)) }}"></i>
                 </check>
             </div>
         </td>
         <td class="text-right no-padding">
             <div class="btn-group">
                 <label
-                        class="btn btn-primary txt-color txt-color-warning {{ @jobConf->isPaused ? 'active' : '' }} {{ isset(@jobConf->status.dbError) ? 'disabled' : '' }}" data-toggle="button"
+                        class="btn btn-primary txt-color txt-color-warning {{ (@jobConf->isPaused ?? null) ? 'active' : '' }} {{ isset(@jobConf->status.dbError) ? 'disabled' : '' }}" data-toggle="button"
                         data-action="cronPause" data-callback="updateCronjob"
                         data-payload="{{ htmlspecialchars(json_encode(['job' => @jobName, 'count' => 0])) }}"
                         data-loading-text="<i class='fas fa-fw fa-sync fa-spin'></i>"
