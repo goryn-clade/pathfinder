@@ -87,7 +87,7 @@ class Controller {
      * @param $params
      * @return bool
      */
-    function beforeroute(\Base $f3, $params) : bool {
+    function beforeroute(\Base $f3, array<string, mixed> $params) : bool {
         // init user session
         $this->initSession($f3);
 
@@ -216,7 +216,7 @@ class Controller {
      * @param bool $prefix
      * @return array
      */
-    protected function getCookieByName($cookieName, $prefix = false) : array {
+    protected function getCookieByName(string $cookieName, bool $prefix = false) : array {
         $data = [];
 
         if(!empty($cookieName)){
@@ -862,7 +862,7 @@ class Controller {
      * @return null|Controller
      * @throws \Exception
      */
-    static function getController($className){
+    static function getController(string $className){
         $controller = null;
         // add subNamespaces for controller classes
         $subNamespaces = ['Api', 'Ccp'];
@@ -1005,7 +1005,7 @@ class Controller {
      * @param $key
      * @return string
      */
-    static function formatHiveKey($key) : string {
+    static function formatHiveKey(string $key) : string {
         $illegalCharacters = ['-', ' '];
         return strtolower(str_replace($illegalCharacters, '', $key));
     }
