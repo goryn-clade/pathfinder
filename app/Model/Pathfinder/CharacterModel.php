@@ -541,7 +541,7 @@ class CharacterModel extends AbstractPathfinderModel {
                 );
 
                 // check if token is not expired
-                if($expireTime->getTimestamp() > $now->getTimestamp()){
+                if($expireTime && $expireTime->getTimestamp() > $now->getTimestamp()){
                     // token still valid
                     $accessToken = $this->esiAccessToken;
 

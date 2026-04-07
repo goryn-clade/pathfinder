@@ -77,7 +77,9 @@ class UserModel extends AbstractPathfinderModel {
 
         // get active character with log data
         $activeCharacter = $this->getActiveCharacter();
-        $userData->character = $activeCharacter->getData(true, true);
+        if($activeCharacter){
+            $userData->character = $activeCharacter->getData(true, true);
+        }
 
         return $userData;
     }

@@ -237,20 +237,22 @@ class CronModel extends AbstractPathfinderModel {
                 $timezone
             );
 
-            $timeBuffer = 60 * 60;
-            $startTime->add(new \DateInterval('PT' . $timeBuffer . 'S'));
+            if($startTime){
+                $timeBuffer = 60 * 60;
+                $startTime->add(new \DateInterval('PT' . $timeBuffer . 'S'));
 
-            if($this->lastExecEnd){
-                $endTime = \DateTime::createFromFormat(
-                    'U.u',
-                    number_format($this->lastExecEnd, 6, '.', ''),
-                    $timezone
-                );
-            }else{
-                $endTime = new \DateTime('now', $timezone);
+                if($this->lastExecEnd){
+                    $endTime = \DateTime::createFromFormat(
+                        'U.u',
+                        number_format($this->lastExecEnd, 6, '.', ''),
+                        $timezone
+                    );
+                }else{
+                    $endTime = new \DateTime('now', $timezone);
+                }
+
+                $timedOut = $startTime < $endTime;
             }
-
-            $timedOut = $startTime < $endTime;
         }
 
         return $timedOut;

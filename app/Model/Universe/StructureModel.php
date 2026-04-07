@@ -115,10 +115,12 @@ class StructureModel extends AbstractUniverseModel {
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             //change `id` column to BigInt
-            $schema = new Schema($db);
-            $typeQuery = $schema->findQuery($schema->dataTypes[Schema::DT_BIGINT]);
-            $db->exec("ALTER TABLE " . $db->quotekey('structure') .
-                " MODIFY COLUMN " . $db->quotekey('id')  . " " . $typeQuery . " NOT NULL");
+            if($db){
+                $schema = new Schema($db);
+                $typeQuery = $schema->findQuery($schema->dataTypes[Schema::DT_BIGINT]);
+                $db->exec("ALTER TABLE " . $db->quotekey('structure') .
+                    " MODIFY COLUMN " . $db->quotekey('id')  . " " . $typeQuery . " NOT NULL");
+            }
         }
         return $status;
     }
