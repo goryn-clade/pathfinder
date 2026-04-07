@@ -13,11 +13,11 @@ class Util {
 
     /**
      * convert array keys to upper/lowercase -> recursive
-     * @param $arr
+     * @param array $arr
      * @param int $case
      * @return array
      */
-    static function arrayChangeKeyCaseRecursive($arr, $case = CASE_LOWER){
+    static function arrayChangeKeyCaseRecursive(array $arr, int $case = CASE_LOWER){
         if(is_array($arr)){
             $arr = array_map( function($item){
                 if( is_array($item) )
@@ -31,7 +31,7 @@ class Util {
 
     /**
      * flatten multidimensional array ignore keys
-     * @param array $array
+     * @param array<mixed> $array
      * @return array
      */
     static function arrayFlattenByValue(array $array) : array {
@@ -43,7 +43,7 @@ class Util {
     /**
      * flatten multidimensional array merge keys
      * -> overwrites duplicate keys!
-     * @param array $array
+     * @param array<mixed> $array
      * @return array
      */
     static function arrayFlattenByKey(array $array) : array {
@@ -55,7 +55,7 @@ class Util {
     /**
      * transforms array with assoc. arrays as values
      * into assoc. array where $key column data is used for its key
-     * @param array $array
+     * @param array<string, mixed> $array
      * @param string $key
      * @param bool $unsetKey
      * @return array
@@ -89,11 +89,11 @@ class Util {
 
     /**
      * convert array keys by a custom callback
-     * @param $arr
-     * @param $callback
+     * @param array $arr
+     * @param callable $callback
      * @return array
      */
-    static function arrayChangeKeys($arr, $callback){
+    static function arrayChangeKeys(array $arr, callable $callback){
         return array_combine(
             array_map(function ($key) use ($callback){
                return $callback($key);
@@ -141,10 +141,10 @@ class Util {
 
     /**
      * get hash from an array of ESI scopes
-     * @param array $scopes
+     * @param array<string> $scopes
      * @return string
      */
-    static function getHashFromScopes($scopes) : string {
+    static function getHashFromScopes(array $scopes) : string {
         $scopes = (array)$scopes;
         sort($scopes);
         return md5(serialize($scopes));
