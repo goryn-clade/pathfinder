@@ -1141,8 +1141,8 @@
                                                 {{ @logData.mTimeFormat2 }}
                                             </td>
                                             <td class="bg-color bg-color-tealDarker" title="{{ @logData.remoteAddress }}" data-container="body">
-                                                <set cellValue = "{{ parse_url(@logData.remoteAddress, PHP_URL_HOST) . parse_url(@logData.remoteAddress, PHP_URL_PATH) }}" />
-                                                <check if="{{ parse_url(@logData.remoteAddress, PHP_URL_PORT) }}">
+                                                <set cellValue = "{{ @logData.remoteAddress ? parse_url(@logData.remoteAddress, PHP_URL_HOST) . parse_url(@logData.remoteAddress, PHP_URL_PATH) : '' }}" />
+                                                <check if="{{ @logData.remoteAddress && parse_url(@logData.remoteAddress, PHP_URL_PORT) }}">
                                                     <set cellValue = "{{ @cellValue . ':' . parse_url(@logData.remoteAddress, PHP_URL_PORT) }}" />
                                                 </check>
 
