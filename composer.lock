@@ -1011,16 +1011,16 @@
         },
         {
             "name": "goryn-clade/pathfinder_esi",
-            "version": "v3.0.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goryn-clade/pathfinder_esi.git",
-                "reference": "f0551dc6a821e503fcc2b9d7ecfd6ad99a6cbfd3"
+                "reference": "2c4c4cac6b6c80767a1b489dfe9eb7fe326a7bf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/f0551dc6a821e503fcc2b9d7ecfd6ad99a6cbfd3",
-                "reference": "f0551dc6a821e503fcc2b9d7ecfd6ad99a6cbfd3",
+                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/2c4c4cac6b6c80767a1b489dfe9eb7fe326a7bf2",
+                "reference": "2c4c4cac6b6c80767a1b489dfe9eb7fe326a7bf2",
                 "shasum": ""
             },
             "require": {
@@ -1050,9 +1050,9 @@
             "homepage": "https://github.com/goryn-clade/pathfinder_esi",
             "support": {
                 "issues": "https://github.com/goryn-clade/pathfinder_esi/issues",
-                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.3"
+                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.4"
             },
-            "time": "2026-04-07T00:20:30+00:00"
+            "time": "2026-04-07T00:30:00+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
