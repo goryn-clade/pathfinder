@@ -154,7 +154,7 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function setData(array $data){
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
@@ -354,9 +354,9 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * setter for statusId
-     * @param $status
+     * @param array<string, mixed> $status
      */
-    public function set_status($status){
+    public function set_status(array $status){
         if($statusId = (int)$status['id']){
             $this->statusId = $statusId;
         }
@@ -364,10 +364,10 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * setter for position array
-     * @param $position
+     * @param array<string, mixed> $position
      * @return null
      */
-    public function set_position($position){
+    public function set_position(array $position){
         $position = (array)$position;
         if(count($position) === 2){
             $this->posX = $position['x'];
@@ -491,9 +491,9 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent(self $self, array $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemCreate');
     }
@@ -502,10 +502,10 @@ class SystemModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent($self, $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
         $status = parent::beforeUpdateEvent($self, $pkeys);
 
         if($status && !$self->isActive()){
@@ -532,9 +532,9 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent(self $self, array $pkeys){
         $self->clearCacheData();
         $activity = ($self->isActive()) ? 'systemUpdate' : 'systemDelete';
         $self->logActivity($activity);
@@ -543,9 +543,9 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent(self $self, array $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemDelete');
     }
@@ -725,7 +725,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * -> send to a Slack channel
      * -> send to a Discord channel
      * -> send to an Email
-     * @param array $rallyData
+     * @param array<string, mixed> $rallyData
      * @param CharacterModel $characterModel
      * @throws Exception\ConfigException
      * @throws \Exception
