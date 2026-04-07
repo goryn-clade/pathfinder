@@ -486,7 +486,7 @@ abstract class AbstractLog implements LogInterface {
     protected function getHandlerParamsStream() : array {
         $params = [];
         if( !empty($conf = $this->handlerParamsConfig['stream']) ){
-            $params[] = $conf->stream;
+            $params[] = $conf->stream ?? null;
             $params[] = Logger::toMonologLevel($this->getLevel());  // min level that is handled;
             $params[] = true;                                       // bubble
             $params[] = 0666;                                       // permissions (default 644)
@@ -505,10 +505,10 @@ abstract class AbstractLog implements LogInterface {
             // meta data (required by receiver socket)
             $meta = [
                 'logType' => 'mapLog',
-                'stream'=> $conf->streamConf->stream
+                'stream'=> $conf->streamConf->stream ?? null
             ];
 
-            $params[] = $conf->dsn;
+            $params[] = $conf->dsn ?? null;
             $params[] = Logger::toMonologLevel($this->getLevel());
             $params[] = true;
             $params[] = $meta;
@@ -525,11 +525,11 @@ abstract class AbstractLog implements LogInterface {
     protected function getHandlerParamsSlack(string $handlerKey) : array {
         $params = [];
         if( !empty($conf = $this->handlerParamsConfig[$handlerKey]) ){
-            $params[] = $conf->slackWebHookURL;
-            $params[] = $conf->slackChannel;
-            $params[] = $conf->slackUsername;
+            $params[] = $conf->slackWebHookURL ?? null;
+            $params[] = $conf->slackChannel ?? null;
+            $params[] = $conf->slackUsername ?? null;
             $params[] = true;                                       // $useAttachment
-            $params[] = $conf->slackIcon;
+            $params[] = $conf->slackIcon ?? null;
             $params[] = true;                                       // $includeContext
             $params[] = false;                                      // $includeExtra
             $params[] = Logger::toMonologLevel($this->getLevel());  // min level that is handled

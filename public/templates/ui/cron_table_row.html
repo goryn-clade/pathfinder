@@ -115,8 +115,8 @@
         </td>
         <td>
             <div class="pf-container-flex-end">
-                <check if="{{ @jobConf->logFile }}">
-                    <i class="fas fa-fw fa-file-alt pf-help-light" title="{{ @jobConf->logFile }}"></i>
+                <check if="{{ @jobConf->logFile ?? null }}">
+                    <i class="fas fa-fw fa-file-alt pf-help-light" title="{{ @jobConf->logFile ?? null }}"></i>
                 </check>
                 <check if="{{ @jobConf->lastExecState ?? null }}">
                     <i class="fas fa-fw fa-exclamation-circle pf-help-light pf-json-popover" data-json="{{ htmlspecialchars(json_encode(@jobConf->lastExecState ?? null)) }}"></i>
