@@ -109,17 +109,16 @@ class Structure extends AbstractRestController {
                 $corporation->saveStructure($structure);
             }
 
-                // group all updated structures by corporation -> just for return
-                $corporationsStructureData = $structure->getDataByCorporations();
-                foreach($corporationsStructureData as $corporationId => $corporationStructureData){
-                    if(isset($data[$corporationId])){
-                        $data[$corporationId]['structures'] = array_merge(
-                            $data[$corporationId]['structures'],
-                            $corporationStructureData['structures']
-                        );
-                    }else{
-                        $data[$corporationId] = $corporationStructureData;
-                    }
+            // group all updated structures by corporation -> just for return
+            $corporationsStructureData = $structure->getDataByCorporations();
+            foreach($corporationsStructureData as $corporationId => $corporationStructureData){
+                if(isset($data[$corporationId])){
+                    $data[$corporationId]['structures'] = array_merge(
+                        $data[$corporationId]['structures'],
+                        $corporationStructureData['structures']
+                    );
+                }else{
+                    $data[$corporationId] = $corporationStructureData;
                 }
             }
         }
