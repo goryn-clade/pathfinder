@@ -1056,7 +1056,7 @@
 
             <repeat group="{{ @socketInformation }}" key="{{ @socketType }}" value="{{ @socketData }}">
                 <div class="col-xs-12 col-md-6 pf-landing-pricing-panel">
-                    <div id="pf-setup-{{ @socketType }}" data-token="{{ @socketData.token }}" class="panel panel-default pricing-big" style="position: relative">
+                    <div id="pf-setup-{{ @socketType }}" data-token="{{ @socketData.token ?? '' }}" class="panel panel-default pricing-big" style="position: relative">
                         <div class="panel-heading text-left">
                             <h3 class="panel-title"><i class="fas {{ @socketData.icon }}"></i>&nbsp;&nbsp;{{ @socketData.label }}
                                 <check if="{{ @socketData.stats }}">
@@ -1102,8 +1102,8 @@
                         </div>
 
                         <div class="panel-footer text-align-center">
-                            <h3 class="panel-title txt-color {{ @socketData.status.class }}">{{ @socketData.status.label }}</h3>
-                            <check if="{{ @socketData.status.type == 'danger' }}">
+                            <h3 class="panel-title txt-color {{ @socketData.status.class ?? '' }}">{{ @socketData.status.label ?? '' }}</h3>
+                            <check if="{{ (@socketData.status.type ?? null) == 'danger' }}">
                                 {{ @tplCounter('increment', 'socket_danger') }}
                             </check>
                         </div>
@@ -1128,10 +1128,10 @@
                                     <set logsCheck = 'OK' />
                                     <repeat group="{{ @socketData.stats.logs ?? [] }}" value="{{ @logData }}">
                                         <set logTypeClass = "" />
-                                        <check if="{{ in_array('info', @logData.logTypes) }}">
+                                        <check if="{{ in_array('info', @logData.logTypes ?? []) }}">
                                             <set logTypeClass = "txt-color-info" />
                                         </check>
-                                        <check if="{{ in_array('error', @logData.logTypes) }}">
+                                        <check if="{{ in_array('error', @logData.logTypes ?? []) }}">
                                             <set logTypeClass = "txt-color-warning" />
                                             <set logsCheck = 'ERROR' />
                                         </check>
@@ -1165,7 +1165,7 @@
                                                 <kbd>{{ mb_strimwidth(pathinfo(@logData.fileName, PATHINFO_FILENAME), 0, 15, '…') }}</kbd>
                                             </td>
                                             <td class="bg-color bg-color-tealDarker">{{ @logData.message }}</td>
-                                            <td class="text-right bg-color bg-color-tealDarker" title="{{ implode(', ', @logData.logTypes) }}" data-placement="right" data-container="body">
+                                            <td class="text-right bg-color bg-color-tealDarker" title="{{ implode(', ', @logData.logTypes ?? []) }}" data-placement="right" data-container="body">
                                                 <i class="fas fa-fw fa-tag txt-color {{ @logTypeClass }}"></i>
                                             </td>
                                         </tr>
