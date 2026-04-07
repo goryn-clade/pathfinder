@@ -41,7 +41,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $position
      * @return null
      */
-    public function set_position($position){
+    public function set_position(array<string, mixed> $position){
         $position = (array)$position;
         if(count($position) === 3){
             $this->x = $position['x'];
@@ -58,7 +58,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent($self, $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $self->touch('updated');
@@ -148,7 +148,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    public function loadById(int $id, string $accessToken = '', array $additionalOptions = []){
+    public function loadById(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []){
         /**
          * @var self $model
          */
@@ -164,7 +164,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []);
+    abstract protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []);
 
     /**
      * convert CCPs ids for system security into Pathfinder security label
@@ -197,7 +197,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param AbstractUniverseModel $model
      * @param array $rowKeys
      */
-    public static function buildTableIndex(AbstractUniverseModel $model, array $rowKeys = []){
+    public static function buildTableIndex(AbstractUniverseModel $model, array<string> $rowKeys = []){
         $hashKeyTable = static::generateHashKeyTable($model->getTable());
         if( !self::getF3()->exists($hashKeyTable, $cachedData) ){
             $cachedData = [];
@@ -213,7 +213,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $value
      * @return string
      */
-    public static function generateHashKeyRow(string $table, $value) : string {
+    public static function generateHashKeyRow(string $table, string|int $value) : string {
         return static::generateHashKeyTable($table) . '_' .  md5(strtolower((string)$value));
     }
 
