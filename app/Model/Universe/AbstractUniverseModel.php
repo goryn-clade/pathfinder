@@ -58,7 +58,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $self->touch('updated');
