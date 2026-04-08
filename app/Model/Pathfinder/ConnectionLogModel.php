@@ -77,7 +77,7 @@ class ConnectionLogModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array $data){
+    public function setData(array<string, mixed> $data){
         $this->copyfrom($data, ['shipTypeId', 'shipTypeName', 'shipMass', 'characterId', 'characterName']);
     }
 
