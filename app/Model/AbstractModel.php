@@ -471,7 +471,7 @@ abstract class AbstractModel extends Cortex {
      * @param string $dataCacheKeyPrefix - optional key prefix
      * @return mixed|null
      */
-    protected function getCacheData($dataCacheKeyPrefix = ''){
+    protected function getCacheData(string $dataCacheKeyPrefix = '') : mixed {
         $cacheData = null;
         // table cache exists
         // -> check cache for this row data
@@ -539,7 +539,7 @@ abstract class AbstractModel extends Cortex {
      * @param string $msg
      * @throws ValidationException
      */
-    protected function throwValidationException(string $col, string $msg = ''){
+    protected function throwValidationException(string $col, string $msg = '') : void {
         $msg = empty($msg) ? 'Validation failed: "' . $col . '".' : $msg;
         throw new ValidationException($msg, $col);
     }
@@ -548,7 +548,7 @@ abstract class AbstractModel extends Cortex {
      * @param string $msg
      * @throws DatabaseException
      */
-    protected function throwDbException(string $msg){
+    protected function throwDbException(string $msg) : void {
         throw new DatabaseException($msg);
     }
 
@@ -567,7 +567,7 @@ abstract class AbstractModel extends Cortex {
      * -> this will not work (prevent abuse)
      * @param bool $active
      */
-    public function setActive(bool $active){
+    public function setActive(bool $active) : void {
         // enables "active" change for this model
         $this->allowActiveChange = true;
         $this->active = $active;
@@ -618,7 +618,7 @@ abstract class AbstractModel extends Cortex {
      * @param array<string, mixed> $filter
      * @return mixed|null
      */
-    protected function relFindOne(string $key, array $filter){
+    protected function relFindOne(string $key, array<string, mixed> $filter) : mixed {
         $relModel = null;
         $relFilter = [];
         if($this->exists($key, true)){
@@ -952,7 +952,7 @@ abstract class AbstractModel extends Cortex {
      * get formatter callback function for parsed logs
      * @return null
      */
-    protected function getLogFormatter(){
+    protected function getLogFormatter() : mixed {
         return null;
     }
 
@@ -960,7 +960,7 @@ abstract class AbstractModel extends Cortex {
      * add new validation error
      * @param ValidationException $e
      */
-    protected function setValidationError(ValidationException $e){
+    protected function setValidationError(ValidationException $e) : void {
         $this->validationError[] = $e->getError();
     }
 
