@@ -356,7 +356,7 @@ class Route extends AbstractRestController {
      * @param array<string, mixed> $filterData
      * @param array<int> $keepSystems
      */
-    private function filterJumpData(array<string, mixed> $filterData = [], array<int> $keepSystems = []){
+    private function filterJumpData(array<string, mixed> $filterData = [], array<int> $keepSystems = []) : void {
         if($filterData['flag'] == 'secure'){
             // remove all systems (TrueSec < 0.5) from search arrays
             $this->jumpArray = array_filter($this->jumpArray, function($systemId) use ($keepSystems) {

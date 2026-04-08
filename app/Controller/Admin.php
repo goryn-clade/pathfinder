@@ -284,7 +284,7 @@ class Admin extends Controller{
      * @param int $characterId
      * @return array|\DB\CortexCollection
      */
-    protected function filterValidCharacters(CharacterModel $character, $characterId){
+    protected function filterValidCharacters(CharacterModel $character, int $characterId) : array {
         $characters = [];
         // check if kickCharacters belong to same Corp as admin character
         // -> remove admin char from valid characters...
@@ -307,7 +307,7 @@ class Admin extends Controller{
      * @param int $mapId
      * @param int $value
      */
-    protected function activateMap(CharacterModel $character, int $mapId, int $value){
+    protected function activateMap(CharacterModel $character, int $mapId, int $value) : void {
         $maps = $this->filterValidMaps($character, $mapId);
         foreach($maps as $map){
             $map->setActive((bool)$value);
@@ -319,7 +319,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      * @param int $mapId
      */
-    protected function deleteMap(CharacterModel $character, int $mapId){
+    protected function deleteMap(CharacterModel $character, int $mapId) : void {
         $maps = $this->filterValidMaps($character, $mapId);
         foreach($maps as $map){
             $map->erase();
@@ -332,7 +332,7 @@ class Admin extends Controller{
      * @param int $mapId
      * @return \DB\CortexCollection[]|MapModel[]
      */
-    protected function filterValidMaps(CharacterModel $character, int $mapId) {
+    protected function filterValidMaps(CharacterModel $character, int $mapId) : array {
         $maps = [];
         if($character->roleId->name === 'SUPER'){
             if($filterMaps = MapModel::getAll([$mapId], ['addInactive' => true])){

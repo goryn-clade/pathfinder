@@ -234,7 +234,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param string $name
      * @param int $systemId
      */
-    public function getByName(CorporationModel $corporation, string $name, int $systemId){
+    public function getByName(CorporationModel $corporation, string $name, int $systemId) : void {
         if($corporation->valid() && $name){
             $this->has('structureCorporations', ['corporationId = :corporationId', ':corporationId' => $corporation->_id]);
             $this->load(['name = :name AND systemId = :systemId AND active = :active',
