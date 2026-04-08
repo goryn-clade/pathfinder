@@ -18,7 +18,7 @@ class Connection extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function get(\Base $f3, $params){
+    public function get(\Base $f3, array<string, mixed> $params){
         $requestData = $this->getRequestData($f3);
         $connectionIds = array_map('intval', explode(',', (string)$params['id']));
         $addData = (array)$requestData['addData'];
@@ -122,7 +122,7 @@ class Connection extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, $params){
+    public function delete(\Base $f3, array<string, mixed> $params){
         $requestData = $this->getRequestData($f3);
         $connectionIds = array_map('intval', explode(',', (string)$params['id']));
         $deletedConnectionIds = [];
