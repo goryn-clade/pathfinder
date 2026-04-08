@@ -71,7 +71,7 @@ class Structure extends AbstractRestController {
      * @return array
      * @throws \Exception
      */
-    private function update(array $structuresData) : array {
+    private function update(array<int|string, mixed> $structuresData) : array {
         $data = [];
 
         $activeCharacter = $this->getCharacter();

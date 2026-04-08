@@ -113,7 +113,7 @@ class Map extends AbstractRestController {
      * @return Pathfinder\MapModel
      * @throws \Exception
      */
-    private function update(Pathfinder\MapModel $map, array $mapData) : Pathfinder\MapModel {
+    private function update(Pathfinder\MapModel $map, array<string, mixed> $mapData) : Pathfinder\MapModel {
         $activeCharacter = $this->getCharacter();
 
         $map->setData($mapData);

@@ -165,7 +165,7 @@ class System extends AbstractRestController {
      * @return Pathfinder\SystemModel
      * @throws \Exception
      */
-    private function update(Pathfinder\SystemModel $system, array $systemData) : Pathfinder\SystemModel {
+    private function update(Pathfinder\SystemModel $system, array<string, mixed> $systemData) : Pathfinder\SystemModel {
         $activeCharacter = $this->getCharacter();
 
         // statusId === 0  is 'auto' status -> keep current status
