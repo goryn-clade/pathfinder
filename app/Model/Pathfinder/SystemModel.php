@@ -730,7 +730,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @throws Exception\ConfigException
      * @throws \Exception
      */
-    public function sendRallyPoke(array<string, mixed> $rallyData, CharacterModel $characterModel){
+    public function sendRallyPoke(array<string, mixed> $rallyData, CharacterModel $characterModel) : void {
         // rally log needs at least one handler to be valid
         $isValidLog = false;
         $log = new Logging\RallyLog('rallySet', $this->getMap()->getLogChannelData());
@@ -783,7 +783,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * set system type based on security
      */
-    public function setType(){
+    public function setType() : void {
         switch($this->security){
             case 'H':
             case 'L':
@@ -812,7 +812,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param CharacterModel $character
      * @return false|ConnectionModel
      */
-    public function saveSignature(SystemSignatureModel $signature, CharacterModel $character){
+    public function saveSignature(SystemSignatureModel $signature, CharacterModel $character) : false|ConnectionModel {
         $signature->systemId = $this;
         return $signature->save($character);
     }
@@ -899,7 +899,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * @see parent
      */
-    public function clearCacheData(){
+    public function clearCacheData() : void {
         parent::clearCacheData();
 
         // clear map cache as well
