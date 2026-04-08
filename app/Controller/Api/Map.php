@@ -445,7 +445,7 @@ class Map extends Controller\AccessController {
      * @param Pathfinder\MapModel $map
      * @throws \Exception
      */
-    protected function broadcastMapAccess(Pathfinder\MapModel $map){
+    protected function broadcastMapAccess(Pathfinder\MapModel $map) : void {
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,

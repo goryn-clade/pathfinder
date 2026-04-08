@@ -42,7 +42,7 @@ abstract class AbstractRestController extends Controller\AccessController {
      * render API response to client
      * @param $output
      */
-    protected function out(mixed $output){
+    protected function out(mixed $output) : void {
         echo json_encode($output);
     }
 

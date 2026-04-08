@@ -22,7 +22,7 @@ class Statistic extends Controller\AccessController {
      * @param int $week
      * @return string
      */
-    protected function concatYearWeek($year, $week){
+    protected function concatYearWeek(int $year, int $week) : string {
         return strval($year) . str_pad($week, 2, 0, STR_PAD_LEFT);
     }
 
@@ -31,7 +31,7 @@ class Statistic extends Controller\AccessController {
      * @param $year
      * @return int
      */
-    protected function getIsoWeeksInYear(int $year){
+    protected function getIsoWeeksInYear(int $year) : int {
         $week = 0;
         try{
             $date = new \DateTime;
@@ -47,7 +47,7 @@ class Statistic extends Controller\AccessController {
      * @param int $year
      * @return int
      */
-    protected function getWeekCount($period, $year){
+    protected function getWeekCount(string $period, int $year) : int {
         $weeksInYear = $this->getIsoWeeksInYear($year);
 
         switch($period){
@@ -75,7 +75,7 @@ class Statistic extends Controller\AccessController {
      * @param bool $backwards
      * @return array
      */
-    protected function calculateYearWeekOffset($year, $week, $weekCount, $backwards = false){
+    protected function calculateYearWeekOffset(int $year, int $week, int $weekCount, bool $backwards = false) : array {
         $offset = [
             'year' => (int)$year,
             'week' => (int)$week
@@ -128,7 +128,7 @@ class Statistic extends Controller\AccessController {
      * @param int $weekEnd
      * @return array
      */
-    protected function queryStatistic(CharacterModel $character, $typeId, $yearStart, $weekStart, $yearEnd, $weekEnd){
+    protected function queryStatistic(CharacterModel $character, int $typeId, int $yearStart, int $weekStart, int $yearEnd, int $weekEnd) : array {
         $data = [];
 
         // can be either "characterId" || "corporationId" || "allianceId"

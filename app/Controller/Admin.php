@@ -86,7 +86,7 @@ class Admin extends Controller{
      * @return CharacterModel|null
      * @throws \Exception
      */
-    protected function getAdminCharacter(\Base $f3){
+    protected function getAdminCharacter(\Base $f3) : ?CharacterModel {
         $adminCharacter = null;
         if( !$f3->exists(Sso::SESSION_KEY_SSO_ERROR) ){
             if( $character = $this->getCharacter(0) ){
@@ -230,7 +230,7 @@ class Admin extends Controller{
      * @param int $kickCharacterId
      * @param int $minutes
      */
-    protected function kickCharacter(CharacterModel $character, $kickCharacterId, $minutes){
+    protected function kickCharacter(CharacterModel $character, int $kickCharacterId, int $minutes) : void {
         $kickOptions = self::KICK_OPTIONS;
         $minKickTime = key($kickOptions) ;
         end($kickOptions);
@@ -259,7 +259,7 @@ class Admin extends Controller{
      * @param int $banCharacterId
      * @param int $value
      */
-    protected function banCharacter(CharacterModel $character, $banCharacterId, $value){
+    protected function banCharacter(CharacterModel $character, int $banCharacterId, int $value) : void {
         $banCharacters = $this->filterValidCharacters($character, $banCharacterId);
         foreach($banCharacters as $banCharacter){
             $banCharacter->ban($value);
@@ -361,7 +361,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initSettings(\Base $f3, CharacterModel $character){
+    protected function initSettings(\Base $f3, CharacterModel $character) : void {
         $data = (object) [];
         $corporations = $this->getAccessibleCorporations($character);
 
@@ -377,7 +377,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initMembers(\Base $f3, CharacterModel $character){
+    protected function initMembers(\Base $f3, CharacterModel $character) : void {
         $data = (object) [];
         if($characterCorporation = $character->getCorporation()){
             $corporations = $this->getAccessibleCorporations($character);
@@ -402,7 +402,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initMaps(\Base $f3, CharacterModel $character){
+    protected function initMaps(\Base $f3, CharacterModel $character) : void {
         $data = (object) [];
         if($characterCorporation = $character->getCorporation()){
             $corporations = $this->getAccessibleCorporations($character);
@@ -429,7 +429,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      * @return CorporationModel[]
      */
-    protected function getAccessibleCorporations(CharacterModel $character) {
+    protected function getAccessibleCorporations(CharacterModel $character) : array {
         $corporations = [];
         if($characterCorporation = $character->getCorporation()){
             switch($character->roleId->name){

@@ -80,7 +80,7 @@ class Route extends AbstractRestController {
     /**
      * reset all jump data
      */
-    protected function resetJumpData(){
+    protected function resetJumpData() : void {
         $this->nameArray = [];
         $this->jumpArray = [];
         $this->idArray = [];

@@ -1080,7 +1080,7 @@ class Setup extends Controller {
      * @param bool|false $exec
      * @return array
      */
-    protected function checkDatabase(\Base $f3, $exec = false){
+    protected function checkDatabase(\Base $f3, bool $exec = false) : array {
 
         foreach($this->databases as $dbAlias => $dbData){
 
@@ -1513,7 +1513,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @param string $dbAlias
      */
-    protected function createDB(\Base $f3, string $dbAlias){
+    protected function createDB(\Base $f3, string $dbAlias) : void {
         // check for valid key
         if(!empty($this->databases[$dbAlias])){
             // disable logging (we expect the DB connect to fail -> no db created)
@@ -1888,7 +1888,7 @@ class Setup extends Controller {
      * @return bool
      * @throws \Exception
      */
-    protected function importTable($modelClass){
+    protected function importTable(string $modelClass) : bool {
         $this->getDB('PF');
         return Pathfinder\AbstractPathfinderModel::getNew($modelClass)->importData();
     }
@@ -1898,7 +1898,7 @@ class Setup extends Controller {
      * @param string $modelClass
      * @throws \Exception
      */
-    protected function exportTable($modelClass){
+    protected function exportTable(string $modelClass) : void {
         $this->getDB('PF');
         Pathfinder\AbstractPathfinderModel::getNew($modelClass)->exportData();
     }
@@ -1968,7 +1968,7 @@ class Setup extends Controller {
      * clear directory
      * @param string $path
      */
-    protected function clearFiles(string $path){
+    protected function clearFiles(string $path) : void {
         $files = Search::getFilesByMTime($path);
         foreach($files as $file){
             /**
@@ -1988,7 +1988,7 @@ class Setup extends Controller {
      * @param int $port
      * @param int $db
      */
-    protected function flushRedisDb(string $host, int $port, int $db = 0){
+    protected function flushRedisDb(string $host, int $port, int $db = 0) : void {
         $client = new \Redis();
         $client->pconnect($host, $port, 0.3);
         $client->select($db);
@@ -2001,7 +2001,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    protected function invalidateCookies(\Base $f3){
+    protected function invalidateCookies(\Base $f3) : void {
         $this->getDB('PF');
         $authenticationModel = Pathfinder\AbstractPathfinderModel::getNew('CharacterAuthenticationModel');
         $results = $authenticationModel->find();
