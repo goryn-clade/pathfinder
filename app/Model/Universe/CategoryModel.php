@@ -42,7 +42,7 @@ class CategoryModel extends AbstractUniverseModel {
      * @param array $additionalData
      * @return null|object
      */
-    public function getData(array $additionalData = []){
+    public function getData(array $additionalData = []) : \stdClass {
         $categoryData = (object) [];
         $categoryData->id = $this->_id;
         $categoryData->name = $this->name;
@@ -59,7 +59,7 @@ class CategoryModel extends AbstractUniverseModel {
      * @param bool $published
      * @return array|mixed
      */
-    protected function getGroups(bool $published = true){
+    protected function getGroups(bool $published = true) : array|mixed {
         $groups = [];
         if($published){
             $this->filter('groups', [
@@ -126,7 +126,7 @@ class CategoryModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []){
+    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []) : void {
         if(!empty($data = self::getUniverseCategoryData($id))){
             $this->copyfrom($data, ['id', 'name', 'published']);
             $this->save();
