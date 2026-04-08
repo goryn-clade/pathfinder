@@ -52,7 +52,7 @@ class Controller {
     /**
      * @param string $template
      */
-    protected function setTemplate($template){
+    protected function setTemplate(string $template){
         $this->template = $template;
     }
 
@@ -133,7 +133,7 @@ class Controller {
      * init new Session handler
      * @param \Base $f3
      */
-    protected function initSession(\Base $f3){
+    protected function initSession(\Base $f3) : void {
         $session = null;
 
         if(
@@ -169,7 +169,7 @@ class Controller {
      * @param \Base $f3
      * @return Resource
      */
-    protected function initResource(\Base $f3){
+    protected function initResource(\Base $f3) : Resource {
         $resource = Resource::instance();
         $resource->setOption('basePath', $f3->get('BASE'));
         $resource->setOption('filePath', [
@@ -300,7 +300,7 @@ class Controller {
      * @return Pathfinder\CharacterModel[]
      * @throws \Exception
      */
-    protected function getCookieCharacters($cookieData = [], $checkAuthorization = true) : array {
+    protected function getCookieCharacters(array<string, mixed> $cookieData = [], bool $checkAuthorization = true) : array {
         $characters = [];
 
         if(
@@ -468,7 +468,7 @@ class Controller {
      * @param int $characterId
      * @throws \Exception
      */
-    protected function setTempCharacterData(int $characterId){
+    protected function setTempCharacterData(int $characterId) : void {
         if($characterId > 0){
             $tempCharacterData = [
                 'ID'    => $characterId
@@ -497,7 +497,7 @@ class Controller {
         bool $deleteLog = true,
         bool $deleteCookie = false,
         int $statusCode = self::DEFAULT_STATUS_LOGOUT
-    ){
+    ) : void {
         $sessionCharacterData = (array)$f3->get(Api\User::SESSION_KEY_CHARACTERS);
 
         if($sessionCharacterData){
@@ -645,7 +645,7 @@ class Controller {
      * @param null $trace
      * @return \stdClass
      */
-    protected function getErrorObject(int $code, string $status = '', string $text = '', $trace = null) : \stdClass {
+    protected function getErrorObject(int $code, string $status = '', string $text = '', mixed $trace = null) : \stdClass {
         $object = (object) [];
         $object->type = 'error';
         $object->code = $code;
@@ -665,7 +665,7 @@ class Controller {
      * @param string $type
      * @return \stdClass
      */
-    protected function getNotificationObject(string $title, $text = '', $type = 'danger') : \stdClass {
+    protected function getNotificationObject(string $title, string $text = '', string $type = 'danger') : \stdClass {
         $notification = (object) [];
         $notification->type = in_array($type, self::NOTIFICATION_TYPES) ? $type : 'danger';
         $notification->title = $title;
@@ -679,7 +679,7 @@ class Controller {
      * @param null $alias
      * @return bool|string
      */
-    protected function getRouteUrl($alias = null){
+    protected function getRouteUrl(?string $alias = null){
         $url = false;
 
         if(!empty($alias)){

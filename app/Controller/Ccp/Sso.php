@@ -52,7 +52,7 @@ class Sso extends Api\User{
      * -> cf. Controller->getCookieCharacters() ( equivalent cookie based login)
      * @param \Base $f3
      */
-    public function requestAdminAuthorization($f3){
+    public function requestAdminAuthorization(\Base $f3) : void {
         // store browser tabId to be "targeted" after login
         $f3->set(self::SESSION_KEY_SSO_FROM, 'admin');
 
@@ -66,7 +66,7 @@ class Sso extends Api\User{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function requestAuthorization($f3){
+    public function requestAuthorization(\Base $f3) : void {
         $params = $f3->get('GET');
 
         if(
@@ -163,7 +163,7 @@ class Sso extends Api\User{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function callbackAuthorization($f3){
+    public function callbackAuthorization(\Base $f3) : void {
         $getParams = (array)$f3->get('GET');
 
         // users can log in either from @login (new user) or @map (existing user) root alias
@@ -300,7 +300,7 @@ class Sso extends Api\User{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function login(\Base $f3){
+    public function login(\Base $f3) : void {
         $data = (array)$f3->get('GET');
         $cookieName = (string)$data['cookie'];
         $character = null;
@@ -373,7 +373,7 @@ class Sso extends Api\User{
      * @param string $refreshToken
      * @return \stdClass
      */
-    public function refreshAccessToken(string $refreshToken){
+    public function refreshAccessToken(string $refreshToken) : \stdClass {
         $requestParams = [
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken

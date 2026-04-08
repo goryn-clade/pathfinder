@@ -72,7 +72,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent($self, $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $this->touch('updated');
@@ -110,7 +110,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param array $options
      * @return CharacterModel[]
      */
-    public function getCharacters($characterIds = [], $options = []) : array {
+    public function getCharacters(array $characterIds = [], array<string, mixed> $options = []) : array {
         $characters = [];
         $filter = ['active = ?', 1];
 
