@@ -92,7 +92,7 @@ class TableModifier extends SQL\TableModifier {
      * Add/Update foreign key constraint
      * @param Constraint $constraint
      */
-    public function addConstraint($constraint) : mixed {
+    public function addConstraint($constraint) : void {
 
         if($constraint->isValid()){
             $this->queries[] = "

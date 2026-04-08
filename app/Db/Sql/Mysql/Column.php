@@ -25,7 +25,7 @@ class Column extends SQL\Column
      * add constraint to this column
      * @param Constraint $constraint
      */
-    public function addConstraint(Constraint $constraint) : mixed {
+    public function addConstraint(Constraint $constraint) : void {
         $this->table->addConstraint($constraint);
     }
 

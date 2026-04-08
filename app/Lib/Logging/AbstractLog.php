@@ -175,14 +175,14 @@ abstract class AbstractLog implements LogInterface {
     /**
      * set $f3 base object
      */
-    public function setF3() : mixed {
+    public function setF3() : void {
         $this->f3 = \Base::instance();
     }
 
     /**
      * @param $message
      */
-    public function setMessage(string $message) : mixed {
+    public function setMessage(string $message) : void {
         $this->message = $message;
     }
 
@@ -190,7 +190,7 @@ abstract class AbstractLog implements LogInterface {
      * @param string $level
      * @throws \Exception
      */
-    public function setLevel(string $level) : mixed {
+    public function setLevel(string $level) : void {
         if( in_array($level, self::LEVEL)){
             $this->level = $level;
         }else{
@@ -202,7 +202,7 @@ abstract class AbstractLog implements LogInterface {
      * @param string $tag
      * @throws \Exception
      */
-    public function setTag(string $tag) : mixed {
+    public function setTag(string $tag) : void {
         if( in_array($tag, self::TAG)){
             $this->tag = $tag;
         }else{

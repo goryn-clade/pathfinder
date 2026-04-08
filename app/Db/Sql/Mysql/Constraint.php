@@ -42,28 +42,28 @@ class Constraint
     /**
      * @param mixed $keys
      */
-    public function setKeys($keys) : mixed {
+    public function setKeys($keys) : void {
         $this->keys = (array)$keys;
     }
 
     /**
      * @param mixed $referencedTable
      */
-    public function setReferencedTable($referencedTable) : mixed {
+    public function setReferencedTable($referencedTable) : void {
         $this->referencedTable = $referencedTable;
     }
 
     /**
      * @param mixed $referencedCols
      */
-    public function setReferencedCols($referencedCols) : mixed {
+    public function setReferencedCols($referencedCols) : void {
         $this->referencedCols = (array)$referencedCols;
     }
 
     /**
      * @param string $onDelete
      */
-    public function setOnDelete($onDelete) : mixed {
+    public function setOnDelete($onDelete) : void {
         if (in_array($onDelete, self::ACTIONS_DELETE)) {
             $this->onDelete = $onDelete;
         } else {
@@ -74,7 +74,7 @@ class Constraint
     /**
      * @param string $onUpdate
      */
-    public function setOnUpdate($onUpdate) : mixed {
+    public function setOnUpdate($onUpdate) : void {
         if (in_array($onUpdate, self::ACTIONS_UPDATE)) {
             $this->onUpdate = $onUpdate;
         } else {

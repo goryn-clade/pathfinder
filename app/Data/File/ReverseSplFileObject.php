@@ -73,7 +73,7 @@ class ReverseSplFileObject extends \SplFileObject{
     /**
      * reverse rewind file.
      */
-    public function rewind() : mixed {
+    public function rewind() : void {
         //Set the line position to 0 - First Line
         $this->position = 0;
 

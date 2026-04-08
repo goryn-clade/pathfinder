@@ -66,7 +66,7 @@ class LogCollection extends AbstractLog {
      * @param AbstractLog $log
      * @throws \Exception
      */
-    public function addLog(AbstractLog $log) : mixed {
+    public function addLog(AbstractLog $log) : void {
         if(!$this->collection->contains($log)){
             if(!$this->collection->count()){
                 // first log sets the default for this collection
@@ -103,7 +103,7 @@ class LogCollection extends AbstractLog {
     /**
      * @param string $message
      */
-    public function setMessage(string $message) : mixed {
+    public function setMessage(string $message) : void {
         $currentMessage = parent::getMessage();
         if(empty($currentMessage)){
             $newMessage = $message;
@@ -120,7 +120,7 @@ class LogCollection extends AbstractLog {
      * @param string $tag
      * @throws \Exception
      */
-    public function setTag(string $tag) : mixed {
+    public function setTag(string $tag) : void {
         $currentTag = parent::getTag();
         switch($currentTag){
             case 'default':
