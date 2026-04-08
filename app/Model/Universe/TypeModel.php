@@ -260,7 +260,7 @@ class TypeModel extends AbstractUniverseModel {
     public function afterInsertEvent(self $self, array $pkeys) : void {
         $self->syncDogmaAttributes();
 
-        return parent::afterInsertEvent($self, $pkeys);
+        parent::afterInsertEvent($self, $pkeys);
     }
 
     /**
@@ -271,7 +271,7 @@ class TypeModel extends AbstractUniverseModel {
     public function afterUpdateEvent(self $self, array $pkeys) : void {
         $self->syncDogmaAttributes();
 
-        return parent::afterUpdateEvent($self, $pkeys);
+        parent::afterUpdateEvent($self, $pkeys);
     }
 
     /**

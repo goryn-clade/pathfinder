@@ -77,7 +77,7 @@ class Structure extends AbstractRestController {
         $activeCharacter = $this->getCharacter();
         if(!$activeCharacter || !($corporation = $activeCharacter->getCorporation())){
             $this->out($data);
-            return;
+            return $data;
         }
 
         // structures always belong to a corporation
