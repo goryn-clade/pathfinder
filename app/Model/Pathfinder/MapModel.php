@@ -191,7 +191,7 @@ class MapModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param array<string, mixed> $data
      */
-    public function setData(array $data){
+    public function setData(array<string, mixed> $data){
         unset($data['id']);
         unset($data['created']);
         unset($data['updated']);
@@ -444,7 +444,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $self->logActivity('mapCreate');
     }
@@ -454,7 +454,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
 
         $activity = ($self->isActive()) ? 'mapUpdate' : 'mapDelete';
@@ -466,7 +466,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $self->deleteLogFile();
     }
@@ -554,7 +554,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param array<array<string, mixed>> $addFilters
      * @return SystemModel|null
      */
-    public function getSystemByCCPId(int $systemId, array $addFilters = []) : ?SystemModel {
+    public function getSystemByCCPId(int $systemId, array<int, string|int> $addFilters = []) : ?SystemModel {
         /**
          * @var SystemModel $system
          */
@@ -750,7 +750,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param array $stack
      * @return array
      */
-    public function compareAccess(array $stack) : array {
+    public function compareAccess(array<int|string, mixed> $stack) : array {
         $result = [];
         if($this->valid()){
             if($this->isPrivate()){
@@ -810,7 +810,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param array<string> $clearKeys
      * @return int
      */
-    public function clearAccess(array $clearKeys = ['character', 'corporation', 'alliance']) : int {
+    public function clearAccess(array<int, string> $clearKeys = ['character', 'corporation', 'alliance']) : int {
         $count = 0;
         foreach($clearKeys as $key){
             $field = null;
@@ -917,7 +917,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param array<string, mixed> $options filter options
      * @return CharacterModel[]
      */
-    private function getAllCharacters(array $options = []) : array {
+    private function getAllCharacters(array<string, mixed> $options = []) : array {
         $characters = [];
 
         if($this->isPrivate()){
@@ -949,7 +949,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @return array|null|\stdClass
      * @throws \Exception
      */
-    public function getCharactersData(array $options = []){
+    public function getCharactersData(array<string, mixed> $options = []){
         // check if there is cached data
         $charactersData = $this->getCacheData(self::DATA_CACHE_KEY_CHARACTER);
 
@@ -1472,7 +1472,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param array<string, mixed> $options
      * @return CortexCollection
      */
-    public static function getAll(array $mapIds = [], array $options = []){
+    public static function getAll(array<int, int> $mapIds = [], array<string, mixed> $options = []){
         $query = [
             'id IN :mapIds',
             ':mapIds' => $mapIds

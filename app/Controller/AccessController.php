@@ -90,7 +90,7 @@ class AccessController extends Controller {
      * -> send over TCP Socket
      * @param array|null $mapData
      */
-    protected function broadcastMapData(?array $mapData) : void {
+    protected function broadcastMapData(?array<string, mixed> $mapData) : void {
         if(!empty($mapData)){
             $this->getF3()->webSocket()->write('mapUpdate', $mapData);
         }

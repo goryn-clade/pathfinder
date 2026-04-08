@@ -15,7 +15,7 @@ class Sql extends \DB\SQL {
      * @param null $pw
      * @param array|null $options
      */
-    public function __construct($dsn, $user = null, $pw = null, array $options = null){
+    public function __construct(string $dsn, string|null $user = null, string|null $pw = null, array|null $options = null){
         parent::__construct($dsn, $user, $pw, $options);
     }
 

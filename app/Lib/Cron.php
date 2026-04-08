@@ -52,7 +52,7 @@ class Cron extends \Cron {
      * @param $name
      * @return string
      */
-    public function __get($name){
+    public function __get(string $name){
         if(in_array($name, ['jobs'])){
             return $this->$name;
         }else{
