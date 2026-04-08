@@ -52,14 +52,14 @@ class Controller {
     /**
      * @param string $template
      */
-    protected function setTemplate(string $template){
+    protected function setTemplate(string $template) : void {
         $this->template = $template;
     }
 
     /**
      * @return string
      */
-    protected function getTemplate(){
+    protected function getTemplate() : ?string {
         return $this->template;
     }
 
@@ -243,7 +243,7 @@ class Controller {
      * @param Pathfinder\CharacterModel $character
      * @throws \Exception
      */
-    protected function setLoginCookie(Pathfinder\CharacterModel $character){
+    protected function setLoginCookie(Pathfinder\CharacterModel $character) : void {
         if( $this->getCookieState() ){
             $expireSeconds = (int)Config::getPathfinderData('login.cookie_expire');
             $expireSeconds *= 24 * 60 * 60;
@@ -679,7 +679,7 @@ class Controller {
      * @param null $alias
      * @return bool|string
      */
-    protected function getRouteUrl(?string $alias = null){
+    protected function getRouteUrl(?string $alias = null) : bool|string {
         $url = false;
 
         if(!empty($alias)){
@@ -716,7 +716,7 @@ class Controller {
      * print error information in CLI mode
      * @param \stdClass $error
      */
-    protected function echoErrorCLI(\stdClass $error){
+    protected function echoErrorCLI(\stdClass $error) : void {
         echo '[' . date('H:i:s') . '] ───────────────────────────' . PHP_EOL;
         foreach(get_object_vars($error) as $key => $value){
             $row = str_pad(' ',2 ) . str_pad($key . ':',10 );
@@ -830,7 +830,7 @@ class Controller {
     /**
      * store activity log data to DB
      */
-    protected function logActivities(){
+    protected function logActivities() : void {
         LogController::instance()->logActivities();
         Monolog::instance()->log();
     }
