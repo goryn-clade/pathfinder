@@ -92,7 +92,7 @@ class Log extends AbstractRestController {
      * @return bool|Pathfinder\ConnectionLogModel
      * @throws \Exception
      */
-    private function update(int $logId, array $logData){
+    private function update(int $logId, array<string, mixed> $logData){
         $log = false;
         if($logId){
             $activeCharacter = $this->getCharacter();
