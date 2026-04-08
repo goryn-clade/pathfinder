@@ -193,7 +193,7 @@ class Admin extends Controller{
      * @param array $settings
      * @throws \Exception
      */
-    protected function saveSettings(CharacterModel $character, int $corporationId, array $settings){
+    protected function saveSettings(CharacterModel $character, int $corporationId, array<string, mixed> $settings){
         $defaultRole = RoleModel::getDefaultRole();
 
         if($corporationId && $defaultRole){

@@ -45,7 +45,7 @@ class Universe extends Controller\AccessController {
      * @param array $params
      * @throws \Exception
      */
-    public function constellationData(\Base $f3, $params){
+    public function constellationData(\Base $f3, array<string, mixed> $params){
         $constellationId = isset($params['arg1']) ? (int)$params['arg1'] : 0;
 
         $return = (object) [];
