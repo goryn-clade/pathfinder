@@ -466,7 +466,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getAccessData(\Base $f3){
+    public function getAccessData(\Base $f3) : void {
         $return = (object) [];
 
         $activeCharacter = $this->getCharacter();
@@ -615,7 +615,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function updateData(\Base $f3){
+    public function updateData(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
         $mapsData = (array)$postData['mapData'];
         $userDataRequired = (bool)$postData['getUserData'];
@@ -643,7 +643,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function updateUnloadData(\Base $f3){
+    public function updateUnloadData(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
 
         if(!empty($mapsData = (string)$postData['mapData'])){
@@ -662,7 +662,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function updateUserData(\Base $f3){
+    public function updateUserData(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
         $mapIds = (array)$postData['mapIds'];
         $getMapUserData = (bool)$postData['getMapUserData'];
@@ -1006,7 +1006,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getConnectionData(\Base $f3){
+    public function getConnectionData(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
 
         $addData = (array)$postData['addData'];
@@ -1057,7 +1057,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getLogData(\Base $f3){
+    public function getLogData(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->data = [];

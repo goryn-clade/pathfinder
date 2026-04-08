@@ -20,7 +20,7 @@ class Setup extends Controller\Controller {
      * get HTML table <tr>´s for all cronjobs
      * @param \Base $f3
      */
-    public function cronTable(\Base $f3){
+    public function cronTable(\Base $f3) : void {
         $return = (object) [];
         $return->error = [];
         $return->jobsData = Cron::instance()->getJobsConfig();
@@ -32,7 +32,7 @@ class Setup extends Controller\Controller {
      * toggle "isPaused" for a cronjob by its name
      * @param \Base $f3
      */
-    public function cronPause(\Base $f3){
+    public function cronPause(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];
@@ -59,7 +59,7 @@ class Setup extends Controller\Controller {
      * -> max execution time might be lower than CLI calls!
      * @param \Base $f3
      */
-    public function cronExecute(\Base $f3){
+    public function cronExecute(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];

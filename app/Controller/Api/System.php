@@ -19,7 +19,7 @@ class System extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function setDestination(\Base $f3){
+    public function setDestination(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
 
         $return = (object) [];
@@ -61,7 +61,7 @@ class System extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function pokeRally(\Base $f3){
+    public function pokeRally(\Base $f3) : void {
         $rallyData = (array)$f3->get('POST');
         $systemId = (int)$rallyData['systemId'];
         $return = (object) [];
