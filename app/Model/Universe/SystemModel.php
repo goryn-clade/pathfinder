@@ -238,7 +238,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param array $sovData
      * @return bool true if sovereignty data changed
      */
-    public function updateSovereigntyData(array $sovData = []) : bool {
+    public function updateSovereigntyData(array<string, mixed> $sovData = []) : bool {
         $hasChanged     = false;
         $systemId       = (int)$sovData['systemId'];
         $factionId      = (int)$sovData['factionId'];
@@ -322,7 +322,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param array $fwData
      * @return bool true if faction warfare data changed
      */
-    public function updateFactionWarData(array $fwData = []) : bool {
+    public function updateFactionWarData(array<string, mixed> $fwData = []) : bool {
         $hasChanged         = false;
         $systemId           = (int)$fwData['systemId'];
         $ownerFactionId     = (int)$fwData['ownerFactionId'];
@@ -378,7 +378,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
         // build search index
         $self->buildIndex();
         return parent::afterUpdateEvent($self, $pkeys);
@@ -490,7 +490,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseSystem', $id);
 
         if(!empty($data)){
