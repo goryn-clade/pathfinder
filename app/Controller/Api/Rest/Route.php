@@ -746,7 +746,7 @@ class Route extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function post(\Base $f3){
+    public function post(\Base $f3) : void {
         $requestData = $this->getRequestData($f3);
 
         $activeCharacter = $this->getCharacter();

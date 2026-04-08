@@ -17,7 +17,7 @@ class Structure extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function post(\Base $f3){
+    public function post(\Base $f3) : void {
         $requestData = $this->getRequestData($f3);
         $structuresData = $requestData ? $this->update($requestData) : [];
         $this->out($structuresData);
@@ -27,7 +27,7 @@ class Structure extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function put(\Base $f3){
+    public function put(\Base $f3) : void {
         $requestData = $this->getRequestData($f3);
         $structuresData = $requestData ? $this->update([$requestData]) : [];
         $this->out($structuresData);
@@ -38,7 +38,7 @@ class Structure extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, array<string, mixed> $params){
+    public function patch(\Base $f3, array<string, mixed> $params) : void {
         $requestData = $this->getRequestData($f3);
         $structuresData = (($structureId = (int)$params['id']) && ($structureId == (int)$requestData['id'])) ? $this->update([$requestData]) : [];
         $this->out($structuresData);
@@ -49,7 +49,7 @@ class Structure extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, array<string, mixed> $params){
+    public function delete(\Base $f3, array<string, mixed> $params) : void {
         $deletedStructureIds = [];
 
         if($structureId = (int)$params['id']){
