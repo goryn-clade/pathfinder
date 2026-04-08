@@ -356,7 +356,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * setter for statusId
      * @param array<string, mixed> $status
      */
-    public function set_status(array $status){
+    public function set_status(array<string, mixed> $status){
         if($statusId = (int)$status['id']){
             $this->statusId = $statusId;
         }
@@ -367,7 +367,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param array<string, mixed> $position
      * @return null
      */
-    public function set_position(array $position){
+    public function set_position(array<string, mixed> $position){
         $position = (array)$position;
         if(count($position) === 2){
             $this->posX = $position['x'];
