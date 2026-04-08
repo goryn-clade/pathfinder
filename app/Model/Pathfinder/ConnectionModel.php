@@ -159,7 +159,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param array<string> $type
      * @return array
      */
-    public function set_type(array $type){
+    public function set_type(array<string> $type){
         // remove unwanted types -> they should not be send from client
         // -> reset keys! otherwise JSON format results in object and not in array
         $type = array_values(array_intersect(array_unique((array)$type), self::$connectionTypeWhitelist));
@@ -182,7 +182,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * setter for endpoints data (data for source/target endpoint)
      * @param array<string, mixed> $endpointsData
      */
-    public function set_endpoints(array $endpointsData){
+    public function set_endpoints(array<string, mixed> $endpointsData){
         if(!empty($endpointData = (array)$endpointsData['source'])){
             $this->setEndpointData('source', $endpointData);
         }
@@ -196,7 +196,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param string $label (source||target)
      * @param array<string, mixed> $endpointData
      */
-    public function setEndpointData(string $label, array $endpointData = []){
+    public function setEndpointData(string $label, array<string, mixed> $endpointData = []){
         if($this->exists($field = $label . 'EndpointType')){
             $types = empty($types = (array)$endpointData['types']) ? null : $types;
             if($this->$field != $types){
