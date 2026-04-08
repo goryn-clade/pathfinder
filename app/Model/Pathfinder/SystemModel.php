@@ -156,7 +156,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param array<string, mixed> $data
      */
-    public function setData(array $data){
+    public function setData(array<string, mixed> $data){
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
     }
 
@@ -493,7 +493,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemCreate');
     }
@@ -505,7 +505,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         $status = parent::beforeUpdateEvent($self, $pkeys);
 
         if($status && !$self->isActive()){
@@ -534,7 +534,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $activity = ($self->isActive()) ? 'systemUpdate' : 'systemDelete';
         $self->logActivity($activity);
@@ -545,7 +545,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemDelete');
     }
@@ -730,7 +730,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @throws Exception\ConfigException
      * @throws \Exception
      */
-    public function sendRallyPoke(array $rallyData, CharacterModel $characterModel){
+    public function sendRallyPoke(array<string, mixed> $rallyData, CharacterModel $characterModel){
         // rally log needs at least one handler to be valid
         $isValidLog = false;
         $log = new Logging\RallyLog('rallySet', $this->getMap()->getLogChannelData());
