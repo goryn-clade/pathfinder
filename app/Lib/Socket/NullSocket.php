@@ -22,7 +22,7 @@ class NullSocket extends AbstractSocket {
     /**
      * @return Socket\ConnectorInterface
      */
-    protected function getConnector(): Socket\ConnectorInterface {
+    protected function getConnector() : Socket\ConnectorInterface {
         return new Socket\Connector($this->getLoop(), $this->options);
     }
 

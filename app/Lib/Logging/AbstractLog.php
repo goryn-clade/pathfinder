@@ -464,7 +464,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * remove all group handlers and their config params
      */
-    public function removeHandlerGroups(){
+    public function removeHandlerGroups() : void {
         foreach($this->getHandlerGroups() as $handlerKey){
             $this->removeHandlerGroup($handlerKey);
         }
@@ -473,7 +473,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * @param string $handlerKey
      */
-    public function removeHandlerGroup(string $handlerKey){
+    public function removeHandlerGroup(string $handlerKey) : void {
         unset($this->handlerConfig[$handlerKey]);
         unset($this->handlerParamsConfig[$handlerKey]);
     }
@@ -554,7 +554,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * send this Log to global log buffer storage
      */
-    public function buffer(){
+    public function buffer() : void {
         if( !empty($this->handlerParamsConfig) ){
             Monolog::instance()->push($this);
         }  

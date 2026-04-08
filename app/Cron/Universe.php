@@ -69,7 +69,7 @@ class Universe extends AbstractCron {
     /**
      * flush output
      */
-    private function echoFlush(){
+    private function echoFlush() : void {
         flush();
         ob_flush();
     }
@@ -80,7 +80,7 @@ class Universe extends AbstractCron {
      * @param int $paramOffset
      * @param int $paramLength
      */
-    private function echoParams(string $type, int $paramOffset, int $paramLength){
+    private function echoParams(string $type, int $paramOffset, int $paramLength) : void {
         echo 'params ───────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo 'type               : ' . $type . PHP_EOL;
         echo 'offset             : ' . $paramOffset . PHP_EOL;
@@ -91,7 +91,7 @@ class Universe extends AbstractCron {
     /**
      * echo configuration
      */
-    private function echoConfig(){
+    private function echoConfig() : void {
         echo 'config ───────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo 'max_execution_time : ' . ini_get('max_execution_time') . PHP_EOL;
         echo 'memory_limit       : ' . ini_get('memory_limit') . PHP_EOL;
@@ -105,7 +105,7 @@ class Universe extends AbstractCron {
      * @param int $importCount
      * @param array $ids
      */
-    private function echoInfo(int $total, int $offset, int $importCount, array $ids){
+    private function echoInfo(int $total, int $offset, int $importCount, array $ids) : void {
         echo 'info ─────────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo 'all data           : ' . $total . PHP_EOL;
         echo 'import offset      : ' . $offset . PHP_EOL;
@@ -117,7 +117,7 @@ class Universe extends AbstractCron {
     /**
      * echo start
      */
-    private function echoStart(){
+    private function echoStart() : void {
         echo 'start ────────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         $this->echoFlush();
     }
@@ -128,7 +128,7 @@ class Universe extends AbstractCron {
      * @param int $importCount
      * @param int $id
      */
-    private function echoLoading(int $count, int $importCount, int $id){
+    private function echoLoading(int $count, int $importCount, int $id) : void {
         echo '[' . date('H:i:s') . '] loading... ' . $this->formatCounterValue($count) . '/' . $importCount . '  id: ' . $this->formatIdValue($id) . PHP_EOL;
         $this->echoFlush();
     }
@@ -140,7 +140,7 @@ class Universe extends AbstractCron {
      * @param float $timeLoopStart
      * @param float $timeTotalStart
      */
-    private function echoLoaded(int $importCount, int $id, float $timeLoopStart, float $timeTotalStart){
+    private function echoLoaded(int $importCount, int $id, float $timeLoopStart, float $timeTotalStart) : void {
         $time = microtime(true);
         echo '[' . date('H:i:s') . '] loaded          ' . str_pad('', strlen($importCount), ' ') . '  id: ' . $this->formatIdValue($id)  .
             '  memory: ' . $this->formatMemoryValue(memory_get_usage()) .
@@ -155,7 +155,7 @@ class Universe extends AbstractCron {
      * @param int $importCount
      * @param float $timeTotalStart
      */
-    private function echoFinish(int $count, int $importCount, float $timeTotalStart){
+    private function echoFinish(int $count, int $importCount, float $timeTotalStart) : void {
         echo 'finished ─────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo '[' . date('H:i:s') . ']            ' . $this->formatCounterValue($count) . '/' . $importCount .
             '                    peak: ' . $this->formatMemoryValue(memory_get_peak_usage ()) .

@@ -98,7 +98,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param array<string, mixed> $record
      * @return array
      */
-    protected function getSlackData(array $record): array {
+    protected function getSlackData(array $record) : array {
         $postData = [];
 
         if ($this->username) {
@@ -157,7 +157,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param array<string, mixed> $postData
      * @return array
      */
-    protected function cleanAttachments(array $postData): array{
+    protected function cleanAttachments(array $postData) : array {
         $attachmentCount = count($postData['attachments']);
         if( $attachmentCount > $this->maxAttachments){
             $text = 'To many attachments! ' . ($attachmentCount - $this->maxAttachments) . ' of ' . $attachmentCount . ' attachments not visible';
@@ -180,7 +180,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param array<string, mixed> $characterData
      * @return array
      */
-    protected function setAuthor(array $attachment, array $characterData): array {
+    protected function setAuthor(array $attachment, array $characterData) : array {
         if( !empty($characterData['id']) &&  !empty($characterData['name'])){
             $attachment['author_name'] = $characterData['name'] . ' #' . $characterData['id'];
             $attachment['author_link'] = Config::getPathfinderData('api.z_killboard') . '/character/' . $characterData['id'] . '/';
@@ -195,7 +195,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param array<string, mixed> $thumbData
      * @return array
      */
-    protected function setThumb(array $attachment, array $thumbData): array {
+    protected function setThumb(array $attachment, array $thumbData) : array {
         if( !empty($thumbData['url'])) {
             $attachment['thumb_url'] = $thumbData['url'];
         }
@@ -210,7 +210,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param bool $short
      * @return array
      */
-    protected function generateAttachmentField(string|int $title, mixed $value, bool $format = false, bool $short = true){
+    protected function generateAttachmentField(string|int $title, mixed $value, bool $format = false, bool $short = true) : mixed {
         return [
             'title' => $title,
             'value' => !empty($value) ? ( $format ? sprintf('`%s`', $value) : $value ) : '',
@@ -222,7 +222,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param string $tag
      * @return string
      */
-    protected function getAttachmentColor(string $tag): string {
+    protected function getAttachmentColor(string $tag) : string {
         switch($tag){
             case 'information': $color = '#428bca'; break;
             case 'success':     $color = '#4f9e4f'; break;
@@ -238,7 +238,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param array<string, mixed> $record
      * @return array
      */
-    private function excludeFields(array $record){
+    private function excludeFields(array $record) : mixed {
         foreach($this->excludeFields as $field){
             $keys = explode('.', $field);
             $node = &$record;

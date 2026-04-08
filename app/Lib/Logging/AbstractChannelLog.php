@@ -38,7 +38,7 @@ abstract class AbstractChannelLog extends AbstractLog {
     /**
      * @param array $channelData
      */
-    protected function setChannelData(array $channelData){
+    protected function setChannelData(array $channelData) : void {
         $this->channelData = $channelData;
     }
 
@@ -80,7 +80,7 @@ abstract class AbstractChannelLog extends AbstractLog {
     /**
      * @return array
      */
-    public function getContext(): array{
+    public function getContext() : array {
         $context = parent::getContext();
 
         // add temp data (e.g. used for $message placeholder replacement

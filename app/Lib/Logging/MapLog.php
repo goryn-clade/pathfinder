@@ -159,7 +159,7 @@ class MapLog extends AbstractCharacterLog {
         $this->logActivity = $logActivity;
     }
 
-    public function buffer(){
+    public function buffer() : void {
         parent::buffer();
 
         if($this->logActivity){

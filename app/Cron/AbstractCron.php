@@ -50,7 +50,7 @@ abstract class AbstractCron {
      * php.ini settings are ignored! http://php.net/manual/en/info.configuration.php#ini.max-execution-time
      * @param int $time
      */
-    protected function setMaxExecutionTime(int $time = self::DEFAULT_MAX_EXECUTION_TIME){
+    protected function setMaxExecutionTime(int $time = self::DEFAULT_MAX_EXECUTION_TIME) : void {
         ini_set('max_execution_time', $time);
     }
 
@@ -88,7 +88,7 @@ abstract class AbstractCron {
      * @param string $job
      * @param bool $logging
      */
-    protected function logStart(string $job, bool $logging = true){
+    protected function logStart(string $job, bool $logging = true) : void {
         $this->setMaxExecutionTime();
 
         $cron = \Exodus4D\Pathfinder\Lib\Cron::instance();
@@ -115,7 +115,7 @@ abstract class AbstractCron {
      * @param int $offset
      * @param string $logText
      */
-    protected function logEnd(string $job, int $total = 0, int $count = 0, int $importCount = 0, int $offset = 0, string $logText = ''){
+    protected function logEnd(string $job, int $total = 0, int $count = 0, int $importCount = 0, int $offset = 0, string $logText = '') : void {
         $execEnd = microtime(true);
         $memPeak = memory_get_peak_usage();
         $state = [
@@ -195,7 +195,7 @@ abstract class AbstractCron {
      * @param array $state
      * @param string $logText for custom text
      */
-    private function writeLog(string $job, int $memPeak = 0, float $execEnd = 0, array $state = [], string $logText = ''){
+    private function writeLog(string $job, int $memPeak = 0, float $execEnd = 0, array $state = [], string $logText = '') : void {
         $percent = number_format($state['percent'], 1) . '%';
         $duration = number_format(round($execEnd - $_SERVER['REQUEST_TIME_FLOAT'], 3), 3) . 's';
         $log = new \Log('cron_' . $job . '.log');

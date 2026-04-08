@@ -85,7 +85,7 @@ class Monolog extends \Prefab {
      * @param Logging\AbstractLog $log
      * @throws \Exception
      */
-    public function push(Logging\AbstractLog $log){
+    public function push(Logging\AbstractLog $log) : void {
         // check whether $log should be "grouped" by common handlers
         if($log->isGrouped()){
             $groupHash = $log->getGroupHash();

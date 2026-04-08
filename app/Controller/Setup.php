@@ -634,7 +634,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function checkPHPConfig(\Base $f3): array {
+    protected function checkPHPConfig(\Base $f3) : array {
         $memoryLimit        = (int)ini_get('memory_limit');
         $maxInputVars       = (int)ini_get('max_input_vars');
         $maxExecutionTime   = (int)ini_get('max_execution_time'); // 0 == infinite
@@ -706,7 +706,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function checkRedisInformation(\Base $f3): array {
+    protected function checkRedisInformation(\Base $f3) : array {
         $redisConfig = [];
 
         if(
@@ -953,7 +953,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function checkSystemConfig(\Base $f3): array {
+    protected function checkSystemConfig(\Base $f3) : array {
         $systemConf = [];
         if(function_exists('exec')){
             $gitOut = $composerOut = $nodeOut = $npmOut = [];
@@ -1006,7 +1006,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function getMapsDefaultConfig(\Base $f3): array {
+    protected function getMapsDefaultConfig(\Base $f3) : array {
         $matrix = \Matrix::instance();
         $mapsDefaultConfig = (array)Config::getMapsDefaultConfig();
         $matrix->transpose($mapsDefaultConfig);

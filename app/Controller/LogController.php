@@ -36,7 +36,7 @@ class LogController extends \Prefab  {
      * @return array
      * @throws \Exception
      */
-    protected function getActivityLogColumns(): array{
+    protected function getActivityLogColumns() : array {
         if(empty($this->activityLogColumns)){
             $f3 = \Base::instance();
             if(!$f3->exists(self::CACHE_KEY_ACTIVITY_COLUMNS, $this->activityLogColumns)){
@@ -142,7 +142,7 @@ class LogController extends \Prefab  {
      * @param int $mapId
      * @return int
      */
-    private function getBufferedActivityIndex(int $characterId, int $mapId): int {
+    private function getBufferedActivityIndex(int $characterId, int $mapId) : int {
         $activityKey = 0;
         if($characterId > 0 && $mapId > 0 ){
             foreach($this->activityLogBuffer as $key => $activityData){

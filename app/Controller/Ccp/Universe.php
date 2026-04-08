@@ -18,7 +18,7 @@ class Universe extends Controller\Controller {
 
 
     /*  currently not used
-    protected function setupRegions(\Base $f3){
+    protected function setupRegions(\Base $f3) : void {
         $regionsWhitelist = [
             10000002 // The Forge (13 constellations -> 93 systems)
         ];
@@ -39,7 +39,7 @@ class Universe extends Controller\Controller {
     }*/
 
     /* currently not used
-    protected function setupConstellations(\Base $f3){
+    protected function setupConstellations(\Base $f3) : void {
         $constellationsWhitelist = [
             20000014 // Mal (11 systems)
         ];

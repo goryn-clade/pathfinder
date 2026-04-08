@@ -32,7 +32,7 @@ class Map extends Controller\AccessController {
      * @param int $mapId
      * @return string
      */
-    protected function getUserDataCacheKey(int $mapId): string {
+    protected function getUserDataCacheKey(int $mapId) : string {
         return sprintf(self::CACHE_KEY_USER_DATA, 'MAP_' . $mapId);
     }
 
@@ -41,7 +41,7 @@ class Map extends Controller\AccessController {
      * @param int $mapId
      * @return string
      */
-    protected function getHistoryDataCacheKey(int $mapId): string {
+    protected function getHistoryDataCacheKey(int $mapId) : string {
         return sprintf(self::CACHE_KEY_HISTORY, 'MAP_' . $mapId);
     }
 

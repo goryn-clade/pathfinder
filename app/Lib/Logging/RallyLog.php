@@ -87,7 +87,7 @@ class RallyLog extends AbstractCharacterLog {
      * @param array $data
      * @return string
      */
-    protected function formatData(array $data): string{
+    protected function formatData(array $data) : string {
         $string = '';
 
         if(

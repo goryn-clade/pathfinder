@@ -44,7 +44,7 @@ class Cron extends \Cron {
         return $isDue;
     }
 
-    public function execute($job, $async = true) {
+    public function execute($job, $async = true) : mixed {
         return parent::execute($job, $async);
     }
 
@@ -52,7 +52,7 @@ class Cron extends \Cron {
      * @param $name
      * @return string
      */
-    public function __get(string $name){
+    public function __get(string $name) : mixed {
         if(in_array($name, ['jobs'])){
             return $this->$name;
         }else{
@@ -103,7 +103,7 @@ class Cron extends \Cron {
      * @param array $jobConf
      * @return mixed|void
      */
-    public function registerJob(string $name, array $jobConf){
+    public function registerJob(string $name, array $jobConf) : void {
         // method is called from /setup page -> DB might not be created at this point!
         // -> check if DB exists here. Otherwise Cortex()->__construct()
         \Base::instance()->DB->setSilent(true);
@@ -150,7 +150,7 @@ class Cron extends \Cron {
      * @param string $expr
      * @return bool
      */
-    protected function checkPreset(string $expr){
+    protected function checkPreset(string $expr) : void {
         if(preg_match('/^@(\w+)$/', $expr,$m)){
             if(!isset($this->presets[$m[1]]))
                 return false;

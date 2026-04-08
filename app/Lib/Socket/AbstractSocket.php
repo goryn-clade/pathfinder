@@ -58,7 +58,7 @@ abstract class AbstractSocket implements SocketInterface {
     /**
      * @return EventLoop\LoopInterface
      */
-    protected function getLoop(): EventLoop\LoopInterface {
+    protected function getLoop() : EventLoop\LoopInterface {
         if(!($this->loop instanceof EventLoop\LoopInterface)){
             $this->loop = EventLoop\Factory::create();
         }

@@ -106,7 +106,7 @@ class SystemGraph extends AbstractRestController {
      * @param int $systemId
      * @return string
      */
-    protected function getSystemGraphCacheKey(int $systemId): string {
+    protected function getSystemGraphCacheKey(int $systemId) : string {
         return sprintf(self::CACHE_KEY_GRAPH, 'SYSTEM_' . $systemId);
     }
 }

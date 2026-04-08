@@ -490,8 +490,7 @@ class Controller {
      * @param int $statusCode
      * @throws \Exception
      */
-    protected function logoutCharacter(
-        \Base $f3,
+    protected function logoutCharacter(        \Base $f3,
         bool $all = false,
         bool $deleteSession = true,
         bool $deleteLog = true,

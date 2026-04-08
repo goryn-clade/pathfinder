@@ -47,7 +47,7 @@ class LogCollection extends AbstractLog {
      * @return AbstractLog
      * @throws \Exception
      */
-    protected function getPrimaryLog(): AbstractLog{
+    protected function getPrimaryLog() : AbstractLog {
         $this->collection->rewind();
         if($this->collection->valid()){
             /**

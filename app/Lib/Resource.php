@@ -116,7 +116,7 @@ class Resource extends \Prefab {
      * @param string $file
      * @param string $rel
      */
-    public function register(string $group, string $file, string $rel = self::ATTR_REL){
+    public function register(string $group, string $file, string $rel = self::ATTR_REL) : void {
         $this->resources[$group][$file] = ['options' => ['rel' => $rel]];
     }
 
@@ -148,7 +148,7 @@ class Resource extends \Prefab {
      * build inline HTML <link> tags for resources
      * @return string
      */
-    public function buildLinks(){
+    public function buildLinks() : void {
         $this->build();
         $links = [];
         foreach($this->resources as $resources){
@@ -192,7 +192,7 @@ class Resource extends \Prefab {
      * build resource data
      * -> add missing attributes to resources
      */
-    protected function build(){
+    protected function build() : array {
         foreach($this->resources as $group => &$resources){
             foreach($resources as $file => &$conf){
                 if(empty($conf['link'])){
