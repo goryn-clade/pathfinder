@@ -133,7 +133,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param array<string, mixed> $dogmaAttributesData
      * @return null
      */
-    public function set_dogma_attributes(array $dogmaAttributesData){
+    public function set_dogma_attributes(array<string, mixed> $dogmaAttributesData){
         $this->virtual('dogmaAttributes', (array)$dogmaAttributesData);
         return null;
     }
@@ -257,7 +257,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
         $self->syncDogmaAttributes();
 
         return parent::afterInsertEvent($self, $pkeys);
@@ -268,7 +268,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
         $self->syncDogmaAttributes();
 
         return parent::afterUpdateEvent($self, $pkeys);
