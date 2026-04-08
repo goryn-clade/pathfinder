@@ -28,7 +28,7 @@ class Universe extends AbstractCron {
      * @param int $counter
      * @return string
      */
-    private function formatCounterValue(int $counter){
+    private function formatCounterValue(int $counter) : mixed {
         return str_pad($counter, 4, ' ', STR_PAD_LEFT);
     }
 
@@ -37,7 +37,7 @@ class Universe extends AbstractCron {
      * @param int $counter
      * @return string
      */
-    private function formatIdValue(int $counter){
+    private function formatIdValue(int $counter) : mixed {
         return str_pad($counter, 10, ' ', STR_PAD_LEFT);
     }
 
@@ -46,7 +46,7 @@ class Universe extends AbstractCron {
      * @param int $size
      * @return string
      */
-    private function formatMemoryValue(int $size){
+    private function formatMemoryValue(int $size) : mixed {
         $unit = ['B','KB','MB','GB','TB','PB'];
         return  str_pad(number_format(@round($size/pow(1024,($i=floor(log($size,1024)))),2), 2, '.', '') . '' . $unit[$i], 9, ' ', STR_PAD_LEFT);
     }
@@ -56,7 +56,7 @@ class Universe extends AbstractCron {
      * @param float $time
      * @return string
      */
-    private function formatSeconds(float $time){
+    private function formatSeconds(float $time) : mixed {
         $time = round($time, 5);
         $formatSeconds = function($seconds){
             return str_pad(number_format(round($seconds, 5), 5), 8, ' ', STR_PAD_LEFT);

@@ -38,7 +38,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * map iterator
      * @return array
      */
-    public function getData(){
+    public function getData() : mixed {
         iterator_apply($this, [static::class, 'recursiveIterator'], [$this]);
 
         return iterator_to_array($this, true);

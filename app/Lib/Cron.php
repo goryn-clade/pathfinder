@@ -32,7 +32,7 @@ class Cron extends \Cron {
      * @param int $time
      * @return bool
      */
-    public function isDue($job, $time){
+    public function isDue($job, $time) : bool {
         if($isDue = parent::isDue($job, $time)){
             // check if job is not paused
             if($job = $this->getJob($job)){

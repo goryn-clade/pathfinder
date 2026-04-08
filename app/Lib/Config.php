@@ -195,7 +195,7 @@ class Config extends \Prefab {
      * @param \Base $f3
      * @return array|null
      */
-    protected function getAllEnvironmentData(\Base $f3){
+    protected function getAllEnvironmentData(\Base $f3) : mixed {
         if(!$f3->exists(self::HIVE_KEY_ENVIRONMENT, $environmentData)){
             $environmentData =  $this->setAllEnvironmentData($f3);
         }

@@ -31,7 +31,7 @@ class Sql extends \DB\SQL {
      * get all table names
      * @return array|bool
      */
-    public function getTables(){
+    public function getTables() : mixed {
         $schema = new Schema($this);
         return $schema->getTables();
     }

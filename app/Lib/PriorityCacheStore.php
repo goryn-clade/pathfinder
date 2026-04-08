@@ -107,7 +107,7 @@ class PriorityCacheStore {
         }
     }
 
-    public function clear(){
+    public function clear() : void {
         $limit = $this->entryLimit;
         $this->entryLimit = 0;
         $this->cleanup();
@@ -118,7 +118,7 @@ class PriorityCacheStore {
     /**
      * @return string
      */
-    public function __toString(){
+    public function __toString() : string {
         return 'Store count: ' . count($this->store) . ' priorityQueue count: ' . $this->priorityQueue->count();
     }
 }

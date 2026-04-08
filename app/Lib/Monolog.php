@@ -108,7 +108,7 @@ class Monolog extends \Prefab {
     /**
      * bulk process all stored logs -> send to Monolog lib
      */
-    public function log(){
+    public function log() : void {
 
         foreach($this->logs as $logs){
             foreach($logs as $log){
@@ -185,7 +185,7 @@ class Monolog extends \Prefab {
      * @return FormatterInterface|null
      * @throws \Exception
      */
-    private function getFormatter(string $formatKey){
+    private function getFormatter(string $formatKey) : mixed {
         $formatter = null;
         if(!empty($formatKey)){
             if(array_key_exists($formatKey, self::FORMATTER)){
