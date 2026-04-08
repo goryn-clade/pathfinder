@@ -38,7 +38,7 @@ class Admin extends Controller{
      * @return bool
      * @throws \Exception
      */
-    function beforeroute(\Base $f3, $params): bool {
+    function beforeroute(\Base $f3, array<string, mixed> $params): bool {
         $return = parent::beforeroute($f3, $params);
 
         $f3->set('tplPage', 'login');
@@ -122,7 +122,7 @@ class Admin extends Controller{
      * @param null $character
      * @throws \Exception
      */
-    public function dispatch(\Base $f3, $params, $character = null){
+    public function dispatch(\Base $f3, array<string, mixed> $params, ?CharacterModel $character = null){
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map('strtolower', explode('/', $params['*']))));

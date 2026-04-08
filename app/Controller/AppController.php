@@ -20,7 +20,7 @@ class AppController extends Controller {
      * @param $params
      * @return bool
      */
-    public function beforeroute(\Base $f3, $params) : bool {
+    public function beforeroute(\Base $f3, array<string, mixed> $params) : bool {
         // page title
         $f3->set('tplPageTitle',  Config::getPathfinderData('name'));
 
