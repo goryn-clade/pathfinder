@@ -523,7 +523,7 @@ class Map extends Controller\AccessController {
      * @param array $mapsData
      * @return \stdClass
      */
-    protected function updateMapsData(Pathfinder\CharacterModel $character, array $mapsData) : \stdClass {
+    protected function updateMapsData(Pathfinder\CharacterModel $character, array<int|string, mixed> $mapsData) : \stdClass {
         $return = (object) [];
         $return->error = [];
         $return->mapData = [];
@@ -740,7 +740,7 @@ class Map extends Controller\AccessController {
      * @return Pathfinder\MapModel
      * @throws \Exception
      */
-    protected function updateMapByCharacter(Pathfinder\MapModel $map, Pathfinder\CharacterModel $character, array $newSystemPositions = []) : Pathfinder\MapModel {
+    protected function updateMapByCharacter(Pathfinder\MapModel $map, Pathfinder\CharacterModel $character, array<int|string, mixed> $newSystemPositions = []) : Pathfinder\MapModel {
         // map changed. update cache (system/connection) changed
         $mapDataChanged = false;
 
