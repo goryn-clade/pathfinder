@@ -736,7 +736,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function showError(\Base $f3) : void {
+    public function showError(\Base $f3) : bool {
 
         if(!headers_sent()){
             // collect error info -------------------------------------------------------------------------------------
@@ -818,7 +818,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function unload(\Base $f3) : void {
+    public function unload(\Base $f3) : bool {
         // store all user activities that are buffered for logging in this request
         // this should work even on non HTTP200 responses
         $this->logActivities();

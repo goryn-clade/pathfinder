@@ -148,7 +148,7 @@ class Resource extends \Prefab {
      * build inline HTML <link> tags for resources
      * @return string
      */
-    public function buildLinks() : void {
+    public function buildLinks() : string {
         $this->build();
         $links = [];
         foreach($this->resources as $resources){

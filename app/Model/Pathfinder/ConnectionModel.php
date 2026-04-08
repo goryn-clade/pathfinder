@@ -381,7 +381,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * get all signatures that are connected with this connection
      * @return array|mixed
      */
-    public function getSignatures() : array|mixed {
+    public function getSignatures() : mixed {
         $signatures = [];
         $this->filter('signatures', [
             'active = :active',
@@ -399,7 +399,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * get all jump logs that are connected with this connection
      * @return array|mixed
      */
-    public function getLogs() : array|mixed {
+    public function getLogs() : mixed {
         $logs = [];
 
         if($this->connectionLog){

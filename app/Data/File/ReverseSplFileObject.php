@@ -130,7 +130,7 @@ class ReverseSplFileObject extends \SplFileObject{
         //Step the file pointer back one step to the last letter of the previous line
         --$this->pointer;
         if($this->pointer < $this->begin){
-            return;
+            return null;
         }
 
         $this->fseek($this->pointer);

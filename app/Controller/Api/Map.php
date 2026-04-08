@@ -293,7 +293,8 @@ class Map extends Controller\AccessController {
             $activeCharacter = $this->getCharacter();
 
             if(!$activeCharacter){
-                return $return;
+                echo json_encode($return);
+                return;
             }
 
             /**
@@ -471,7 +472,8 @@ class Map extends Controller\AccessController {
 
         $activeCharacter = $this->getCharacter();
         if(!$activeCharacter){
-            return $return;
+            echo json_encode($return);
+            return;
         }
 
         $characterData = $activeCharacter->getData(true);

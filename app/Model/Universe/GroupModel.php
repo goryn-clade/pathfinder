@@ -76,7 +76,7 @@ class GroupModel extends AbstractUniverseModel {
      * @param bool $published
      * @return array|mixed
      */
-    public function getTypes(bool $published = true) : array|mixed {
+    public function getTypes(bool $published = true) : mixed {
         $types = [];
         if($published){
             $this->filter('types', [

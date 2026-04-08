@@ -103,7 +103,7 @@ class Cron extends \Cron {
      * @param array $jobConf
      * @return mixed|void
      */
-    public function registerJob(string $name, array $jobConf) : void {
+    public function registerJob(string $name, array $jobConf) : mixed {
         // method is called from /setup page -> DB might not be created at this point!
         // -> check if DB exists here. Otherwise Cortex()->__construct()
         \Base::instance()->DB->setSilent(true);
@@ -150,7 +150,7 @@ class Cron extends \Cron {
      * @param string $expr
      * @return bool
      */
-    protected function checkPreset(string $expr) : void {
+    protected function checkPreset(string $expr) : bool {
         if(preg_match('/^@(\w+)$/', $expr,$m)){
             if(!isset($this->presets[$m[1]]))
                 return false;

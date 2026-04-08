@@ -59,7 +59,7 @@ class CategoryModel extends AbstractUniverseModel {
      * @param bool $published
      * @return array|mixed
      */
-    protected function getGroups(bool $published = true) : array|mixed {
+    protected function getGroups(bool $published = true) : mixed {
         $groups = [];
         if($published){
             $this->filter('groups', [

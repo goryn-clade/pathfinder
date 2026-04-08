@@ -196,11 +196,11 @@ class Config extends \Prefab {
      * @return array|null
      */
     protected function getAllEnvironmentData(\Base $f3) : mixed {
-        if(!$f3->exists(self::HIVE_KEY_ENVIRONMENT, $environmentData)){
-            $environmentData =  $this->setAllEnvironmentData($f3);
+        if(!$f3->exists(self::HIVE_KEY_ENVIRONMENT)){
+            $this->setAllEnvironmentData($f3);
         }
 
-        return $environmentData;
+        return $f3->get(self::HIVE_KEY_ENVIRONMENT);
     }
 
     /**
@@ -263,8 +263,6 @@ class Config extends \Prefab {
             ksort($environmentData);
             $f3->set(self::HIVE_KEY_ENVIRONMENT, $environmentData);
         }
-
-        return $environmentData;
     }
 
     /**
