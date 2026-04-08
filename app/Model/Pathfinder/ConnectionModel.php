@@ -287,7 +287,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @throws Exception\DatabaseException
      * @throws \Exception
      */
-    public function beforeInsertEvent(self $self, array $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         // check for "default" connection type and add them if missing
         // -> get() with "true" returns RAW data! important for JSON table column check!
         $types = (array)json_decode($this->get('type', true));
@@ -307,7 +307,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionCreate');
     }
@@ -318,7 +318,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionUpdate');
     }
@@ -329,7 +329,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionDelete');
     }
