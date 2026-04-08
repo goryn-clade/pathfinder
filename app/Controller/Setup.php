@@ -731,7 +731,7 @@ class Setup extends Controller {
              * @param array  $conf
              * @return array
              */
-            $getClientInfo = function(\Redis $client, array<string, mixed> $conf) : array {
+            $getClientInfo = function(\Redis $client, array $conf) : array {
                 return [
                     'dsn' => [
                         'label' => 'DSN',
@@ -860,7 +860,7 @@ class Setup extends Controller {
              * build (modify) $redisConfig with DNS $conf data
              * @param array $conf
              */
-            $buildRedisConfig = function(array<string, mixed> $conf) use (&$redisConfig, $getDbLabel, $getClientInfo, $getClientStats, $getDatabaseStatus): void{
+            $buildRedisConfig = function(array $conf) use (&$redisConfig, $getDbLabel, $getClientInfo, $getClientStats, $getDatabaseStatus): void{
                 if(($conf['type'] ?? null) == 'redis'){
                     // is Redis -> group all DNS by host:port
                     $uid = ($conf['host'] ?? 'localhost') . ':' . ($conf['port'] ?? 6379);
@@ -1585,7 +1585,7 @@ class Setup extends Controller {
         $statsTcp = false;
         $statsWeb = false;
 
-        $setStats = function(array<string, mixed> $stats) use (&$statsTcp, &$statsWeb): void {
+        $setStats = function(array $stats) use (&$statsTcp, &$statsWeb): void {
             if(!empty($stats['tcpSocket'])){
                 $statsTcp = $stats['tcpSocket'];
             }

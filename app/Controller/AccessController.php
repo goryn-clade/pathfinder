@@ -20,7 +20,7 @@ class AccessController extends Controller {
      * @return bool
      * @throws \Exception
      */
-    function beforeroute(\Base $f3, array<string, mixed> $params) : bool {
+    function beforeroute(\Base $f3, array $params) : bool {
         if($return = parent::beforeroute($f3, $params)){
             // Any route/endpoint of a child class of this one,
             // requires a valid logged in user!
@@ -90,7 +90,7 @@ class AccessController extends Controller {
      * -> send over TCP Socket
      * @param array|null $mapData
      */
-    protected function broadcastMapData(?array<string, mixed> $mapData) : void {
+    protected function broadcastMapData(?array $mapData) : void {
         if(!empty($mapData)){
             $this->getF3()->webSocket()->write('mapUpdate', $mapData);
         }

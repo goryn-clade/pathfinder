@@ -156,7 +156,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param array<string, mixed> $data
      */
-    public function setData(array<string, mixed> $data) : void {
+    public function setData(array $data) : void {
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
     }
 
@@ -356,7 +356,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * setter for statusId
      * @param array<string, mixed> $status
      */
-    public function set_status(array<string, mixed> $status) : void {
+    public function set_status(array $status) : void {
         if($statusId = (int)$status['id']){
             $this->statusId = $statusId;
         }
@@ -367,7 +367,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param array<string, mixed> $position
      * @return null
      */
-    public function set_position(array<string, mixed> $position) : null {
+    public function set_position(array $position) : null {
         $position = (array)$position;
         if(count($position) === 2){
             $this->posX = $position['x'];
@@ -493,7 +493,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterInsertEvent(self $self, array $pkeys) : void {
         $self->clearCacheData();
         $self->logActivity('systemCreate');
     }
@@ -505,7 +505,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array<int|string, mixed> $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
         $status = parent::beforeUpdateEvent($self, $pkeys);
 
         if($status && !$self->isActive()){
@@ -534,7 +534,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterUpdateEvent(self $self, array $pkeys) : void {
         $self->clearCacheData();
         $activity = ($self->isActive()) ? 'systemUpdate' : 'systemDelete';
         $self->logActivity($activity);
@@ -545,7 +545,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterEraseEvent(self $self, array $pkeys) : void {
         $self->clearCacheData();
         $self->logActivity('systemDelete');
     }
@@ -730,7 +730,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @throws Exception\ConfigException
      * @throws \Exception
      */
-    public function sendRallyPoke(array<string, mixed> $rallyData, CharacterModel $characterModel) : void {
+    public function sendRallyPoke(array $rallyData, CharacterModel $characterModel) : void {
         // rally log needs at least one handler to be valid
         $isValidLog = false;
         $log = new Logging\RallyLog('rallySet', $this->getMap()->getLogChannelData());

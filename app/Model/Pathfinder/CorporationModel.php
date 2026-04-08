@@ -179,7 +179,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array<int|string, mixed> $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $this->touch('updated');
@@ -193,7 +193,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param array<string, mixed> $options
      * @return array
      */
-    public function getMaps(?int $mapId = null, array<string, mixed> $options = []) : array {
+    public function getMaps(?int $mapId = null, array $options = []) : array {
         $maps = [];
         $this->filterRel();
 
@@ -227,7 +227,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param array<string, mixed> $options
      * @return CharacterModel[]
      */
-    public function getCharacters(array<int, int> $characterIds = [], array<string, mixed> $options = []) : array {
+    public function getCharacters(array $characterIds = [], array $options = []) : array {
         $characters = [];
         $filter = ['active = ?', 1];
 
@@ -310,7 +310,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @return CorporationRightModel[]
      * @throws \Exception
      */
-    public function getRights(array<int, string> $names = self::RIGHTS, array<string, mixed> $options = []) : array {
+    public function getRights(array $names = self::RIGHTS, array $options = []) : array {
         $corporationRights = [];
         // get available rights
         $right = self::getNew('RightModel');
@@ -401,7 +401,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param array<string, mixed> $options
      * @return \DB\CortexCollection
      */
-    public static function getAll(array<string, mixed> $options = []){
+    public static function getAll(array $options = []){
         $query = [
             'active = :active',
             ':active' => 1

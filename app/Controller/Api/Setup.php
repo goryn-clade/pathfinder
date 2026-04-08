@@ -84,7 +84,7 @@ class Setup extends Controller\Controller {
      * @param array $jobsData
      * @return string
      */
-    protected function getCronHtml(array<int|string, mixed> $jobsData) : string {
+    protected function getCronHtml(array $jobsData) : string {
         $tplData = [
             'cronConfig' => [
                 'jobs' => $jobsData,

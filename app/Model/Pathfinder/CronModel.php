@@ -111,7 +111,7 @@ class CronModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array<string, mixed> $data) : void {
+    public function setData(array $data) : void {
         $this->copyfrom($data, ['handler', 'expr', 'lastExecStart', 'lastExecEnd', 'lastExecMemPeak', 'lastExecState']);
     }
 

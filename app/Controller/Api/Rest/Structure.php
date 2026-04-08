@@ -38,7 +38,7 @@ class Structure extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, array<string, mixed> $params) : void {
+    public function patch(\Base $f3, array $params) : void {
         $requestData = $this->getRequestData($f3);
         $structuresData = (($structureId = (int)$params['id']) && ($structureId == (int)$requestData['id'])) ? $this->update([$requestData]) : [];
         $this->out($structuresData);
@@ -49,7 +49,7 @@ class Structure extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, array<string, mixed> $params) : void {
+    public function delete(\Base $f3, array $params) : void {
         $deletedStructureIds = [];
 
         if($structureId = (int)$params['id']){
@@ -71,7 +71,7 @@ class Structure extends AbstractRestController {
      * @return array
      * @throws \Exception
      */
-    private function update(array<int|string, mixed> $structuresData) : array {
+    private function update(array $structuresData) : array {
         $data = [];
 
         $activeCharacter = $this->getCharacter();

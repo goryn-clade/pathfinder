@@ -104,7 +104,7 @@ class CorporationModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []) : void {
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
         $data = self::getF3()->ccpClient()->send('getCorporation', $id);
         if(!empty($data) && !isset($data['error'])){
             // check for NPC corporation

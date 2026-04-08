@@ -185,7 +185,7 @@ class Config extends \Prefab {
         $f3->set(EveScoutClient::CLIENT_NAME, EveScoutClient::instance());
 
         // Socket connectors ------------------------------------------------------------------------------------------
-        $f3->set(TcpSocket::SOCKET_NAME, function(array<string, int> $options = ['timeout' => 1]) : SocketInterface {
+        $f3->set(TcpSocket::SOCKET_NAME, function(array $options = ['timeout' => 1]) : SocketInterface {
             return AbstractSocket::factory(TcpSocket::class, self::getSocketUri(), $options);
         });
     }

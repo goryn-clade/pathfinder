@@ -116,5 +116,5 @@ class FactionWarSystemModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []) : void {}
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {}
 }

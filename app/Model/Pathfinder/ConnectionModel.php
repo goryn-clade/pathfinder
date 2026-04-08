@@ -159,7 +159,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param array<string> $type
      * @return array
      */
-    public function set_type(array<string> $type) : array {
+    public function set_type(array $type) : array {
         // remove unwanted types -> they should not be send from client
         // -> reset keys! otherwise JSON format results in object and not in array
         $type = array_values(array_intersect(array_unique((array)$type), self::$connectionTypeWhitelist));
@@ -182,7 +182,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * setter for endpoints data (data for source/target endpoint)
      * @param array<string, mixed> $endpointsData
      */
-    public function set_endpoints(array<string, mixed> $endpointsData) : void {
+    public function set_endpoints(array $endpointsData) : void {
         if(!empty($endpointData = (array)$endpointsData['source'])){
             $this->setEndpointData('source', $endpointData);
         }
@@ -196,7 +196,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param string $label (source||target)
      * @param array<string, mixed> $endpointData
      */
-    public function setEndpointData(string $label, array<string, mixed> $endpointData = []) : void {
+    public function setEndpointData(string $label, array $endpointData = []) : void {
         if($this->exists($field = $label . 'EndpointType')){
             $types = empty($types = (array)$endpointData['types']) ? null : $types;
             if($this->$field != $types){
@@ -287,7 +287,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @throws Exception\DatabaseException
      * @throws \Exception
      */
-    public function beforeInsertEvent(self $self, array<int|string, mixed> $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array $pkeys) : bool {
         // check for "default" connection type and add them if missing
         // -> get() with "true" returns RAW data! important for JSON table column check!
         $types = (array)json_decode($this->get('type', true));
@@ -307,7 +307,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterInsertEvent(self $self, array $pkeys) : void {
         $self->clearCacheData();
         $self->logActivity('connectionCreate');
     }
@@ -318,7 +318,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterUpdateEvent(self $self, array $pkeys) : void {
         $self->clearCacheData();
         $self->logActivity('connectionUpdate');
     }
@@ -329,7 +329,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterEraseEvent(self $self, array $pkeys) : void {
         $self->clearCacheData();
         $self->logActivity('connectionDelete');
     }

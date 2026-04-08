@@ -126,7 +126,7 @@ class CategoryModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []) : void {
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
         if(!empty($data = self::getUniverseCategoryData($id))){
             $this->copyfrom($data, ['id', 'name', 'published']);
             $this->save();

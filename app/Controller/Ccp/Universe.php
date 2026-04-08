@@ -62,7 +62,7 @@ class Universe extends Controller\Controller {
      * @return array
      * @throws \Exception
      */
-    protected function setupCategories(array<int, int> $categoriesWhitelist = []) : array {
+    protected function setupCategories(array $categoriesWhitelist = []) : array {
         $info = [];
         $categoryIds = Model\Universe\CategoryModel::getUniverseCategories();
         $categoryIds = array_intersect($categoriesWhitelist, $categoryIds);
@@ -106,7 +106,7 @@ class Universe extends Controller\Controller {
      * @return array
      * @throws \Exception
      */
-    protected function setupGroups(array<int, int> $groupsWhitelist = []) : array {
+    protected function setupGroups(array $groupsWhitelist = []) : array {
         $info = [];
         $groupIds = Model\Universe\GroupModel::getUniverseGroups();
         $groupIds = array_intersect($groupsWhitelist, $groupIds);
@@ -304,7 +304,7 @@ class Universe extends Controller\Controller {
      * @param bool $strict
      * @return array
      */
-    public static function searchUniverseNameData(array<int, int> $categories, string $search, int $characterId, string $accessToken, bool $strict = false) : array {
+    public static function searchUniverseNameData(array $categories, string $search, int $characterId, string $accessToken, bool $strict = false) : array {
         $f3 = \Base::instance();
         $universeNameData = [];
         if( !empty($categories) && !empty($search)){

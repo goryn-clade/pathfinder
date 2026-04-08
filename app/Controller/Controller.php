@@ -87,7 +87,7 @@ class Controller {
      * @param $params
      * @return bool
      */
-    function beforeroute(\Base $f3, array<string, mixed> $params) : bool {
+    function beforeroute(\Base $f3, array $params) : bool {
         // init user session
         $this->initSession($f3);
 
@@ -300,7 +300,7 @@ class Controller {
      * @return Pathfinder\CharacterModel[]
      * @throws \Exception
      */
-    protected function getCookieCharacters(array<string, mixed> $cookieData = [], bool $checkAuthorization = true) : array {
+    protected function getCookieCharacters(array $cookieData = [], bool $checkAuthorization = true) : array {
         $characters = [];
 
         if(

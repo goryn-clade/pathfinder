@@ -38,7 +38,7 @@ class Admin extends Controller{
      * @return bool
      * @throws \Exception
      */
-    function beforeroute(\Base $f3, array<string, mixed> $params): bool {
+    function beforeroute(\Base $f3, array $params): bool {
         $return = parent::beforeroute($f3, $params);
 
         $f3->set('tplPage', 'login');
@@ -122,7 +122,7 @@ class Admin extends Controller{
      * @param null $character
      * @throws \Exception
      */
-    public function dispatch(\Base $f3, array<string, mixed> $params, ?CharacterModel $character = null) : void {
+    public function dispatch(\Base $f3, array $params, ?CharacterModel $character = null) : void {
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map('strtolower', explode('/', $params['*']))));
@@ -193,7 +193,7 @@ class Admin extends Controller{
      * @param array $settings
      * @throws \Exception
      */
-    protected function saveSettings(CharacterModel $character, int $corporationId, array<string, mixed> $settings) : void {
+    protected function saveSettings(CharacterModel $character, int $corporationId, array $settings) : void {
         $defaultRole = RoleModel::getDefaultRole();
 
         if($corporationId && $defaultRole){

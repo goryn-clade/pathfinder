@@ -49,7 +49,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * @param $array
      * @return array
      */
-    protected function camelCaseKeys(array<string, mixed> $array) : array {
+    protected function camelCaseKeys(array $array) : array {
         return Util::arrayChangeKeys($array, [\Base::instance(), 'camelcase']);
     }
 

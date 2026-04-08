@@ -85,7 +85,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param array<string, mixed> $data
      */
-    public function setData(array<string, mixed> $data) : void {
+    public function setData(array $data) : void {
         $this->copyfrom($data, ['name', 'groupId', 'typeId', 'description', 'connectionId']);
     }
 
@@ -205,7 +205,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param array<string, mixed> $signatureData
      * @return bool
      */
-    public function hasChanged(array<string, mixed> $signatureData) : bool {
+    public function hasChanged(array $signatureData) : bool {
         $hasChanged = false;
 
         foreach((array)$signatureData as $key => $value){
@@ -247,7 +247,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterInsertEvent(self $self, array $pkeys) : void {
         $self->logActivity('signatureCreate');
     }
 
@@ -259,7 +259,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array<int|string, mixed> $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
         // "updated" column should always be updated if no changes made this signature
         // -> makes it easier to see what signatures have not been updated
         $this->touch('updated');
@@ -273,7 +273,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterUpdateEvent(self $self, array $pkeys) : void {
         $self->logActivity('signatureUpdate');
     }
 
@@ -283,7 +283,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys) : void {
+    public function afterEraseEvent(self $self, array $pkeys) : void {
         $self->logActivity('signatureDelete');
 
         if(

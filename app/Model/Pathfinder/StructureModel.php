@@ -80,7 +80,7 @@ class StructureModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array<string, mixed> $data) : void {
+    public function setData(array $data) : void {
         $this->copyfrom($data, ['structureId', 'corporationId', 'systemId', 'statusId', 'name', 'description']);
     }
     /**
@@ -184,7 +184,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeInsertEvent(self $self, array<int|string, mixed> $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array $pkeys) : bool {
         return $this->isValid() ? parent::beforeInsertEvent($self, $pkeys) : false;
     }
 
