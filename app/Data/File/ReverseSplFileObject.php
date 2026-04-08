@@ -53,7 +53,7 @@ class ReverseSplFileObject extends \SplFileObject{
      */
     protected $eol = ["\r", "\n"];
 
-    public function __construct($sourceFile, $offset = 0){
+    public function __construct(string $sourceFile, int $offset = 0){
         parent::__construct($sourceFile);
 
         // set total line count of the file

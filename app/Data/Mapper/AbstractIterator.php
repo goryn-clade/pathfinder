@@ -30,7 +30,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * AbstractIterator constructor.
      * @param $data
      */
-    function __construct($data){
+    function __construct(mixed $data){
         parent::__construct($data, \RecursiveIteratorIterator::SELF_FIRST);
     }
 
@@ -49,7 +49,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * @param $array
      * @return array
      */
-    protected function camelCaseKeys($array){
+    protected function camelCaseKeys(array<string, mixed> $array){
         return Util::arrayChangeKeys($array, [\Base::instance(), 'camelcase']);
     }
 
