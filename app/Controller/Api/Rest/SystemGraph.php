@@ -19,7 +19,7 @@ class SystemGraph extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function get(\Base $f3, $params){
+    public function get(\Base $f3, array<string, mixed> $params){
         $requestData = $this->getRequestData($f3);
         $systemIds = (array)$requestData['systemIds'];
         $graphsData = [];
