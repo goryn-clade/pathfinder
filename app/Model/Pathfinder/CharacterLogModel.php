@@ -122,7 +122,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * set log data by associative array
      * @param array $logData
      */
-    public function setData(array<string, mixed> $logData) : void {
+    public function setData(array $logData) : void {
 
         if( isset($logData['system']) ){
             $this->systemId = (int)$logData['system']['id'];
