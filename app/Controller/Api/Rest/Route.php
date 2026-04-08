@@ -92,7 +92,7 @@ class Route extends AbstractRestController {
      * -> jump data includes JUST "static" connections (Stargates)
      * -> this data is equal for EACH route search (does not depend on map data)
      */
-    private function setStaticJumpData(){
+    private function setStaticJumpData() : void {
         if($universeDB = $this->getDB('UNIVERSE')){
             $query = "SELECT * FROM system_neighbour";
             $rows = $universeDB->exec($query, null, $this->staticJumpDataCacheTime);
@@ -114,7 +114,7 @@ class Route extends AbstractRestController {
      * @param array<string, mixed> $filterData
      * @throws \Exception
      */
-    private function setDynamicJumpData(array<int> $mapIds = [], array<string, mixed> $filterData = []){
+    private function setDynamicJumpData(array<int> $mapIds = [], array<string, mixed> $filterData = []) : void {
         // make sure, mapIds are integers (protect against SQL injections)
         $mapIds = array_unique( array_map('intval', $mapIds), SORT_NUMERIC);
 
@@ -263,7 +263,7 @@ class Route extends AbstractRestController {
      * set current Thera connections jump data for this instance
      * -> Connected wormholes pulled from eve-scout.com
      */
-    private function setTheraJumpData(){
+    private function setTheraJumpData() : void {
         if(!$this->getF3()->exists(self::CACHE_KEY_THERA_JUMP_DATA, $jumpData)){
             $jumpData = [];
             $connectionsData = $this->getF3()->eveScoutClient()->send('getTheraConnections');
@@ -317,7 +317,7 @@ class Route extends AbstractRestController {
      * -> data is either coming from CCPs [SDE] OR from map specific data
      * @param array<int, array<string, mixed>> $rows
      */
-    private function updateJumpData(array<int, array<string, mixed>> &$rows = []){
+    private function updateJumpData(array<int, array<string, mixed>> &$rows = []) : void {
         foreach($rows as &$row){
             $regionId       = (int)$row['regionId'];
             $constId        = (int)$row['constellationId'];
@@ -385,7 +385,7 @@ class Route extends AbstractRestController {
      * @param string $option
      * @return null
      */
-    private function getSystemInfoBySystemId(int $systemId, string $option){
+    private function getSystemInfoBySystemId(int $systemId, string $option) : mixed {
         $info = null;
         switch($option){
             case 'systemName':
@@ -413,7 +413,7 @@ class Route extends AbstractRestController {
      * @param int $M
      * @return array
      */
-    private function graph_find_path(array &$G, string $A, string $B, int $M = 50000){
+    private function graph_find_path(array &$G, string $A, string $B, int $M = 50000) : array {
         $maxDepth = $M;
 
         // $P will hold the result path at the end.
@@ -729,7 +729,7 @@ class Route extends AbstractRestController {
      * @param array $filterData
      * @return string
      */
-    private function getRouteCacheKey(array<int> $mapIds, int $systemFrom, int $systemTo, array<string, mixed> $filterData = []){
+    private function getRouteCacheKey(array<int> $mapIds, int $systemFrom, int $systemTo, array<string, mixed> $filterData = []) : string {
 
         $keyParts = [
             implode('_', $mapIds),

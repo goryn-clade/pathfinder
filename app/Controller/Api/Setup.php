@@ -105,7 +105,7 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function buildIndex(\Base $f3){
+    public function buildIndex(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
         $type = (string)$postData['type'];
         $countAll = (int)$postData['countAll'];
@@ -226,7 +226,7 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function clearIndex(\Base $f3){
+    public function clearIndex(\Base $f3) : void {
         $postData = (array)$f3->get('POST');
         $type = (string)$postData['type'];
 

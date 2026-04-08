@@ -263,7 +263,7 @@ abstract class AbstractModel extends Cortex {
      * @return mixed
      * @throws ValidationException
      */
-    public function set($key, $val){
+    public function set($key, $val) : mixed {
         if(is_string($val)){
             $val = trim($val);
         }
@@ -305,7 +305,7 @@ abstract class AbstractModel extends Cortex {
      * @param bool $active
      * @return mixed
      */
-    public function set_active($active){
+    public function set_active($active) : mixed {
         if($this->allowActiveChange){
             // allowed to set/change -> reset "allowed" property
             $this->allowActiveChange = false;
@@ -345,7 +345,7 @@ abstract class AbstractModel extends Cortex {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticFieldConfig(){
+    private function addStaticFieldConfig() : void {
         $this->fieldConf = array_merge($this->getStaticFieldConf(), $this->fieldConf);
     }
 
@@ -487,7 +487,7 @@ abstract class AbstractModel extends Cortex {
      * @param string $dataCacheKeyPrefix
      * @param int $data_ttl
      */
-    public function updateCacheData(mixed $cacheData, string $dataCacheKeyPrefix = '', int $data_ttl = self::DEFAULT_CACHE_TTL){
+    public function updateCacheData(mixed $cacheData, string $dataCacheKeyPrefix = '', int $data_ttl = self::DEFAULT_CACHE_TTL) : void {
         $cacheDataTmp = (array)$cacheData;
 
         // check if data should be cached
@@ -507,7 +507,7 @@ abstract class AbstractModel extends Cortex {
      * unset the getData() cache for this object
      * -> see also clearCacheDataWithPrefix(), for more information
      */
-    public function clearCacheData(){
+    public function clearCacheData() : void {
         $this->clearCache($this->getCacheKey());
     }
 
@@ -516,7 +516,7 @@ abstract class AbstractModel extends Cortex {
      * -> primarily used by object cache with multiple data caches
      * @param string $dataCacheKeyPrefix
      */
-    public function clearCacheDataWithPrefix(string $dataCacheKeyPrefix = ''){
+    public function clearCacheDataWithPrefix(string $dataCacheKeyPrefix = '') : void {
         $this->clearCache($this->getCacheKey($dataCacheKeyPrefix));
     }
 
@@ -524,7 +524,7 @@ abstract class AbstractModel extends Cortex {
      * unset object cached data (if exists)
      * @param string|null $cacheKey
      */
-    private function clearCache(string|null $cacheKey){
+    private function clearCache(string|null $cacheKey) : void {
         if(!empty($cacheKey)){
             $f3 = self::getF3();
             if($f3->exists($cacheKey)){
@@ -688,7 +688,7 @@ abstract class AbstractModel extends Cortex {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys) : void {
     }
 
     /**
@@ -710,7 +710,7 @@ abstract class AbstractModel extends Cortex {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys) : void {
     }
 
     /**
@@ -730,7 +730,7 @@ abstract class AbstractModel extends Cortex {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys) : void {
     }
 
     /**
@@ -753,7 +753,7 @@ abstract class AbstractModel extends Cortex {
      * truncate all table rows
      * -> Use with Caution!!!
      */
-    public function truncate(){
+    public function truncate() : void {
         if($this->allowTruncate && is_object($this->db)){
             $this->db->exec("TRUNCATE " . $this->getTable());
         }
@@ -765,7 +765,7 @@ abstract class AbstractModel extends Cortex {
      * @param string $format
      * @return false|null|string
      */
-    public function getFormattedColumn(string $column, string $format = 'Y-m-d H:i'){
+    public function getFormattedColumn(string $column, string $format = 'Y-m-d H:i') : string|null|false {
         return $this->get($column) ? date($format, strtotime( $this->get($column) )) : null;
     }
 

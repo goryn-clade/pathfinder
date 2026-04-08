@@ -67,7 +67,7 @@ class Admin extends Controller{
      * event handler after routing
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) {
+    public function afterroute(\Base $f3) : void {
         // js view (file)
         $f3->set('tplJsView', 'admin');
 
@@ -122,7 +122,7 @@ class Admin extends Controller{
      * @param null $character
      * @throws \Exception
      */
-    public function dispatch(\Base $f3, array<string, mixed> $params, ?CharacterModel $character = null){
+    public function dispatch(\Base $f3, array<string, mixed> $params, ?CharacterModel $character = null) : void {
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map('strtolower', explode('/', $params['*']))));
@@ -193,7 +193,7 @@ class Admin extends Controller{
      * @param array $settings
      * @throws \Exception
      */
-    protected function saveSettings(CharacterModel $character, int $corporationId, array<string, mixed> $settings){
+    protected function saveSettings(CharacterModel $character, int $corporationId, array<string, mixed> $settings) : void {
         $defaultRole = RoleModel::getDefaultRole();
 
         if($corporationId && $defaultRole){

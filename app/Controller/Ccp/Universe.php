@@ -285,7 +285,7 @@ class Universe extends Controller\Controller {
      * clear cacheKey
      * @param string $cacheKey
      */
-    private function clear(string $cacheKey){
+    private function clear(string $cacheKey) : void {
         if($this->getF3()->exists($cacheKey,$value)) {
             if(is_string($value) && strpos($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX) === 0) {
                 // value references another cacheKey -> clear that one as well
