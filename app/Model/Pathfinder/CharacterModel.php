@@ -423,7 +423,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
     }
 
@@ -432,7 +432,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
     }
 
@@ -441,7 +441,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
         $self->clearCacheData();
     }
 
@@ -840,7 +840,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @return CharacterModel
      * @throws \Exception
      */
-    public function updateLog(array $additionalOptions = []) : self {
+    public function updateLog(array<string, mixed> $additionalOptions = []) : self {
         $deleteLog = false;
         $invalidResponse = false;
 
@@ -1137,7 +1137,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param array<string, mixed> $historyEntry
      * @return bool
      */
-    protected function updateLogHistoryEntry(array $historyEntry) : bool {
+    protected function updateLogHistoryEntry(array<string, mixed> $historyEntry) : bool {
         $updated = false;
 
         if(
@@ -1446,7 +1446,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param array<int, array<string, mixed>> $characterDataBase
      * @return array
      */
-    public static function mergeSessionCharacterData(array $characterDataBase = []) : array {
+    public static function mergeSessionCharacterData(array<int, array<string, mixed>> $characterDataBase = []) : array {
         $addData = [];
         // get current session characters to be merged with
         $characterData = (array)self::getF3()->get(User::SESSION_KEY_CHARACTERS);
@@ -1471,7 +1471,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param array<int> $characterIds
      * @return \DB\CortexCollection
      */
-    public static function getAll(array $characterIds = []){
+    public static function getAll(array<int, int> $characterIds = []){
         $query = [
             'active = :active AND id IN :characterIds',
             ':active' => 1,
