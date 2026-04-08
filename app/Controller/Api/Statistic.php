@@ -31,7 +31,7 @@ class Statistic extends Controller\AccessController {
      * @param $year
      * @return int
      */
-    protected function getIsoWeeksInYear($year){
+    protected function getIsoWeeksInYear(int $year){
         $week = 0;
         try{
             $date = new \DateTime;

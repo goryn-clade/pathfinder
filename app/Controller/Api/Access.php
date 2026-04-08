@@ -20,7 +20,7 @@ class Access extends Controller\AccessController {
      * @param $params
      * @throws \Exception
      */
-    public function search($f3, $params){
+    public function search(\Base $f3, array<string, mixed> $params){
         $accessData = [];
 
         if(

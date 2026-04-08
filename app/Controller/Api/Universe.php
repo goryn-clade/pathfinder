@@ -21,7 +21,7 @@ class Universe extends Controller\AccessController {
      * @param \Base $f3
      * @param $params
      */
-    public function search(\Base $f3, $params){
+    public function search(\Base $f3, array<string, mixed> $params){
         $postData = (array)$f3->get('POST');
         $categories = (array)$postData['categories'];
         $universeNameData = [];
