@@ -674,7 +674,7 @@ abstract class AbstractModel extends Cortex {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeInsertEvent(self $self, array $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         if($this->exists('updated')){
             $this->touch('updated');
         }
@@ -688,7 +688,7 @@ abstract class AbstractModel extends Cortex {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
     }
 
     /**
@@ -699,7 +699,7 @@ abstract class AbstractModel extends Cortex {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         return true;
     }
 
@@ -710,7 +710,7 @@ abstract class AbstractModel extends Cortex {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
     }
 
     /**
@@ -720,7 +720,7 @@ abstract class AbstractModel extends Cortex {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeEraseEvent(self $self, array $pkeys) : bool {
+    public function beforeEraseEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         return true;
     }
 
@@ -730,7 +730,7 @@ abstract class AbstractModel extends Cortex {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
     }
 
     /**

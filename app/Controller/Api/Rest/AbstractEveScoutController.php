@@ -39,7 +39,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
     protected function getEveScoutConnections() : array {
         $connectionsData = [];
 
-        $enrichWithSystemData = function(string $key, array $eveScoutConnection, array &$connectionData) : void {
+        $enrichWithSystemData = function(string $key, array<string, mixed> $eveScoutConnection, array &$connectionData) : void {
             $eveScoutSystem = (array)$eveScoutConnection[$key];
             $universe = new Universe();
             $staticData = $universe->getSystemData($eveScoutSystem['id']);
@@ -56,7 +56,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
             ];
         };
 
-        $enrichWithSignatureData = function(string $key, array $eveScoutConnection, array &$connectionData) : void {
+        $enrichWithSignatureData = function(string $key, array<string, mixed> $eveScoutConnection, array &$connectionData) : void {
             $eveScoutSignature = (array)$eveScoutConnection[$key];
             $signatureData = [
                 'name' => $eveScoutSignature['name'] ? : null,
@@ -71,7 +71,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
             $connectionData[$key] = $signatureData;
         };
 
-        $enrichWithWormholeData = function(array $wormholeData, array &$connectionsData) : void {
+        $enrichWithWormholeData = function(array<string, mixed> $wormholeData, array &$connectionsData) : void {
             $type = ['wh_fresh'];
 
             if($wormholeData['estimatedEol'] <= 4){
