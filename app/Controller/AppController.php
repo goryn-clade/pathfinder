@@ -59,7 +59,7 @@ class AppController extends Controller {
      * event handler after routing
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3){
+    public function afterroute(\Base $f3) : void {
         parent::afterroute($f3);
 
         // clear all SSO related temp data
@@ -72,7 +72,7 @@ class AppController extends Controller {
      * show main login (index) page
      * @param \Base $f3
      */
-    public function init(\Base $f3){
+    public function init(\Base $f3) : void {
         $resource = Resource::instance();
         $resource->register('script', 'app/login');
         $resource->register('script', 'app/mappage', 'prefetch');

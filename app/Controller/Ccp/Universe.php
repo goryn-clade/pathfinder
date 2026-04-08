@@ -226,7 +226,7 @@ class Universe extends Controller\Controller {
     /**
      * clear complete systems search index for all systems
      */
-    public function clearSystemsIndex(){
+    public function clearSystemsIndex() : void {
         $cacheKeyTable = Model\Universe\AbstractUniverseModel::generateHashKeyTable('system');
         if($this->getF3()->exists($cacheKeyTable,$cacheKeys)){
             foreach((array)$cacheKeys as $cacheKeyRow) {

@@ -115,7 +115,7 @@ class Controller {
      * -> render view
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3){
+    public function afterroute(\Base $f3) : void {
         // send preload/prefetch headers
         $resource = Resource::instance();
         if($resource->getOption('output') === 'header'){
@@ -545,7 +545,7 @@ class Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getEveServerStatus(\Base $f3){
+    public function getEveServerStatus(\Base $f3) : void {
         $ttl = 60;
         $esiStatusVersion = 'latest';
         $cacheKey = 'eve_server_status';
@@ -737,7 +737,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function showError(\Base $f3){
+    public function showError(\Base $f3) : void {
 
         if(!headers_sent()){
             // collect error info -------------------------------------------------------------------------------------
@@ -819,7 +819,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function unload(\Base $f3){
+    public function unload(\Base $f3) : void {
         // store all user activities that are buffered for logging in this request
         // this should work even on non HTTP200 responses
         $this->logActivities();

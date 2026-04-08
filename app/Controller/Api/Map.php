@@ -50,7 +50,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function initData(\Base $f3){
+    public function initData(\Base $f3) : void {
         $validInitData = true;
         $ttl = 60 * 60;
 
@@ -279,7 +279,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function import(\Base $f3){
+    public function import(\Base $f3) : void {
         $importData = (array)$f3->get('POST');
 
         $return = (object) [];

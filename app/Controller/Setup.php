@@ -168,7 +168,7 @@ class Setup extends Controller {
     /**
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) {
+    public function afterroute(\Base $f3) : void {
         // js view (file)
         $f3->set('tplJsView', 'setup');
 
@@ -191,7 +191,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function init(\Base $f3){
+    public function init(\Base $f3) : void {
         $params = $f3->get('GET');
 
         // enables automatic column fix
