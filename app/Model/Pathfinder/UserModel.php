@@ -104,7 +104,7 @@ class UserModel extends AbstractPathfinderModel {
      * @return bool
      * @throws Exception\RegistrationException
      */
-    public function beforeInsertEvent(self $self, array $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array<int|string, mixed> $pkeys) : bool {
         $registrationStatus = Controller\Controller::getRegistrationStatus();
         switch($registrationStatus){
             case 0:
@@ -122,7 +122,7 @@ class UserModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
         $this->sendDeleteMail();
     }
 
