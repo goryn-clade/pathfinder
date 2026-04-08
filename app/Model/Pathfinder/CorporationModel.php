@@ -288,7 +288,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param string $accessToken
      * @return array
      */
-    public function getCharactersRoles($accessToken){
+    public function getCharactersRoles($accessToken) : mixed {
         $characterRolesData = [];
         if(
             !empty($accessToken) &&
@@ -376,7 +376,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * add new structure for this corporation
      * @param StructureModel $structure
      */
-    public function saveStructure(StructureModel $structure){
+    public function saveStructure(StructureModel $structure) : void {
         if( !$structure->dry() ){
             $corporationStructure = $this->rel('corporationStructures');
             

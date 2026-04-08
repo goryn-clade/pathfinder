@@ -96,7 +96,7 @@ class StationModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : \stdClass {
         $data           = (object) [];
         $data->id       = $this->_id;
         $data->name     = $this->name;
@@ -122,7 +122,7 @@ class StationModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []) : void {
         $data = self::getF3()->ccpClient()->send('getUniverseStation', $id);
         if(!empty($data) && !isset($data['error'])){
             /**

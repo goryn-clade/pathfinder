@@ -55,7 +55,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * get all alliance data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : \stdClass {
         $allianceData = (object) [];
 
         $allianceData->id = $this->id;
@@ -84,7 +84,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * get all maps for this alliance
      * @return array|mixed
      */
-    public function getMaps(){
+    public function getMaps() : mixed {
         $maps = [];
         $this->filterRel();
 

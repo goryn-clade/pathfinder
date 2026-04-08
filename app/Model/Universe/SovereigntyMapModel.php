@@ -74,7 +74,7 @@ class SovereigntyMapModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : \stdClass {
         $data                       = (object) [];
 
         if($this->factionId){
@@ -97,5 +97,5 @@ class SovereigntyMapModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []){}
+    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []) : void {}
 }

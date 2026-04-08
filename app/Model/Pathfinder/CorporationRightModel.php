@@ -66,7 +66,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array<string, mixed> $data){
+    public function setData(array<string, mixed> $data) : void {
         unset($data['id']);
         unset($data['created']);
         unset($data['updated']);
@@ -84,7 +84,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
      * get cooperation right data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : \stdClass {
         $cooperationRightData = (object) [];
 
         $cooperationRightData->right = $this->rightId->getData();

@@ -80,7 +80,7 @@ class StructureModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array<string, mixed> $data){
+    public function setData(array<string, mixed> $data) : void {
         $this->copyfrom($data, ['structureId', 'corporationId', 'systemId', 'statusId', 'name', 'description']);
     }
     /**

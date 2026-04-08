@@ -90,7 +90,7 @@ class SystemStatusModel extends AbstractPathfinderModel {
      * get system status data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : \stdClass {
 
         $statusData                 = (object)[];
         $statusData->id             = $this->_id;

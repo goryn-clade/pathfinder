@@ -54,7 +54,7 @@ class CharacterMapModel extends AbstractPathfinderModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    public function clearCacheData() : void {
         // clear map cache
         $this->mapId->clearCacheData();
     }

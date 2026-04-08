@@ -11,9 +11,9 @@ namespace Exodus4D\Pathfinder\Model\Pathfinder;
 
 interface LogModelInterface {
 
-    public function getLogObjectData(): array;
+    public function getLogObjectData() : array;
 
-    public function getMap(): MapModel;
+    public function getMap() : MapModel;
 
-    public function getLogData(): array;
+    public function getLogData() : array;
 }

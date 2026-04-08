@@ -166,7 +166,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @return bool
      * @throws Exception\ValidationException
      */
-    protected function validate_name(string $key, string $val): bool {
+    protected function validate_name(string $key, string $val) : bool {
         $valid = true;
         if(!mb_ereg('^[a-zA-Z]{3}-\d{3}$', $val)){
             $valid = false;
@@ -180,14 +180,14 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @return Logging\LogInterface
      * @throws Exception\ConfigException
      */
-    public function newLog(string $action = ''): Logging\LogInterface{
+    public function newLog(string $action = '') : Logging\LogInterface {
         return $this->getMap()->newLog($action)->setTempData($this->getLogObjectData());
     }
 
     /**
      * @return MapModel
      */
-    public function getMap(): MapModel{
+    public function getMap() : MapModel {
         return $this->get('systemId')->getMap();
     }
 
@@ -298,7 +298,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * get object relevant data for model log
      * @return array
      */
-    public function getLogObjectData() : array{
+    public function getLogObjectData() : array {
         return [
             'objId' => $this->_id,
             'objName' => $this->name

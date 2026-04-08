@@ -880,7 +880,7 @@ abstract class AbstractModel extends Cortex {
      * import table data from a *.csv file
      * @return array|bool
      */
-    public function importData(){
+    public function importData() : bool {
         $status = false;
 
         if(
@@ -1003,7 +1003,7 @@ abstract class AbstractModel extends Cortex {
     /**
      * @return mixed
      */
-    public function save(){
+    public function save() : mixed {
         $return = false;
         try{
             $return = parent::save();

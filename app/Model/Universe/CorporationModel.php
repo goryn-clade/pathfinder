@@ -74,7 +74,7 @@ class CorporationModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : \stdClass {
         $data           = (object) [];
         $data->id       = $this->_id;
         $data->name     = $this->name;
@@ -86,7 +86,7 @@ class CorporationModel extends AbstractUniverseModel {
      * @param $date
      * @return string|null
      */
-    public function set_dateFounded($date){
+    public function set_dateFounded($date) : mixed {
         if(is_string($date) && !empty($date)){
             try{
                 $dateTime  = new \DateTime($date);
@@ -104,7 +104,7 @@ class CorporationModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []){
+    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []) : void {
         $data = self::getF3()->ccpClient()->send('getCorporation', $id);
         if(!empty($data) && !isset($data['error'])){
             // check for NPC corporation

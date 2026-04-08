@@ -32,7 +32,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * get model data -> should be overwritten
      * @return null
      */
-    public function getData(){
+    public function getData() : mixed {
         return null;
     }
 
@@ -41,7 +41,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $position
      * @return null
      */
-    public function set_position(array<string, mixed> $position){
+    public function set_position(array<string, mixed> $position) : mixed {
         $position = (array)$position;
         if(count($position) === 3){
             $this->x = $position['x'];
@@ -72,7 +72,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $column
      * @return bool|string
      */
-    public function getHashKey(string $column = '_id'){
+    public function getHashKey(string $column = '_id') : string {
         $key = false;
         if($this->valid() && $this->exists($column)){
             $key = self::generateHashKeyRow($this->getTable(), $this->$column);
@@ -112,7 +112,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * -> stores getData() result into Cache (RAM) for faster access
      * @return null|\stdClass
      */
-    public function buildIndex(){
+    public function buildIndex() : bool {
         $data = null;
         if($hashKeyId = $this->getHashKey()){
             $data = $this->getData();
@@ -130,7 +130,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * -> if data not found -> try to build up index for this model
      * @return null|\stdClass
      */
-    public function fromIndex(){
+    public function fromIndex() : mixed {
         $data = null;
         if($hashKeyId = $this->getHashKey()){
             if( !self::existsCacheValue($hashKeyId, $data)){
@@ -148,7 +148,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    public function loadById(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []){
+    public function loadById(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []) : self {
         /**
          * @var self $model
          */
@@ -164,7 +164,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    abstract protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []);
+    abstract protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []) : void;
 
     /**
      * convert CCPs ids for system security into Pathfinder security label

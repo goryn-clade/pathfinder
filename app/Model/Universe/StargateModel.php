@@ -79,7 +79,7 @@ class StargateModel extends AbstractUniverseModel {
         ]
     ];
 
-    public function getData(){
+    public function getData() : \stdClass {
         $stargateData               = (object) [];
         $stargateData->id           = $this->_id;
         $stargateData->type         = $this->typeId->name;
@@ -93,7 +93,7 @@ class StargateModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array<string, mixed> $additionalOptions = []) : void {
         $data = self::getF3()->ccpClient()->send('getUniverseStargate', $id);
 
         if(!empty($data)){

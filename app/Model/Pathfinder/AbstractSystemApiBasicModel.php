@@ -39,7 +39,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
      * get data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : mixed {
         $data               = (object)[];
         $data->systemId     = $this->getRaw('systemId');
         $data->values       = $this->getValues();
@@ -73,7 +73,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticKillFieldConfig(){
+    private function addStaticKillFieldConfig() : void {
         if(is_array($this->fieldConf)){
             $staticFieldConfig = [];
 

@@ -32,7 +32,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
      * -> enable/disable
      * @param $status
      */
-    public function setActivityLogging(bool $status){
+    public function setActivityLogging(bool $status) : void {
         $this->enableActivityLogging = $status;
     }
 
@@ -41,7 +41,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
      * @param bool $essentials
      * @return NULL|void
      */
-    public function reset($mapper = true, $essentials = true){
+    public function reset($mapper = true, $essentials = true) : self {
         $this->fieldChanges = [];
         parent::reset($mapper, $essentials);
     }
@@ -88,7 +88,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
     /**
      * @return mixed|void
      */
-    public function save(){
+    public function save() : self {
         // save changed field value BEFORE ->save() it called!
         // parent::save() resets the schema and old values get replaced with new values
         $this->fieldChanges = $this->getFieldChanges();

@@ -122,7 +122,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * set log data by associative array
      * @param array $logData
      */
-    public function setData(array<string, mixed> $logData){
+    public function setData(array<string, mixed> $logData) : void {
 
         if( isset($logData['system']) ){
             $this->systemId = (int)$logData['system']['id'];
@@ -206,7 +206,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys) : void {
         $self->clearCacheData();
     }
 
@@ -216,7 +216,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys) : void {
         $self->updateLogsHistory('update');
 
         // check if any "relevant" column has changed
@@ -231,7 +231,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys) : void {
         $self->deleteLogsHistory();
         $self->clearCacheData();
     }
@@ -239,7 +239,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    public function clearCacheData() : void {
         // clear character "LOG" cache
         // -> character data without "LOG" has not changed!
         if(is_object($this->characterId)){
@@ -256,7 +256,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * -> checks $this->fieldChanges
      * @param string $action
      */
-    protected function updateLogsHistory(string $action){
+    protected function updateLogsHistory(string $action) : void {
         if(
             $this->valid() &&
             is_object($this->characterId)
@@ -268,7 +268,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
     /**
      * delete 'character log' history data
      */
-    protected function deleteLogsHistory(){
+    protected function deleteLogsHistory() : void {
         if(is_object($this->characterId)){
             $this->characterId->clearCacheDataWithPrefix(CharacterModel::DATA_CACHE_KEY_LOG_HISTORY);
         }

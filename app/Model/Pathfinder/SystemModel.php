@@ -822,7 +822,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param bool $fullData
      * @return array
      */
-    public function getLogObjectData($fullData = false) : array{
+    public function getLogObjectData($fullData = false) : array {
         $objectData = [
             'objId' => $this->_id,
             'objName' => $this->name

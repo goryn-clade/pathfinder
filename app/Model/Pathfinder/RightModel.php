@@ -95,7 +95,7 @@ class RightModel extends AbstractPathfinderModel {
      * get right data
      * @return \stdClass
      */
-    public function getData(){
+    public function getData() : \stdClass {
         $rightData = (object) [];
 
         $rightData->name = $this->name;

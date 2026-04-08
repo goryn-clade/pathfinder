@@ -73,7 +73,7 @@ class StructureModel extends AbstractUniverseModel {
      * -> more fields can be added in here if needed
      * @return \stdClass
      */
-    public function getData(): \stdClass {
+    public function getData() : \stdClass {
         $data = (object) [];
         if($this->valid()){
             $data->id   = $this->_id;
@@ -89,7 +89,7 @@ class StructureModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []){
+    protected function loadData(int $id, string $accessToken = '', array<string, mixed>  = []) : void {
         $data = self::getF3()->ccpClient()->send('getUniverseStructure', $id, $accessToken);
         if(!empty($data) && !isset($data['error'])){
             /**

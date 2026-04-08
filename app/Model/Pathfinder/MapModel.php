@@ -191,7 +191,7 @@ class MapModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param array<string, mixed> $data
      */
-    public function setData(array<string, mixed> $data){
+    public function setData(array<string, mixed> $data) : void {
         unset($data['id']);
         unset($data['created']);
         unset($data['updated']);
@@ -221,7 +221,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @return mixed|object|null
      * @throws Exception\ConfigException
      */
-    public function getData(bool $noCache = false){
+    public function getData(bool $noCache = false) : \stdClass {
         // check if there is cached data
         if($noCache || is_null($mapDataAll = $this->getCacheData())){
             // no cached map data found
@@ -414,7 +414,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param string|int $channel
      * @return string
      */
-    protected function set_slackChannelHistory(string|int $channel){
+    protected function set_slackChannelHistory(string|int $channel) : mixed {
         return $this->formatSlackChannelName($channel);
     }
 
@@ -422,7 +422,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param string|int $channel
      * @return string
      */
-    protected function set_slackChannelRally(string|int $channel){
+    protected function set_slackChannelRally(string|int $channel) : mixed {
         return $this->formatSlackChannelName($channel);
     }
 
@@ -431,7 +431,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param string|int $channel
      * @return string
      */
-    private function formatSlackChannelName(string|int $channel){
+    private function formatSlackChannelName(string|int $channel) : string {
         $channel = strtolower(str_replace(' ','', trim(trim((string)$channel), '#@')));
         if($channel){
             $channel = '#' . $channel;
@@ -444,7 +444,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterInsertEvent(self $self, array<int|string, mixed> $pkeys) : void {
         $self->clearCacheData();
         $self->logActivity('mapCreate');
     }
@@ -454,7 +454,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterUpdateEvent(self $self, array<int|string, mixed> $pkeys) : void {
         $self->clearCacheData();
 
         $activity = ($self->isActive()) ? 'mapUpdate' : 'mapDelete';
@@ -466,7 +466,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys){
+    public function afterEraseEvent(self $self, array<int|string, mixed> $pkeys) : void {
         $self->clearCacheData();
         $self->deleteLogFile();
     }
@@ -474,7 +474,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    public function clearCacheData() : void {
         parent::clearCacheData();
 
         // clear character data with map access as well!
@@ -578,7 +578,7 @@ class MapModel extends AbstractMapTrackingModel {
      * get systems in this map
      * @return CortexCollection|array
      */
-    protected function getSystems(){
+    protected function getSystems() : mixed {
         $filters = [
             self::getFilter('active', true)
         ];
@@ -636,7 +636,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param string $scope
      * @return CortexCollection|array
      */
-    public function getConnections($connectionIds = null, $scope = ''){
+    public function getConnections($connectionIds = null, $scope = '') : array {
         $filters = [
             self::getFilter('source', 0, '>'),
             self::getFilter('target', 0, '>')
@@ -857,7 +857,7 @@ class MapModel extends AbstractMapTrackingModel {
      * get all (private) characters for this map
      * @return CharacterModel[]
      */
-    private function getCharacters(){
+    private function getCharacters() : mixed {
         $characters = [];
         $filter = ['active = ?', 1];
 
@@ -949,7 +949,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @return array|null|\stdClass
      * @throws \Exception
      */
-    public function getCharactersData(array<string, mixed> $options = []){
+    public function getCharactersData(array<string, mixed> $options = []) : array {
         // check if there is cached data
         $charactersData = $this->getCacheData(self::DATA_CACHE_KEY_CHARACTER);
 
@@ -1081,7 +1081,7 @@ class MapModel extends AbstractMapTrackingModel {
      * map log formatter callback
      * @return \Closure
      */
-    protected function getLogFormatter(){
+    protected function getLogFormatter() : object {
         return function(&$rowDataObj): void{
             unset($rowDataObj['extra']);
         };
@@ -1272,7 +1272,7 @@ class MapModel extends AbstractMapTrackingModel {
      *
      * @return mixed|null
      */
-    public function getScope(){
+    public function getScope() : string {
         $scope = null;
         if( $this->scopeId->isActive() ){
             $scope = $this->scopeId;
@@ -1324,7 +1324,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param int $posY
      * @return false|ConnectionModel
      */
-    public function saveSystem(SystemModel $system, CharacterModel $character, $posX = 10, $posY = 0){
+    public function saveSystem(SystemModel $system, CharacterModel $character, $posX = 10, $posY = 0) : self {
         $system->setActive(true);
         $system->mapId = $this->id;
         $system->posX = $posX;
@@ -1372,7 +1372,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel $character
      * @return false|ConnectionModel
      */
-    public function saveConnection(ConnectionModel $connection, CharacterModel $character){
+    public function saveConnection(ConnectionModel $connection, CharacterModel $character) : self {
         $connection->mapId = $this;
         return $connection->save($character);
     }
@@ -1380,7 +1380,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * delete existing log file
      */
-    protected function deleteLogFile(){
+    protected function deleteLogFile() : void {
         $config = $this->getStreamConfig();
         if(is_file($config->stream)){
             // try to set write access
@@ -1397,7 +1397,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @return \stdClass
      * @throws \Exception
      */
-    public function getUserData(){
+    public function getUserData() : \stdClass {
 
         // get systems for this map
         // the getData() function is cached. So this is more suitable than getSystems();
@@ -1457,7 +1457,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel|null $characterModel
      * @return false|ConnectionModel|MapModel
      */
-    public function save(CharacterModel $characterModel = null){
+    public function save(CharacterModel $characterModel = null) : self {
         /**
          * @var MapModel $mapModel
          */
