@@ -117,7 +117,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param $structureId
      * @return int|null
      */
-    public function set_structureId($structureId) : ?int {
+    public function set_structureId(int $structureId) : ?int {
         $structureId = (int)$structureId;
         return $structureId ? : null;
     }
@@ -184,7 +184,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeInsertEvent($self, $pkeys) : bool {
+    public function beforeInsertEvent(self $self, array $pkeys) : bool {
         return $this->isValid() ? parent::beforeInsertEvent($self, $pkeys) : false;
     }
 
