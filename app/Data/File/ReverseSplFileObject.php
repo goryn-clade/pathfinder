@@ -154,7 +154,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * seek to previous lines
      * @param int $lineCount
      */
-    public function seek($lineCount){
+    public function seek(int $lineCount) : void {
         for($i = 0; $i < $lineCount; $i++){
             $this->next();
         }

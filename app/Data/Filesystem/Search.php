@@ -23,10 +23,10 @@ class Search {
      * @param int $limit
      * @return \Traversable
      */
-    static function getFilesByMTime(string $dir, $mTime = null, $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
+    static function getFilesByMTime(string $dir, ?int $mTime = null, int $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
         $mTime = is_null($mTime) ? time() : (int)$mTime;
 
-        $filterCallback = function($current, $key, $iterator) use ($mTime) {
+        $filterCallback = function(\RecursiveDirectoryIterator $current) use ($mTime) {
             /**
              * @var \RecursiveDirectoryIterator $current
              */
@@ -54,7 +54,7 @@ class Search {
      */
     static function getFilesBySize(string $dir, int $size = 0, int $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
 
-        $filterCallback = function($current, $key, $iterator) use ($size) {
+        $filterCallback = function(\RecursiveDirectoryIterator $current) use ($size) {
             /**
              * @var \RecursiveDirectoryIterator $current
              */

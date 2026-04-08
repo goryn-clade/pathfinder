@@ -339,7 +339,7 @@ class Sso extends Api\User{
      * @param bool $authCode
      * @return null|\stdClass
      */
-    protected function getSsoAccessData($authCode){
+    protected function getSsoAccessData(string $authCode) : ?\stdClass {
         $accessData = null;
 
         if( !empty($authCode) ){
@@ -358,7 +358,7 @@ class Sso extends Api\User{
      * @param string $authCode
      * @return \stdClass
      */
-    protected function verifyAuthorizationCode(string $authCode){
+    protected function verifyAuthorizationCode(string $authCode) : \stdClass {
         $requestParams = [
             'grant_type' => 'authorization_code',
             'code' => $authCode
