@@ -24,7 +24,7 @@ class Map extends AbstractRestController {
      * @param       $test
      * @throws \Exception
      */
-    public function put(\Base $f3, array<string, mixed> $test){
+    public function put(\Base $f3, array<string, mixed> $test) : void {
         $requestData = $this->getRequestData($f3);
 
         /**
@@ -41,7 +41,7 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, array<string, mixed> $params){
+    public function patch(\Base $f3, array<string, mixed> $params) : void {
         $requestData = $this->getRequestData($f3);
         $mapData = [];
 
@@ -66,7 +66,7 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, array<string, mixed> $params){
+    public function delete(\Base $f3, array<string, mixed> $params) : void {
         $deletedMapIds = [];
 
         if($mapId = (int)$params['id']){
