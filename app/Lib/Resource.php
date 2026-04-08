@@ -97,7 +97,7 @@ class Resource extends \Prefab {
      * @param $value
      * @param bool $extend
      */
-    public function setOption(string $option, mixed $value, bool $extend = false) : mixed {
+    public function setOption(string $option, mixed $value, bool $extend = false) : void {
         $this->$option = ($extend && is_array($value) && is_array($this->$option)) ? array_merge($this->$option, $value) : $value;
     }
 
