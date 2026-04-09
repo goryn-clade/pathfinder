@@ -185,7 +185,7 @@ class Config extends \Prefab {
         $f3->set(EveScoutClient::CLIENT_NAME, EveScoutClient::instance());
 
         // Socket connectors ------------------------------------------------------------------------------------------
-        $f3->set(TcpSocket::SOCKET_NAME, function(array $options = ['timeout' => 1]) : SocketInterface {
+        $f3->set(TcpSocket::SOCKET_NAME, function( $options = ['timeout' => 1]) : SocketInterface {
             return AbstractSocket::factory(TcpSocket::class, self::getSocketUri(), $options);
         });
     }
@@ -195,12 +195,12 @@ class Config extends \Prefab {
      * @param \Base $f3
      * @return array|null
      */
-    protected function getAllEnvironmentData(\Base $f3) : mixed {
-        if(!$f3->exists(self::HIVE_KEY_ENVIRONMENT)){
-            $this->setAllEnvironmentData($f3);
+    protected function getAllEnvironmentData(\Base $f3){
+        if(!$f3->exists(self::HIVE_KEY_ENVIRONMENT, $environmentData)){
+            $environmentData =  $this->setAllEnvironmentData($f3);
         }
 
-        return $f3->get(self::HIVE_KEY_ENVIRONMENT);
+        return $environmentData;
     }
 
     /**
@@ -210,7 +210,7 @@ class Config extends \Prefab {
      * that depend on environment settings
      * @param \Base $f3
      */
-    protected function setHiveVariables(\Base $f3) : void {
+    protected function setHiveVariables(\Base $f3){
         // hive keys that can be overwritten
         $hiveKeys = ['BASE', 'URL', 'DEBUG', 'CACHE'];
 
@@ -226,7 +226,7 @@ class Config extends \Prefab {
      * @param \Base $f3
      * @return array|mixed|null
      */
-    protected function setAllEnvironmentData(\Base $f3) : void {
+    protected function setAllEnvironmentData(\Base $f3){
         $environmentData = null;
 
         if( !empty($this->serverConfigData['ENV']) ){
@@ -263,6 +263,8 @@ class Config extends \Prefab {
             ksort($environmentData);
             $f3->set(self::HIVE_KEY_ENVIRONMENT, $environmentData);
         }
+
+        return $environmentData;
     }
 
     /**
@@ -275,7 +277,7 @@ class Config extends \Prefab {
      * -> FastCGI syntax
      *      fastcgi_param PF-ENV-DEBUG 3;
      */
-    protected function setServerData() : void {
+    protected function setServerData(){
         $data = [];
         foreach($_SERVER as $key => $value){
             if(strpos($key, self::PREFIX_KEY . self::ARRAY_DELIMITER) === 0){

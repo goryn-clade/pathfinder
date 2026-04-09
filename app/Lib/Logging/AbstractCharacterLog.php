@@ -41,7 +41,7 @@ abstract class AbstractCharacterLog extends AbstractChannelLog {
      * @param CharacterModel $character
      * @return LogInterface
      */
-    public function setCharacter(CharacterModel $character) : LogInterface {
+    public function setCharacter(CharacterModel $character): LogInterface{
         $this->character = $character;
         return $this;
     }
@@ -49,7 +49,7 @@ abstract class AbstractCharacterLog extends AbstractChannelLog {
     /**
      * @return CharacterModel
      */
-    public function getCharacter() : CharacterModel {
+    public function getCharacter(): CharacterModel{
         return $this->character;
     }
 
@@ -74,7 +74,7 @@ abstract class AbstractCharacterLog extends AbstractChannelLog {
      * get character thumbnailUrl
      * @return string
      */
-    protected function getThumbUrl() : string {
+    protected function getThumbUrl(): string {
         $url = '';
         if(is_object($character = $this->getCharacter())){
             $url = Config::getPathfinderData('api.ccp_image_server') . '/Character/' . $character->_id . '_128.jpg';

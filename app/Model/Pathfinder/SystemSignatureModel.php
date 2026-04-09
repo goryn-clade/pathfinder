@@ -83,9 +83,9 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
 
     /**
      * set data by associative array
-     * @param array<string, mixed> $data
+     * @param  $data
      */
-    public function setData(array $data) : void {
+    public function setData( $data){
         $this->copyfrom($data, ['name', 'groupId', 'typeId', 'description', 'connectionId']);
     }
 
@@ -93,7 +93,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * get signature data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $signatureData                              = (object) [];
         $signatureData->id                          = $this->id;
 
@@ -130,7 +130,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param ConnectionModel|int $connectionId
      * @return int|null
      */
-    public function set_connectionId(ConnectionModel|int $connectionId) : int|null {
+    public function set_connectionId(ConnectionModel|int $connectionId){
         $connectionId = (int)$connectionId;
         $validConnectionId = null;
 
@@ -166,7 +166,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @return bool
      * @throws Exception\ValidationException
      */
-    protected function validate_name(string $key, string $val) : bool {
+    protected function validate_name(string $key, string $val): bool {
         $valid = true;
         if(!mb_ereg('^[a-zA-Z]{3}-\d{3}$', $val)){
             $valid = false;
@@ -180,14 +180,14 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @return Logging\LogInterface
      * @throws Exception\ConfigException
      */
-    public function newLog(string $action = '') : Logging\LogInterface {
+    public function newLog(string $action = ''): Logging\LogInterface{
         return $this->getMap()->newLog($action)->setTempData($this->getLogObjectData());
     }
 
     /**
      * @return MapModel
      */
-    public function getMap() : MapModel {
+    public function getMap(): MapModel{
         return $this->get('systemId')->getMap();
     }
 
@@ -195,17 +195,17 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * get the connection (if attached)
      * @return ConnectionModel|null
      */
-    public function getConnection() : ConnectionModel|null {
+    public function getConnection(){
         return $this->connectionId;
     }
 
     /**
      * compares a new data set (array) with the current values
      * and checks if something has changed
-     * @param array<string, mixed> $signatureData
+     * @param  $signatureData
      * @return bool
      */
-    public function hasChanged(array $signatureData) : bool {
+    public function hasChanged( $signatureData) : bool {
         $hasChanged = false;
 
         foreach((array)$signatureData as $key => $value){
@@ -247,7 +247,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys) : void {
+    public function afterInsertEvent(self $self,  $pkeys){
         $self->logActivity('signatureCreate');
     }
 
@@ -259,7 +259,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
         // "updated" column should always be updated if no changes made this signature
         // -> makes it easier to see what signatures have not been updated
         $this->touch('updated');
@@ -273,7 +273,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys) : void {
+    public function afterUpdateEvent(self $self,  $pkeys){
         $self->logActivity('signatureUpdate');
     }
 
@@ -283,7 +283,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys) : void {
+    public function afterEraseEvent(self $self,  $pkeys){
         $self->logActivity('signatureDelete');
 
         if(
@@ -298,7 +298,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * get object relevant data for model log
      * @return array
      */
-    public function getLogObjectData() : array {
+    public function getLogObjectData() : array{
         return [
             'objId' => $this->_id,
             'objName' => $this->name

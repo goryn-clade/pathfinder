@@ -71,7 +71,7 @@ class PlanetModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $data               = (object) [];
         $data->name         = $this->name;
 
@@ -86,7 +86,7 @@ class PlanetModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniversePlanet', $id);
         if(!empty($data)){
             /**

@@ -57,7 +57,7 @@ class SystemStaticModel extends AbstractUniverseModel {
      * get static data
      * @return null|string
      */
-    public function getData() : \stdClass {
+    public function getData(){
         return $this->typeId ? $this->typeId->getWormholeName() : null;
     }
 
@@ -66,7 +66,7 @@ class SystemStaticModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {}
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
 
     /**
      * overwrites parent

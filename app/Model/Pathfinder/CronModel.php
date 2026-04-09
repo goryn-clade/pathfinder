@@ -111,7 +111,7 @@ class CronModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array $data) : void {
+    public function setData( $data){
         $this->copyfrom($data, ['handler', 'expr', 'lastExecStart', 'lastExecEnd', 'lastExecMemPeak', 'lastExecState']);
     }
 
@@ -119,7 +119,7 @@ class CronModel extends AbstractPathfinderModel {
      * get data
      * @return object
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $data                   = (object) [];
         $data->id               = $this->_id;
         $data->name             = $this->name;
@@ -145,7 +145,7 @@ class CronModel extends AbstractPathfinderModel {
      * @param string $lastExecStart
      * @return string
      */
-    public function set_lastExecStart($lastExecStart) : mixed {
+    public function set_lastExecStart($lastExecStart){
         $this->logState();
         return $lastExecStart;
     }
@@ -153,7 +153,7 @@ class CronModel extends AbstractPathfinderModel {
     /**
      * log execution "state" for prev run in 'history' column
      */
-    protected function logState() : void {
+    protected function logState(){
         $this->history = $this->getHistory() ? : null;
         // reset data from last run
         $this->lastExecEnd = null;

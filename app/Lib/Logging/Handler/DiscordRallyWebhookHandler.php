@@ -15,7 +15,7 @@ class DiscordRallyWebhookHandler extends AbstractRallyWebhookHandler {
      * @param $html
      * @return string
      */
-    protected function htmlToMarkdown($html) : string {
+    protected function htmlToMarkdown($html){
         $markdown = parent::htmlToMarkdown($html);
         // Discord supports syntax highlighting for MarkDown
         $markdown = 'Markdown' . "\n" . $markdown;

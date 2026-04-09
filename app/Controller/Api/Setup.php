@@ -20,7 +20,7 @@ class Setup extends Controller\Controller {
      * get HTML table <tr>´s for all cronjobs
      * @param \Base $f3
      */
-    public function cronTable(\Base $f3) : void {
+    public function cronTable(\Base $f3){
         $return = (object) [];
         $return->error = [];
         $return->jobsData = Cron::instance()->getJobsConfig();
@@ -32,7 +32,7 @@ class Setup extends Controller\Controller {
      * toggle "isPaused" for a cronjob by its name
      * @param \Base $f3
      */
-    public function cronPause(\Base $f3) : void {
+    public function cronPause(\Base $f3){
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];
@@ -59,7 +59,7 @@ class Setup extends Controller\Controller {
      * -> max execution time might be lower than CLI calls!
      * @param \Base $f3
      */
-    public function cronExecute(\Base $f3) : void {
+    public function cronExecute(\Base $f3){
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];
@@ -84,7 +84,7 @@ class Setup extends Controller\Controller {
      * @param array $jobsData
      * @return string
      */
-    protected function getCronHtml(array $jobsData) : string {
+    protected function getCronHtml( $jobsData) : string {
         $tplData = [
             'cronConfig' => [
                 'jobs' => $jobsData,
@@ -105,7 +105,7 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function buildIndex(\Base $f3) : void {
+    public function buildIndex(\Base $f3){
         $postData = (array)$f3->get('POST');
         $type = (string)$postData['type'];
         $countAll = (int)$postData['countAll'];
@@ -226,7 +226,7 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function clearIndex(\Base $f3) : void {
+    public function clearIndex(\Base $f3){
         $postData = (array)$f3->get('POST');
         $type = (string)$postData['type'];
 

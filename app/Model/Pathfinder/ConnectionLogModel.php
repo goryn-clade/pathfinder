@@ -77,7 +77,7 @@ class ConnectionLogModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array $data) : void {
+    public function setData( $data){
         $this->copyfrom($data, ['shipTypeId', 'shipTypeName', 'shipMass', 'characterId', 'characterName']);
     }
 
@@ -118,7 +118,7 @@ class ConnectionLogModel extends AbstractPathfinderModel {
      * @param string $val
      * @return bool
      */
-    protected function validate_shipTypeId(string $key, string $val) : bool {
+    protected function validate_shipTypeId(string $key, string $val): bool {
         return !empty((int)$val);
     }
 

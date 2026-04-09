@@ -72,7 +72,7 @@ class StarModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $starData                   = (object) [];
         $starData->id               = $this->_id;
         $starData->name             = $this->typeId->name;
@@ -85,7 +85,7 @@ class StarModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseStar', $id);
         if(!empty($data)){
             /**

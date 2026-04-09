@@ -60,7 +60,7 @@ class PriorityCacheStore {
      * @param $key
      * @param $data
      */
-    public function set(string $key, mixed $data) : void {
+    public function set(string $key, mixed $data){
         if(!$this->exists($key)){
             $this->priorityQueue->insert($key, $this->priority--);
         }
@@ -75,7 +75,7 @@ class PriorityCacheStore {
      * @param $key
      * @return mixed|null
      */
-    public function get(string $key) : mixed {
+    public function get(string $key){
         return $this->exists($key) ? $this->store[$key] : null;
     }
 
@@ -83,7 +83,7 @@ class PriorityCacheStore {
      * @param $key
      * @return bool
      */
-    public function exists(string $key) : bool {
+    public function exists(string $key){
         return isset($this->store[$key]);
     }
 
@@ -96,7 +96,7 @@ class PriorityCacheStore {
         }
     }
 
-    public function cleanup() : void {
+    public function cleanup(){
         while(
             $this->entryLimit < $this->priorityQueue->count() &&
             $this->priorityQueue->valid()
@@ -107,7 +107,7 @@ class PriorityCacheStore {
         }
     }
 
-    public function clear() : void {
+    public function clear(){
         $limit = $this->entryLimit;
         $this->entryLimit = 0;
         $this->cleanup();
@@ -118,7 +118,7 @@ class PriorityCacheStore {
     /**
      * @return string
      */
-    public function __toString() : string {
+    public function __toString(){
         return 'Store count: ' . count($this->store) . ' priorityQueue count: ' . $this->priorityQueue->count();
     }
 }

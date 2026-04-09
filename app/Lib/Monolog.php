@@ -85,7 +85,7 @@ class Monolog extends \Prefab {
      * @param Logging\AbstractLog $log
      * @throws \Exception
      */
-    public function push(Logging\AbstractLog $log) : void {
+    public function push(Logging\AbstractLog $log){
         // check whether $log should be "grouped" by common handlers
         if($log->isGrouped()){
             $groupHash = $log->getGroupHash();
@@ -108,7 +108,7 @@ class Monolog extends \Prefab {
     /**
      * bulk process all stored logs -> send to Monolog lib
      */
-    public function log() : void {
+    public function log(){
 
         foreach($this->logs as $logs){
             foreach($logs as $log){
@@ -185,7 +185,7 @@ class Monolog extends \Prefab {
      * @return FormatterInterface|null
      * @throws \Exception
      */
-    private function getFormatter(string $formatKey) : mixed {
+    private function getFormatter(string $formatKey){
         $formatter = null;
         if(!empty($formatKey)){
             if(array_key_exists($formatKey, self::FORMATTER)){

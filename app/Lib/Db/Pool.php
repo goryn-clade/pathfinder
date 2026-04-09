@@ -65,7 +65,7 @@ class Pool extends \Prefab {
      * @param bool $silent
      * @param bool $clearErrors
      */
-    public function setSilent(bool $silent, bool $clearErrors = false) : void {
+    public function setSilent(bool $silent, bool $clearErrors = false){
         $this->silent = $silent;
         if($clearErrors){
             $this->errors = [];
@@ -205,7 +205,7 @@ class Pool extends \Prefab {
      * @param string $alias
      * @param \Exception $e
      */
-    protected function pushError(string $alias, \Exception $e) : void {
+    protected function pushError(string $alias, \Exception $e){
         if(!isset($this->errors[$alias]) || !is_array($this->errors[$alias])){
             $this->errors[$alias] = [];
         }

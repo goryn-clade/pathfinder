@@ -78,7 +78,7 @@ class FactionWarSystemModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $data                           = (object) [];
         $data->contested                = $this->contested;
 
@@ -116,5 +116,5 @@ class FactionWarSystemModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {}
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
 }

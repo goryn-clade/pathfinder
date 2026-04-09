@@ -54,7 +54,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
     /**
      * see parent
      */
-    public function clearCacheData() : void {
+    public function clearCacheData(){
         // clear map cache
         $this->mapId->clearCacheData();
     }

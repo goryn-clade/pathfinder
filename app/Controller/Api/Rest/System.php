@@ -19,7 +19,7 @@ class System extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function get(\Base $f3, array $params) : void {
+    public function get(\Base $f3,  $params) : void {
         $requestData = $this->getRequestData($f3);
         $systemData = null;
 
@@ -80,7 +80,7 @@ class System extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, array $params) : void {
+    public function patch(\Base $f3,  $params) : void {
         $requestData = $this->getRequestData($f3);
         $systemData = [];
 
@@ -106,7 +106,7 @@ class System extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, array $params) : void {
+    public function delete(\Base $f3,  $params) : void {
         $requestData = $this->getRequestData($f3);
         $systemIds = array_map('intval', explode(',', (string)$params['id']));
         $deletedSystemIds = [];
@@ -165,7 +165,7 @@ class System extends AbstractRestController {
      * @return Pathfinder\SystemModel
      * @throws \Exception
      */
-    private function update(Pathfinder\SystemModel $system, array $systemData) : Pathfinder\SystemModel {
+    private function update(Pathfinder\SystemModel $system,  $systemData) : Pathfinder\SystemModel {
         $activeCharacter = $this->getCharacter();
 
         // statusId === 0  is 'auto' status -> keep current status

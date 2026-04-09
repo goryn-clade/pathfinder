@@ -104,7 +104,7 @@ class UserModel extends AbstractPathfinderModel {
      * @return bool
      * @throws Exception\RegistrationException
      */
-    public function beforeInsertEvent(self $self, array $pkeys) : bool {
+    public function beforeInsertEvent(self $self,  $pkeys) : bool {
         $registrationStatus = Controller\Controller::getRegistrationStatus();
         switch($registrationStatus){
             case 0:
@@ -122,14 +122,14 @@ class UserModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys) : void {
+    public function afterEraseEvent(self $self,  $pkeys){
         $this->sendDeleteMail();
     }
 
     /**
      * send delete confirm mail to  this user
      */
-    protected function sendDeleteMail() : void {
+    protected function sendDeleteMail(){
         if($this->isMailSendEnabled()){
             $log = new Logging\UserLog('userDelete', $this->getLogChannelData());
             $log->addHandler('mail', 'mail', $this->getSMTPConfig());
@@ -271,7 +271,7 @@ class UserModel extends AbstractPathfinderModel {
      * characters will be checked/updated on login by CCP API call
      * @return UserCharacterModel[]
      */
-    public function getUserCharacters() : mixed {
+    public function getUserCharacters(){
         $this->filter('userCharacters', ['active = ?', 1]);
 
         $userCharacters = [];

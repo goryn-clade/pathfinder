@@ -18,7 +18,7 @@ class Log extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function put(\Base $f3) : void {
+    public function put(\Base $f3){
         $requestData = $this->getRequestData($f3);
         $connectionData = [];
 
@@ -50,7 +50,7 @@ class Log extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, array $params) : void {
+    public function delete(\Base $f3,  $params){
         $logId = (int)$params['id'];
         $connectionData = [];
 
@@ -69,7 +69,7 @@ class Log extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, array $params) : void {
+    public function patch(\Base $f3,  $params){
         $logId = (int)$params['id'];
         $requestData = $this->getRequestData($f3);
         $connectionData = [];
@@ -92,7 +92,7 @@ class Log extends AbstractRestController {
      * @return bool|Pathfinder\ConnectionLogModel
      * @throws \Exception
      */
-    private function update(int $logId, array $logData) : bool|Pathfinder\ConnectionLogModel {
+    private function update(int $logId,  $logData){
         $log = false;
         if($logId){
             $activeCharacter = $this->getCharacter();

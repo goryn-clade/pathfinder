@@ -32,7 +32,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * get model data -> should be overwritten
      * @return null
      */
-    public function getData() : mixed {
+    public function getData(){
         return null;
     }
 
@@ -41,7 +41,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $position
      * @return null
      */
-    public function set_position(array $position) : mixed {
+    public function set_position( $position){
         $position = (array)$position;
         if(count($position) === 3){
             $this->x = $position['x'];
@@ -58,7 +58,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $self->touch('updated');
@@ -72,7 +72,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $column
      * @return bool|string
      */
-    public function getHashKey(string $column = '_id') : string {
+    public function getHashKey(string $column = '_id'){
         $key = false;
         if($this->valid() && $this->exists($column)){
             $key = self::generateHashKeyRow($this->getTable(), $this->$column);
@@ -112,7 +112,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * -> stores getData() result into Cache (RAM) for faster access
      * @return null|\stdClass
      */
-    public function buildIndex() : bool {
+    public function buildIndex(){
         $data = null;
         if($hashKeyId = $this->getHashKey()){
             $data = $this->getData();
@@ -130,7 +130,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * -> if data not found -> try to build up index for this model
      * @return null|\stdClass
      */
-    public function fromIndex() : mixed {
+    public function fromIndex(){
         $data = null;
         if($hashKeyId = $this->getHashKey()){
             if( !self::existsCacheValue($hashKeyId, $data)){
@@ -148,7 +148,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    public function loadById(int $id, string $accessToken = '', array $additionalOptions = []) : self {
+    public function loadById(int $id, string $accessToken = '',  $additionalOptions = []){
         /**
          * @var self $model
          */
@@ -164,7 +164,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void;
+    abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []);
 
     /**
      * convert CCPs ids for system security into Pathfinder security label
@@ -197,7 +197,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param AbstractUniverseModel $model
      * @param array $rowKeys
      */
-    public static function buildTableIndex(AbstractUniverseModel $model, array $rowKeys = []){
+    public static function buildTableIndex(AbstractUniverseModel $model,  $rowKeys = []){
         $hashKeyTable = static::generateHashKeyTable($model->getTable());
         if( !self::getF3()->exists($hashKeyTable, $cachedData) ){
             $cachedData = [];

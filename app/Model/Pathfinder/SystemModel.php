@@ -154,9 +154,9 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * set data by associative array
-     * @param array<string, mixed> $data
+     * @param  $data
      */
-    public function setData(array $data) : void {
+    public function setData( $data){
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
     }
 
@@ -164,7 +164,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * get map data as object
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         // check if there is cached data
         if(is_null($data = $this->getCacheData())){
             $data                           = (object) [];
@@ -254,7 +254,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @return mixed|null|\stdClass
      * @throws \Exception
      */
-    private function getStaticSystemData() : mixed {
+    private function getStaticSystemData(){
         $staticData = null;
         if(!is_object(self::$priorityCacheStore)){
             self::$priorityCacheStore = new PriorityCacheStore();
@@ -278,7 +278,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @return mixed|null
      * @throws \Exception
      */
-    private function getStaticSystemValue(string $key) : mixed {
+    private function getStaticSystemValue(string $key){
         $value = null;
         if($staticData = $this->getStaticSystemData()){
             if(isset($staticData->$key)){
@@ -341,7 +341,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param string $alias
      * @return string
      */
-    public function set_alias($alias) : string {
+    public function set_alias($alias){
         $alias = trim($alias);
 
         // we don´t need redundant data. "name" is always preferred if "alias" is empty
@@ -354,9 +354,9 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * setter for statusId
-     * @param array<string, mixed> $status
+     * @param  $status
      */
-    public function set_status(array $status) : void {
+    public function set_status( $status){
         if($statusId = (int)$status['id']){
             $this->statusId = $statusId;
         }
@@ -364,10 +364,10 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * setter for position array
-     * @param array<string, mixed> $position
+     * @param  $position
      * @return null
      */
-    public function set_position(array $position) : null {
+    public function set_position( $position){
         $position = (array)$position;
         if(count($position) === 2){
             $this->posX = $position['x'];
@@ -409,7 +409,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param int $rally
      * @return null|string
      */
-    public function set_rallyUpdated($rally) : null|string {
+    public function set_rallyUpdated($rally){
         $rally = (int)$rally;
 
         switch($rally){
@@ -428,63 +428,63 @@ class SystemModel extends AbstractMapTrackingModel {
         return $rally;
     }
 
-    public function get_name() : mixed {
+    public function get_name(){
         return $this->getStaticSystemValue('name');
     }
 
-    public function get_constellationId() : mixed {
+    public function get_constellationId(){
         $constellationData = $this->getStaticSystemValue('constellation');
         return $constellationData ? $constellationData->id : null;
     }
 
-    public function get_constellation() : mixed {
+    public function get_constellation(){
         $constellationData = $this->getStaticSystemValue('constellation');
         return $constellationData ? $constellationData->name : null;
     }
 
-    public function get_regionId() : mixed {
+    public function get_regionId(){
         $constellationData = $this->getStaticSystemValue('constellation');
         return ($constellationData && $constellationData->region) ? $constellationData->region->id : null;
     }
 
-    public function get_region() : mixed {
+    public function get_region(){
         $constellationData = $this->getStaticSystemValue('constellation');
         return ($constellationData && $constellationData->region) ? $constellationData->region->name : null;
     }
 
-    public function get_security() : mixed {
+    public function get_security(){
         return $this->getStaticSystemValue('security');
     }
 
-    public function get_trueSec() : mixed {
+    public function get_trueSec(){
         return $this->getStaticSystemValue('trueSec');
     }
 
-    public function get_effect() : mixed {
+    public function get_effect(){
         return $this->getStaticSystemValue('effect');
     }
 
-    public function get_shattered() : mixed {
+    public function get_shattered(){
         return $this->getStaticSystemValue('shattered');
     }
 
-    public function get_statics() : mixed {
+    public function get_statics(){
         return $this->getStaticSystemValue('statics');
     }
 
-    public function get_planets() : mixed {
+    public function get_planets(){
         return $this->getStaticSystemValue('planets');
     }
 
-    public function get_stations() : mixed {
+    public function get_stations(){
         return $this->getStaticSystemValue('stations');
     }
 
-    public function get_sovereignty() : mixed {
+    public function get_sovereignty(){
         return $this->getStaticSystemValue('sovereignty');
     }
 
-    public function get_factionWar() : mixed {
+    public function get_factionWar(){
         return $this->getStaticSystemValue('factionWar');
     }
 
@@ -493,7 +493,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys) : void {
+    public function afterInsertEvent(self $self,  $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemCreate');
     }
@@ -505,7 +505,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
         $status = parent::beforeUpdateEvent($self, $pkeys);
 
         if($status && !$self->isActive()){
@@ -534,7 +534,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys) : void {
+    public function afterUpdateEvent(self $self,  $pkeys){
         $self->clearCacheData();
         $activity = ($self->isActive()) ? 'systemUpdate' : 'systemDelete';
         $self->logActivity($activity);
@@ -545,7 +545,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys) : void {
+    public function afterEraseEvent(self $self,  $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemDelete');
     }
@@ -595,7 +595,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param CharacterModel $characterModel
      * @return bool
      */
-    public function delete(CharacterModel $characterModel) : bool {
+    public function delete(CharacterModel $characterModel){
         return ($this->valid() && $this->hasAccess($characterModel)) ? $this->erase() : false;
     }
 
@@ -603,7 +603,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * get all connections of this system
      * @return ConnectionModel[]
      */
-    public function getConnections() : array {
+    public function getConnections(){
         $connections = [];
 
         $this->filter('connectionsTarget', [
@@ -636,7 +636,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * -> might be filtered by active has() filter
      * @return SystemSignatureModel[]
      */
-    public function getSignatures() : array {
+    public function getSignatures(){
         return $this->signatures ? : [];
     }
 
@@ -725,12 +725,12 @@ class SystemModel extends AbstractMapTrackingModel {
      * -> send to a Slack channel
      * -> send to a Discord channel
      * -> send to an Email
-     * @param array<string, mixed> $rallyData
+     * @param  $rallyData
      * @param CharacterModel $characterModel
      * @throws Exception\ConfigException
      * @throws \Exception
      */
-    public function sendRallyPoke(array $rallyData, CharacterModel $characterModel) : void {
+    public function sendRallyPoke( $rallyData, CharacterModel $characterModel){
         // rally log needs at least one handler to be valid
         $isValidLog = false;
         $log = new Logging\RallyLog('rallySet', $this->getMap()->getLogChannelData());
@@ -783,7 +783,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * set system type based on security
      */
-    public function setType() : void {
+    public function setType(){
         switch($this->security){
             case 'H':
             case 'L':
@@ -812,7 +812,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param CharacterModel $character
      * @return false|ConnectionModel
      */
-    public function saveSignature(SystemSignatureModel $signature, CharacterModel $character) : false|ConnectionModel {
+    public function saveSignature(SystemSignatureModel $signature, CharacterModel $character){
         $signature->systemId = $this;
         return $signature->save($character);
     }
@@ -822,7 +822,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param bool $fullData
      * @return array
      */
-    public function getLogObjectData($fullData = false) : array {
+    public function getLogObjectData($fullData = false) : array{
         $objectData = [
             'objId' => $this->_id,
             'objName' => $this->name
@@ -899,7 +899,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * @see parent
      */
-    public function clearCacheData() : void {
+    public function clearCacheData(){
         parent::clearCacheData();
 
         // clear map cache as well

@@ -151,7 +151,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticDateFieldConfig() : void {
+    private function addStaticDateFieldConfig(){
         if(is_array($this->fieldConf)){
             $staticFieldConfig = [
                 'year' => [
@@ -175,7 +175,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
      * get all table columns that are used as "counter" columns
      * @return array
      */
-    public function getCountableColumnNames() : array {
+    public function getCountableColumnNames(): array {
         $fieldConf = $this->getFieldConfiguration();
 
         $filterCounterColumns = function($key, $value){

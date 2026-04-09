@@ -50,7 +50,7 @@ class RaceModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $data           = (object) [];
         $data->id       = $this->_id;
         $data->name     = $this->name;
@@ -65,7 +65,7 @@ class RaceModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseRace', $id);
         if(!empty($data) && !isset($data['error'])){
             /**

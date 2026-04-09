@@ -51,7 +51,7 @@ class MapLog extends AbstractCharacterLog {
      * get log tag depending on log action
      * @return string
      */
-    public function getTagFromAction() : mixed {
+    public function getTagFromAction(){
         $tag = parent::getTag();
         $actionParts = $this->getActionParts();
         switch($actionParts[1]){
@@ -155,11 +155,11 @@ class MapLog extends AbstractCharacterLog {
     /**
      * @param bool $logActivity
      */
-    public function logActivity(bool $logActivity) : void {
+    public function logActivity(bool $logActivity){
         $this->logActivity = $logActivity;
     }
 
-    public function buffer() : void {
+    public function buffer(){
         parent::buffer();
 
         if($this->logActivity){

@@ -28,7 +28,7 @@ class CharacterUpdate extends AbstractCron {
      * @param \Base $f3
      * @return int
      */
-    protected function getCharacterLogInactiveTime(\Base $f3) : mixed {
+    protected function getCharacterLogInactiveTime(\Base $f3){
         $logInactiveTime = (int)$f3->get('PATHFINDER.CACHE.CHARACTER_LOG_INACTIVE');
         return ($logInactiveTime >= 0) ? $logInactiveTime : self::CHARACTER_LOG_INACTIVE;
     }

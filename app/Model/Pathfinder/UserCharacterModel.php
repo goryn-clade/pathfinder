@@ -58,7 +58,7 @@ class UserCharacterModel extends AbstractPathfinderModel {
      * @param UserCharacterModel $self
      * @param $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys) : void {
+    public function afterEraseEvent(self $self,  $pkeys){
         if(
             is_object($self->userId) &&
             is_null($self->userId->userCharacters)
@@ -71,7 +71,7 @@ class UserCharacterModel extends AbstractPathfinderModel {
      * get the character model of this character
      * @return mixed
      */
-    public function getCharacter() : mixed {
+    public function getCharacter(){
         return $this->characterId;
     }
 

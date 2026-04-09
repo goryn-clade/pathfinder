@@ -20,7 +20,7 @@ class SignatureHistory extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function get(\Base $f3, array $params) : void {
+    public function get(\Base $f3,  $params){
         $historyData = [];
 
         if($systemId = (int)$params['id']){
@@ -58,7 +58,7 @@ class SignatureHistory extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function put(\Base $f3) : void {
+    public function put(\Base $f3){
         $requestData = $this->getRequestData($f3);
         $signaturesData = [];
 

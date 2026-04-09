@@ -115,7 +115,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getCookieCharacter(\Base $f3) : void {
+    public function getCookieCharacter(\Base $f3){
         $data = $f3->get('POST');
         $cookieName = (string)$data['cookie'];
 
@@ -152,7 +152,7 @@ class User extends Controller\Controller{
      * get captcha image and store key to session
      * @param \Base $f3
      */
-    public function getCaptcha(\Base $f3) : void {
+    public function getCaptcha(\Base $f3){
         $data = $f3->get('POST');
 
         $return = (object) [];
@@ -196,7 +196,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function logout(\Base $f3) : void {
+    public function logout(\Base $f3){
         $data = $f3->get('POST');
         $deleteCookie = (bool)$data['deleteCookie'];
 
@@ -209,7 +209,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function openIngameWindow(\Base $f3) : void {
+    public function openIngameWindow(\Base $f3){
         $data = $f3->get('POST');
 
         $return = (object) [];
@@ -244,7 +244,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function saveAccount(\Base $f3) : void {
+    public function saveAccount(\Base $f3){
         $data = $f3->get('POST');
 
         $return = (object)[];
@@ -353,7 +353,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function deleteAccount(\Base $f3) : void {
+    public function deleteAccount(\Base $f3){
         $data = $f3->get('POST.formData');
         $return = (object) [];
 

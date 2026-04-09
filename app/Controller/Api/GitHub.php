@@ -24,7 +24,7 @@ class GitHub extends Controller\Controller {
      * get release information from  GitHub
      * @param \Base $f3
      */
-    public function releases(\Base $f3) : void {
+    public function releases(\Base $f3){
         $releaseCount = 4;
 
         $return = (object) [];

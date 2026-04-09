@@ -286,7 +286,7 @@ abstract class AbstractClient extends \Prefab {
      * unload function
      * @param \Redis $client
      */
-    public function unloadCache(\Redis $client) : void {
+    public function unloadCache(\Redis $client){
         if($client->isConnected()){
             $client->close();
         }
@@ -298,7 +298,7 @@ abstract class AbstractClient extends \Prefab {
      * @param array $arguments
      * @return array|mixed
      */
-    public function __call(string $name, array $arguments = []) : mixed {
+    public function __call(string $name, array $arguments = []){
         $return = [];
         if(is_object($this->client)){
             if(method_exists($this->client, $name)){

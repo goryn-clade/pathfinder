@@ -19,7 +19,7 @@ class SystemGraph extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function get(\Base $f3, array $params) : void {
+    public function get(\Base $f3,  $params){
         $requestData = $this->getRequestData($f3);
         $systemIds = (array)$requestData['systemIds'];
         $graphsData = [];
@@ -106,7 +106,7 @@ class SystemGraph extends AbstractRestController {
      * @param int $systemId
      * @return string
      */
-    protected function getSystemGraphCacheKey(int $systemId) : string {
+    protected function getSystemGraphCacheKey(int $systemId): string {
         return sprintf(self::CACHE_KEY_GRAPH, 'SYSTEM_' . $systemId);
     }
 }

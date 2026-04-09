@@ -52,14 +52,14 @@ class Controller {
     /**
      * @param string $template
      */
-    protected function setTemplate(string $template) : void {
+    protected function setTemplate(string $template){
         $this->template = $template;
     }
 
     /**
      * @return string
      */
-    protected function getTemplate() : ?string {
+    protected function getTemplate(){
         return $this->template;
     }
 
@@ -87,7 +87,7 @@ class Controller {
      * @param $params
      * @return bool
      */
-    function beforeroute(\Base $f3, array $params) : bool {
+    function beforeroute(\Base $f3,  $params) : bool {
         // init user session
         $this->initSession($f3);
 
@@ -115,7 +115,7 @@ class Controller {
      * -> render view
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) : void {
+    public function afterroute(\Base $f3){
         // send preload/prefetch headers
         $resource = Resource::instance();
         if($resource->getOption('output') === 'header'){
@@ -243,7 +243,7 @@ class Controller {
      * @param Pathfinder\CharacterModel $character
      * @throws \Exception
      */
-    protected function setLoginCookie(Pathfinder\CharacterModel $character) : void {
+    protected function setLoginCookie(Pathfinder\CharacterModel $character){
         if( $this->getCookieState() ){
             $expireSeconds = (int)Config::getPathfinderData('login.cookie_expire');
             $expireSeconds *= 24 * 60 * 60;
@@ -300,7 +300,7 @@ class Controller {
      * @return Pathfinder\CharacterModel[]
      * @throws \Exception
      */
-    protected function getCookieCharacters(array $cookieData = [], bool $checkAuthorization = true) : array {
+    protected function getCookieCharacters( $cookieData = [], bool $checkAuthorization = true) : array {
         $characters = [];
 
         if(
@@ -490,7 +490,8 @@ class Controller {
      * @param int $statusCode
      * @throws \Exception
      */
-    protected function logoutCharacter(        \Base $f3,
+    protected function logoutCharacter(
+        \Base $f3,
         bool $all = false,
         bool $deleteSession = true,
         bool $deleteLog = true,
@@ -544,7 +545,7 @@ class Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getEveServerStatus(\Base $f3) : void {
+    public function getEveServerStatus(\Base $f3){
         $ttl = 60;
         $esiStatusVersion = 'latest';
         $cacheKey = 'eve_server_status';
@@ -678,7 +679,7 @@ class Controller {
      * @param null $alias
      * @return bool|string
      */
-    protected function getRouteUrl(?string $alias = null) : bool|string {
+    protected function getRouteUrl(?string $alias = null){
         $url = false;
 
         if(!empty($alias)){
@@ -715,7 +716,7 @@ class Controller {
      * print error information in CLI mode
      * @param \stdClass $error
      */
-    protected function echoErrorCLI(\stdClass $error) : void {
+    protected function echoErrorCLI(\stdClass $error){
         echo '[' . date('H:i:s') . '] ───────────────────────────' . PHP_EOL;
         foreach(get_object_vars($error) as $key => $value){
             $row = str_pad(' ',2 ) . str_pad($key . ':',10 );
@@ -736,7 +737,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function showError(\Base $f3) : bool {
+    public function showError(\Base $f3){
 
         if(!headers_sent()){
             // collect error info -------------------------------------------------------------------------------------
@@ -818,7 +819,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function unload(\Base $f3) : bool {
+    public function unload(\Base $f3){
         // store all user activities that are buffered for logging in this request
         // this should work even on non HTTP200 responses
         $this->logActivities();
@@ -829,7 +830,7 @@ class Controller {
     /**
      * store activity log data to DB
      */
-    protected function logActivities() : void {
+    protected function logActivities(){
         LogController::instance()->logActivities();
         Monolog::instance()->log();
     }

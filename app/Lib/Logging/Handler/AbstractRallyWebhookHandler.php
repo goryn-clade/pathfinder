@@ -147,7 +147,7 @@ abstract class AbstractRallyWebhookHandler extends AbstractWebhookHandler {
      * @param $html
      * @return string
      */
-    protected function htmlToMarkdown($html) : string {
+    protected function htmlToMarkdown($html){
         $converter = new HtmlConverter();
         $converter->getConfig()->setOption('strip_tags', true);
         return $converter->convert($html);

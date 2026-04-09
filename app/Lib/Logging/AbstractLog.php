@@ -175,14 +175,14 @@ abstract class AbstractLog implements LogInterface {
     /**
      * set $f3 base object
      */
-    public function setF3() : void {
+    public function setF3(){
         $this->f3 = \Base::instance();
     }
 
     /**
      * @param $message
      */
-    public function setMessage(string $message) : void {
+    public function setMessage(string $message){
         $this->message = $message;
     }
 
@@ -190,7 +190,7 @@ abstract class AbstractLog implements LogInterface {
      * @param string $level
      * @throws \Exception
      */
-    public function setLevel(string $level) : void {
+    public function setLevel(string $level){
         if( in_array($level, self::LEVEL)){
             $this->level = $level;
         }else{
@@ -202,7 +202,7 @@ abstract class AbstractLog implements LogInterface {
      * @param string $tag
      * @throws \Exception
      */
-    public function setTag(string $tag) : void {
+    public function setTag(string $tag){
         if( in_array($tag, self::TAG)){
             $this->tag = $tag;
         }else{
@@ -464,7 +464,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * remove all group handlers and their config params
      */
-    public function removeHandlerGroups() : void {
+    public function removeHandlerGroups(){
         foreach($this->getHandlerGroups() as $handlerKey){
             $this->removeHandlerGroup($handlerKey);
         }
@@ -473,7 +473,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * @param string $handlerKey
      */
-    public function removeHandlerGroup(string $handlerKey) : void {
+    public function removeHandlerGroup(string $handlerKey){
         unset($this->handlerConfig[$handlerKey]);
         unset($this->handlerParamsConfig[$handlerKey]);
     }
@@ -554,7 +554,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * send this Log to global log buffer storage
      */
-    public function buffer() : void {
+    public function buffer(){
         if( !empty($this->handlerParamsConfig) ){
             Monolog::instance()->push($this);
         }  

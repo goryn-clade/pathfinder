@@ -82,7 +82,7 @@ class RoleModel extends AbstractPathfinderModel {
      * get role data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $roleData = (object) [];
 
         $roleData->name = $this->name;

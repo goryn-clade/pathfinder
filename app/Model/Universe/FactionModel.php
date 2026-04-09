@@ -70,7 +70,7 @@ class FactionModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $factionData                = (object) [];
         $factionData->id            = $this->_id;
         $factionData->name          = $this->name;
@@ -83,7 +83,7 @@ class FactionModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseFaction', $id);
         if(!empty($data) && !isset($data['error'])){
             $this->copyfrom($data, ['id', 'name', 'description', 'sizeFactor', 'stationCount', 'stationSystemCount']);

@@ -55,7 +55,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * get all alliance data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $allianceData = (object) [];
 
         $allianceData->id = $this->id;
@@ -72,7 +72,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $this->touch('updated');
@@ -84,7 +84,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * get all maps for this alliance
      * @return array|mixed
      */
-    public function getMaps() : mixed {
+    public function getMaps(){
         $maps = [];
         $this->filterRel();
 
@@ -110,7 +110,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param array $options
      * @return CharacterModel[]
      */
-    public function getCharacters(array $characterIds = [], array $options = []) : array {
+    public function getCharacters(array $characterIds = [],  $options = []) : array {
         $characters = [];
         $filter = ['active = ?', 1];
 

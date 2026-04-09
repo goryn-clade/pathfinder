@@ -130,10 +130,10 @@ class TypeModel extends AbstractUniverseModel {
      * set 'dogma_attributes' during ESI import process to a virtual field
      * -> 'dogma_attributes' get imported after type is saved
      * @see loadData()
-     * @param array<string, mixed> $dogmaAttributesData
+     * @param  $dogmaAttributesData
      * @return null
      */
-    public function set_dogma_attributes(array $dogmaAttributesData) : mixed {
+    public function set_dogma_attributes( $dogmaAttributesData){
         $this->virtual('dogmaAttributes', (array)$dogmaAttributesData);
         return null;
     }
@@ -142,7 +142,7 @@ class TypeModel extends AbstractUniverseModel {
      * special getter for 'wormhole' types
      * @return string|null
      */
-    public function getWormholeName() : mixed {
+    public function getWormholeName(){
         return self::formatWormholeName($this->name);
     }
 
@@ -151,7 +151,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param bool $essentials
      * @return NULL|void
      */
-    public function reset($mapper = true, $essentials = true) : self {
+    public function reset($mapper = true, $essentials = true){
         $this->clearVirtual('dogmaAttributes');
         parent::reset($mapper, $essentials);
     }
@@ -161,7 +161,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param array $additionalData
      * @return null|object
      */
-    public function getData(array $additionalData = []) : \stdClass {
+    public function getData( $additionalData = []){
         $typeData = (object) [];
         $typeData->id = $this->_id;
         $typeData->name = $this->name;
@@ -257,10 +257,10 @@ class TypeModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys) : void {
+    public function afterInsertEvent(self $self,  $pkeys){
         $self->syncDogmaAttributes();
 
-        parent::afterInsertEvent($self, $pkeys);
+        return parent::afterInsertEvent($self, $pkeys);
     }
 
     /**
@@ -268,17 +268,17 @@ class TypeModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys) : void {
+    public function afterUpdateEvent(self $self,  $pkeys){
         $self->syncDogmaAttributes();
 
-        parent::afterUpdateEvent($self, $pkeys);
+        return parent::afterUpdateEvent($self, $pkeys);
     }
 
     /**
      * sync existing 'dogma' typeAttributes data with "new/updated" typeAttributes
      * -> $this->dogmaAttributes must be set before calling this method
      */
-    protected function syncDogmaAttributes() : void {
+    protected function syncDogmaAttributes(){
         if(
             $this->storeDogmaAttributes &&
             !empty($dogmaAttributesData = (array)$this->dogmaAttributes)
@@ -322,7 +322,7 @@ class TypeModel extends AbstractUniverseModel {
      * -> used to inject custom attributes (not available from ESI)
      * @param array $data
      */
-    private function manipulateDogmaAttributes(array &$data) : void {
+    private function manipulateDogmaAttributes( &$data){
         if(!$this->storeDogmaAttributes){
             // attributes should not get saved
             unset($data['dogma_attributes']);
@@ -352,7 +352,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseType', $id);
         if(!empty($data)){
             $this->manipulateDogmaAttributes($data);

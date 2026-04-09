@@ -61,7 +61,7 @@ class TypeAttributeModel extends AbstractUniverseModel {
     /**
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $typeAttributeData          = $this->attributeId->getData();
         $typeAttributeData->value   = (float)$this->value;
 
@@ -73,7 +73,7 @@ class TypeAttributeModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {}
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
 
     /**
      * overwrites parent

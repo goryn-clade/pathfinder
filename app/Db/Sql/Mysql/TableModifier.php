@@ -28,7 +28,7 @@ class TableModifier extends SQL\TableModifier {
      * @param null| Constraint $constraint
      * @return Constraint[]
      */
-    public function listConstraint($constraint = null) : mixed {
+    public function listConstraint($constraint = null){
 
         $constraintName = '%';
         $keys = [];
@@ -70,7 +70,7 @@ class TableModifier extends SQL\TableModifier {
      * @param Constraint $constraint
      * @return bool
      */
-    public function constraintExists($constraint) : bool {
+    public function constraintExists($constraint){
         $constraints = $this->listConstraint();
         return array_key_exists($constraint->getConstraintName(), $constraints);
     }
@@ -79,7 +79,7 @@ class TableModifier extends SQL\TableModifier {
      * drop foreign key constraint
      * @param Constraint $constraint
      */
-    public function dropConstraint($constraint) : void {
+    public function dropConstraint($constraint){
         if($constraint->isValid()){
             $this->queries[] = "ALTER TABLE " . $this->db->quotekey($this->name) . "
                                 DROP FOREIGN KEY " . $this->db->quotekey($constraint->getConstraintName()) . ";";
@@ -92,7 +92,7 @@ class TableModifier extends SQL\TableModifier {
      * Add/Update foreign key constraint
      * @param Constraint $constraint
      */
-    public function addConstraint($constraint) : void {
+    public function addConstraint($constraint){
 
         if($constraint->isValid()){
             $this->queries[] = "

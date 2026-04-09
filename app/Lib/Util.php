@@ -31,7 +31,7 @@ class Util {
 
     /**
      * flatten multidimensional array ignore keys
-     * @param array<mixed> $array
+     * @param  $array
      * @return array
      */
     static function arrayFlattenByValue(array $array) : array {
@@ -43,7 +43,7 @@ class Util {
     /**
      * flatten multidimensional array merge keys
      * -> overwrites duplicate keys!
-     * @param array<mixed> $array
+     * @param  $array
      * @return array
      */
     static function arrayFlattenByKey(array $array) : array {
@@ -55,7 +55,7 @@ class Util {
     /**
      * transforms array with assoc. arrays as values
      * into assoc. array where $key column data is used for its key
-     * @param array<string, mixed> $array
+     * @param  $array
      * @param string $key
      * @param bool $unsetKey
      * @return array
@@ -141,7 +141,7 @@ class Util {
 
     /**
      * get hash from an array of ESI scopes
-     * @param array<string> $scopes
+     * @param  $scopes
      * @return string
      */
     static function getHashFromScopes(array $scopes) : string {

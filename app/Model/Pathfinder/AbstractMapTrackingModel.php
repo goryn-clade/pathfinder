@@ -47,7 +47,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
      * get static character  fields for this model instance
      * @return array
      */
-    protected function getStaticFieldConf() : array {
+    protected function getStaticFieldConf(): array{
         return array_merge(parent::getStaticFieldConf(), $this->trackingFieldConf);
     }
 
@@ -55,7 +55,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
      * log character activity create/update/delete events
      * @param string $action
      */
-    protected function logActivity(string $action) : void {
+    protected function logActivity($action){
         // check if activity logging is enabled for this object
         if($this->enableActivityLogging){
             // check for field changes
@@ -73,7 +73,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
      * @return bool
      * @throws Exception\DatabaseException
      */
-    public function isValid() : bool {
+    public function isValid(): bool {
         if($valid = parent::isValid()){
             foreach($this->trackingFieldConf as $key => $colConf){
                 if($this->exists($key)){
@@ -96,7 +96,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
      * get log file data
      * @return array
      */
-    public function getLogData() : array {
+    public function getLogData(): array {
         return [];
     }
 
@@ -105,7 +105,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
      * @param CharacterModel $characterModel
      * @return ConnectionModel|false
      */
-    public function save(CharacterModel $characterModel = null) : self {
+    public function save(CharacterModel $characterModel = null){
         if($this->dry()){
             $this->createdCharacterId = $characterModel;
         }

@@ -56,7 +56,7 @@ class SystemTypeModel extends AbstractPathfinderModel {
      * get system type data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
 
         $typeData                   = (object)[];
         $typeData->id               = $this->_id;

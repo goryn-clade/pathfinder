@@ -168,7 +168,7 @@ class Setup extends Controller {
     /**
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) : void {
+    public function afterroute(\Base $f3) {
         // js view (file)
         $f3->set('tplJsView', 'setup');
 
@@ -191,7 +191,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function init(\Base $f3) : void {
+    public function init(\Base $f3){
         $params = $f3->get('GET');
 
         // enables automatic column fix
@@ -634,7 +634,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function checkPHPConfig(\Base $f3) : array {
+    protected function checkPHPConfig(\Base $f3): array {
         $memoryLimit        = (int)ini_get('memory_limit');
         $maxInputVars       = (int)ini_get('max_input_vars');
         $maxExecutionTime   = (int)ini_get('max_execution_time'); // 0 == infinite
@@ -706,7 +706,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function checkRedisInformation(\Base $f3) : array {
+    protected function checkRedisInformation(\Base $f3): array {
         $redisConfig = [];
 
         if(
@@ -731,7 +731,7 @@ class Setup extends Controller {
              * @param array  $conf
              * @return array
              */
-            $getClientInfo = function(\Redis $client, array $conf) : array {
+            $getClientInfo = function(\Redis $client,  $conf) : array {
                 return [
                     'dsn' => [
                         'label' => 'DSN',
@@ -860,7 +860,7 @@ class Setup extends Controller {
              * build (modify) $redisConfig with DNS $conf data
              * @param array $conf
              */
-            $buildRedisConfig = function(array $conf) use (&$redisConfig, $getDbLabel, $getClientInfo, $getClientStats, $getDatabaseStatus): void{
+            $buildRedisConfig = function( $conf) use (&$redisConfig, $getDbLabel, $getClientInfo, $getClientStats, $getDatabaseStatus): void{
                 if(($conf['type'] ?? null) == 'redis'){
                     // is Redis -> group all DNS by host:port
                     $uid = ($conf['host'] ?? 'localhost') . ':' . ($conf['port'] ?? 6379);
@@ -953,7 +953,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function checkSystemConfig(\Base $f3) : array {
+    protected function checkSystemConfig(\Base $f3): array {
         $systemConf = [];
         if(function_exists('exec')){
             $gitOut = $composerOut = $nodeOut = $npmOut = [];
@@ -1006,7 +1006,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
-    protected function getMapsDefaultConfig(\Base $f3) : array {
+    protected function getMapsDefaultConfig(\Base $f3): array {
         $matrix = \Matrix::instance();
         $mapsDefaultConfig = (array)Config::getMapsDefaultConfig();
         $matrix->transpose($mapsDefaultConfig);
@@ -1080,7 +1080,7 @@ class Setup extends Controller {
      * @param bool|false $exec
      * @return array
      */
-    protected function checkDatabase(\Base $f3, bool $exec = false) : array {
+    protected function checkDatabase(\Base $f3, $exec = false){
 
         foreach($this->databases as $dbAlias => $dbData){
 
@@ -1513,7 +1513,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @param string $dbAlias
      */
-    protected function createDB(\Base $f3, string $dbAlias) : void {
+    protected function createDB(\Base $f3, string $dbAlias){
         // check for valid key
         if(!empty($this->databases[$dbAlias])){
             // disable logging (we expect the DB connect to fail -> no db created)
@@ -1585,7 +1585,7 @@ class Setup extends Controller {
         $statsTcp = false;
         $statsWeb = false;
 
-        $setStats = function(array $stats) use (&$statsTcp, &$statsWeb): void {
+        $setStats = function( $stats) use (&$statsTcp, &$statsWeb): void {
             if(!empty($stats['tcpSocket'])){
                 $statsTcp = $stats['tcpSocket'];
             }
@@ -1888,7 +1888,7 @@ class Setup extends Controller {
      * @return bool
      * @throws \Exception
      */
-    protected function importTable(string $modelClass) : bool {
+    protected function importTable($modelClass){
         $this->getDB('PF');
         return Pathfinder\AbstractPathfinderModel::getNew($modelClass)->importData();
     }
@@ -1898,7 +1898,7 @@ class Setup extends Controller {
      * @param string $modelClass
      * @throws \Exception
      */
-    protected function exportTable(string $modelClass) : void {
+    protected function exportTable($modelClass){
         $this->getDB('PF');
         Pathfinder\AbstractPathfinderModel::getNew($modelClass)->exportData();
     }
@@ -1968,7 +1968,7 @@ class Setup extends Controller {
      * clear directory
      * @param string $path
      */
-    protected function clearFiles(string $path) : void {
+    protected function clearFiles(string $path){
         $files = Search::getFilesByMTime($path);
         foreach($files as $file){
             /**
@@ -1988,7 +1988,7 @@ class Setup extends Controller {
      * @param int $port
      * @param int $db
      */
-    protected function flushRedisDb(string $host, int $port, int $db = 0) : void {
+    protected function flushRedisDb(string $host, int $port, int $db = 0){
         $client = new \Redis();
         $client->pconnect($host, $port, 0.3);
         $client->select($db);
@@ -2001,7 +2001,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    protected function invalidateCookies(\Base $f3) : void {
+    protected function invalidateCookies(\Base $f3){
         $this->getDB('PF');
         $authenticationModel = Pathfinder\AbstractPathfinderModel::getNew('CharacterAuthenticationModel');
         $results = $authenticationModel->find();

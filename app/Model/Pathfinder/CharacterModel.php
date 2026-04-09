@@ -207,7 +207,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @return mixed|object|null
      * @throws \Exception
      */
-    public function getData($addLogData = false, $addLogHistoryData = false) : \stdClass {
+    public function getData($addLogData = false, $addLogHistoryData = false){
         // check for cached data
         if(is_null($characterData = $this->getCacheData())){
             // no cached character data found
@@ -290,7 +290,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param CorporationModel|int $corporationId
      * @return mixed
      */
-    public function set_corporationId(CorporationModel|int $corporationId) : mixed {
+    public function set_corporationId(CorporationModel|int $corporationId){
         $currentCorporationId = (int)$this->get('corporationId', true);
 
         if($currentCorporationId !== $corporationId){
@@ -306,7 +306,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param string $ownerHash
      * @return string
      */
-    public function set_ownerHash($ownerHash) : mixed {
+    public function set_ownerHash($ownerHash){
         if( $this->ownerHash !== $ownerHash ){
             if( $this->hasUserCharacter() ){
                 // reset admin actions (e.g. kick/ban)
@@ -329,7 +329,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @return mixed|null|string
      * @throws \Exception
      */
-    public function set_kicked(int|bool|null $minutes) : mixed {
+    public function set_kicked(int|bool|null $minutes){
         if($this->allowKickChange){
             // allowed to set/change -> reset "allowed" property
             $this->allowKickChange = false;
@@ -358,7 +358,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @return mixed|string|null
      * @throws \Exception
      */
-    public function set_banned(bool|int $status) : mixed {
+    public function set_banned(bool|int $status){
         if($this->allowBanChange){
             // allowed to set/change -> reset "allowed" property
             $this->allowBanChange = false;
@@ -382,7 +382,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param bool $logLocation
      * @return bool
      */
-    public function set_logLocation(bool $logLocation) : mixed {
+    public function set_logLocation(bool $logLocation){
         $logLocation = (bool)$logLocation;
         if(
             !$logLocation &&
@@ -400,7 +400,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * -> this will not work (prevent abuse)
      * @param bool|int $minutes
      */
-    public function kick($minutes = false) : self {
+    public function kick($minutes = false){
         // enables "kicked" change for this model
         $this->allowKickChange = true;
         $this->kicked = $minutes;
@@ -412,7 +412,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * -> this will not work (prevent abuse)
      * @param bool|int $status
      */
-    public function ban($status = false) : self {
+    public function ban($status = false){
         // enables "banned" change for this model
         $this->allowBanChange = true;
         $this->banned = $status;
@@ -423,7 +423,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys) : void {
+    public function afterInsertEvent(self $self,  $pkeys){
         $self->clearCacheData();
     }
 
@@ -432,7 +432,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys) : void {
+    public function afterUpdateEvent(self $self,  $pkeys){
         $self->clearCacheData();
     }
 
@@ -441,14 +441,14 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys) : void {
+    public function afterEraseEvent(self $self,  $pkeys){
         $self->clearCacheData();
     }
 
     /**
      * see parent
      */
-    public function clearCacheData() : void {
+    public function clearCacheData(){
         parent::clearCacheData();
 
         // clear data with "log" as well!
@@ -458,7 +458,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * resets some columns that could have changed by admins (e.g. kick/ban)
      */
-    private function resetAdminColumns() : void {
+    private function resetAdminColumns(){
         $this->kick();
         $this->ban();
     }
@@ -522,7 +522,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * get ESI API "access_token" from OAuth
      * @return bool|string
      */
-    public function getAccessToken() : mixed {
+    public function getAccessToken(){
         $accessToken = false;
         $refreshToken = true;
 
@@ -788,7 +788,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * update clone data
      */
-    public function updateCloneData() : void {
+    public function updateCloneData(){
         if($accessToken = $this->getAccessToken()){
             $clonesData = self::getF3()->ccpClient()->send('getCharacterClones', $this->_id, $accessToken);
             if(!isset($clonesData['error'])){
@@ -804,7 +804,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * @throws \Exception
      */
-    public function updateRoleData() : void {
+    public function updateRoleData(){
         $this->roleId = $this->getRole();
     }
 
@@ -836,11 +836,11 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * update character log (active system, ...)
      * -> API request for character log data
-     * @param array<string, mixed> $additionalOptions (optional) request options for cURL request
+     * @param  $additionalOptions (optional) request options for cURL request
      * @return CharacterModel
      * @throws \Exception
      */
-    public function updateLog(array $additionalOptions = []) : self {
+    public function updateLog( $additionalOptions = []) : self {
         $deleteLog = false;
         $invalidResponse = false;
 
@@ -1134,10 +1134,10 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * try to update existing 'character log' history entry (replace data)
      * -> matched by 'stamp' timestamp
-     * @param array<string, mixed> $historyEntry
+     * @param  $historyEntry
      * @return bool
      */
-    protected function updateLogHistoryEntry(array $historyEntry) : bool {
+    protected function updateLogHistoryEntry( $historyEntry) : bool {
         $updated = false;
 
         if(
@@ -1165,7 +1165,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * broadcast characterData
      */
-    public function broadcastCharacterUpdate() : void {
+    public function broadcastCharacterUpdate(){
         $characterData = $this->getData(true);
 
         self::getF3()->webSocket()->write('characterUpdate', $characterData);
@@ -1377,7 +1377,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * delete current location
      */
-    protected function deleteLog() : void {
+    protected function deleteLog(){
         if($characterLog = $this->getLog()){
             $characterLog->erase();
         }
@@ -1386,7 +1386,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * delete authentications data
      */
-    protected function deleteAuthentications() : void {
+    protected function deleteAuthentications(){
         if(is_object($this->characterAuthentications)){
             foreach($this->characterAuthentications as $characterAuthentication){
                 /**
@@ -1402,7 +1402,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param bool $deleteSession
      * @param bool $deleteCookie
      */
-    public function logout(bool $deleteSession = true, bool $deleteLog = true, bool $deleteCookie = false) : void {
+    public function logout(bool $deleteSession = true, bool $deleteLog = true, bool $deleteCookie = false){
         // delete current session data --------------------------------------------------------------------------------
         if($deleteSession){
             $sessionCharacterData = (array)$this->getF3()->get(User::SESSION_KEY_CHARACTERS);
@@ -1443,10 +1443,10 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * merges two multidimensional characterSession arrays by checking characterID
-     * @param array<int, array<string, mixed>> $characterDataBase
+     * @param  $characterDataBase
      * @return array
      */
-    public static function mergeSessionCharacterData(array $characterDataBase = []) : array {
+    public static function mergeSessionCharacterData( $characterDataBase = []) : array {
         $addData = [];
         // get current session characters to be merged with
         $characterData = (array)self::getF3()->get(User::SESSION_KEY_CHARACTERS);
@@ -1468,10 +1468,10 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * get all characters
-     * @param array<int> $characterIds
+     * @param  $characterIds
      * @return \DB\CortexCollection
      */
-    public static function getAll(array $characterIds = []){
+    public static function getAll( $characterIds = []){
         $query = [
             'active = :active AND id IN :characterIds',
             ':active' => 1,

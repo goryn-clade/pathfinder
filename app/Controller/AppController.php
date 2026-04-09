@@ -20,7 +20,7 @@ class AppController extends Controller {
      * @param $params
      * @return bool
      */
-    public function beforeroute(\Base $f3, array $params) : bool {
+    public function beforeroute(\Base $f3,  $params) : bool {
         // page title
         $f3->set('tplPageTitle',  Config::getPathfinderData('name'));
 
@@ -59,7 +59,7 @@ class AppController extends Controller {
      * event handler after routing
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) : void {
+    public function afterroute(\Base $f3){
         parent::afterroute($f3);
 
         // clear all SSO related temp data
@@ -72,7 +72,7 @@ class AppController extends Controller {
      * show main login (index) page
      * @param \Base $f3
      */
-    public function init(\Base $f3) : void {
+    public function init(\Base $f3){
         $resource = Resource::instance();
         $resource->register('script', 'app/login');
         $resource->register('script', 'app/mappage', 'prefetch');

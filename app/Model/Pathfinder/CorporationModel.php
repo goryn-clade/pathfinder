@@ -179,7 +179,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self, array $pkeys) : bool {
+    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $this->touch('updated');
@@ -190,10 +190,10 @@ class CorporationModel extends AbstractPathfinderModel {
     /**
      * get all maps for this corporation
      * @param int|null $mapId
-     * @param array<string, mixed> $options
+     * @param  $options
      * @return array
      */
-    public function getMaps(?int $mapId = null, array $options = []) : array {
+    public function getMaps(?int $mapId = null,  $options = []) : array {
         $maps = [];
         $this->filterRel();
 
@@ -223,11 +223,11 @@ class CorporationModel extends AbstractPathfinderModel {
 
     /**
      * get all characters in this corporation
-     * @param array<int> $characterIds
-     * @param array<string, mixed> $options
+     * @param  $characterIds
+     * @param  $options
      * @return CharacterModel[]
      */
-    public function getCharacters(array $characterIds = [], array $options = []) : array {
+    public function getCharacters( $characterIds = [],  $options = []) : array {
         $characters = [];
         $filter = ['active = ?', 1];
 
@@ -288,7 +288,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param string $accessToken
      * @return array
      */
-    public function getCharactersRoles($accessToken) : mixed {
+    public function getCharactersRoles($accessToken){
         $characterRolesData = [];
         if(
             !empty($accessToken) &&
@@ -305,12 +305,12 @@ class CorporationModel extends AbstractPathfinderModel {
 
     /**
      * get all corporation rights
-     * @param array<string> $names
-     * @param array<string, mixed> $options
+     * @param  $names
+     * @param  $options
      * @return CorporationRightModel[]
      * @throws \Exception
      */
-    public function getRights(array $names = self::RIGHTS, array $options = []) : array {
+    public function getRights( $names = self::RIGHTS,  $options = []) : array {
         $corporationRights = [];
         // get available rights
         $right = self::getNew('RightModel');
@@ -376,7 +376,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * add new structure for this corporation
      * @param StructureModel $structure
      */
-    public function saveStructure(StructureModel $structure) : void {
+    public function saveStructure(StructureModel $structure){
         if( !$structure->dry() ){
             $corporationStructure = $this->rel('corporationStructures');
             
@@ -398,10 +398,10 @@ class CorporationModel extends AbstractPathfinderModel {
 
     /**
      * get all corporations
-     * @param array<string, mixed> $options
+     * @param  $options
      * @return \DB\CortexCollection
      */
-    public static function getAll(array $options = []){
+    public static function getAll( $options = []){
         $query = [
             'active = :active',
             ':active' => 1

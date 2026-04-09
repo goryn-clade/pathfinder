@@ -17,7 +17,7 @@ class MailFormatter implements Formatter\FormatterInterface {
      * @param array $record
      * @return mixed|string
      */
-    public function format(array $record) : mixed {
+    public function format(array $record){
 
         $tplDefaultData = [
             'tplPretext' => $record['message'],
@@ -42,7 +42,7 @@ class MailFormatter implements Formatter\FormatterInterface {
      * @param array $records
      * @return mixed|string
      */
-    public function formatBatch(array $records) : mixed {
+    public function formatBatch(array $records){
         $message = '';
         foreach ($records as $record) {
             $message .= $this->format($record);

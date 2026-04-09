@@ -77,7 +77,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param  bool        $includeExtra           Whether the extra data added to Slack as attachments are in a short style
      * @param  int         $level                  The minimum logging level at which this handler will be triggered
      * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
-     * @param  array<string> $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param   $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
     public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $includeContext = true, $includeExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = []){
         $this->webhookUrl = $webhookUrl;
@@ -95,10 +95,10 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
 
     /**
      * format
-     * @param array<string, mixed> $record
+     * @param  $record
      * @return array
      */
-    protected function getSlackData(array $record) : array {
+    protected function getSlackData(array $record): array {
         $postData = [];
 
         if ($this->username) {
@@ -125,7 +125,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     /**
      * {@inheritdoc}
      *
-     * @param array<string, mixed> $record
+     * @param  $record
      */
     protected function write(array $record) : void {
         $record = $this->excludeFields($record);
@@ -154,10 +154,10 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * @param array<string, mixed> $postData
+     * @param  $postData
      * @return array
      */
-    protected function cleanAttachments(array $postData) : array {
+    protected function cleanAttachments(array $postData): array{
         $attachmentCount = count($postData['attachments']);
         if( $attachmentCount > $this->maxAttachments){
             $text = 'To many attachments! ' . ($attachmentCount - $this->maxAttachments) . ' of ' . $attachmentCount . ' attachments not visible';
@@ -176,11 +176,11 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * @param array<string, mixed> $attachment
-     * @param array<string, mixed> $characterData
+     * @param  $attachment
+     * @param  $characterData
      * @return array
      */
-    protected function setAuthor(array $attachment, array $characterData) : array {
+    protected function setAuthor(array $attachment, array $characterData): array {
         if( !empty($characterData['id']) &&  !empty($characterData['name'])){
             $attachment['author_name'] = $characterData['name'] . ' #' . $characterData['id'];
             $attachment['author_link'] = Config::getPathfinderData('api.z_killboard') . '/character/' . $characterData['id'] . '/';
@@ -191,11 +191,11 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * @param array<string, mixed> $attachment
-     * @param array<string, mixed> $thumbData
+     * @param  $attachment
+     * @param  $thumbData
      * @return array
      */
-    protected function setThumb(array $attachment, array $thumbData) : array {
+    protected function setThumb(array $attachment, array $thumbData): array {
         if( !empty($thumbData['url'])) {
             $attachment['thumb_url'] = $thumbData['url'];
         }
@@ -210,7 +210,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param bool $short
      * @return array
      */
-    protected function generateAttachmentField(string|int $title, mixed $value, bool $format = false, bool $short = true) : mixed {
+    protected function generateAttachmentField(string|int $title, mixed $value, bool $format = false, bool $short = true){
         return [
             'title' => $title,
             'value' => !empty($value) ? ( $format ? sprintf('`%s`', $value) : $value ) : '',
@@ -222,7 +222,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param string $tag
      * @return string
      */
-    protected function getAttachmentColor(string $tag) : string {
+    protected function getAttachmentColor(string $tag): string {
         switch($tag){
             case 'information': $color = '#428bca'; break;
             case 'success':     $color = '#4f9e4f'; break;
@@ -235,10 +235,10 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
 
     /**
      * Get a copy of record with fields excluded according to $this->excludeFields
-     * @param array<string, mixed> $record
+     * @param  $record
      * @return array
      */
-    private function excludeFields(array $record) : mixed {
+    private function excludeFields(array $record){
         foreach($this->excludeFields as $field){
             $keys = explode('.', $field);
             $node = &$record;

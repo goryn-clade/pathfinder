@@ -97,7 +97,7 @@ class Resource extends \Prefab {
      * @param $value
      * @param bool $extend
      */
-    public function setOption(string $option, mixed $value, bool $extend = false) : void {
+    public function setOption(string $option, mixed $value, bool $extend = false){
         $this->$option = ($extend && is_array($value) && is_array($this->$option)) ? array_merge($this->$option, $value) : $value;
     }
 
@@ -106,7 +106,7 @@ class Resource extends \Prefab {
      * @param string $option
      * @return mixed|null
      */
-    public function getOption(string $option) : mixed {
+    public function getOption(string $option){
         return isset($this->$option) ? $this->$option : null;
     }
 
@@ -116,7 +116,7 @@ class Resource extends \Prefab {
      * @param string $file
      * @param string $rel
      */
-    public function register(string $group, string $file, string $rel = self::ATTR_REL) : void {
+    public function register(string $group, string $file, string $rel = self::ATTR_REL){
         $this->resources[$group][$file] = ['options' => ['rel' => $rel]];
     }
 
@@ -148,7 +148,7 @@ class Resource extends \Prefab {
      * build inline HTML <link> tags for resources
      * @return string
      */
-    public function buildLinks() : string {
+    public function buildLinks(){
         $this->build();
         $links = [];
         foreach($this->resources as $resources){
@@ -192,7 +192,7 @@ class Resource extends \Prefab {
      * build resource data
      * -> add missing attributes to resources
      */
-    protected function build() : void {
+    protected function build(){
         foreach($this->resources as $group => &$resources){
             foreach($resources as $file => &$conf){
                 if(empty($conf['link'])){

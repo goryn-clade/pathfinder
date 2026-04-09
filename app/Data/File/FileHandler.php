@@ -28,7 +28,8 @@ class FileHandler extends \Prefab {
      * @param \Closure|null $rowParser
      * @return array
      */
-    public function readFileReverse(        string $sourceFile,
+    public function readFileReverse(
+        string $sourceFile,
         int $offset = self::LOG_FILE_OFFSET,
         int $limit = self::LOG_FILE_LIMIT,
         \Closure $rowParser = null

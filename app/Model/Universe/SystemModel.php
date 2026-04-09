@@ -115,7 +115,7 @@ class SystemModel extends AbstractUniverseModel {
      * -> this includes constellation, region, star, planets as well
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $data                       = (object) [];
         $data->id                   = $this->_id;
         $data->name                 = $this->name;
@@ -169,7 +169,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param $name
      * @return mixed
      */
-    public function set_name(string $name) : string {
+    public function set_name(string $name){
         // name should never change
         // -> important for "Abyssal" systems where ESI don´t have correct system name
         if(!empty($this->name)){
@@ -183,7 +183,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param $secStatus
      * @return double
      */
-    public function set_securityStatus(string|int|float $secStatus) : float {
+    public function set_securityStatus(string|int|float $secStatus){
         $secStatus = (double)$secStatus;
         // round for trueSec
         $positive = ($secStatus > 0);
@@ -229,7 +229,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param $effect
      * @return string|null
      */
-    public function set_effect(string $effect) : string|null {
+    public function set_effect(string $effect){
         $effect = (string)$effect;
         return $effect ? : null;
     }
@@ -238,7 +238,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param array $sovData
      * @return bool true if sovereignty data changed
      */
-    public function updateSovereigntyData(array $sovData = []) : bool {
+    public function updateSovereigntyData( $sovData = []) : bool {
         $hasChanged     = false;
         $systemId       = (int)$sovData['systemId'];
         $factionId      = (int)$sovData['factionId'];
@@ -322,7 +322,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param array $fwData
      * @return bool true if faction warfare data changed
      */
-    public function updateFactionWarData(array $fwData = []) : bool {
+    public function updateFactionWarData( $fwData = []) : bool {
         $hasChanged         = false;
         $systemId           = (int)$fwData['systemId'];
         $ownerFactionId     = (int)$fwData['ownerFactionId'];
@@ -378,7 +378,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys) : bool {
+    public function afterUpdateEvent(self $self,  $pkeys){
         // build search index
         $self->buildIndex();
         return parent::afterUpdateEvent($self, $pkeys);
@@ -478,7 +478,7 @@ class SystemModel extends AbstractUniverseModel {
     /**
      * update system from ESI
      */
-    public function updateModel() : void {
+    public function updateModel(){
         if($this->valid()){
             $this->loadData($this->_id);
             $this->loadPlanetsData();
@@ -490,7 +490,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseSystem', $id);
 
         if(!empty($data)){
@@ -519,7 +519,7 @@ class SystemModel extends AbstractUniverseModel {
     /**
      * load planets data for this system
      */
-    public function loadPlanetsData() : void {
+    public function loadPlanetsData(){
         if($this->valid()){
             $data = self::getF3()->ccpClient()->send('getUniverseSystem', $this->_id);
             if($data['planets']){
@@ -540,7 +540,7 @@ class SystemModel extends AbstractUniverseModel {
      * load stargates for this system
      * -> stargates to destination system which is not in DB get ignored
      */
-    public function loadStargatesData() : void {
+    public function loadStargatesData(){
         if($this->valid()){
             $data = self::getF3()->ccpClient()->send('getUniverseSystem', $this->_id);
             if($data['stargates']){
@@ -559,7 +559,7 @@ class SystemModel extends AbstractUniverseModel {
     /**
      * load NPC owned stations for this system
      */
-    public function loadStationsData() : void {
+    public function loadStationsData(){
         if($this->valid()){
             $data = self::getF3()->ccpClient()->send('getUniverseSystem', $this->_id);
             if($data['stations']){

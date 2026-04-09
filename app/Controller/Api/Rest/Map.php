@@ -24,7 +24,7 @@ class Map extends AbstractRestController {
      * @param       $test
      * @throws \Exception
      */
-    public function put(\Base $f3, array $test) : void {
+    public function put(\Base $f3,  $test) : void {
         $requestData = $this->getRequestData($f3);
 
         /**
@@ -41,7 +41,7 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, array $params) : void {
+    public function patch(\Base $f3,  $params) : void {
         $requestData = $this->getRequestData($f3);
         $mapData = [];
 
@@ -66,7 +66,7 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, array $params) : void {
+    public function delete(\Base $f3,  $params) : void {
         $deletedMapIds = [];
 
         if($mapId = (int)$params['id']){
@@ -113,7 +113,7 @@ class Map extends AbstractRestController {
      * @return Pathfinder\MapModel
      * @throws \Exception
      */
-    private function update(Pathfinder\MapModel $map, array $mapData) : Pathfinder\MapModel {
+    private function update(Pathfinder\MapModel $map,  $mapData) : Pathfinder\MapModel {
         $activeCharacter = $this->getCharacter();
 
         $map->setData($mapData);
@@ -216,7 +216,7 @@ class Map extends AbstractRestController {
      * @param Pathfinder\MapModel $map
      * @throws \Exception
      */
-    protected function broadcastMapAccess(Pathfinder\MapModel $map) : void {
+    protected function broadcastMapAccess(Pathfinder\MapModel $map){
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,
@@ -235,7 +235,7 @@ class Map extends AbstractRestController {
      * broadcast map delete information to clients
      * @param int $mapId
      */
-    private function broadcastMapDeleted(int $mapId) : void {
+    private function broadcastMapDeleted(int $mapId){
         $this->getF3()->webSocket()->write('mapDeleted', $mapId);
     }
 }

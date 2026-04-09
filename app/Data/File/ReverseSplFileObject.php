@@ -73,7 +73,7 @@ class ReverseSplFileObject extends \SplFileObject{
     /**
      * reverse rewind file.
      */
-    public function rewind() : void {
+    public function rewind(){
         //Set the line position to 0 - First Line
         $this->position = 0;
 
@@ -110,7 +110,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * Return the current line after the file pointer
      * @return string
      */
-    public function current() : mixed {
+    public function current(){
         return trim($this->fgets());
     }
 
@@ -119,18 +119,18 @@ class ReverseSplFileObject extends \SplFileObject{
      * These go in reverse order
      * @return mixed
      */
-    public function key() : mixed {
+    public function key(){
         return $this->position;
     }
 
     /**
      * move one line up
      */
-    public function next() : mixed {
+    public function next(){
         //Step the file pointer back one step to the last letter of the previous line
         --$this->pointer;
         if($this->pointer < $this->begin){
-            return null;
+            return;
         }
 
         $this->fseek($this->pointer);
@@ -146,7 +146,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * Check the current file pointer to make sure we  are not at the beginning of the file
      * @return bool
      */
-    public function valid() : mixed {
+    public function valid(){
         return ($this->pointer >= $this->begin);
     }
 
@@ -164,7 +164,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * move pointer to line begin
      * -> skip line breaks
      */
-    private function findLineBegin() : void {
+    private function findLineBegin(){
         //Check the character over and over till we hit another new line
         $c = $this->fgetc();
 
@@ -192,7 +192,7 @@ class ReverseSplFileObject extends \SplFileObject{
     /**
      * set total line count. No matter if there are empty lines in between
      */
-    private function setLineCount() : void {
+    private function setLineCount(){
         // Store flags and position
         $flags = $this->getFlags();
         $currentPointer = $this->ftell();

@@ -38,7 +38,7 @@ class Admin extends Controller{
      * @return bool
      * @throws \Exception
      */
-    function beforeroute(\Base $f3, array $params): bool {
+    function beforeroute(\Base $f3,  $params): bool {
         $return = parent::beforeroute($f3, $params);
 
         $f3->set('tplPage', 'login');
@@ -67,7 +67,7 @@ class Admin extends Controller{
      * event handler after routing
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) : void {
+    public function afterroute(\Base $f3) {
         // js view (file)
         $f3->set('tplJsView', 'admin');
 
@@ -86,7 +86,7 @@ class Admin extends Controller{
      * @return CharacterModel|null
      * @throws \Exception
      */
-    protected function getAdminCharacter(\Base $f3) : ?CharacterModel {
+    protected function getAdminCharacter(\Base $f3){
         $adminCharacter = null;
         if( !$f3->exists(Sso::SESSION_KEY_SSO_ERROR) ){
             if( $character = $this->getCharacter(0) ){
@@ -122,7 +122,7 @@ class Admin extends Controller{
      * @param null $character
      * @throws \Exception
      */
-    public function dispatch(\Base $f3, array $params, ?CharacterModel $character = null) : void {
+    public function dispatch(\Base $f3,  $params, ?CharacterModel $character = null){
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map('strtolower', explode('/', $params['*']))));
@@ -193,7 +193,7 @@ class Admin extends Controller{
      * @param array $settings
      * @throws \Exception
      */
-    protected function saveSettings(CharacterModel $character, int $corporationId, array $settings) : void {
+    protected function saveSettings(CharacterModel $character, int $corporationId,  $settings){
         $defaultRole = RoleModel::getDefaultRole();
 
         if($corporationId && $defaultRole){
@@ -230,7 +230,7 @@ class Admin extends Controller{
      * @param int $kickCharacterId
      * @param int $minutes
      */
-    protected function kickCharacter(CharacterModel $character, int $kickCharacterId, int $minutes) : void {
+    protected function kickCharacter(CharacterModel $character, $kickCharacterId, $minutes){
         $kickOptions = self::KICK_OPTIONS;
         $minKickTime = key($kickOptions) ;
         end($kickOptions);
@@ -259,7 +259,7 @@ class Admin extends Controller{
      * @param int $banCharacterId
      * @param int $value
      */
-    protected function banCharacter(CharacterModel $character, int $banCharacterId, int $value) : void {
+    protected function banCharacter(CharacterModel $character, $banCharacterId, $value){
         $banCharacters = $this->filterValidCharacters($character, $banCharacterId);
         foreach($banCharacters as $banCharacter){
             $banCharacter->ban($value);
@@ -284,7 +284,7 @@ class Admin extends Controller{
      * @param int $characterId
      * @return array|\DB\CortexCollection
      */
-    protected function filterValidCharacters(CharacterModel $character, int $characterId) : array {
+    protected function filterValidCharacters(CharacterModel $character, $characterId){
         $characters = [];
         // check if kickCharacters belong to same Corp as admin character
         // -> remove admin char from valid characters...
@@ -307,7 +307,7 @@ class Admin extends Controller{
      * @param int $mapId
      * @param int $value
      */
-    protected function activateMap(CharacterModel $character, int $mapId, int $value) : void {
+    protected function activateMap(CharacterModel $character, int $mapId, int $value){
         $maps = $this->filterValidMaps($character, $mapId);
         foreach($maps as $map){
             $map->setActive((bool)$value);
@@ -319,7 +319,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      * @param int $mapId
      */
-    protected function deleteMap(CharacterModel $character, int $mapId) : void {
+    protected function deleteMap(CharacterModel $character, int $mapId){
         $maps = $this->filterValidMaps($character, $mapId);
         foreach($maps as $map){
             $map->erase();
@@ -332,7 +332,7 @@ class Admin extends Controller{
      * @param int $mapId
      * @return \DB\CortexCollection[]|MapModel[]
      */
-    protected function filterValidMaps(CharacterModel $character, int $mapId) : array {
+    protected function filterValidMaps(CharacterModel $character, int $mapId) {
         $maps = [];
         if($character->roleId->name === 'SUPER'){
             if($filterMaps = MapModel::getAll([$mapId], ['addInactive' => true])){
@@ -361,7 +361,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initSettings(\Base $f3, CharacterModel $character) : void {
+    protected function initSettings(\Base $f3, CharacterModel $character){
         $data = (object) [];
         $corporations = $this->getAccessibleCorporations($character);
 
@@ -377,7 +377,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initMembers(\Base $f3, CharacterModel $character) : void {
+    protected function initMembers(\Base $f3, CharacterModel $character){
         $data = (object) [];
         if($characterCorporation = $character->getCorporation()){
             $corporations = $this->getAccessibleCorporations($character);
@@ -402,7 +402,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initMaps(\Base $f3, CharacterModel $character) : void {
+    protected function initMaps(\Base $f3, CharacterModel $character){
         $data = (object) [];
         if($characterCorporation = $character->getCorporation()){
             $corporations = $this->getAccessibleCorporations($character);
@@ -429,7 +429,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      * @return CorporationModel[]
      */
-    protected function getAccessibleCorporations(CharacterModel $character) : array {
+    protected function getAccessibleCorporations(CharacterModel $character) {
         $corporations = [];
         if($characterCorporation = $character->getCorporation()){
             switch($character->roleId->name){

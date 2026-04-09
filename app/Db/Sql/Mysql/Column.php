@@ -17,7 +17,8 @@ class Column extends SQL\Column
      * drop constraint from this column
      * @param Constraint $constraint
      */
-    public function dropConstraint(Constraint $constraint) : void {
+    public function dropConstraint(Constraint $constraint)
+    {
         $this->table->dropConstraint($constraint);
     }
 
@@ -25,7 +26,8 @@ class Column extends SQL\Column
      * add constraint to this column
      * @param Constraint $constraint
      */
-    public function addConstraint(Constraint $constraint) : void {
+    public function addConstraint(Constraint $constraint)
+    {
         $this->table->addConstraint($constraint);
     }
 
@@ -33,7 +35,8 @@ class Column extends SQL\Column
      * @param Constraint $constraint
      * @return mixed
      */
-    public function constraintExists(Constraint $constraint) : bool {
+    public function constraintExists(Constraint $constraint)
+    {
         return $this->table->constraintExists($constraint);
     }
 
@@ -47,7 +50,8 @@ class Column extends SQL\Column
      * @param array $constraintData
      * @return Constraint
      */
-    public function newConstraint($constraintData) : mixed {
+    public function newConstraint($constraintData)
+    {
 
         $constraint = null;
 

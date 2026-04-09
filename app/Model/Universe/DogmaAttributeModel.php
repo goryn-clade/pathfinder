@@ -73,7 +73,7 @@ class DogmaAttributeModel extends AbstractUniverseModel {
      * get data
      * @return \stdClass
      */
-    public function getData() : \stdClass {
+    public function getData(){
         $attributeData              = (object) [];
         $attributeData->id          = $this->_id;
         $attributeData->name        = $this->name;
@@ -87,7 +87,7 @@ class DogmaAttributeModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getDogmaAttribute', $id);
         if(!empty($data) && !isset($data['error'])){
             $this->copyfrom($data, ['id', 'name', 'displayName', 'description', 'published', 'stackable', 'highIsGood', 'defaultValue', 'iconId', 'unitId']);

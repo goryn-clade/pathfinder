@@ -18,7 +18,7 @@ class Universe extends Controller\Controller {
 
 
     /*  currently not used
-    protected function setupRegions(\Base $f3) : void {
+    protected function setupRegions(\Base $f3){
         $regionsWhitelist = [
             10000002 // The Forge (13 constellations -> 93 systems)
         ];
@@ -39,7 +39,7 @@ class Universe extends Controller\Controller {
     }*/
 
     /* currently not used
-    protected function setupConstellations(\Base $f3) : void {
+    protected function setupConstellations(\Base $f3){
         $constellationsWhitelist = [
             20000014 // Mal (11 systems)
         ];
@@ -62,7 +62,7 @@ class Universe extends Controller\Controller {
      * @return array
      * @throws \Exception
      */
-    protected function setupCategories(array $categoriesWhitelist = []) : array {
+    protected function setupCategories( $categoriesWhitelist = []) : array {
         $info = [];
         $categoryIds = Model\Universe\CategoryModel::getUniverseCategories();
         $categoryIds = array_intersect($categoriesWhitelist, $categoryIds);
@@ -106,7 +106,7 @@ class Universe extends Controller\Controller {
      * @return array
      * @throws \Exception
      */
-    protected function setupGroups(array $groupsWhitelist = []) : array {
+    protected function setupGroups( $groupsWhitelist = []) : array {
         $info = [];
         $groupIds = Model\Universe\GroupModel::getUniverseGroups();
         $groupIds = array_intersect($groupsWhitelist, $groupIds);
@@ -226,7 +226,7 @@ class Universe extends Controller\Controller {
     /**
      * clear complete systems search index for all systems
      */
-    public function clearSystemsIndex() : void {
+    public function clearSystemsIndex(){
         $cacheKeyTable = Model\Universe\AbstractUniverseModel::generateHashKeyTable('system');
         if($this->getF3()->exists($cacheKeyTable,$cacheKeys)){
             foreach((array)$cacheKeys as $cacheKeyRow) {
@@ -285,7 +285,7 @@ class Universe extends Controller\Controller {
      * clear cacheKey
      * @param string $cacheKey
      */
-    private function clear(string $cacheKey) : void {
+    private function clear(string $cacheKey){
         if($this->getF3()->exists($cacheKey,$value)) {
             if(is_string($value) && strpos($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX) === 0) {
                 // value references another cacheKey -> clear that one as well
@@ -304,7 +304,7 @@ class Universe extends Controller\Controller {
      * @param bool $strict
      * @return array
      */
-    public static function searchUniverseNameData(array $categories, string $search, int $characterId, string $accessToken, bool $strict = false) : array {
+    public static function searchUniverseNameData( $categories, string $search, int $characterId, string $accessToken, bool $strict = false) : array {
         $f3 = \Base::instance();
         $universeNameData = [];
         if( !empty($categories) && !empty($search)){

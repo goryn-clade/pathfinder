@@ -59,7 +59,7 @@ class GroupModel extends AbstractUniverseModel {
      * @param array $additionalData
      * @return null|object
      */
-    public function getData(array $additionalData = []) : \stdClass {
+    public function getData(array $additionalData = []){
         $groupData = (object) [];
         $groupData->id = $this->_id;
         $groupData->name = $this->name;
@@ -76,7 +76,7 @@ class GroupModel extends AbstractUniverseModel {
      * @param bool $published
      * @return array|mixed
      */
-    public function getTypes(bool $published = true) : mixed {
+    public function getTypes(bool $published = true){
         $types = [];
         if($published){
             $this->filter('types', [
@@ -121,7 +121,7 @@ class GroupModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []) : void {
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         if(!empty($data = self::getUniverseGroupData($id))){
             /**
              * @var CategoryModel $category

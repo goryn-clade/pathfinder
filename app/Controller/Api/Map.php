@@ -32,7 +32,7 @@ class Map extends Controller\AccessController {
      * @param int $mapId
      * @return string
      */
-    protected function getUserDataCacheKey(int $mapId) : string {
+    protected function getUserDataCacheKey(int $mapId): string {
         return sprintf(self::CACHE_KEY_USER_DATA, 'MAP_' . $mapId);
     }
 
@@ -41,7 +41,7 @@ class Map extends Controller\AccessController {
      * @param int $mapId
      * @return string
      */
-    protected function getHistoryDataCacheKey(int $mapId) : string {
+    protected function getHistoryDataCacheKey(int $mapId): string {
         return sprintf(self::CACHE_KEY_HISTORY, 'MAP_' . $mapId);
     }
 
@@ -50,7 +50,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function initData(\Base $f3) : void {
+    public function initData(\Base $f3){
         $validInitData = true;
         $ttl = 60 * 60;
 
@@ -279,7 +279,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function import(\Base $f3) : void {
+    public function import(\Base $f3){
         $importData = (array)$f3->get('POST');
 
         $return = (object) [];
@@ -293,8 +293,7 @@ class Map extends Controller\AccessController {
             $activeCharacter = $this->getCharacter();
 
             if(!$activeCharacter){
-                echo json_encode($return);
-                return;
+                return $return;
             }
 
             /**
@@ -446,7 +445,7 @@ class Map extends Controller\AccessController {
      * @param Pathfinder\MapModel $map
      * @throws \Exception
      */
-    protected function broadcastMapAccess(Pathfinder\MapModel $map) : void {
+    protected function broadcastMapAccess(Pathfinder\MapModel $map){
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,
@@ -467,13 +466,12 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getAccessData(\Base $f3) : void {
+    public function getAccessData(\Base $f3){
         $return = (object) [];
 
         $activeCharacter = $this->getCharacter();
         if(!$activeCharacter){
-            echo json_encode($return);
-            return;
+            return $return;
         }
 
         $characterData = $activeCharacter->getData(true);
@@ -525,7 +523,7 @@ class Map extends Controller\AccessController {
      * @param array $mapsData
      * @return \stdClass
      */
-    protected function updateMapsData(Pathfinder\CharacterModel $character, array $mapsData) : \stdClass {
+    protected function updateMapsData(Pathfinder\CharacterModel $character,  $mapsData) : \stdClass {
         $return = (object) [];
         $return->error = [];
         $return->mapData = [];
@@ -617,7 +615,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function updateData(\Base $f3) : void {
+    public function updateData(\Base $f3){
         $postData = (array)$f3->get('POST');
         $mapsData = (array)$postData['mapData'];
         $userDataRequired = (bool)$postData['getUserData'];
@@ -645,7 +643,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function updateUnloadData(\Base $f3) : void {
+    public function updateUnloadData(\Base $f3){
         $postData = (array)$f3->get('POST');
 
         if(!empty($mapsData = (string)$postData['mapData'])){
@@ -664,7 +662,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function updateUserData(\Base $f3) : void {
+    public function updateUserData(\Base $f3){
         $postData = (array)$f3->get('POST');
         $mapIds = (array)$postData['mapIds'];
         $getMapUserData = (bool)$postData['getMapUserData'];
@@ -742,7 +740,7 @@ class Map extends Controller\AccessController {
      * @return Pathfinder\MapModel
      * @throws \Exception
      */
-    protected function updateMapByCharacter(Pathfinder\MapModel $map, Pathfinder\CharacterModel $character, array $newSystemPositions = []) : Pathfinder\MapModel {
+    protected function updateMapByCharacter(Pathfinder\MapModel $map, Pathfinder\CharacterModel $character,  $newSystemPositions = []) : Pathfinder\MapModel {
         // map changed. update cache (system/connection) changed
         $mapDataChanged = false;
 
@@ -1008,7 +1006,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getConnectionData(\Base $f3) : void {
+    public function getConnectionData(\Base $f3){
         $postData = (array)$f3->get('POST');
 
         $addData = (array)$postData['addData'];
@@ -1059,7 +1057,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getLogData(\Base $f3) : void {
+    public function getLogData(\Base $f3){
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->data = [];

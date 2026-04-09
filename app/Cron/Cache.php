@@ -26,7 +26,7 @@ class Cache extends AbstractCron {
      * @param \Base $f3
      * @return int
      */
-    protected function getExpireMaxTime(\Base $f3) : int {
+    protected function getExpireMaxTime(\Base $f3): int {
         $expireTime =  (int)$f3->get('PATHFINDER.CACHE.EXPIRE_MAX');
         return ($expireTime >= 0) ? $expireTime : self::CACHE_EXPIRE_MAX;
     }

@@ -80,7 +80,7 @@ class StructureModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData(array $data) : void {
+    public function setData( $data){
         $this->copyfrom($data, ['structureId', 'corporationId', 'systemId', 'statusId', 'name', 'description']);
     }
     /**
@@ -184,7 +184,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeInsertEvent(self $self, array $pkeys) : bool {
+    public function beforeInsertEvent(self $self,  $pkeys) : bool {
         return $this->isValid() ? parent::beforeInsertEvent($self, $pkeys) : false;
     }
 
@@ -234,7 +234,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param string $name
      * @param int $systemId
      */
-    public function getByName(CorporationModel $corporation, string $name, int $systemId) : void {
+    public function getByName(CorporationModel $corporation, string $name, int $systemId){
         if($corporation->valid() && $name){
             $this->has('structureCorporations', ['corporationId = :corporationId', ':corporationId' => $corporation->_id]);
             $this->load(['name = :name AND systemId = :systemId AND active = :active',

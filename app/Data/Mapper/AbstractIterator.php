@@ -38,7 +38,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * map iterator
      * @return array
      */
-    public function getData() : mixed {
+    public function getData(){
         iterator_apply($this, [static::class, 'recursiveIterator'], [$this]);
 
         return iterator_to_array($this, true);
@@ -49,7 +49,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * @param $array
      * @return array
      */
-    protected function camelCaseKeys(array $array) : array {
+    protected function camelCaseKeys( $array){
         return Util::arrayChangeKeys($array, [\Base::instance(), 'camelcase']);
     }
 

@@ -124,7 +124,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param bool $addLogData
      * @return \stdClass
      */
-    public function getData($addSignatureData = false, $addLogData = false) : \stdClass {
+    public function getData($addSignatureData = false, $addLogData = false){
         $connectionData = (object) [];
         $connectionData->id             = $this->id;
         $connectionData->source         = $this->source->id;
@@ -156,10 +156,10 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * setter for connection type
-     * @param array<string> $type
+     * @param  $type
      * @return array
      */
-    public function set_type(array $type) : array {
+    public function set_type( $type){
         // remove unwanted types -> they should not be send from client
         // -> reset keys! otherwise JSON format results in object and not in array
         $type = array_values(array_intersect(array_unique((array)$type), self::$connectionTypeWhitelist));
@@ -180,9 +180,9 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * setter for endpoints data (data for source/target endpoint)
-     * @param array<string, mixed> $endpointsData
+     * @param  $endpointsData
      */
-    public function set_endpoints(array $endpointsData) : void {
+    public function set_endpoints( $endpointsData){
         if(!empty($endpointData = (array)$endpointsData['source'])){
             $this->setEndpointData('source', $endpointData);
         }
@@ -194,9 +194,9 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * set connection endpoint related data
      * @param string $label (source||target)
-     * @param array<string, mixed> $endpointData
+     * @param  $endpointData
      */
-    public function setEndpointData(string $label, array $endpointData = []) : void {
+    public function setEndpointData(string $label,  $endpointData = []){
         if($this->exists($field = $label . 'EndpointType')){
             $types = empty($types = (array)$endpointData['types']) ? null : $types;
             if($this->$field != $types){
@@ -222,7 +222,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * set default connection scope + type by search route between endpoints
      * @throws \Exception
      */
-    public function setAutoScopeAndType() : void {
+    public function setAutoScopeAndType(){
         if(
             is_object($this->source) &&
             is_object($this->target)
@@ -287,7 +287,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @throws Exception\DatabaseException
      * @throws \Exception
      */
-    public function beforeInsertEvent(self $self, array $pkeys) : bool {
+    public function beforeInsertEvent(self $self,  $pkeys) : bool {
         // check for "default" connection type and add them if missing
         // -> get() with "true" returns RAW data! important for JSON table column check!
         $types = (array)json_decode($this->get('type', true));
@@ -307,7 +307,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self, array $pkeys) : void {
+    public function afterInsertEvent(self $self,  $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionCreate');
     }
@@ -318,7 +318,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self, array $pkeys) : void {
+    public function afterUpdateEvent(self $self,  $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionUpdate');
     }
@@ -329,7 +329,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self, array $pkeys) : void {
+    public function afterEraseEvent(self $self,  $pkeys){
         $self->clearCacheData();
         $self->logActivity('connectionDelete');
     }
@@ -373,7 +373,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * see parent
      */
-    public function clearCacheData() : void {
+    public function clearCacheData(){
         $this->mapId->clearCacheData();
     }
 
@@ -381,7 +381,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * get all signatures that are connected with this connection
      * @return array|mixed
      */
-    public function getSignatures() : mixed {
+    public function getSignatures(){
         $signatures = [];
         $this->filter('signatures', [
             'active = :active',
@@ -399,7 +399,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * get all jump logs that are connected with this connection
      * @return array|mixed
      */
-    public function getLogs() : mixed {
+    public function getLogs(){
         $logs = [];
 
         if($this->connectionLog){

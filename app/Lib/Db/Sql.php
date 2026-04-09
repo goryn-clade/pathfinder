@@ -31,7 +31,7 @@ class Sql extends \DB\SQL {
      * get all table names
      * @return array|bool
      */
-    public function getTables() : mixed {
+    public function getTables(){
         $schema = new Schema($this);
         return $schema->getTables();
     }
@@ -93,7 +93,7 @@ class Sql extends \DB\SQL {
      * @param string $characterSetDatabase
      * @param string $collationDatabase
      */
-    public function prepareDatabase(string $characterSetDatabase, string $collationDatabase) : void {
+    public function prepareDatabase(string $characterSetDatabase, string $collationDatabase){
         if($this->name() && $characterSetDatabase && $collationDatabase){
             // set/change default "character set" and "collation"
             $this->exec('ALTER DATABASE ' . $this->quotekey($this->name())

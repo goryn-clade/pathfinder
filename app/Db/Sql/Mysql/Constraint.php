@@ -42,28 +42,32 @@ class Constraint
     /**
      * @param mixed $keys
      */
-    public function setKeys($keys) : void {
+    public function setKeys($keys)
+    {
         $this->keys = (array)$keys;
     }
 
     /**
      * @param mixed $referencedTable
      */
-    public function setReferencedTable($referencedTable) : void {
+    public function setReferencedTable($referencedTable)
+    {
         $this->referencedTable = $referencedTable;
     }
 
     /**
      * @param mixed $referencedCols
      */
-    public function setReferencedCols($referencedCols) : void {
+    public function setReferencedCols($referencedCols)
+    {
         $this->referencedCols = (array)$referencedCols;
     }
 
     /**
      * @param string $onDelete
      */
-    public function setOnDelete($onDelete) : void {
+    public function setOnDelete($onDelete)
+    {
         if (in_array($onDelete, self::ACTIONS_DELETE)) {
             $this->onDelete = $onDelete;
         } else {
@@ -74,7 +78,8 @@ class Constraint
     /**
      * @param string $onUpdate
      */
-    public function setOnUpdate($onUpdate) : void {
+    public function setOnUpdate($onUpdate)
+    {
         if (in_array($onUpdate, self::ACTIONS_UPDATE)) {
             $this->onUpdate = $onUpdate;
         } else {
@@ -85,35 +90,40 @@ class Constraint
     /**
      * @return array
      */
-    public function getKeys() : mixed {
+    public function getKeys()
+    {
         return $this->keys;
     }
 
     /**
      * @return string
      */
-    public function getReferencedTable() : mixed {
+    public function getReferencedTable()
+    {
         return $this->referencedTable;
     }
 
     /**
      * @return array
      */
-    public function getReferencedCols() : mixed {
+    public function getReferencedCols()
+    {
         return $this->referencedCols;
     }
 
     /**
      * @return string
      */
-    public function getOnDelete() : mixed {
+    public function getOnDelete()
+    {
         return $this->onDelete;
     }
 
     /**
      * @return string
      */
-    public function getOnUpdate() : mixed {
+    public function getOnUpdate()
+    {
         return $this->onUpdate;
     }
 
@@ -125,7 +135,8 @@ class Constraint
      * -> To get a certain constraint or generate a unique constraint, ALL params are required!
      * @return string
      */
-    public function getConstraintName() : mixed {
+    public function getConstraintName()
+    {
         $constraintName = 'fk_' . $this->table->name;
 
         if (!empty($this->getKeys())) {
@@ -146,7 +157,8 @@ class Constraint
      * -> all required members must be set!
      * @return bool
      */
-    public function isValid() : bool {
+    public function isValid()
+    {
         $valid = false;
 
         if (
