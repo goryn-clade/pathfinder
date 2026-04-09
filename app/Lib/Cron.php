@@ -117,6 +117,7 @@ class Cron extends \Cron {
             }
         }
         \Base::instance()->DB->setSilent(false);
+        return null;
     }
 
     /**

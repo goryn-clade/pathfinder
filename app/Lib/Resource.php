@@ -192,7 +192,7 @@ class Resource extends \Prefab {
      * build resource data
      * -> add missing attributes to resources
      */
-    protected function build() : array {
+    protected function build() : void {
         foreach($this->resources as $group => &$resources){
             foreach($resources as $file => &$conf){
                 if(empty($conf['link'])){
