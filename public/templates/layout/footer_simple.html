@@ -5,14 +5,14 @@
 <div class="hidden-xs pf-landing-sticky-panel pf-landing-sticky-panel--bottom pf-landing-sticky-panel--left">
     <ul class="fa-ul">
         <repeat group="{{ @p1 }}" value="{{ @link }}">
-            <li><i class="fa-li {{ @link.icon }}"></i><a href="{{ @link.href }}" data-panel-action="{{ @link.action }}">{{ @link.label }}</a></li>
+            <li><i class="fa-li {{ @link.icon }}"></i><a href="{{ @link.href }}" data-panel-action="{{ @link.action ?? '' }}">{{ @link.label }}</a></li>
         </repeat>
     </ul>
 </div>
 <div class="hidden-xs pf-landing-sticky-panel pf-landing-sticky-panel--bottom pf-landing-sticky-panel--right">
     <ul class="fa-ul">
         <repeat group="{{ @p2 }}" value="{{ @link }}">
-            <li><i class="fa-li {{ @link.icon }}"></i><a href="{{ @link.href }}" data-panel-action="{{ @link.action }}">{{ @link.label }}</a></li>
+            <li><i class="fa-li {{ @link.icon }}"></i><a href="{{ @link.href }}" data-panel-action="{{ @link.action ?? '' }}">{{ @link.label }}</a></li>
         </repeat>
     </ul>
 </div>
