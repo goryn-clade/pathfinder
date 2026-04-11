@@ -1109,7 +1109,7 @@
                         </div>
 
                         {* show log data from "stats" array *}
-                        <check if="{{ @socketData.stats.logs }}">
+                        <check if="{{ @socketData.stats.logs ?? false }}">
                             <div class="panel-body no-padding text-left">
                                 <table class="table">
                                     <thead>
