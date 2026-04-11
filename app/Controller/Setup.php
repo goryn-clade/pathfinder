@@ -1628,7 +1628,7 @@ class Setup extends Controller {
                 'label'  => 'TCP-Socket (intern)',
                 'icon' => 'fa-exchange-alt',
                 'status' => $statusTcp,
-                'stats'  => $statsTcp,
+                'stats'  => is_array($statsTcp) ? $statsTcp : [],
                 'data' => [
                     [
                         'label' => 'HOST',
@@ -1658,7 +1658,7 @@ class Setup extends Controller {
                 'label' => 'Web-Socket',
                 'icon' => 'fa-random',
                 'status' => $statusWeb,
-                'stats'  => $statsWeb,
+                'stats'  => is_array($statsWeb) ? $statsWeb : [],
                 'data' => [
                     [
                         'label' => 'URI',
