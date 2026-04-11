@@ -770,7 +770,7 @@
                                                         </td>
                                                     </tr>
                                                 </check>
-                                                <check if="{{ @columnData.deprecated }}">
+                                                <check if="{{ @columnData.deprecated ?? false }}">
                                                     {* Deprecated colums *}
                                                     <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse txt-color txt-color-yellowDark">
                                                         <td class="bg-color bg-color-tealDarker"></td>
