@@ -1304,13 +1304,13 @@ class Setup extends Controller {
                             }
 
                             // check if column unique changed ---------------------------------------------------------
-                            if($currentColIndexData['unique'] != $fieldConf['unique']){
+                            if(($currentColIndexData['unique'] ?? false) != ($fieldConf['unique'] ?? false)){
                                 $changedUnique = true;
                                 $columnStatusCheck = false;
                                 $tableStatusCheckCount++;
 
                                 $indexUpdate = true;
-                                $indexUnique = (bool)$fieldConf['unique'];
+                                $indexUnique = (bool)($fieldConf['unique'] ?? false);
                             }
 
                             // build table with changed columns -------------------------------------------------------
@@ -1601,26 +1601,26 @@ class Setup extends Controller {
             ->then(
                 function($payload) use ($task, $healthCheckToken, &$statusTcp, $setStats): void {
                     if(
-                        $payload['task'] == $task &&
-                        $payload['load'] == $healthCheckToken
+                        ($payload['task'] ?? null) == $task &&
+                        ($payload['load'] ?? null) == $healthCheckToken
                     ){
                         $statusTcp['type'] = 'success';
                         $statusTcp['label'] = 'PING OK';
                         $statusTcp['class'] = 'txt-color-success';
                     }else{
                         $statusTcp['type'] = 'warning';
-                        $statusTcp['label'] = is_string($payload['load']) ? $payload['load'] : 'INVALID RESPONSE';
+                        $statusTcp['label'] = is_string($payload['load'] ?? null) ? $payload['load'] : 'INVALID RESPONSE';
                         $statusTcp['class'] = 'txt-color-warning';
                     }
 
                     // statistics (e.g. current connection count)
-                    $setStats((array)$payload['stats']);
+                    $setStats((array)($payload['stats'] ?? []));
                 },
                 function($payload) use (&$statusTcp, $setStats): void {
-                    $statusTcp['label'] = $payload['load'];
+                    $statusTcp['label'] = $payload['load'] ?? '';
 
                     // statistics (e.g. current connection count)
-                    $setStats((array)$payload['stats']);
+                    $setStats((array)($payload['stats'] ?? []));
                 });
 
         return [

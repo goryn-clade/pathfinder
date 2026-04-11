@@ -626,7 +626,9 @@ abstract class AbstractModel extends Cortex {
             if(array_key_exists($key, $fieldConf)){
                 if(array_key_exists($type = 'has-many', $fieldConf[$key])){
                     $fromConf = $fieldConf[$key][$type];
-                    $relFilter = self::getFilter($fromConf[1], $this->getRaw($fromConf['relField']));
+                    if(is_array($fromConf) && isset($fromConf[1]) && isset($fromConf['relField'])){
+                        $relFilter = self::getFilter($fromConf[1], $this->getRaw($fromConf['relField']));
+                    }
                 }
             }
 
@@ -653,7 +655,9 @@ abstract class AbstractModel extends Cortex {
             if(array_key_exists($key, $fieldConf)){
                 if(array_key_exists($type = 'has-many', $fieldConf[$key])){
                     $fromConf = $fieldConf[$key][$type];
-                    $relFilter = self::getFilter($fromConf[1], $this->getRaw($fromConf['relField']));
+                    if(is_array($fromConf) && isset($fromConf[1]) && isset($fromConf['relField'])){
+                        $relFilter = self::getFilter($fromConf[1], $this->getRaw($fromConf['relField']));
+                    }
                 }
             }
 
