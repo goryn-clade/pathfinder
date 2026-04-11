@@ -1187,6 +1187,7 @@ class Setup extends Controller {
                         // find deprecated columns that are no longer needed ------------------------------------------
                         $deprecatedColumnNames = array_diff(array_keys($currentColumns), array_keys($data['fieldConf']), ['id']);
                         foreach($deprecatedColumnNames as $deprecatedColumnName){
+                            $requiredTables[$requiredTableName]['fieldConf'][$deprecatedColumnName]['type'] = 'deprecated';
                             $requiredTables[$requiredTableName]['fieldConf'][$deprecatedColumnName]['deprecated'] = true;
                             $requiredTables[$requiredTableName]['fieldConf'][$deprecatedColumnName]['currentType'] = 'deprecated';
                             //$requiredTables[$requiredTableName]['fieldConf'][$deprecatedColumnName]['statusCheck'] = false;
