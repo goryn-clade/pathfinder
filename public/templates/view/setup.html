@@ -675,7 +675,7 @@
                                                 <td class="bg-color bg-color-tealDarkest text-center"></td>
                                             </tr>
                                             <repeat group="{{ @tableData.fieldConf }}" key="{{ @columnName }}" value="{{ @columnData }}" counter="{{ @countCol }}">
-                                                <check if="{{ @columnData.type }}">
+                                                <check if="{{ @columnData.type ?? null }}">
                                                     {* Required colums *}
                                                     <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                         <td class="text-right bg-color bg-color-tealDarker">{{@countCol}}.</td>
