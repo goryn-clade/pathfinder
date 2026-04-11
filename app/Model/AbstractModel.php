@@ -386,7 +386,7 @@ abstract class AbstractModel extends Cortex {
         $valid = true;
         if($colConf = $this->fieldConf[$key]){
             if(isset($colConf['belongs-to-one'])){
-                if( (is_int($val) || ctype_digit($val)) && (int)$val > 0){
+                if( (is_int($val) || (is_string($val) && ctype_digit($val))) && (int)$val > 0){
                     $valid = true;
                 }elseif( is_a($val, $colConf['belongs-to-one']) && !$val->dry() ){
                     $valid = true;
