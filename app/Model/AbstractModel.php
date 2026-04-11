@@ -915,6 +915,9 @@ abstract class AbstractModel extends Cortex {
 
         foreach($tableData as $rowData){
             // search for existing record and update columns
+            if(!isset($rowData['id'])){
+                continue; // skip rows without id
+            }
             $this->getById($rowData['id'], 0);
             if($this->dry()){
                 $addedCount++;
