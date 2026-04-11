@@ -493,7 +493,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self,  $pkeys){
+    public function afterInsertEvent($self, $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemCreate');
     }
@@ -505,7 +505,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
+    public function beforeUpdateEvent($self, $pkeys) : bool {
         $status = parent::beforeUpdateEvent($self, $pkeys);
 
         if($status && !$self->isActive()){
@@ -534,7 +534,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self,  $pkeys){
+    public function afterUpdateEvent($self, $pkeys){
         $self->clearCacheData();
         $activity = ($self->isActive()) ? 'systemUpdate' : 'systemDelete';
         $self->logActivity($activity);
@@ -545,7 +545,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self,  $pkeys){
+    public function afterEraseEvent($self, $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemDelete');
     }

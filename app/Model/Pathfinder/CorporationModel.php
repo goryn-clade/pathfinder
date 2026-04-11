@@ -179,7 +179,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
+    public function beforeUpdateEvent($self, $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $this->touch('updated');

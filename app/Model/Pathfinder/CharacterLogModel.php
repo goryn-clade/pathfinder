@@ -206,7 +206,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterInsertEvent(self $self,  $pkeys){
+    public function afterInsertEvent($self, $pkeys){
         $self->clearCacheData();
     }
 
@@ -216,7 +216,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent(self $self,  $pkeys){
+    public function afterUpdateEvent($self, $pkeys){
         $self->updateLogsHistory('update');
 
         // check if any "relevant" column has changed
@@ -231,7 +231,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterEraseEvent(self $self,  $pkeys){
+    public function afterEraseEvent($self, $pkeys){
         $self->deleteLogsHistory();
         $self->clearCacheData();
     }

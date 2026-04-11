@@ -67,7 +67,7 @@ class CharacterAuthenticationModel extends AbstractPathfinderModel{
      * @param $pkeys
      * @return bool
      */
-    public function beforeEraseEvent(self $self,  $pkeys) : bool {
+    public function beforeEraseEvent($self, $pkeys) : bool {
         // clear existing client Cookies as well
         $cookieName = Controller\Controller::COOKIE_PREFIX_CHARACTER;
         $cookieName .= '_' . $this->characterId->getCookieName();

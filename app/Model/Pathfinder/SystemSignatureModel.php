@@ -247,7 +247,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent(self $self,  $pkeys){
+    public function afterInsertEvent($self, $pkeys){
         $self->logActivity('signatureCreate');
     }
 
@@ -259,7 +259,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent(self $self,  $pkeys) : bool {
+    public function beforeUpdateEvent($self, $pkeys) : bool {
         // "updated" column should always be updated if no changes made this signature
         // -> makes it easier to see what signatures have not been updated
         $this->touch('updated');
@@ -273,7 +273,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent(self $self,  $pkeys){
+    public function afterUpdateEvent($self, $pkeys){
         $self->logActivity('signatureUpdate');
     }
 
@@ -283,7 +283,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent(self $self,  $pkeys){
+    public function afterEraseEvent($self, $pkeys){
         $self->logActivity('signatureDelete');
 
         if(

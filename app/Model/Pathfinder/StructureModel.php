@@ -184,7 +184,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeInsertEvent(self $self,  $pkeys) : bool {
+    public function beforeInsertEvent($self, $pkeys) : bool {
         return $this->isValid() ? parent::beforeInsertEvent($self, $pkeys) : false;
     }
 

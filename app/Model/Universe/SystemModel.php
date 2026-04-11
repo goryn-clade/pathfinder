@@ -378,7 +378,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent(self $self,  $pkeys){
+    public function afterUpdateEvent($self,  $pkeys){
         // build search index
         $self->buildIndex();
         return parent::afterUpdateEvent($self, $pkeys);
