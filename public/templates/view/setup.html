@@ -610,7 +610,7 @@
 
                                             <td>{{ @tableName }}</td>
                                             <td class="text-center">
-                                                <check if="{{ @tableData.exists }}">
+                                                <check if="{{ @tableData.exists ?? false }}">
                                                     <true>
                                                         <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                     </true>
@@ -620,7 +620,7 @@
                                                 </check>
                                             </td>
                                             <td>
-                                                <check if="{{ @tableData.exists }}">
+                                                <check if="{{ @tableData.exists ?? false }}">
                                                     <true>
                                                         <check if="{{ @tableData.currentCharset == @tableData.requiredCharset }}">
                                                             <true>
@@ -681,7 +681,7 @@
                                                         <td class="text-right bg-color bg-color-tealDarker">{{@countCol}}.</td>
                                                         <td class="bg-color bg-color-tealDarker">{{ @columnName }}</td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
                                                                     <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                                 </true>
@@ -691,7 +691,7 @@
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
                                                                     <check if="{{ @columnData.changedType }}">
                                                                         <true>
@@ -708,7 +708,7 @@
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
                                                                     <check if="{{ @columnData.changedNullable }}">
                                                                         <true>
@@ -725,7 +725,7 @@
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
                                                                     <check if="{{ @columnData.changedIndex }}">
                                                                         <true>
@@ -742,7 +742,7 @@
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
                                                                     <check if="{{ @columnData.changedUnique }}">
                                                                         <true>
@@ -810,7 +810,7 @@
                                                 <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                     <td class="text-right bg-color bg-color-tealDarker">{{@countForeignKey}}.</td>
                                                     <td class="bg-color bg-color-tealDarker" colspan="6">
-                                                        <check if="{{ @keyData.exists }}">
+                                                        <check if="{{ @keyData.exists ?? false }}">
                                                             <true>
                                                                 <kbd class="txt-color txt-color-success">{{ @keyData.keyName }}</kbd>
                                                             </true>
@@ -820,7 +820,7 @@
                                                         </check>
                                                     </td>
                                                     <td class="bg-color bg-color-tealDarker text-right">
-                                                        <check if="{{ @keyData.exists }}">
+                                                        <check if="{{ @keyData.exists ?? false }}">
                                                             <true>
                                                                 <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                             </true>
