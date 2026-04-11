@@ -1648,8 +1648,8 @@ class Setup extends Controller {
                         'check' => !empty( $ttl )
                     ],[
                         'label' => 'uptime',
-                        'value' => Config::formatTimeInterval($statsTcp['startup'] ? : 0),
-                        'check' => $statsTcp['startup'] > 0
+                        'value' => Config::formatTimeInterval(($statsTcp['startup'] ?? null) ? : 0),
+                        'check' => ($statsTcp['startup'] ?? 0) > 0
                     ]
                 ],
                 'token' => $healthCheckToken
