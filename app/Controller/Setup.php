@@ -630,12 +630,31 @@ class Setup extends Controller {
     }
 
     /**
+     * parse memory value string (e.g. "256M", "1G") to bytes
+     * @param string $value
+     * @return int
+     */
+    protected function parseMemoryValue(string $value): int {
+        $value = strtoupper(trim($value));
+        if ($value === '-1') {
+            return PHP_INT_MAX; // unlimited
+        }
+        $units = ['K' => 1024, 'M' => 1024 ** 2, 'G' => 1024 ** 3];
+        $unit = substr($value, -1);
+        if (isset($units[$unit])) {
+            return (int)substr($value, 0, -1) * $units[$unit];
+        }
+        return (int)$value;
+    }
+
+    /**
      * check PHP config (php.ini)
      * @param \Base $f3
      * @return array
      */
     protected function checkPHPConfig(\Base $f3): array {
-        $memoryLimit        = (int)ini_get('memory_limit');
+        $memoryLimitStr     = ini_get('memory_limit');
+        $memoryLimit        = $this->parseMemoryValue($memoryLimitStr);
         $maxInputVars       = (int)ini_get('max_input_vars');
         $maxExecutionTime   = (int)ini_get('max_execution_time'); // 0 == infinite
         $htmlErrors         = (int)ini_get('html_errors');
@@ -651,7 +670,7 @@ class Setup extends Controller {
             'memoryLimit' => [
                 'label' => 'memory_limit',
                 'required' => $f3->get('REQUIREMENTS.PHP.MEMORY_LIMIT'),
-                'version' => $memoryLimit,
+                'version' => $memoryLimitStr,
                 'check' => $memoryLimit >= $f3->get('REQUIREMENTS.PHP.MEMORY_LIMIT'),
                 'tooltip' => 'PHP default = 64MB.'
             ],
