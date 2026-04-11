@@ -1294,13 +1294,13 @@ class Setup extends Controller {
                             $indexKey = (bool)$hasIndex;
                             $indexUnique = (bool)$hasUnique;
 
-                            if($currentColIndex != $fieldConf['index']){
+                            if($currentColIndex != ($fieldConf['index'] ?? false)){
                                 $changedIndex = true;
                                 $columnStatusCheck = false;
                                 $tableStatusCheckCount++;
 
                                 $indexUpdate = true;
-                                $indexKey = (bool)$fieldConf['index'];
+                                $indexKey = (bool)($fieldConf['index'] ?? false);
                             }
 
                             // check if column unique changed ---------------------------------------------------------
