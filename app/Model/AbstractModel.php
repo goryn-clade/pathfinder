@@ -357,8 +357,8 @@ abstract class AbstractModel extends Cortex {
      */
     protected function validateField(string $key, mixed $val) : bool {
         $valid = true;
-        if($fieldConf = $this->fieldConf[$key]){
-            if($method = $this->fieldConf[$key]['validate']){
+        if($fieldConf = $this->fieldConf[$key] ?? null){
+            if($method = $fieldConf['validate'] ?? null){
                 if( !is_string($method)){
                     $method = $key;
                 }
