@@ -331,7 +331,7 @@ class TypeModel extends AbstractUniverseModel {
                 case Config::ESI_GROUP_WORMHOLE_ID:
                     if(
                         !empty($wormholesCSVData = static::getCSVData('wormhole', 'name')) &&
-                        !empty($wormholeCSVData = $wormholesCSVData[self::formatWormholeName($data['name'])])
+                        !empty($wormholeCSVData = $wormholesCSVData[self::formatWormholeName($data['name'])] ?? null)
                     ){
                         // found relevant wormhole data in *.csv for current type
                         if(!empty($scanWormholeStrength = (float)$wormholeCSVData['scanWormholeStrength'])){
