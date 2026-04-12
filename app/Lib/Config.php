@@ -156,9 +156,7 @@ class Config extends \Prefab {
         $this->setHiveVariables($f3);
 
         // set global getter for \DateTimeZone
-        $f3->set('getTimeZone', function() use ($f3) : \DateTimeZone {
-            return new \DateTimeZone( $f3->get('TZ') );
-        });
+        $f3->set('getTimeZone', fn(): \DateTimeZone => new \DateTimeZone( $f3->get('TZ') ));
 
         // set global getter for new \DateTime
         $f3->set('getDateTime', function(string $time = 'now', ?\DateTimeZone $timeZone = null) use ($f3) : \DateTime {
@@ -168,14 +166,12 @@ class Config extends \Prefab {
 
         // database connection pool -----------------------------------------------------------------------------------
         $f3->set(Pool::POOL_NAME, Pool::instance(
-            function(string $alias) use ($f3) : array {
+            
                 // get DB config by alias for new connections
-                return self::getDatabaseConfig($f3, $alias);
-            },
-            function(string $schema) use ($f3) : array {
+                fn(string $alias): array => self::getDatabaseConfig($f3, $alias),
+            
                 // get DB requirement vars from requirements.ini
-                return self::getRequiredDbVars($f3, $schema);
-            }
+                fn(string $schema): array => self::getRequiredDbVars($f3, $schema)
         ));
 
         // lazy init Web Api clients ----------------------------------------------------------------------------------
@@ -185,9 +181,7 @@ class Config extends \Prefab {
         $f3->set(EveScoutClient::CLIENT_NAME, EveScoutClient::instance());
 
         // Socket connectors ------------------------------------------------------------------------------------------
-        $f3->set(TcpSocket::SOCKET_NAME, function( $options = ['timeout' => 1]) : SocketInterface {
-            return AbstractSocket::factory(TcpSocket::class, self::getSocketUri(), $options);
-        });
+        $f3->set(TcpSocket::SOCKET_NAME, fn($options = ['timeout' => 1]): SocketInterface => AbstractSocket::factory(TcpSocket::class, self::getSocketUri(), $options));
     }
 
     /**
@@ -280,8 +274,8 @@ class Config extends \Prefab {
     protected function setServerData(){
         $data = [];
         foreach($_SERVER as $key => $value){
-            if(strpos($key, self::PREFIX_KEY . self::ARRAY_DELIMITER) === 0){
-                $path = explode( self::ARRAY_DELIMITER, $key);
+            if(str_starts_with((string) $key, self::PREFIX_KEY . self::ARRAY_DELIMITER)){
+                $path = explode( self::ARRAY_DELIMITER, (string) $key);
                 // remove prefix
                 array_shift($path);
 
@@ -332,7 +326,7 @@ class Config extends \Prefab {
         ];
 
         $pdoReg = '/^(?<SCHEME>[[:alpha:]]+):((host=(?<HOST>[a-zA-Z0-9-_\.]*))|(unix_socket=(?<SOCKET>[a-zA-Z0-9\/]*\.sock)))((;dbname=(?<NAME>\w*))|(;port=(?<PORT>\d*))){0,2}/';
-        if(preg_match($pdoReg, self::getEnvironmentData('DB_' . $alias . '_DNS'), $matches)){
+        if(preg_match($pdoReg, (string) self::getEnvironmentData('DB_' . $alias . '_DNS'), $matches)){
             // remove unnamed matches
             $matches = array_intersect_key($matches, $config);
             // remove empty matches
@@ -402,8 +396,7 @@ class Config extends \Prefab {
         $validateMailConfig = function($mailConf = null) : bool {
             $email = null;
             if(is_array($mailConf)){
-                reset($mailConf);
-                $email = key($mailConf);
+                $email = array_key_first($mailConf);
             }elseif(is_string($mailConf)){
                 $email = $mailConf;
             }
@@ -450,14 +443,14 @@ class Config extends \Prefab {
     static function getPluginConfig(?string $key, bool $checkEnabled = true) : ?array {
         $isEnabled = $checkEnabled ?
             filter_var(\Base::instance()->get(
-                self::HIVE_KEY_PLUGIN . '.' . strtoupper($key) . '_ENABLED'),
+                self::HIVE_KEY_PLUGIN . '.' . strtoupper((string) $key) . '_ENABLED'),
                 FILTER_VALIDATE_BOOLEAN
             ) :
             true;
 
         $data = null;
         if($isEnabled){
-            $hiveKey = self::HIVE_KEY_PLUGIN . '.' . strtoupper($key);
+            $hiveKey = self::HIVE_KEY_PLUGIN . '.' . strtoupper((string) $key);
             $data = (array)\Base::instance()->get($hiveKey);
         }
         return $data;
@@ -585,9 +578,7 @@ class Config extends \Prefab {
                 $conf['folder'] = $parts[2];
             }
             // int cast numeric values
-            $conf = array_map(function($val){
-                return is_numeric($val) ? intval($val) : $val;
-            }, $conf);
+            $conf = array_map(fn($val) => is_numeric($val) ? intval($val) : $val, $conf);
         }
         return $matches;
     }
@@ -603,7 +594,7 @@ class Config extends \Prefab {
         // default daily downtime 00:00am
         $downTimeParts = [0, 0];
         if( !empty($downTime = (string)self::getEnvironmentData('CCP_SSO_DOWNTIME')) ){
-            $parts = array_map('intval', explode(':', $downTime));
+            $parts = array_map(intval(...), explode(':', $downTime));
             if(count($parts) === 2){
                 // well formatted DOWNTIME found in config files
                 $downTimeParts = $parts;

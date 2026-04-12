@@ -46,7 +46,7 @@ class UserModel extends AbstractPathfinderModel {
             'validate' => true
         ],
         'userCharacters' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\UserCharacterModel', 'userId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\UserCharacterModel::class, 'userId']
         ]
     ];
 
@@ -106,16 +106,11 @@ class UserModel extends AbstractPathfinderModel {
      */
     public function beforeInsertEvent($self,  $pkeys) : bool {
         $registrationStatus = Controller\Controller::getRegistrationStatus();
-        switch($registrationStatus){
-            case 0:
-                throw new Exception\RegistrationException('User registration is currently not allowed');
-                break;
-            case 1:
-                return true;
-                break;
-            default:
-                return false;
-        }
+        return match ($registrationStatus) {
+            0 => throw new Exception\RegistrationException('User registration is currently not allowed'),
+            1 => true,
+            default => false,
+        };
     }
 
     /**

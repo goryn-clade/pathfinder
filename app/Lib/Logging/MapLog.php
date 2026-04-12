@@ -54,11 +54,12 @@ class MapLog extends AbstractCharacterLog {
     public function getTagFromAction(){
         $tag = parent::getTag();
         $actionParts = $this->getActionParts();
-        switch($actionParts[1]){
-            case 'create': $tag = 'success'; break;
-            case 'update': $tag = 'warning'; break;
-            case 'delete': $tag = 'danger'; break;
-        }
+        $tag = match ($actionParts[1]) {
+            'create' => 'success',
+            'update' => 'warning',
+            'delete' => 'danger',
+            default => $tag,
+        };
 
         return $tag;
     }
@@ -102,7 +103,7 @@ class MapLog extends AbstractCharacterLog {
     protected function formatData(array $data) : string {
         $actionParts = $this->getActionParts();
         $objectString = !empty($data['object']) ? "'" .  $data['object']['objName'] . "'" . ' #' . $data['object']['objId'] : '';
-        $string = ucfirst($actionParts[1]) . 'd ' . $actionParts[0] . " " . $objectString;
+        $string = ucfirst((string) $actionParts[1]) . 'd ' . $actionParts[0] . " " . $objectString;
 
         // format changed columns (recursive) ---------------------------------------------
         switch($actionParts[1]){
@@ -149,7 +150,7 @@ class MapLog extends AbstractCharacterLog {
      * @return array
      */
     protected function getActionParts() : array {
-        return array_map('strtolower', preg_split('/(?=[A-Z])/', $this->getAction()));
+        return array_map(strtolower(...), preg_split('/(?=[A-Z])/', $this->getAction()));
     }
 
     /**

@@ -45,7 +45,7 @@ class RightModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'corporationRights' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel', 'rightId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel::class, 'rightId']
         ]
     ];
 

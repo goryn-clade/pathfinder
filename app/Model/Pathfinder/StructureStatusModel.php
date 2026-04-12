@@ -44,7 +44,7 @@ class StructureStatusModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'structures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\StructureModel', 'statusId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\StructureModel::class, 'statusId']
         ]
     ];
 

@@ -108,7 +108,7 @@ class System extends AbstractRestController {
      */
     public function delete(\Base $f3,  $params) : void {
         $requestData = $this->getRequestData($f3);
-        $systemIds = array_map('intval', explode(',', (string)$params['id']));
+        $systemIds = array_map(intval(...), explode(',', (string)$params['id']));
         $deletedSystemIds = [];
 
         if($mapId = (int)$requestData['mapId']){

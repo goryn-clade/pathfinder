@@ -132,7 +132,7 @@ class Map extends AbstractRestController {
             $deleted = 0;
             if(is_array($modelIds)){
                 // remove primaryModel id (-> re-add later)
-                $modelIds = array_diff(array_map('intval', $modelIds), [$primaryModel->_id]);
+                $modelIds = array_diff(array_map(intval(...), $modelIds), [$primaryModel->_id]);
 
                 // avoid abuse -> respect share limits (-1 is because the primaryModel has also access)
                 $modelIds = array_slice($modelIds, 0, max($maxShared - 1, 0));
@@ -220,9 +220,7 @@ class Map extends AbstractRestController {
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,
-            'characterIds' => array_map(function($data){
-                return $data->id;
-            }, $map->getCharactersData())
+            'characterIds' => array_map(fn($data) => $data->id, $map->getCharactersData())
         ];
 
         $this->getF3()->webSocket()->write('mapAccess', $mapAccess);

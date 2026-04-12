@@ -29,7 +29,7 @@ class StationModel extends AbstractUniverseModel {
         'systemId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\SystemModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\SystemModel::class,
             'constraint' => [
                 [
                     'table' => 'system',
@@ -41,7 +41,7 @@ class StationModel extends AbstractUniverseModel {
         'typeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\TypeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\TypeModel::class,
             'constraint' => [
                 [
                     'table' => 'type',
@@ -53,7 +53,7 @@ class StationModel extends AbstractUniverseModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',
@@ -64,7 +64,7 @@ class StationModel extends AbstractUniverseModel {
         'raceId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\RaceModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\RaceModel::class,
             'constraint' => [
                 [
                     'table' => 'race',

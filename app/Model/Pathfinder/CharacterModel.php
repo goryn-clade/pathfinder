@@ -116,7 +116,7 @@ class CharacterModel extends AbstractPathfinderModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',
@@ -127,7 +127,7 @@ class CharacterModel extends AbstractPathfinderModel {
         'allianceId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\AllianceModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\AllianceModel::class,
             'constraint' => [
                 [
                     'table' => 'alliance',
@@ -140,7 +140,7 @@ class CharacterModel extends AbstractPathfinderModel {
             'nullable' => false,
             'default' => 1,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\RoleModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\RoleModel::class,
             'constraint' => [
                 [
                     'table' => 'role',
@@ -187,16 +187,16 @@ class CharacterModel extends AbstractPathfinderModel {
             'default' => 0
         ],
         'userCharacter' => [
-            'has-one' => ['Exodus4D\Pathfinder\Model\Pathfinder\UserCharacterModel', 'characterId']
+            'has-one' => [\Exodus4D\Pathfinder\Model\Pathfinder\UserCharacterModel::class, 'characterId']
         ],
         'characterLog' => [
-            'has-one' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterLogModel', 'characterId']
+            'has-one' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterLogModel::class, 'characterId']
         ],
         'characterMaps' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterMapModel', 'characterId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterMapModel::class, 'characterId']
         ],
         'characterAuthentications' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterAuthenticationModel', 'characterId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterAuthenticationModel::class, 'characterId']
         ]
     ];
 
@@ -644,9 +644,9 @@ class CharacterModel extends AbstractPathfinderModel {
         // check whether character is banned or temp kicked
         if(is_null($this->banned)){
             if( !$this->isKicked() ){
-                $whitelistCharacter = array_filter( array_map('trim', (array)Config::getPathfinderData('login.character') ) );
-                $whitelistCorporations = array_filter( array_map('trim', (array)Config::getPathfinderData('login.corporation') ) );
-                $whitelistAlliance = array_filter( array_map('trim', (array)Config::getPathfinderData('login.alliance') ) );
+                $whitelistCharacter = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.character') ) );
+                $whitelistCorporations = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.corporation') ) );
+                $whitelistAlliance = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.alliance') ) );
 
                 if(
                     empty($whitelistCharacter) &&
@@ -1338,7 +1338,7 @@ class CharacterModel extends AbstractPathfinderModel {
         $maps = ["maps" => [], "mapIds" => []];
         
         // get all characters in session and iterate over them
-        foreach($this->getAll(array_column($this->getF3()->get(User::SESSION_KEY_CHARACTERS), 'ID')) as $character){            
+        foreach(static::getAll(array_column($this->getF3()->get(User::SESSION_KEY_CHARACTERS), 'ID')) as $character){            
             if($alliance = $character->getAlliance()){
                 foreach($alliance->getMaps() as $map){
                     if(!in_array($map->_id, $maps["mapIds"])){
@@ -1406,9 +1406,7 @@ class CharacterModel extends AbstractPathfinderModel {
         // delete current session data --------------------------------------------------------------------------------
         if($deleteSession){
             $sessionCharacterData = (array)$this->getF3()->get(User::SESSION_KEY_CHARACTERS);
-            $sessionCharacterData = array_filter($sessionCharacterData, function($data){
-                return ($data['ID'] != $this->_id);
-            });
+            $sessionCharacterData = array_filter($sessionCharacterData, fn($data) => $data['ID'] != $this->_id);
 
             if(empty($sessionCharacterData)){
                 // no active characters logged in -> log user out

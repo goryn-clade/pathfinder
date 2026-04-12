@@ -47,22 +47,22 @@ class FactionModel extends AbstractUniverseModel {
             'default' => 0
         ],
         'race' => [ // faction API endpoint dont have "raceId" data, but race API endpoint has
-            'has-one' => ['Exodus4D\Pathfinder\Model\Universe\RaceModel', 'factionId']
+            'has-one' => [\Exodus4D\Pathfinder\Model\Universe\RaceModel::class, 'factionId']
         ],
         'alliances' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\AllianceModel', 'factionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\AllianceModel::class, 'factionId']
         ],
         'corporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\CorporationModel', 'factionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\CorporationModel::class, 'factionId']
         ],
         'sovereigntySystems' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel', 'factionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel::class, 'factionId']
         ],
         'factionWarSystemOwners' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel', 'ownerFactionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel::class, 'ownerFactionId']
         ],
         'factionWarSystemOccupiers' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel', 'occupierFactionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel::class, 'occupierFactionId']
         ]
     ];
 

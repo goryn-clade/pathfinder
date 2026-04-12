@@ -27,8 +27,8 @@ class Access extends Controller\AccessController {
             array_key_exists('arg1', $params) &&
             array_key_exists('arg2', $params)
         ){
-            $searchType = strtolower($params['arg1']);
-            $searchToken = strtolower($params['arg2']);
+            $searchType = strtolower((string) $params['arg1']);
+            $searchToken = strtolower((string) $params['arg2']);
 
             $accessModel = null;
             switch($searchType){

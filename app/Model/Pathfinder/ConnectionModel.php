@@ -33,7 +33,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         'mapId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapModel::class,
             'constraint' => [
                 [
                     'table' => 'map',
@@ -44,7 +44,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         'source' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\SystemModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\SystemModel::class,
             'constraint' => [
                 [
                     'table' => 'system',
@@ -56,7 +56,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         'target' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\SystemModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\SystemModel::class,
             'constraint' => [
                 [
                     'table' => 'system',
@@ -88,10 +88,10 @@ class ConnectionModel extends AbstractMapTrackingModel {
             'default' => null
         ],
         'signatures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\SystemSignatureModel', 'connectionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\SystemSignatureModel::class, 'connectionId']
         ],
         'connectionLog' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\ConnectionLogModel', 'connectionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\ConnectionLogModel::class, 'connectionId']
         ]
     ];
 

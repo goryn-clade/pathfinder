@@ -64,7 +64,7 @@ class CcpSystemsUpdate extends AbstractCron {
                 [':ns' => '0.0', ':ls' => 'L', ':hs' => 'H']
             );
 
-            $systemIds = array_map('intval', array_column($systemsData, 'id'));
+            $systemIds = array_map(intval(...), array_column($systemsData, 'id'));
             sort($systemIds, SORT_NUMERIC);
 
             $pfDB = $f3->DB->getDB('PF');

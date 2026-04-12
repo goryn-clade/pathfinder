@@ -72,7 +72,7 @@ class TypeModel extends AbstractUniverseModel {
         'groupId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\GroupModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\GroupModel::class,
             'constraint' => [
                 [
                     'table' => 'group',
@@ -104,25 +104,25 @@ class TypeModel extends AbstractUniverseModel {
             'index' => true
         ],
         'stations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\StationModel', 'typeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\StationModel::class, 'typeId']
         ],
         'structures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\StructureModel', 'typeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\StructureModel::class, 'typeId']
         ],
         'planets' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\PlanetModel', 'typeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\PlanetModel::class, 'typeId']
         ],
         'stars' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\StarModel', 'typeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\StarModel::class, 'typeId']
         ],
         'attributes' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\TypeAttributeModel', 'typeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\TypeAttributeModel::class, 'typeId']
         ],
         'stargates' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\StargateModel', 'typeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\StargateModel::class, 'typeId']
         ],
         'statics' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SystemStaticModel', 'typeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SystemStaticModel::class, 'typeId']
         ]
     ];
 
@@ -153,7 +153,6 @@ class TypeModel extends AbstractUniverseModel {
      */
     public function reset($mapper = true, $essentials = true){
         $this->clearVirtual('dogmaAttributes');
-        parent::reset($mapper, $essentials);
     }
 
     /**

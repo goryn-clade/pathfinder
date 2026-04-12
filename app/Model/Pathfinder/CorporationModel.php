@@ -132,19 +132,19 @@ class CorporationModel extends AbstractPathfinderModel {
             'default' => 0
         ],
         'corporationCharacters' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class, 'corporationId']
         ],
         'mapCorporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel::class, 'corporationId']
         ],
         'corporationRights' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel::class, 'corporationId']
         ],
         'corporationStructures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationStructureModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationStructureModel::class, 'corporationId']
         ],
         'structures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\StructureModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\StructureModel::class, 'corporationId']
         ]
     ];
 

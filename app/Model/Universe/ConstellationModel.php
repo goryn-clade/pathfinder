@@ -29,7 +29,7 @@ class ConstellationModel extends AbstractUniverseModel {
         'regionId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\RegionModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\RegionModel::class,
             'constraint' => [
                 [
                     'table' => 'region',
@@ -54,10 +54,10 @@ class ConstellationModel extends AbstractUniverseModel {
             'default' => 0
         ],
         'systems' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SystemModel', 'constellationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SystemModel::class, 'constellationId']
         ],
         'systemNeighbours' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel', 'constellationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel::class, 'constellationId']
         ]
     ];
 

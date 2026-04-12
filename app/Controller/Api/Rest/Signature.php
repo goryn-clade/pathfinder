@@ -185,7 +185,7 @@ class Signature extends AbstractRestController {
      */
     public function delete(\Base $f3,  $params){
         $requestData = $this->getRequestData($f3);
-        $signatureIds = array_map('intval', explode(',', (string)$params['id']));
+        $signatureIds = array_map(intval(...), explode(',', (string)$params['id']));
         $deletedSignatureIds = [];
 
         if($systemId = (int)$requestData['systemId']){

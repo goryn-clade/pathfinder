@@ -65,7 +65,7 @@ class DogmaAttributeModel extends AbstractUniverseModel {
             'default' => null
         ],
         'attributeTypes' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\TypeAttributeModel', 'attributeId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\TypeAttributeModel::class, 'attributeId']
         ]
     ];
 

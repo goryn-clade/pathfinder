@@ -47,9 +47,7 @@ class AppController extends Controller {
 
             // characters  from cookies
             $f3->set('cookieCharacters', $this->getCookieByName(self::COOKIE_PREFIX_CHARACTER, true));
-            $f3->set('getCharacterGrid', function($characters){
-                return ( ((12 / count($characters)) <= 3) ? 3 : (12 / count($characters)) );
-            });
+            $f3->set('getCharacterGrid', fn($characters) => ((12 / count($characters)) <= 3) ? 3 : (12 / count($characters)));
         }
 
         return $return;

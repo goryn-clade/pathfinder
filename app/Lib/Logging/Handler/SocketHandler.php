@@ -14,21 +14,16 @@ use Monolog\Logger;
 class SocketHandler extends \Monolog\Handler\SocketHandler {
 
     /**
-     * some meta data (additional processing information)
-     * @var array|string
-     */
-    protected $metaData                 = [];
-
-    /**
      * SocketHandler constructor.
      * @param $connectionString
      * @param int $level
      * @param bool $bubble
      * @param array $metaData
      */
-    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true, $metaData = []){
-        $this->metaData = $metaData;
-
+    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true, /**
+     * some meta data (additional processing information)
+     */
+    protected $metaData = []){
         parent::__construct($connectionString, $level, $bubble);
     }
 

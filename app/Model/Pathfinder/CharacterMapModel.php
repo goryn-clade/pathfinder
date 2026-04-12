@@ -30,7 +30,7 @@ class CharacterMapModel extends AbstractPathfinderModel {
         'characterId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class,
             'constraint' => [
                 [
                     'table' => 'character',
@@ -41,7 +41,7 @@ class CharacterMapModel extends AbstractPathfinderModel {
         'mapId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapModel::class,
             'constraint' => [
                 [
                     'table' => 'map',

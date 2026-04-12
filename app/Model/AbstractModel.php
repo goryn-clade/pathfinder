@@ -59,7 +59,7 @@ use Exodus4D\Pathfinder\Exception\DatabaseException;
  * @property int $lastExecEnd
  * @property mixed $userCharacter
  */
-abstract class AbstractModel extends Cortex {
+abstract class AbstractModel extends Cortex implements \Stringable {
 
     /**
      * alias name for database connection
@@ -206,27 +206,21 @@ abstract class AbstractModel extends Cortex {
         parent::__construct($db, $table, $fluid, $ttl);
 
         // insert events ------------------------------------------------------------------------------------
-        $this->beforeinsert(function($self, $pkeys){
-            return $self->beforeInsertEvent($self, $pkeys);
-        });
+        $this->beforeinsert(fn($self, $pkeys) => $self->beforeInsertEvent($self, $pkeys));
 
         $this->afterinsert(function($self, $pkeys): void{
             $self->afterInsertEvent($self, $pkeys);
         });
 
         // update events ------------------------------------------------------------------------------------
-        $this->beforeupdate(function($self, $pkeys){
-            return $self->beforeUpdateEvent($self, $pkeys);
-        });
+        $this->beforeupdate(fn($self, $pkeys) => $self->beforeUpdateEvent($self, $pkeys));
 
         $this->afterupdate(function($self, $pkeys): void{
             $self->afterUpdateEvent($self, $pkeys);
         });
 
         // erase events -------------------------------------------------------------------------------------
-        $this->beforeerase(function($self, $pkeys){
-            return $self->beforeEraseEvent($self, $pkeys);
-        });
+        $this->beforeerase(fn($self, $pkeys) => $self->beforeEraseEvent($self, $pkeys));
 
         $this->aftererase(function($self, $pkeys): void{
             $self->afterEraseEvent($self, $pkeys);
@@ -367,7 +361,7 @@ abstract class AbstractModel extends Cortex {
                     // validate $key (column) with this method...
                     $valid = $this->$method($key, $val);
                 }else{
-                    self::getF3()->error(501, 'Method ' . get_class($this) . '->' . $method . '() is not implemented');
+                    self::getF3()->error(501, 'Method ' . static::class . '->' . $method . '() is not implemented');
                 }
             }
         }
@@ -392,7 +386,7 @@ abstract class AbstractModel extends Cortex {
                     $valid = true;
                 }else{
                     $valid = false;
-                    $msg = 'Validation failed: "' . get_class($this) . '->' . $key . '" must be a valid instance of ' . $colConf['belongs-to-one'];
+                    $msg = 'Validation failed: "' . static::class . '->' . $key . '" must be a valid instance of ' . $colConf['belongs-to-one'];
                     $this->throwValidationException($key, $msg);
                 }
             }
@@ -413,7 +407,7 @@ abstract class AbstractModel extends Cortex {
             switch($colConf['type']){
                 case Schema::DT_INT:
                 case Schema::DT_FLOAT:
-                    if( (is_int($val) || ctype_digit($val)) && (int)$val > 0){
+                    if( (is_int($val) || ctype_digit((string) $val)) && (int)$val > 0){
                         $valid = true;
                     }
                     break;
@@ -862,7 +856,7 @@ abstract class AbstractModel extends Cortex {
             $filePath = self::getF3()->get('EXPORT') . 'csv/' . $fileName . '.csv';
             if(is_file($filePath)){
                 $handle = @fopen($filePath, 'r');
-                $keys = array_map('lcfirst', fgetcsv($handle, 0, ';'));
+                $keys = array_map(lcfirst(...), fgetcsv($handle, 0, ';'));
                 $keys = $rtrim($keys);
 
                 if(count($keys) > 0){
@@ -893,7 +887,7 @@ abstract class AbstractModel extends Cortex {
         ){
             // import row data
             $status = $this->importStaticData($tableData);
-            $this->getF3()->status(202);
+            static::getF3()->status(202);
         }
 
         return $status;
@@ -987,7 +981,7 @@ abstract class AbstractModel extends Cortex {
         $outdated = true;
         if($this->valid()){
             try{
-                $timezone = $this->getF3()->get('getTimeZone')();
+                $timezone = static::getF3()->get('getTimeZone')();
                 $currentTime = new \DateTime('now', $timezone);
                 $updateTime = \DateTime::createFromFormat(
                     'Y-m-d H:i:s',
@@ -1027,7 +1021,7 @@ abstract class AbstractModel extends Cortex {
      * @return string
      */
     public function __toString() : string {
-        return $this->getTable();
+        return (string) $this->getTable();
     }
 
     /**

@@ -30,7 +30,7 @@ class ConnectionLogModel extends AbstractPathfinderModel {
         'connectionId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel::class,
             'constraint' => [
                 [
                     'table' => 'connection',

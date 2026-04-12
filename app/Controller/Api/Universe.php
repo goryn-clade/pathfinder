@@ -30,7 +30,7 @@ class Universe extends Controller\AccessController {
         if(
             $activeCharacter &&
             array_key_exists('arg1', $params) &&
-            !empty($search = strtolower($params['arg1'])) &&
+            !empty($search = strtolower((string) $params['arg1'])) &&
             !empty($categories)
         ){
             $universeNameData = Ccp\Universe::searchUniverseNameData($categories, $search, $activeCharacter->_id, $activeCharacter->getAccessToken());

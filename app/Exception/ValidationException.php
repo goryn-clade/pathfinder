@@ -19,19 +19,15 @@ class ValidationException extends PathfinderException {
     ];
 
     /**
-     * table column that triggers the exception
-     * @var string
-     */
-    private $field;
-
-    /**
      * ValidationException constructor.
      * @param string $message
      * @param string $field
      */
-    public function __construct(string $message, string $field = ''){
+    public function __construct(string $message, /**
+     * table column that triggers the exception
+     */
+    private readonly string $field = ''){
         parent::__construct($message, 2000);
-        $this->field = $field;
     }
 
     /**

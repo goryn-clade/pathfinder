@@ -37,7 +37,7 @@ class Statistic extends Controller\AccessController {
             $date = new \DateTime;
             $date->setISODate($year, 53);
             $week = ($date->format('W') === '53' ? 53 : 52);
-        }catch(\Exception $e){}
+        }catch(\Exception){}
         return $week;
     }
 
@@ -50,18 +50,11 @@ class Statistic extends Controller\AccessController {
     protected function getWeekCount($period, $year){
         $weeksInYear = $this->getIsoWeeksInYear($year);
 
-        switch($period){
-            case 'yearly':
-                $weekCount = $weeksInYear;
-                break;
-            case 'monthly':
-                $weekCount = 4;
-                break;
-            case 'weekly':
-            default:
-                $weekCount = 1;
-                break;
-        }
+        $weekCount = match ($period) {
+            'yearly' => $weeksInYear,
+            'monthly' => 4,
+            default => 1,
+        };
 
         return $weekCount;
     }
@@ -227,7 +220,7 @@ class Statistic extends Controller\AccessController {
                     unset($tmp['name']);
                     unset($tmp['lastLogin']);
                     $data[$entry['characterId']]['name'] = $entry['name'];
-                    $data[$entry['characterId']]['lastLogin'] = strtotime($entry['lastLogin']);
+                    $data[$entry['characterId']]['lastLogin'] = strtotime((string) $entry['lastLogin']);
                     $data[$entry['characterId']]['weeks'][ $entry['year'] . $entry['week'] ] = $tmp;
                 }
             }

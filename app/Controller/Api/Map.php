@@ -247,9 +247,7 @@ class Map extends Controller\AccessController {
                     ($categoryUniverseModel->getById(Config::ESI_CATEGORY_STRUCTURE_ID) && $categoryUniverseModel->valid()) ? $categoryUniverseModel->getData() : null,
             ];
 
-            $validInitData = $validInitData ? !count(array_filter($return->universeCategories, function($v){
-                return empty(array_filter((array)$v->groups));
-            })) : $validInitData;
+            $validInitData = $validInitData ? !count(array_filter($return->universeCategories, fn($v) => empty(array_filter((array)$v->groups)))) : $validInitData;
 
             // response should not be cached if invalid -> e.g. missing static data
             if($validInitData){
@@ -449,9 +447,7 @@ class Map extends Controller\AccessController {
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,
-            'characterIds' => array_map(function($data){
-                return $data->id;
-            }, $map->getCharactersData())
+            'characterIds' => array_map(fn($data) => $data->id, $map->getCharactersData())
         ];
 
         $this->getF3()->webSocket()->write('mapAccess', $mapAccess);
@@ -1026,7 +1022,7 @@ class Map extends Controller\AccessController {
                 // get specific connections by id
                 $connectionIds = null;
                 if(is_array($postData['connectionIds'])){
-                    $connectionIds = array_map('intval', $postData['connectionIds']);
+                    $connectionIds = array_map(intval(...), $postData['connectionIds']);
                 }
 
                 $connections = $map->getConnections($connectionIds, 'wh');

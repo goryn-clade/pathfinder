@@ -65,7 +65,7 @@ class SystemModel extends AbstractMapTrackingModel {
         'mapId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapModel::class,
             'constraint' => [
                 [
                     'table' => 'map',
@@ -87,7 +87,7 @@ class SystemModel extends AbstractMapTrackingModel {
         'typeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\SystemTypeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\SystemTypeModel::class,
             'constraint' => [
                 [
                     'table' => 'system_type',
@@ -100,7 +100,7 @@ class SystemModel extends AbstractMapTrackingModel {
             'nullable' => false,
             'default' => 1,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\SystemStatusModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\SystemStatusModel::class,
             'constraint' => [
                 [
                     'table' => 'system_status',
@@ -142,13 +142,13 @@ class SystemModel extends AbstractMapTrackingModel {
             'default' => 0
         ],
         'signatures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\SystemSignatureModel', 'systemId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\SystemSignatureModel::class, 'systemId']
         ],
         'connectionsSource' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel', 'source']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel::class, 'source']
         ],
         'connectionsTarget' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel', 'target']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel::class, 'target']
         ]
     ];
 
@@ -412,18 +412,12 @@ class SystemModel extends AbstractMapTrackingModel {
     public function set_rallyUpdated($rally){
         $rally = (int)$rally;
 
-        switch($rally){
-            case 0:
-                $rally = null;
-                break;
-            case 1:
-                // new rally point set
-                $rally = date('Y-m-d H:i:s', time());
-                break;
-            default:
-                $rally = date('Y-m-d H:i:s', $rally);
-                break;
-        }
+        $rally = match ($rally) {
+            0 => null,
+            // new rally point set
+            1 => date('Y-m-d H:i:s', time()),
+            default => date('Y-m-d H:i:s', $rally),
+        };
 
         return $rally;
     }
@@ -784,19 +778,11 @@ class SystemModel extends AbstractMapTrackingModel {
      * set system type based on security
      */
     public function setType(){
-        switch($this->security){
-            case 'H':
-            case 'L':
-            case '0.0':
-            case 'T':
-                $typeId = 2; // k-space
-                break;
-            case 'A':
-                $typeId = 3; // a-space
-                break;
-            default:
-                $typeId = 1; // w-space
-        }
+        $typeId = match ($this->security) {
+            'H', 'L', '0.0', 'T' => 2,
+            'A' => 3,
+            default => 1,
+        };
 
         /**
          * @var MapTypeModel $type
@@ -848,9 +834,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @return array|null
      */
     public function getSignatureHistoryEntry(string $stamp) : ?array {
-        $signatureHistoryData = array_filter($this->getSignaturesHistory(), function($historyEntry) use ($stamp){
-            return md5($historyEntry['stamp']) == $stamp;
-        });
+        $signatureHistoryData = array_filter($this->getSignaturesHistory(), fn($historyEntry) => md5((string) $historyEntry['stamp']) == $stamp);
         return empty($signatureHistoryData) ? null : reset($signatureHistoryData);
     }
 

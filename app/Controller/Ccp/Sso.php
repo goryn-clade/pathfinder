@@ -463,7 +463,7 @@ class Sso extends Api\User{
         // get decoded JWT using ccp supplied JWK
         $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks), $supportedAlgs);
         // check if issuer matches correct ccp supplied claim values
-        if (strpos($decodedJwt->iss, $this->getSsoJwkClaim()) !== true) {            
+        if (strpos((string) $decodedJwt->iss, static::getSsoJwkClaim()) !== true) {            
             self::getSSOLogger()->write(sprintf(self::ERROR_TOKEN_VERIFICATION, __METHOD__));
         }
         return $decodedJwt;
@@ -499,9 +499,7 @@ class Sso extends Api\User{
             $characterDataBasic = $this->getF3()->ccpClient()->send('getCharacter', $characterId);
             if( !empty($characterDataBasic) ){
                 // remove some "unwanted" data -> not relevant for Pathfinder
-                $characterData->character = array_filter($characterDataBasic, function($key){
-                    return in_array($key, ['id', 'name', 'securityStatus']);
-                }, ARRAY_FILTER_USE_KEY);
+                $characterData->character = array_filter($characterDataBasic, fn($key) => in_array($key, ['id', 'name', 'securityStatus']), ARRAY_FILTER_USE_KEY);
 
                 $characterData->corporation = null;
                 $characterData->alliance = null;

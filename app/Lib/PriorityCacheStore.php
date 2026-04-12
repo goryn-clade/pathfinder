@@ -4,7 +4,7 @@
 namespace Exodus4D\Pathfinder\Lib;
 
 
-class PriorityCacheStore {
+class PriorityCacheStore implements \Stringable {
 
     /**
      * default max entry limit before store gets truncated
@@ -118,7 +118,7 @@ class PriorityCacheStore {
     /**
      * @return string
      */
-    public function __toString(){
+    public function __toString(): string{
         return 'Store count: ' . count($this->store) . ' priorityQueue count: ' . $this->priorityQueue->count();
     }
 }

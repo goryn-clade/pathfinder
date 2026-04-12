@@ -33,7 +33,7 @@ class Search {
             if (
                 !$current->isFile() || // allow recursion
                 (
-                    strpos($current->getFilename(), '.') !== 0 && // skip e.g. ".gitignore"
+                    !str_starts_with($current->getFilename(), '.') && // skip e.g. ".gitignore"
                     $current->getMTime() < $mTime // filter last modification date
                 )
             ){
@@ -61,7 +61,7 @@ class Search {
             if (
                 !$current->isFile() || // allow recursion
                 (
-                    strpos($current->getFilename(), '.') !== 0 && // skip e.g. ".gitignore"
+                    !str_starts_with($current->getFilename(), '.') && // skip e.g. ".gitignore"
                     $current->getSize() > $size // filter file size
                 )
             ){

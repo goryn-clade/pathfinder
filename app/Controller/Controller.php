@@ -224,7 +224,7 @@ class Controller {
             if($prefix === true){
                 // look for multiple cookies with same prefix
                 foreach($cookieData as $name => $value){
-                    if(strpos($name, $cookieName) === 0){
+                    if(str_starts_with((string) $name, $cookieName)){
                         $data[$name] = $value;
                     }
                 }
@@ -319,7 +319,7 @@ class Controller {
                 // remove invalid cookies
                 $invalidCookie = false;
 
-                $data = explode(':', $value);
+                $data = explode(':', (string) $value);
                 if(count($data) === 2){
                     // cookie data is well formatted
                     $characterAuth->getByForeignKey('selector', $data[0], ['limit' => 1]);
@@ -329,7 +329,7 @@ class Controller {
                     // "expire data" and "validate token"
                     if( !$characterAuth->dry() ){
                         if(
-                            strtotime($characterAuth->expires) >= $currentTime->getTimestamp() &&
+                            strtotime((string) $characterAuth->expires) >= $currentTime->getTimestamp() &&
                             hash_equals($characterAuth->token, hash('sha256', $data[1]))
                         ){
                             // cookie information is valid
@@ -721,7 +721,7 @@ class Controller {
         foreach(get_object_vars($error) as $key => $value){
             $row = str_pad(' ',2 ) . str_pad($key . ':',10 );
             if($key == 'trace'){
-                $value = preg_replace("/\r\n|\r|\n/", "\n" . str_pad(' ',12 ), $value);
+                $value = preg_replace("/\r\n|\r|\n/", "\n" . str_pad(' ',12 ), (string) $value);
                 $row .= PHP_EOL . str_pad(' ',12 ) . $value;
             }else{
                 $row .= $value;
@@ -758,7 +758,7 @@ class Controller {
             }
 
             // check if error is a PDO Exception ----------------------------------------------------------------------
-            if(strpos(strtolower( $f3->get('ERROR.text') ), 'duplicate') !== false){
+            if(str_contains(strtolower( $f3->get('ERROR.text') ), 'duplicate')){
                 preg_match_all('/\'([^\']+)\'/', $f3->get('ERROR.text'), $matches, PREG_SET_ORDER);
 
                 if(count($matches) === 2){
@@ -797,9 +797,9 @@ class Controller {
                 if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
 
                 // 4xx/5xx error -> set error page template
-                if( preg_match('/^4[0-9]{2}$/', $error->code) ){
+                if( preg_match('/^4[0-9]{2}$/', (string) $error->code) ){
                     $f3->set('tplPageContent', Config::getPathfinderData('STATUS.4XX') );
-                }elseif( preg_match('/^5[0-9]{2}$/', $error->code) ){
+                }elseif( preg_match('/^5[0-9]{2}$/', (string) $error->code) ){
                     $f3->set('tplPageContent', Config::getPathfinderData('STATUS.5XX'));
                 }
 
@@ -869,7 +869,7 @@ class Controller {
 
         for($i = 0; $i <= count($subNamespaces); $i++){
             $path = [__NAMESPACE__];
-            $path[] = ( isset($subNamespaces[$i - 1]) ) ? $subNamespaces[$i - 1] : '';
+            $path[] = $subNamespaces[$i - 1] ?? '';
             $path[] = $className;
             $classPath = implode('\\', array_filter($path));
 
@@ -927,7 +927,7 @@ class Controller {
             // Therefore we can´t use this for all servers
             // https://github.com/exodus4d/pathfinder/issues/58
             foreach($_SERVER as $name => $value){
-                $name = mb_strtolower($name);
+                $name = mb_strtolower((string) $name);
                 if(mb_substr($name, 0, $prefixLength) == $headerPrefix){
                     $headers[mb_convert_case(str_replace('_', '-', mb_substr($name, $prefixLength)), MB_CASE_TITLE)] = $value;
                 }
@@ -953,13 +953,13 @@ class Controller {
             $serverData->requiredVersion = 'unknown';
             $serverData->phpInterfaceType = php_sapi_name();
 
-            if(strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx' ) !== false){
+            if(str_contains(strtolower((string) $_SERVER['SERVER_SOFTWARE']), 'nginx' )){
                 // Nginx server
-                $serverSoftwareArgs = explode('/', strtolower( $_SERVER['SERVER_SOFTWARE']) );
+                $serverSoftwareArgs = explode('/', strtolower( (string) $_SERVER['SERVER_SOFTWARE']) );
                 $serverData->type = reset($serverSoftwareArgs);
                 $serverData->version = end($serverSoftwareArgs);
                 $serverData->requiredVersion = $f3->get('REQUIREMENTS.SERVER.NGINX.VERSION');
-            }elseif(strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache' ) !== false){
+            }elseif(str_contains(strtolower((string) $_SERVER['SERVER_SOFTWARE']), 'apache' )){
                 // Apache server
                 $serverData->type = 'apache';
                 $serverData->requiredVersion = $f3->get('REQUIREMENTS.SERVER.APACHE.VERSION');

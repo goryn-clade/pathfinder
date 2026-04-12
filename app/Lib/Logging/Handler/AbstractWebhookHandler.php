@@ -15,51 +15,10 @@ use Monolog\Logger;
 abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler {
 
     /**
-     * @var string
-     */
-    private $webhookUrl;
-
-    /**
-     * Slack channel (encoded ID or name)
-     * @var string|null
-     */
-    private $channel;
-
-    /**
-     * Name of a bot
-     * @var string|null
-     */
-    private $username;
-
-    /**
      * User icon e.g. 'ghost', 'http://example.com/user.png'
      * @var string
      */
     private $userIcon;
-
-    /**
-     * Whether the message should be added to Slack as attachment (plain text otherwise)
-     * @var bool
-     */
-    protected $useAttachment;
-
-    /**
-     * Whether the attachment should include context
-     * @var bool
-     */
-    protected $includeContext;
-
-    /**
-     * Whether the attachment should include extra
-     * @var bool
-     */
-    protected $includeExtra;
-
-    /**
-     * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
-     * @var array
-     */
-    private $excludeFields;
 
     /**
      * Max attachment count per message (20 is max)
@@ -79,15 +38,26 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param   $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
-    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $includeContext = true, $includeExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = []){
-        $this->webhookUrl = $webhookUrl;
-        $this->channel = $channel;
-        $this->username = $username;
-        $this->userIcon = trim($iconEmoji, ':');
-        $this->useAttachment = $useAttachment;
-        $this->includeContext = $includeContext;
-        $this->includeExtra = $includeExtra;
-        $this->excludeFields = $excludeFields;
+    public function __construct(private $webhookUrl, /**
+     * Slack channel (encoded ID or name)
+     */
+    private $channel = null, /**
+     * Name of a bot
+     */
+    private $username = null, /**
+     * Whether the message should be added to Slack as attachment (plain text otherwise)
+     */
+    protected $useAttachment = true, $iconEmoji = null, /**
+     * Whether the attachment should include context
+     */
+    protected $includeContext = true, /**
+     * Whether the attachment should include extra
+     */
+    protected $includeExtra = false, $level = Logger::CRITICAL, $bubble = true, /**
+     * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     */
+    private readonly array $excludeFields = []){
+        $this->userIcon = trim((string) $iconEmoji, ':');
 
         parent::__construct($level, $bubble);
 
@@ -219,13 +189,13 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @return string
      */
     protected function getAttachmentColor(string $tag): string {
-        switch($tag){
-            case 'information': $color = '#428bca'; break;
-            case 'success':     $color = '#4f9e4f'; break;
-            case 'warning':     $color = '#e28a0d'; break;
-            case 'danger':      $color = '#a52521'; break;
-            default: $color = '#313335'; break;
-        }
+        $color = match ($tag) {
+            'information' => '#428bca',
+            'success' => '#4f9e4f',
+            'warning' => '#e28a0d',
+            'danger' => '#a52521',
+            default => '#313335',
+        };
         return $color;
     }
 
@@ -236,7 +206,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      */
     private function excludeFields(array $record){
         foreach($this->excludeFields as $field){
-            $keys = explode('.', $field);
+            $keys = explode('.', (string) $field);
             $node = &$record;
             $lastKey = end($keys);
             foreach($keys as $key){

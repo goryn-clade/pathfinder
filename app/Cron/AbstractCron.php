@@ -205,7 +205,7 @@ abstract class AbstractCron {
             Number::instance()->bytesToString($memPeak), $duration
         );
 
-        $text .= $logText ? $logText: '';
+        $text .= $logText ?: '';
         $log->write($text);
     }
 }

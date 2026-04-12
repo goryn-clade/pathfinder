@@ -24,7 +24,7 @@ class TypeAttributeModel extends AbstractUniverseModel {
         'typeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\TypeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\TypeModel::class,
             'constraint' => [
                 [
                     'table' => 'type',
@@ -36,7 +36,7 @@ class TypeAttributeModel extends AbstractUniverseModel {
         'attributeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\DogmaAttributeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\DogmaAttributeModel::class,
             'constraint' => [
                 [
                     'table' => 'dogma_attribute',

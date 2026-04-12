@@ -88,17 +88,11 @@ class LogController extends \Prefab  {
         if( !empty($this->activityLogBuffer) ){
             $db = \Base::instance()->DB->getDB('PF');
 
-            $quoteStr = function($str) use ($db) {
-                return $db->quotekey($str);
-            };
+            $quoteStr = (fn($str) => $db->quotekey($str));
 
-            $placeholderStr = function($str){
-                return ':' . $str;
-            };
+            $placeholderStr = (fn($str) => ':' . $str);
 
-            $updateRule = function($str){
-                return $str . " = " . $str . " + VALUES(" . $str . ")";
-            };
+            $updateRule = (fn($str) => $str . " = " . $str . " + VALUES(" . $str . ")");
 
             $year = (int)date('o');
             $yearWeek = (int)date('W');

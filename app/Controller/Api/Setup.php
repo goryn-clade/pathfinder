@@ -91,9 +91,7 @@ class Setup extends Controller\Controller {
                 'settings' => $this->getF3()->constants(Cron::instance(), 'DEFAULT_')
             ],
             'tplCounter' => $this->counter(),
-            'tplConvertBytes' => function(){
-                return call_user_func_array([Number::instance(), 'bytesToString'], func_get_args());
-            }
+            'tplConvertBytes' => fn() => call_user_func_array([Number::instance(), 'bytesToString'], func_get_args())
         ];
         return \Template::instance()->render('templates/ui/cron_table_row.html', null, $tplData, 0);
     }
@@ -139,9 +137,7 @@ class Setup extends Controller\Controller {
          * @param int $count
          * @return int
          */
-        $percent = function(int $countAll, int $count){
-            return $countAll ? floor((100/$countAll) * $count) : 0;
-        };
+        $percent = (fn(int $countAll, int $count) => $countAll ? floor((100/$countAll) * $count) : 0);
 
         $controller = new Controller\Ccp\Universe();
         switch($type){
@@ -387,13 +383,9 @@ class Setup extends Controller\Controller {
         }
 
         if($info['countChunk'] = count($rows)){
-            $placeholderStr = function(string $str) : string {
-                return ':' . $str;
-            };
+            $placeholderStr = (fn(string $str): string => ':' . $str);
 
-            $updateRule = function(string $str) : string {
-                return $str . " = VALUES(" . $str . ")";
-            };
+            $updateRule = (fn(string $str): string => $str . " = VALUES(" . $str . ")");
 
             $universeDB->begin();
             foreach($rows as $row){

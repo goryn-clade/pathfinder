@@ -335,9 +335,7 @@ class User extends Controller\Controller{
                     }
                 }
 
-            }catch(Exception\ValidationException $e){
-                $return->error[] = $e->getError();
-            }catch(Exception\RegistrationException $e){
+            }catch(Exception\ValidationException|Exception\RegistrationException $e){
                 $return->error[] = $e->getError();
             }
 

@@ -37,7 +37,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
             'type' => Schema::DT_INT,
             'index' => true,
             'unique' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class,
             'constraint' => [
                 [
                     'table' => 'character',

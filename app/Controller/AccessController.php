@@ -113,7 +113,7 @@ class AccessController extends Controller {
                     'connections' => $mapData->connections,
                 ]
             ];
-        }catch(\Exception $e){
+        }catch(\Exception){
 
         }
 

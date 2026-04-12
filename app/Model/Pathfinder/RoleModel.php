@@ -47,7 +47,7 @@ class RoleModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'corporationRights' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel', 'roleId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel::class, 'roleId']
         ]
     ];
 

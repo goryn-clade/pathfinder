@@ -176,9 +176,7 @@ class Setup extends Controller {
 
         $f3->set('tplCounter', $this->counter());
 
-        $f3->set('tplConvertBytes', function(){
-            return call_user_func_array([Number::instance(), 'bytesToString'], func_get_args());
-        });
+        $f3->set('tplConvertBytes', fn() => call_user_func_array([Number::instance(), 'bytesToString'], func_get_args()));
 
         // render view
         echo \Template::instance()->render( Config::getPathfinderData('view.index') );
@@ -740,9 +738,7 @@ class Setup extends Controller {
              * @param string $tag
              * @return string
              */
-            $getDbLabel = function(int $dbNum, string $tag) : string {
-                return '<i class="fas fa-fw fa-database"></i> db(' . $dbNum . ') : ' . $tag;
-            };
+            $getDbLabel = (fn(int $dbNum, string $tag): string => '<i class="fas fa-fw fa-database"></i> db(' . $dbNum . ') : ' . $tag);
 
             /**
              * get client information for a Redis client
@@ -750,18 +746,16 @@ class Setup extends Controller {
              * @param array  $conf
              * @return array
              */
-            $getClientInfo = function(\Redis $client,  $conf) : array {
-                return [
-                    'dsn' => [
-                        'label' => 'DSN',
-                        'value' => ($conf['host'] ?? 'localhost') . ':' . ($conf['port'] ?? 6379)
-                    ],
-                    'connected' => [
-                        'label' => 'status',
-                        'value' => $client->isConnected()
-                    ]
-                ];
-            };
+            $getClientInfo = (fn(\Redis $client, $conf): array => [
+                'dsn' => [
+                    'label' => 'DSN',
+                    'value' => ($conf['host'] ?? 'localhost') . ':' . ($conf['port'] ?? 6379)
+                ],
+                'connected' => [
+                    'label' => 'status',
+                    'value' => $client->isConnected()
+                ]
+            ]);
 
             /**
              * get status information for a Redis client
@@ -896,7 +890,7 @@ class Setup extends Controller {
                         }
 
                         $conf['db'] = $client->getDbNum();
-                    }catch(\RedisException $e){
+                    }catch(\RedisException){
                         // connection failed, getLastError() is called further down
                     }
 
@@ -956,9 +950,7 @@ class Setup extends Controller {
             }
 
             // sort all $dsnData by 'db' number -----------------------------------------------------------------------
-            usort($dsnData, function($a, $b){
-                return $a['db'] <=> $b['db'];
-            });
+            usort($dsnData, fn($a, $b) => $a['db'] <=> $b['db']);
 
             foreach($dsnData as $conf){
                 $buildRedisConfig($conf);
@@ -985,9 +977,7 @@ class Setup extends Controller {
             exec('node -v', $nodeOut, $nodeStatus);
             exec('npm -v', $npmOut, $npmStatus);
 
-            $normalizeVersion = function($version): string {
-                return preg_replace("/[^0-9\.\s]/", '', (string)$version);
-            };
+            $normalizeVersion = (fn($version): string => preg_replace("/[^0-9\.\s]/", '', (string)$version));
 
             $systemConf = [
                 'git' => [
@@ -1199,7 +1189,7 @@ class Setup extends Controller {
                         $tableStatus = $db->getTableStatus($requiredTableName);
                         if(
                             !empty($tableStatus['Collation']) &&
-                            ($statusVal = strstr($tableStatus['Collation'], '_', true)) !== false
+                            ($statusVal = strstr((string) $tableStatus['Collation'], '_', true)) !== false
                         ){
                             $tableCharset = $statusVal;
                             $tableCollation = $tableStatus['Collation'];
@@ -1495,9 +1485,7 @@ class Setup extends Controller {
         $results = $db->exec("SHOW VARIABLES WHERE Variable_Name IN ('" . implode("','", $mySQLConfigKeys) . "')");
 
         $getValue = function(string $param) use ($results) : string {
-            $match = array_filter($results, function($k) use ($param) : bool {
-                return strtolower($k['Variable_name']) == $param;
-            });
+            $match = array_filter($results, fn($k): bool => strtolower((string) $k['Variable_name']) == $param);
             return !empty($match) ? end(reset($match)) : 'unknown';
         };
 
@@ -1779,9 +1767,7 @@ class Setup extends Controller {
                 $universeController->clearSystemsIndex();
             }
 
-            $sum = function(int $carry, int $value) : int {
-                return $carry + $value;
-            };
+            $sum = (fn(int $carry, int $value): int => $carry + $value);
 
             $indexInfo = [
                 'Wormholes' => [
@@ -1813,7 +1799,7 @@ class Setup extends Controller {
                     'tooltip' => 'import all structure types (e.g. Citadels) from ESI. Runtime: ~15s',
                     'subCount' => [
                         'countBuild' => $typesCountStructure,
-                        'countAll' => array_reduce(array_map('count', Universe\CategoryModel::getUniverseCategoryTypes(Config::ESI_CATEGORY_STRUCTURE_ID)), $sum, 0),
+                        'countAll' => array_reduce(array_map(count(...), Universe\CategoryModel::getUniverseCategoryTypes(Config::ESI_CATEGORY_STRUCTURE_ID)), $sum, 0),
                     ]
                 ],
                 'Ships' => [
@@ -1831,7 +1817,7 @@ class Setup extends Controller {
                     'tooltip' => 'import all ships from ESI. Runtime: ~2min',
                     'subCount' => [
                         'countBuild' => $typesCountShip,
-                        'countAll' => array_reduce(array_map('count', Universe\CategoryModel::getUniverseCategoryTypes(Config::ESI_CATEGORY_SHIP_ID)), $sum, 0),
+                        'countAll' => array_reduce(array_map(count(...), Universe\CategoryModel::getUniverseCategoryTypes(Config::ESI_CATEGORY_SHIP_ID)), $sum, 0),
                     ]
                 ],
                 'SystemStatic' => [

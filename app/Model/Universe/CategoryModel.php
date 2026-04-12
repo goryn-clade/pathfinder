@@ -33,7 +33,7 @@ class CategoryModel extends AbstractUniverseModel {
             'index' => true
         ],
         'groups' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\GroupModel', 'categoryId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\GroupModel::class, 'categoryId']
         ]
     ];
 

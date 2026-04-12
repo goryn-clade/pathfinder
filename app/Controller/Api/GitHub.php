@@ -58,8 +58,8 @@ class GitHub extends Controller\Controller {
 
             // remove "update information" from release text
             // -> keep everything until first "***" -> horizontal line
-            if( ($pos = strpos($body, '***')) !== false){
-                $body = substr($body, 0, $pos);
+            if( ($pos = strpos((string) $body, '***')) !== false){
+                $body = substr((string) $body, 0, $pos);
             }
 
             // convert list style

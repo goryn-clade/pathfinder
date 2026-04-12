@@ -20,7 +20,7 @@ class SovereigntyMapModel extends AbstractUniverseModel {
             'type' => Schema::DT_INT,
             'index' => true,
             'unique' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\SystemModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\SystemModel::class,
             'constraint' => [
                 [
                     'table' => 'system',
@@ -32,7 +32,7 @@ class SovereigntyMapModel extends AbstractUniverseModel {
         'factionId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\FactionModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\FactionModel::class,
             'constraint' => [
                 [
                     'table' => 'faction',
@@ -43,7 +43,7 @@ class SovereigntyMapModel extends AbstractUniverseModel {
         'allianceId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\AllianceModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\AllianceModel::class,
             'constraint' => [
                 [
                     'table' => 'alliance',
@@ -54,7 +54,7 @@ class SovereigntyMapModel extends AbstractUniverseModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',

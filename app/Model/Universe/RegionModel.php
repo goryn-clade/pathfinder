@@ -31,10 +31,10 @@ class RegionModel extends AbstractUniverseModel {
             'type' => Schema::DT_TEXT
         ],
         'constellations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\ConstellationModel', 'regionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\ConstellationModel::class, 'regionId']
         ],
         'systemNeighbours' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel', 'regionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel::class, 'regionId']
         ]
     ];
 

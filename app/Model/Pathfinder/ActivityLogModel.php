@@ -30,7 +30,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
         'characterId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class,
             'constraint' => [
                 [
                     'table' => 'character',
@@ -41,7 +41,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
         'mapId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapModel::class,
             'constraint' => [
                 [
                     'table' => 'map',
@@ -178,9 +178,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
     public function getCountableColumnNames(): array {
         $fieldConf = $this->getFieldConfiguration();
 
-        $filterCounterColumns = function($key, $value){
-            return isset($value['counter']) ? $key : false;
-        };
+        $filterCounterColumns = (fn($key, $value) => isset($value['counter']) ? $key : false);
 
         return array_values(array_filter(array_map($filterCounterColumns, array_keys($fieldConf), $fieldConf)));
     }

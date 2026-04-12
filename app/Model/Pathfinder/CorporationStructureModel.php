@@ -30,7 +30,7 @@ class CorporationStructureModel extends AbstractPathfinderModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',
@@ -41,7 +41,7 @@ class CorporationStructureModel extends AbstractPathfinderModel {
         'structureId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\StructureModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\StructureModel::class,
             'constraint' => [
                 [
                     'table' => 'structure',

@@ -43,7 +43,7 @@ class Image extends \Prefab {
         $url = null;
         if(
             $resourceId &&
-            ($serviceUrl = rtrim(Config::getPathfinderData('api.ccp_image_server'), '/')) &&
+            ($serviceUrl = rtrim((string) Config::getPathfinderData('api.ccp_image_server'), '/')) &&
             ($defaults = static::DEFAULT_EVE_SRC_CONFIG[$resourceType])
         ){
             $parts = [$serviceUrl, $resourceType, $resourceId, $resourceVariant ? : $defaults['variant']];

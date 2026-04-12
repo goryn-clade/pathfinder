@@ -125,7 +125,7 @@ class Admin extends Controller{
     public function dispatch(\Base $f3,  $params, ?CharacterModel $character = null){
         if($character instanceof CharacterModel){
             // user logged in
-            $parts = array_values(array_filter(array_map('strtolower', explode('/', $params['*']))));
+            $parts = array_values(array_filter(array_map(strtolower(...), explode('/', (string) $params['*']))));
             $f3->set('tplPage', $parts[0]);
 
             switch($parts[0]){
@@ -233,8 +233,7 @@ class Admin extends Controller{
     protected function kickCharacter(CharacterModel $character, $kickCharacterId, $minutes){
         $kickOptions = self::KICK_OPTIONS;
         $minKickTime = key($kickOptions) ;
-        end($kickOptions);
-        $maxKickTime = key($kickOptions);
+        $maxKickTime = array_key_last($kickOptions);
         $minutes = in_array($minutes, range($minKickTime, $maxKickTime)) ? $minutes : 0;
 
         $kickCharacters = $this->filterValidCharacters($character, $kickCharacterId);
@@ -390,7 +389,7 @@ class Admin extends Controller{
 
             // sort corporation from current user first
             if( !empty($data->corpMembers[$characterCorporation->name]) ){
-                $data->corpMembers = array($characterCorporation->name => $data->corpMembers[$characterCorporation->name]) + $data->corpMembers;
+                $data->corpMembers = [$characterCorporation->name => $data->corpMembers[$characterCorporation->name]] + $data->corpMembers;
             }
         }
 

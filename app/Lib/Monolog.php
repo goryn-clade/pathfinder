@@ -50,11 +50,11 @@ class Monolog extends \Prefab {
      */
     const HANDLER = [
         'stream'        => 'Monolog\Handler\StreamHandler',
-        'socket'        => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SocketHandler',
-        'slackMap'      => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SlackMapWebhookHandler',
-        'slackRally'    => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SlackRallyWebhookHandler',
-        'discordMap'    => 'Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordMapWebhookHandler',
-        'discordRally'  => 'Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordRallyWebhookHandler'
+        'socket'        => \Exodus4D\Pathfinder\Lib\Logging\Handler\SocketHandler::class,
+        'slackMap'      => \Exodus4D\Pathfinder\Lib\Logging\Handler\SlackMapWebhookHandler::class,
+        'slackRally'    => \Exodus4D\Pathfinder\Lib\Logging\Handler\SlackRallyWebhookHandler::class,
+        'discordMap'    => \Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordMapWebhookHandler::class,
+        'discordRally'  => \Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordRallyWebhookHandler::class
     ];
 
     /**

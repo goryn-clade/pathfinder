@@ -139,7 +139,7 @@ abstract class AbstractClient extends \Prefab {
                     }
 
                     if(isset($poolConfig['tag'])){
-                        $name = 'pathfinder|php|tag:' . strtolower($poolConfig['tag']) . '|pid:' . getmypid();
+                        $name = 'pathfinder|php|tag:' . strtolower((string) $poolConfig['tag']) . '|pid:' . getmypid();
                         $client->client('setname', $name);
                     }
 
@@ -304,7 +304,7 @@ abstract class AbstractClient extends \Prefab {
             if(method_exists($this->client, $name)){
                 $return = call_user_func_array([$this->client, $name], $arguments);
             }else{
-                $errorMsg = $this->getMissingMethodError(get_class($this->client), $name);
+                $errorMsg = $this->getMissingMethodError($this->client::class, $name);
                 $this->getLogger('ERROR')->write($errorMsg);
                 \Base::instance()->error(501, $errorMsg);
             }

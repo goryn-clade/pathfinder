@@ -26,7 +26,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
         'regionId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\RegionModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\RegionModel::class,
             'constraint' => [
                 [
                     'table' => 'region',
@@ -38,7 +38,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
         'constellationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\ConstellationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\ConstellationModel::class,
             'constraint' => [
                 [
                     'table' => 'constellation',
@@ -51,7 +51,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
             'type' => Schema::DT_INT,
             'index' => true,
             'unique' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\SystemModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\SystemModel::class,
             'constraint' => [
                 [
                     'table' => 'system',

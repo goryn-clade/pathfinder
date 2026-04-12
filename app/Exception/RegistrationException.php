@@ -19,19 +19,15 @@ class RegistrationException extends PathfinderException{
     ];
 
     /**
-     * form field name that causes this exception
-     * @var string
-     */
-    private $field;
-
-    /**
      * RegistrationException constructor.
      * @param string $message
      * @param string $field
      */
-    public function __construct(string $message, string $field = ''){
+    public function __construct(string $message, /**
+     * form field name that causes this exception
+     */
+    private readonly string $field = ''){
         parent::__construct($message, 2000);
-        $this->field = $field;
     }
 
     /**

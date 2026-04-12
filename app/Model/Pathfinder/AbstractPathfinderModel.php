@@ -43,7 +43,6 @@ abstract class AbstractPathfinderModel extends AbstractModel {
      */
     public function reset($mapper = true, $essentials = true){
         $this->fieldChanges = [];
-        parent::reset($mapper, $essentials);
     }
 
     /**
@@ -64,9 +63,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
 
         if($this->enableActivityLogging){
             // filter fields, where "activity" (changes) should be logged
-            $fieldConf = array_filter($this->fieldConf, function($fieldConf, $key){
-                return isset($fieldConf['activity-log']) ? (bool)$fieldConf['activity-log'] : false;
-            }, ARRAY_FILTER_USE_BOTH);
+            $fieldConf = array_filter($this->fieldConf, fn($fieldConf, $key) => isset($fieldConf['activity-log']) ? (bool)$fieldConf['activity-log'] : false, ARRAY_FILTER_USE_BOTH);
 
             if($fieldKeys = array_keys($fieldConf)){
                 // model has fields where changes should be logged

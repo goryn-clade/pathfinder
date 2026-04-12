@@ -30,7 +30,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
         'allianceId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\AllianceModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\AllianceModel::class,
             'constraint' => [
                 [
                     'table' => 'alliance',
@@ -41,7 +41,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
         'mapId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapModel::class,
             'constraint' => [
                 [
                     'table' => 'map',

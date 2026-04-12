@@ -270,7 +270,7 @@ class Universe extends Controller\Controller {
     private function get(string $cacheKey) : ?\stdClass {
         $data = null;
         if($this->getF3()->exists($cacheKey,$value)) {
-            if(is_string($value) && strpos($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX) === 0) {
+            if(is_string($value) && str_starts_with($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX)) {
                 // value references an other cacheKey that holds data
                 return $this->get($value);
             }elseif( !empty((array)$value) ){
@@ -287,7 +287,7 @@ class Universe extends Controller\Controller {
      */
     private function clear(string $cacheKey){
         if($this->getF3()->exists($cacheKey,$value)) {
-            if(is_string($value) && strpos($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX) === 0) {
+            if(is_string($value) && str_starts_with($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX)) {
                 // value references another cacheKey -> clear that one as well
                 $this->clear($value);
             }

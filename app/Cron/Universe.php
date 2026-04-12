@@ -48,7 +48,7 @@ class Universe extends AbstractCron {
      */
     private function formatMemoryValue(int $size){
         $unit = ['B','KB','MB','GB','TB','PB'];
-        return  str_pad(number_format(@round($size/pow(1024,($i=floor(log($size,1024)))),2), 2, '.', '') . '' . $unit[$i], 9, ' ', STR_PAD_LEFT);
+        return  str_pad(number_format(@round($size/1024 ** $i=floor(log($size,1024)),2), 2, '.', '') . '' . $unit[$i], 9, ' ', STR_PAD_LEFT);
     }
 
     /**
@@ -58,9 +58,7 @@ class Universe extends AbstractCron {
      */
     private function formatSeconds(float $time){
         $time = round($time, 5);
-        $formatSeconds = function($seconds){
-            return str_pad(number_format(round($seconds, 5), 5), 8, ' ', STR_PAD_LEFT);
-        };
+        $formatSeconds = (fn($seconds) => str_pad(number_format(round($seconds, 5), 5), 8, ' ', STR_PAD_LEFT));
 
         $formatted =  $time < 60 ? $formatSeconds($time) . 's' : floor($time / 60) . 'm ' . $formatSeconds(fmod($time, 60)) . 's';
         return str_pad($formatted, 14, ' ', STR_PAD_LEFT);
@@ -328,7 +326,7 @@ class Universe extends AbstractCron {
             // -> even though they are returned from sovereignty/map endpoint?!
             if(
                 $system->getById($id, 0) &&
-                strpos($system->security, 'C') === false
+                !str_contains((string) $system->security, 'C')
             ){
                 if($changedSovData = $system->updateSovereigntyData($sovData[$id])){
                     $changes['sovereignty'][] = $id;
@@ -357,9 +355,7 @@ class Universe extends AbstractCron {
             }
         }
 
-        $changedIds = array_reduce($changes, function(array $reducedIds, array $changedIds) : array {
-            return array_unique(array_merge($reducedIds, $changedIds));
-        }, []);
+        $changedIds = array_reduce($changes, fn(array $reducedIds, array $changedIds): array => array_unique(array_merge($reducedIds, $changedIds)), []);
 
         // Log --------------------------------------------------------------------------------------------------------
         $text = sprintf(self::LOG_TEXT_SOV_FW,

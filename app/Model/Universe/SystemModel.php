@@ -29,7 +29,7 @@ class SystemModel extends AbstractUniverseModel {
         'constellationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\ConstellationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\ConstellationModel::class,
             'constraint' => [
                 [
                     'table' => 'constellation',
@@ -41,7 +41,7 @@ class SystemModel extends AbstractUniverseModel {
         'starId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\StarModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\StarModel::class,
             'constraint' => [
                 [
                     'table' => 'star',
@@ -85,28 +85,28 @@ class SystemModel extends AbstractUniverseModel {
             'default' => 0
         ],
         'planets' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\PlanetModel', 'systemId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\PlanetModel::class, 'systemId']
         ],
         'statics' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SystemStaticModel', 'systemId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SystemStaticModel::class, 'systemId']
         ],
         'stargates' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\StargateModel', 'systemId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\StargateModel::class, 'systemId']
         ],
         'stations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\StationModel', 'systemId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\StationModel::class, 'systemId']
         ],
         'structures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\StructureModel', 'systemId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\StructureModel::class, 'systemId']
         ],
         'neighbour' => [
-            'has-one' => ['Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel', 'systemId']
+            'has-one' => [\Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel::class, 'systemId']
         ],
         'sovereignty' => [
-            'has-one' => ['Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel', 'systemId']
+            'has-one' => [\Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel::class, 'systemId']
         ],
         'factionWar' => [
-            'has-one' => ['Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel', 'systemId']
+            'has-one' => [\Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel::class, 'systemId']
         ]
     ];
 
@@ -143,10 +143,8 @@ class SystemModel extends AbstractUniverseModel {
             // 'Shattered' systems have ONLY planets named with '(shattered)'
             // -> system 'Thera' has '(shattered)' AND other planets -> not shattered.
             // -> system 'J164104, 'J115422' - the only non-shattered wormholes which have a shattered planet -> not shattered.
-            $data->shattered        = count(array_filter($planetsData, function($planetData){
-                return property_exists($planetData, 'type') &&
-                    (strpos(strtolower($planetData->type->name), '(shattered)') !== false);
-            })) == count($planetsData);
+            $data->shattered        = count(array_filter($planetsData, fn($planetData) => property_exists($planetData, 'type') &&
+                (str_contains(strtolower((string) $planetData->type->name), '(shattered)')))) == count($planetsData);
         }
 
         if( !empty($staticsData = $this->getStaticsData()) ){

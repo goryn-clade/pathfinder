@@ -107,7 +107,7 @@ class Resource extends \Prefab {
      * @return mixed|null
      */
     public function getOption(string $option){
-        return isset($this->$option) ? $this->$option : null;
+        return $this->$option ?? null;
     }
 
     /**
@@ -224,7 +224,7 @@ class Resource extends \Prefab {
      * @return string
      */
     protected function getLinkAttrAs(string $group) : string {
-        return isset(self::ATTR_AS[$group]) ? self::ATTR_AS[$group] : '';
+        return self::ATTR_AS[$group] ?? '';
     }
 
     /**
@@ -234,7 +234,7 @@ class Resource extends \Prefab {
      * @return string
      */
     protected function getLinkAttrType(string $group) : string {
-        return isset(self::ATTR_TYPE[$group]) ? self::ATTR_TYPE[$group] : '';
+        return self::ATTR_TYPE[$group] ?? '';
     }
 
     /**
@@ -244,7 +244,7 @@ class Resource extends \Prefab {
      * @return array
      */
     protected function getAdditionalAttrs(string $group) : array {
-        return isset(self::ATTR_ADD[$group]) ? self::ATTR_ADD[$group] : [];
+        return self::ATTR_ADD[$group] ?? [];
     }
 
     /**
@@ -254,6 +254,6 @@ class Resource extends \Prefab {
      * @return string
      */
     protected function getFileExtension(string $group) : string {
-        return isset($this->fileExt[$group]) ? $this->fileExt[$group] : '';
+        return $this->fileExt[$group] ?? '';
     }
 }

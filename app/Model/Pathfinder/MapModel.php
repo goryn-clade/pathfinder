@@ -44,7 +44,7 @@ class MapModel extends AbstractMapTrackingModel {
         'scopeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapScopeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapScopeModel::class,
             'constraint' => [
                 [
                     'table' => 'map_scope',
@@ -57,7 +57,7 @@ class MapModel extends AbstractMapTrackingModel {
         'typeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapTypeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapTypeModel::class,
             'constraint' => [
                 [
                     'table' => 'map_type',
@@ -171,19 +171,19 @@ class MapModel extends AbstractMapTrackingModel {
             'validate' => true
         ],
         'systems' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\SystemModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\SystemModel::class, 'mapId']
         ],
         'connections' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel::class, 'mapId']
         ],
         'mapCharacters' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterMapModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterMapModel::class, 'mapId']
         ],
         'mapCorporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel::class, 'mapId']
         ],
         'mapAlliances' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\AllianceMapModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\AllianceMapModel::class, 'mapId']
         ]
     ];
 
@@ -601,9 +601,7 @@ class MapModel extends AbstractMapTrackingModel {
         }
 
         // orderBy x-Coordinate for smoother frontend animation (left to right)
-        usort($systemsData, function($sysDataA, $sysDataB){
-            return $sysDataA->position->x <=> $sysDataB->position->x;
-        });
+        usort($systemsData, fn($sysDataA, $sysDataB) => $sysDataA->position->x <=> $sysDataB->position->x);
 
         return $systemsData;
     }
@@ -1114,11 +1112,11 @@ class MapModel extends AbstractMapTrackingModel {
         // check global Slack status
         if((bool)Config::getPathfinderData('slack.status')){
             // check global map default config for this channel
-            switch($channel){
-                case 'slackChannelHistory': $defaultMapConfigKey = 'send_history_slack_enabled'; break;
-                case 'slackChannelRally': $defaultMapConfigKey = 'send_rally_slack_enabled'; break;
-                default: throw new Exception\ConfigException(sprintf(self::ERROR_SLACK_CHANNEL, $channel));
-            }
+            $defaultMapConfigKey = match ($channel) {
+                'slackChannelHistory' => 'send_history_slack_enabled',
+                'slackChannelRally' => 'send_rally_slack_enabled',
+                default => throw new Exception\ConfigException(sprintf(self::ERROR_SLACK_CHANNEL, $channel)),
+            };
 
             if((bool) Config::getMapsDefaultConfig($this->typeId->name)[$defaultMapConfigKey]){
                 $config = $this->getSlackWebHookConfig($channel);
@@ -1142,11 +1140,11 @@ class MapModel extends AbstractMapTrackingModel {
         // check global Slack status
         if((bool)Config::getPathfinderData('discord.status')){
             // check global map default config for this channel
-            switch($channel){
-                case 'discordWebHookURLHistory': $defaultMapConfigKey = 'send_history_discord_enabled'; break;
-                case 'discordWebHookURLRally': $defaultMapConfigKey = 'send_rally_discord_enabled'; break;
-                default: throw new Exception\ConfigException(sprintf(self::ERROR_DISCORD_CHANNEL, $channel));
-            }
+            $defaultMapConfigKey = match ($channel) {
+                'discordWebHookURLHistory' => 'send_history_discord_enabled',
+                'discordWebHookURLRally' => 'send_rally_discord_enabled',
+                default => throw new Exception\ConfigException(sprintf(self::ERROR_DISCORD_CHANNEL, $channel)),
+            };
 
             if((bool) Config::getMapsDefaultConfig($this->typeId->name)[$defaultMapConfigKey]){
                 $config = $this->getDiscordWebHookConfig($channel);
@@ -1290,7 +1288,7 @@ class MapModel extends AbstractMapTrackingModel {
         $url = '';
         if( !$this->dry() ){
             $param =  rawurlencode(base64_encode($this->_id));
-            $param .=  $systemId ? '_' . rawurlencode(base64_encode($systemId)) : '';
+            $param .=  $systemId ? '_' . rawurlencode(base64_encode((string) $systemId)) : '';
             $url = $this->getF3()->get('SCHEME') . '://' . $this->getF3()->get('HOST') . $this->getF3()->alias('map', ['*' => '/' . $param]);
         }
         return $url;

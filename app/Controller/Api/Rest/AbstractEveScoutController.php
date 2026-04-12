@@ -60,7 +60,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
             $eveScoutSignature = (array)$eveScoutConnection[$key];
             $signatureData = [
                 'name' => $eveScoutSignature['name'] ? : null,
-                'short_name' => str_split($eveScoutSignature['name'], 3)[0] ? : null
+                'short_name' => str_split((string) $eveScoutSignature['name'], 3)[0] ? : null
             ];
             if($key == 'sourceSignature' && $eveScoutConnection['wh_exits_outward']) {
                 $signatureData['type'] = ['name' => strtoupper((string)$eveScoutConnection['wh_type'])];
@@ -121,7 +121,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
                         $enrichWithSignatureData('sourceSignature', $eveScoutConnection, $data);
                         $enrichWithSignatureData('targetSignature', $eveScoutConnection, $data);
                         $connectionsData[] = $data;
-                    }catch(\Exception $e){
+                    }catch(\Exception){
                         // DateTime parse failure -> skip connection
                     }
                 }

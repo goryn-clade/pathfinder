@@ -95,9 +95,7 @@ class Util {
      */
     static function arrayChangeKeys(array $arr, callable $callback){
         return array_combine(
-            array_map(function ($key) use ($callback){
-               return $callback($key);
-            }, array_keys($arr)), $arr
+            array_map(fn($key) => $callback($key), array_keys($arr)), $arr
         );
     }
 
@@ -108,7 +106,7 @@ class Util {
      */
     static function convertScopesString($scopes){
         $scopes = array_filter(
-            array_map('strtolower',
+            array_map(strtolower(...),
                 (array)explode(' ', $scopes)
             )
         );
@@ -178,9 +176,7 @@ class Util {
     static function roundToInterval(\DateTime &$dateTime, string $type = 'sec', int $interval = 5, string $round = 'floor'){
         $hours = $minutes = $seconds = 0;
 
-        $roundInterval = function(string $format, int $interval, string $round) : int {
-            return call_user_func($round, $format / $interval) * $interval;
-        };
+        $roundInterval = (fn(string $format, int $interval, string $round): int => call_user_func($round, $format / $interval) * $interval);
 
         switch($type){
             case 'hour':

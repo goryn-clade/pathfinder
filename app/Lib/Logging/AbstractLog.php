@@ -277,20 +277,12 @@ abstract class AbstractLog implements LogInterface {
      */
     public function getHandlerParams(string $handlerKey) : array {
         if($this->hasHandlerKey($handlerKey)){
-            switch($handlerKey){
-                case 'stream': $params = $this->getHandlerParamsStream();
-                    break;
-                case 'socket': $params = $this->getHandlerParamsSocket();
-                    break;
-                case 'slackMap':
-                case 'slackRally':
-                case 'discordMap':
-                case 'discordRally':
-                    $params = $this->getHandlerParamsSlack($handlerKey);
-                    break;
-                default:
-                    throw new \Exception(sprintf(self::ERROR_HANDLER_PARAMS, $handlerKey));
-            }
+            $params = match ($handlerKey) {
+                'stream' => $this->getHandlerParamsStream(),
+                'socket' => $this->getHandlerParamsSocket(),
+                'slackMap', 'slackRally', 'discordMap', 'discordRally' => $this->getHandlerParamsSlack($handlerKey),
+                default => throw new \Exception(sprintf(self::ERROR_HANDLER_PARAMS, $handlerKey)),
+            };
         }else{
             throw new \Exception(sprintf(self::ERROR_HANDLER_KEY, $handlerKey, implode(', ', array_flip($this->handlerConfig))));
         }
@@ -320,12 +312,10 @@ abstract class AbstractLog implements LogInterface {
      */
     public function getProcessorParams(string $processorKey) : array {
         if($this->hasProcessorKey($processorKey)){
-            switch($processorKey){
-                case 'psr': $params = $this->getProcessorParamsPsr();
-                    break;
-                default:
-                    throw new \Exception(sprintf(self::ERROR_PROCESSOR_PARAMS, $processorKey));
-            }
+            $params = match ($processorKey) {
+                'psr' => $this->getProcessorParamsPsr(),
+                default => throw new \Exception(sprintf(self::ERROR_PROCESSOR_PARAMS, $processorKey)),
+            };
         }else{
             throw new \Exception(sprintf(self::ERROR_PROCESSOR_KEY, $processorKey, implode(', ', array_flip($this->processorConfig))));
         }

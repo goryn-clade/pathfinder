@@ -99,7 +99,7 @@ class Route extends AbstractRestController {
 
             if(count($rows) > 0){
                 array_walk($rows, function(&$row): void{
-                    $row['jumpNodes'] = array_map('intval', explode(':', $row['jumpNodes']));
+                    $row['jumpNodes'] = array_map(intval(...), explode(':', (string) $row['jumpNodes']));
                 });
                 $this->updateJumpData($rows);
             }
@@ -116,7 +116,7 @@ class Route extends AbstractRestController {
      */
     private function setDynamicJumpData( $mapIds = [],  $filterData = []){
         // make sure, mapIds are integers (protect against SQL injections)
-        $mapIds = array_unique( array_map('intval', $mapIds), SORT_NUMERIC);
+        $mapIds = array_unique( array_map(intval(...), $mapIds), SORT_NUMERIC);
 
         if( !empty($mapIds) ){
             // map filter ---------------------------------------------------------------------------------------------
@@ -366,7 +366,7 @@ class Route extends AbstractRestController {
                 if(
                     $systemSec < 0.45 &&
                     !in_array($systemId, $keepSystems) &&
-                    !preg_match('/^j\d+$/i', $this->idArray[$systemId]) // WHs are supposed to be "secure"
+                    !preg_match('/^j\d+$/i', (string) $this->idArray[$systemId]) // WHs are supposed to be "secure"
                 ){
                     // remove system from nameArray and idArray
                     unset($this->nameArray[$systemId]);
@@ -387,20 +387,13 @@ class Route extends AbstractRestController {
      */
     private function getSystemInfoBySystemId(int $systemId, string $option){
         $info = null;
-        switch($option){
-            case 'systemName':
-                $info = $this->nameArray[$systemId][0];
-                break;
-            case 'regionId':
-                $info = $this->nameArray[$systemId][1];
-                break;
-            case 'constellationId':
-                $info = $this->nameArray[$systemId][2];
-                break;
-            case 'trueSec':
-                $info = $this->nameArray[$systemId][3];
-                break;
-        }
+        $info = match ($option) {
+            'systemName' => $this->nameArray[$systemId][0],
+            'regionId' => $this->nameArray[$systemId][1],
+            'constellationId' => $this->nameArray[$systemId][2],
+            'trueSec' => $this->nameArray[$systemId][3],
+            default => $info,
+        };
 
         return $info;
     }
@@ -442,7 +435,7 @@ class Route extends AbstractRestController {
 
             if(array_key_exists($X, $G)){
                 foreach($G[$X] as $Y){
-                    $Y = trim($Y);
+                    $Y = trim((string) $Y);
                     // See if we got a solution
                     if($Y == $B){
                         // We did? Construct a result path then
@@ -505,7 +498,7 @@ class Route extends AbstractRestController {
 
         // Endpoint return http:404 in case no route find (e.g. from inside a wh)
         // we thread that error "no route found" as a valid response! -> no fallback to custom search
-        if(!empty($routeData['error']) && strtolower($routeData['error']) !== 'no route found'){
+        if(!empty($routeData['error']) && strtolower((string) $routeData['error']) !== 'no route found'){
             // ESI route search has errors -> fallback to custom search implementation
             $routeData = $this->searchRouteCustom($systemFromId, $systemToId, $searchDepth, $mapIds, $filterData);
         }
@@ -527,7 +520,7 @@ class Route extends AbstractRestController {
         // reset all previous set jump data
         $this->resetJumpData();
 
-        $searchDepth = $searchDepth ? $searchDepth : Config::getPathfinderData('route.search_depth');
+        $searchDepth = $searchDepth ?: Config::getPathfinderData('route.search_depth');
 
         $routeData = $this->defaultRouteData;
         $routeData['maxDepth'] = $searchDepth;
@@ -611,7 +604,7 @@ class Route extends AbstractRestController {
         // reset all previous set jump data
         $this->resetJumpData();
 
-        $searchDepth = $searchDepth ? $searchDepth : Config::getPathfinderData('route.search_depth');
+        $searchDepth = $searchDepth ?: Config::getPathfinderData('route.search_depth');
 
         $routeData = $this->defaultRouteData;
         $routeData['maxDepth'] = $searchDepth;
@@ -773,7 +766,7 @@ class Route extends AbstractRestController {
                 // mapIds are optional. If mapIds is empty or not set
                 // route search is limited to CCPs static data
                 $mapData = (array)$routeData['mapIds'];
-                $mapData = array_flip( array_map('intval', $mapData) );
+                $mapData = array_flip( array_map(intval(...), $mapData) );
 
                 // check map access (filter requested mapIDs and format) ----------------------------------------------
                 array_walk($mapData, function(&$item, &$key, $data): void{
