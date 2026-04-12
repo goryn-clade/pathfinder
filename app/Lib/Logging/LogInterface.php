@@ -21,7 +21,7 @@ interface LogInterface {
 
     public function setTempData(array $data) : LogInterface;
 
-    public function addHandler(string $handlerKey, string $formatterKey = null, \stdClass $handlerParams = null) : LogInterface;
+    public function addHandler(string $handlerKey, ?string $formatterKey = null, ?\stdClass $handlerParams = null) : LogInterface;
 
     public function addHandlerGroup(string $handlerKey) : LogInterface;
 

@@ -105,7 +105,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
      * @param CharacterModel $characterModel
      * @return ConnectionModel|false
      */
-    public function save(CharacterModel $characterModel = null){
+    public function save(?CharacterModel $characterModel = null){
         if($this->dry()){
             $this->createdCharacterId = $characterModel;
         }

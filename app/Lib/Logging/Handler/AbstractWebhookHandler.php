@@ -144,10 +144,6 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
             CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
             CURLOPT_POSTFIELDS => $postString
         ];
-        if (defined('CURLOPT_SAFE_UPLOAD')) {
-            $options[CURLOPT_SAFE_UPLOAD] = true;
-        }
-
         curl_setopt_array($ch, $options);
 
         Handler\Curl\Util::execute($ch);

@@ -236,7 +236,7 @@ abstract class AbstractLog implements LogInterface {
      * @param \stdClass|null $handlerParams
      * @return LogInterface
      */
-    public function addHandler(string $handlerKey, string $formatterKey = null, \stdClass $handlerParams = null) : LogInterface {
+    public function addHandler(string $handlerKey, ?string $formatterKey = null, ?\stdClass $handlerParams = null) : LogInterface {
         if(!$this->hasHandlerKey($handlerKey)){
             $this->handlerConfig[$handlerKey] = $formatterKey;
             // add more configuration params for the new handler

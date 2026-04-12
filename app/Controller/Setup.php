@@ -935,9 +935,11 @@ class Setup extends Controller {
 
             // if Session handler is also Redis -> add this as well ---------------------------------------------------
             // -> the DSN format is not the same, convert URL format into DSN
+            $sessionSavePath = session_save_path();
             if(
                 strtolower(session_module_name()) == 'redis' &&
-                ($parts = parse_url(session_save_path()))
+                is_string($sessionSavePath) &&
+                ($parts = parse_url($sessionSavePath))
             ){
                 // parse URL parameters
                 parse_str((string)($parts['query'] ?? ''), $params);

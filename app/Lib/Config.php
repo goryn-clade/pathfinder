@@ -477,7 +477,7 @@ class Config extends \Prefab {
         $f3 = \Base::instance();
 
         if( !$f3->exists(self::CACHE_KEY_SOCKET_VALID, $valid) ){
-            if( $socketUrl = self::getSocketUri() ){
+            if( ($socketUrl = self::getSocketUri()) && is_string($socketUrl) ){
                 // get socket URI parts -> not elegant...
                 $domain = parse_url( $socketUrl, PHP_URL_SCHEME) . '://' . parse_url( $socketUrl, PHP_URL_HOST);
                 $port = parse_url( $socketUrl, PHP_URL_PORT);
@@ -598,7 +598,7 @@ class Config extends \Prefab {
      * @param \DateTime|null $dateCheck
      * @return bool
      */
-    static function inDownTimeRange(\DateTime $dateCheck = null) : bool {
+    static function inDownTimeRange(?\DateTime $dateCheck = null) : bool {
         $inRange = false;
         // default daily downtime 00:00am
         $downTimeParts = [0, 0];

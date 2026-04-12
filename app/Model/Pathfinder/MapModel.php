@@ -1457,7 +1457,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel|null $characterModel
      * @return false|ConnectionModel|MapModel
      */
-    public function save(CharacterModel $characterModel = null){
+    public function save(?CharacterModel $characterModel = null){
         /**
          * @var MapModel $mapModel
          */
