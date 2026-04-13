@@ -53,7 +53,7 @@
 
     <link rel="stylesheet" href="{{ @tplResource->getLink('style', 'pathfinder') }}" type="text/css" media="screen">
 </head>
-<body class="pf-body {{ @tplBodyClass }}" data-js-path="{{ @tplResource->getPath('script') }}" data-script="{{ @tplJsView }}" <check if="{{ @tplCharacterId }}">data-character-id="{{ @tplCharacterId }}"</check> data-version="{{ @PATHFINDER.VERSION }}">
+<body class="pf-body {{ @tplBodyClass ?? 'pf-landing' }}" data-js-path="{{ @tplResource->getPath('script') }}" data-script="{{ @tplJsView }}" <check if="{{ @tplCharacterId }}">data-character-id="{{ @tplCharacterId }}"</check> data-version="{{ @PATHFINDER.VERSION }}">
     <include if="{{ @tplPageContent }}" href="{{ @tplPageContent }}"/>
 
     <!-- Hey dude! Where is all the magic? -->

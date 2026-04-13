@@ -238,10 +238,10 @@ class Statistic extends Controller\AccessController {
         $postData = (array)$f3->get('POST');
         $return = (object) [];
 
-        $period = $postData['period'];
-        $typeId = (int)$postData['typeId'];
-        $yearStart = (int)$postData['year'];
-        $weekStart = (int)$postData['week'];
+        $period = $postData['period'] ?? '';
+        $typeId = (int)($postData['typeId'] ?? 0);
+        $yearStart = (int)($postData['year'] ?? 0);
+        $weekStart = (int)($postData['week'] ?? 0);
 
         $currentYear = (int)date('o');
         $currentWeek = (int)date('W');

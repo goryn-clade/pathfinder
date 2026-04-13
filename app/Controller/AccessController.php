@@ -61,7 +61,8 @@ class AccessController extends Controller {
         // log character access status in debug mode
         if(
             $loginStatus !== 'OK' &&
-            $f3->get('DEBUG') === 3
+            $f3->get('DEBUG') === 3 &&
+            is_object($character)
         ){
             self::getLogger('CHARACTER_ACCESS')->write(
                 sprintf(Pathfinder\CharacterModel::LOG_ACCESS,

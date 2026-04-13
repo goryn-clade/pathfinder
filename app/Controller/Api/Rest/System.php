@@ -31,7 +31,7 @@ class System extends AbstractRestController {
             if(!$activeCharacter){
                 return;
             }
-            $isCcpId = (bool)$requestData['isCcpId'];
+            $isCcpId = (bool)($requestData['isCcpId'] ?? false);
 
             if(
                 !is_null($map = $activeCharacter->getMap($mapId)) &&

@@ -133,7 +133,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         $connectionData->type           = (array)json_decode($this->get('type', true));
         $connectionData->updated        = strtotime($this->updated);
         $connectionData->created        = strtotime($this->created);
-        $connectionData->eolUpdated     = strtotime($this->eolUpdated);
+        $connectionData->eolUpdated     = $this->eolUpdated ? strtotime($this->eolUpdated) : false;
 
         if( !empty($endpointsData = $this->getEndpointsData()) ){
             $connectionData->endpoints = $endpointsData;

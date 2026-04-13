@@ -74,7 +74,7 @@ class Map extends Controller\AccessController {
                     'label' => $rowData->label,
                     'class' => $rowData->class,
                     'classTab' => $rowData->classTab,
-                    'defaultConfig' => $mapsDefaultConfig[$rowData->name]
+                    'defaultConfig' => $mapsDefaultConfig[$rowData->name] ?? null
                 ];
                 $mapTypeData[$rowData->name] = $data;
             }
@@ -613,8 +613,8 @@ class Map extends Controller\AccessController {
      */
     public function updateData(\Base $f3){
         $postData = (array)$f3->get('POST');
-        $mapsData = (array)$postData['mapData'];
-        $userDataRequired = (bool)$postData['getUserData'];
+        $mapsData = (array)($postData['mapData'] ?? []);
+        $userDataRequired = (bool)($postData['getUserData'] ?? false);
 
         $activeCharacter = $this->getCharacter();
         if(!$activeCharacter){
@@ -642,7 +642,7 @@ class Map extends Controller\AccessController {
     public function updateUnloadData(\Base $f3){
         $postData = (array)$f3->get('POST');
 
-        if(!empty($mapsData = (string)$postData['mapData'])){
+        if(!empty($mapsData = (string)($postData['mapData'] ?? ''))){
             $mapsData = (array)json_decode($mapsData, true);
             if(($jsonError = json_last_error()) === JSON_ERROR_NONE){
                 $activeCharacter = $this->getCharacter();
@@ -660,11 +660,11 @@ class Map extends Controller\AccessController {
      */
     public function updateUserData(\Base $f3){
         $postData = (array)$f3->get('POST');
-        $mapIds = (array)$postData['mapIds'];
-        $getMapUserData = (bool)$postData['getMapUserData'];
-        $mapTracking = (bool)$postData['mapTracking'];
-        $systemData = (array)$postData['systemData'];
-        $newSystemPositions = (array)$postData['newSystemPositions'];
+        $mapIds = (array)($postData['mapIds'] ?? []);
+        $getMapUserData = (bool)($postData['getMapUserData'] ?? false);
+        $mapTracking = (bool)($postData['mapTracking'] ?? false);
+        $systemData = (array)($postData['systemData'] ?? []);
+        $newSystemPositions = (array)($postData['newSystemPositions'] ?? []);
         $activeCharacter = $this->getCharacter();
 
         if(!$activeCharacter){
@@ -704,7 +704,7 @@ class Map extends Controller\AccessController {
 
                 // systemData -----------------------------------------------------------------------------------------
                 if(
-                    $mapId === (int)$systemData['mapId'] &&
+                    $mapId === (int)($systemData['mapId'] ?? 0) &&
                     !is_null($system = $map->getSystemById((int)$systemData['id']))
                 ){
                     // data for currently selected system
@@ -1005,11 +1005,11 @@ class Map extends Controller\AccessController {
     public function getConnectionData(\Base $f3){
         $postData = (array)$f3->get('POST');
 
-        $addData = (array)$postData['addData'];
-        $filterData = (array)$postData['filterData'];
+        $addData = (array)($postData['addData'] ?? []);
+        $filterData = (array)($postData['filterData'] ?? []);
         $connectionData = [];
 
-        if($mapId = (int)$postData['mapId']){
+        if($mapId = (int)($postData['mapId'] ?? 0)){
             $activeCharacter = $this->getCharacter();
 
             /**
@@ -1021,7 +1021,7 @@ class Map extends Controller\AccessController {
             if($map->hasAccess($activeCharacter)){
                 // get specific connections by id
                 $connectionIds = null;
-                if(is_array($postData['connectionIds'])){
+                if(is_array($postData['connectionIds'] ?? null)){
                     $connectionIds = array_map(intval(...), $postData['connectionIds']);
                 }
 
@@ -1060,12 +1060,12 @@ class Map extends Controller\AccessController {
 
         // validate query parameters
         $return->query = [
-            'mapId'     => (int) $postData['mapId'],
-            'offset'    => FileHandler::validateOffset( (int)$postData['offset'] ),
-            'limit'     => FileHandler::validateLimit( (int)$postData['limit'] )
+            'mapId'     => (int)($postData['mapId'] ?? 0),
+            'offset'    => FileHandler::validateOffset( (int)($postData['offset'] ?? 0) ),
+            'limit'     => FileHandler::validateLimit( (int)($postData['limit'] ?? 0) )
         ];
 
-        if($mapId = (int)$postData['mapId']){
+        if($mapId = (int)($postData['mapId'] ?? 0)){
             $activeCharacter = $this->getCharacter();
 
             /**

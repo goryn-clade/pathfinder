@@ -458,10 +458,9 @@ class Sso extends Api\User{
         // set $leeway in seconds to 10, since sometimes there can be verification errors due server clock skew resulting
         // in tokens that look like they were issued 1 second in the future.
         JWT::$leeway = 10;
-        // map list of algs from CCP JWK 
-        $supportedAlgs = array_column($ccpJwks['keys'], 'alg');
         // get decoded JWT using ccp supplied JWK
-        $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks), $supportedAlgs);
+        // firebase/php-jwt v6.4+: algs are embedded in Key objects returned by parseKeySet; no separate alg array needed
+        $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks));
         // check if issuer matches correct ccp supplied claim values
         if (strpos((string) $decodedJwt->iss, static::getSsoJwkClaim()) !== true) {            
             self::getSSOLogger()->write(sprintf(self::ERROR_TOKEN_VERIFICATION, __METHOD__));
@@ -510,7 +509,7 @@ class Sso extends Api\User{
                 $characterAffiliation = $this->getF3()->ccpClient()->send('getCharacterAffiliation', [$characterId]);
                 if(count($characterAffiliation) === 1) {
                     $characterCorporationId = $characterAffiliation[0]['corporation']['id'];
-                    $characterAllianceId = $characterAffiliation[0]['alliance']['id'];
+                    $characterAllianceId = $characterAffiliation[0]['alliance']['id'] ?? null;
 
                     if($corporationId = (int)$characterCorporationId){
                         /**

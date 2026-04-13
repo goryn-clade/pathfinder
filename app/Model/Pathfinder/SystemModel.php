@@ -183,7 +183,7 @@ class SystemModel extends AbstractMapTrackingModel {
 
             $data->locked                   = $this->locked;
             $data->drifter                  = $this->isDrifter();
-            $data->rallyUpdated             = strtotime($this->rallyUpdated);
+            $data->rallyUpdated             = $this->rallyUpdated ? strtotime($this->rallyUpdated) : false;
             $data->rallyPoke                = $this->rallyPoke;
             $data->description              = $this->description ? : '';
 

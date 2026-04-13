@@ -145,13 +145,13 @@ class Map extends AbstractRestController {
 
                 $compare = $map->compareAccess($modelIds);
 
-                foreach((array)$compare['old'] as $modelId) {
+                foreach((array)($compare['old'] ?? []) as $modelId) {
                     $deleted += $map->removeFromAccess($modelId);
                 }
 
                 $modelClass = (new \ReflectionClass($primaryModel))->getShortName();
                 $tempModel = Pathfinder\AbstractPathfinderModel::getNew($modelClass);
-                foreach((array)$compare['new'] as $modelId) {
+                foreach((array)($compare['new'] ?? []) as $modelId) {
                     $tempModel->getById($modelId);
                     if(
                         $tempModel->valid() &&

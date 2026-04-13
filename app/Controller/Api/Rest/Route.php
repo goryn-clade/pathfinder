@@ -240,6 +240,7 @@ class Route extends AbstractRestController {
                                 'constellationId'   => $staticData->constellation->id,
                                 'regionId'          => $staticData->constellation->region->id,
                                 'trueSec'           => $staticData->trueSec,
+                                'jumpNodes'         => [],
                             ];
                         }
 
@@ -319,11 +320,11 @@ class Route extends AbstractRestController {
      */
     private function updateJumpData( &$rows = []){
         foreach($rows as &$row){
-            $regionId       = (int)$row['regionId'];
-            $constId        = (int)$row['constellationId'];
+            $regionId       = (int)($row['regionId'] ?? 0);
+            $constId        = (int)($row['constellationId'] ?? 0);
             $systemName     = (string)($row['systemName']);
             $systemId       = (int)$row['systemId'];
-            $secStatus      = (float)$row['trueSec'];
+            $secStatus      = (float)($row['trueSec'] ?? 0.0);
 
             // fill "nameArray" data ----------------------------------------------------------------------------------
             if( !isset($this->nameArray[$systemId]) ){
@@ -339,7 +340,7 @@ class Route extends AbstractRestController {
             }
 
             // fill "jumpArray" data ----------------------------------------------------------------------------------
-            if( !is_array($this->jumpArray[$systemId]) ){
+            if( !is_array($this->jumpArray[$systemId] ?? null) ){
                 $this->jumpArray[$systemId] = [];
             }
             $this->jumpArray[$systemId] = array_merge((array)$row['jumpNodes'], $this->jumpArray[$systemId]);
@@ -731,7 +732,8 @@ class Route extends AbstractRestController {
         ];
 
         $keyParts += $filterData;
-        return 'route_' . hash('md5', implode('_', $keyParts));
+        $keyStrings = array_map(fn($v) => is_array($v) ? implode(',', $v) : (string)$v, $keyParts);
+        return 'route_' . hash('md5', implode('_', $keyStrings));
     }
 
     /**
@@ -769,7 +771,7 @@ class Route extends AbstractRestController {
                 $mapData = array_flip( array_map(intval(...), $mapData) );
 
                 // check map access (filter requested mapIDs and format) ----------------------------------------------
-                array_walk($mapData, function(&$item, &$key, $data): void{
+                array_walk($mapData, function(&$item, $key, $data): void{
                     /**
                      * @var Pathfinder\MapModel $data[0]
                      */
@@ -799,16 +801,16 @@ class Route extends AbstractRestController {
 
                 // search route with filter options
                 $filterData = [
-                    'stargates'             => (bool) $routeData['stargates'],
-                    'jumpbridges'           => (bool) $routeData['jumpbridges'],
-                    'wormholes'             => (bool) $routeData['wormholes'],
-                    'wormholesReduced'      => (bool) $routeData['wormholesReduced'],
-                    'wormholesCritical'     => (bool) $routeData['wormholesCritical'],
-                    'wormholesEOL'          => (bool) $routeData['wormholesEOL'],
-                    'wormholesThera'        => (bool) $routeData['wormholesThera'],
-                    'wormholesSizeMin'      => (string) $routeData['wormholesSizeMin'],
-                    'excludeTypes'          => (array) $routeData['excludeTypes'],
-                    'endpointsBubble'       => (bool) $routeData['endpointsBubble'],
+                    'stargates'             => (bool) ($routeData['stargates'] ?? false),
+                    'jumpbridges'           => (bool) ($routeData['jumpbridges'] ?? false),
+                    'wormholes'             => (bool) ($routeData['wormholes'] ?? false),
+                    'wormholesReduced'      => (bool) ($routeData['wormholesReduced'] ?? false),
+                    'wormholesCritical'     => (bool) ($routeData['wormholesCritical'] ?? false),
+                    'wormholesEOL'          => (bool) ($routeData['wormholesEOL'] ?? false),
+                    'wormholesThera'        => (bool) ($routeData['wormholesThera'] ?? false),
+                    'wormholesSizeMin'      => (string) ($routeData['wormholesSizeMin'] ?? ''),
+                    'excludeTypes'          => (array) ($routeData['excludeTypes'] ?? []),
+                    'endpointsBubble'       => (bool) ($routeData['endpointsBubble'] ?? false),
                     'flag'                  => $routeData['flag']
                 ];
 
@@ -827,15 +829,13 @@ class Route extends AbstractRestController {
                     !$returnRoutData['skipSearch'] &&
                     count($mapIds) > 0
                 ){
-                    $systemFrom     = $routeData['systemFromData']['name'];
                     $systemFromId   = (int)$routeData['systemFromData']['systemId'];
-                    $systemTo       = $routeData['systemToData']['name'];
                     $systemToId     = (int)$routeData['systemToData']['systemId'];
 
                     $cacheKey = $this->getRouteCacheKey(
                         $mapIds,
-                        $systemFrom,
-                        $systemTo,
+                        $systemFromId,
+                        $systemToId,
                         $filterData
                     );
 

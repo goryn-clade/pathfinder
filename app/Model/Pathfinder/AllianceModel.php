@@ -121,7 +121,7 @@ class AllianceModel extends AbstractPathfinderModel {
 
         $this->filter('allianceCharacters', $filter);
 
-        if($options['hasLog']){
+        if($options['hasLog'] ?? false){
             // just characters with active log data
             $this->has('allianceCharacters.characterLog', ['active = ?', 1]);
         }

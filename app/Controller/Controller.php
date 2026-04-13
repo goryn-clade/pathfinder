@@ -409,9 +409,9 @@ class Controller {
         $character = null;
         if($user = $this->getUser($ttl)){
             $header = self::getRequestHeaders();
-            $requestedCharacterId = (int)$header['Pf-Character'];
+            $requestedCharacterId = (int)($header['Pf-Character'] ?? 0);
             if( !$this->getF3()->get('AJAX') ){
-                $requestedCharacterId = (int)$_COOKIE['old_char_id'];
+                $requestedCharacterId = (int)($_COOKIE['old_char_id'] ?? 0);
                 if(!$requestedCharacterId){
                     $tempCharacterData = (array)$this->getF3()->get(Api\User::SESSION_KEY_TEMP_CHARACTER_DATA);
                     if((int)$tempCharacterData['ID'] > 0){

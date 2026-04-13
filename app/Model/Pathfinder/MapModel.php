@@ -1120,7 +1120,7 @@ class MapModel extends AbstractMapTrackingModel {
 
             if((bool) Config::getMapsDefaultConfig($this->typeId->name)[$defaultMapConfigKey]){
                 $config = $this->getSlackWebHookConfig($channel);
-                if($config->slackWebHookURL && $config->slackChannel){
+                if(($config->slackWebHookURL ?? null) && ($config->slackChannel ?? null)){
                     $enabled = true;
                 }
             }
@@ -1148,7 +1148,7 @@ class MapModel extends AbstractMapTrackingModel {
 
             if((bool) Config::getMapsDefaultConfig($this->typeId->name)[$defaultMapConfigKey]){
                 $config = $this->getDiscordWebHookConfig($channel);
-                if($config->slackWebHookURL){
+                if($config->slackWebHookURL ?? null){
                     $enabled = true;
                 }
             }
@@ -1475,7 +1475,7 @@ class MapModel extends AbstractMapTrackingModel {
             'id IN :mapIds',
             ':mapIds' => $mapIds
         ];
-        if( !$options['addInactive'] ){
+        if( !($options['addInactive'] ?? false) ){
             $query[0] .= ' AND active = :active';
             $query[':active'] = 1;
         }

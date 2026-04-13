@@ -208,8 +208,8 @@ class CorporationModel extends AbstractPathfinderModel {
         if($this->mapCorporations){
             $mapCount = 0;
             foreach($this->mapCorporations as $mapCorporation){
-                $validActive = !$options['addInactive'] ? $mapCorporation->mapId->isActive() : true;
-                $validMapCount = !$options['ignoreMapCount'] ? $mapCount < Config::getMapsDefaultConfig('corporation')['max_count'] : true;
+                $validActive = !($options['addInactive'] ?? false) ? $mapCorporation->mapId->isActive() : true;
+                $validMapCount = !($options['ignoreMapCount'] ?? false) ? $mapCount < Config::getMapsDefaultConfig('corporation')['max_count'] : true;
 
                 if($validActive && $validMapCount){
                     $maps[] = $mapCorporation->mapId;
@@ -238,7 +238,7 @@ class CorporationModel extends AbstractPathfinderModel {
 
         $this->filter('corporationCharacters', $filter);
 
-        if($options['hasLog']){
+        if($options['hasLog'] ?? false){
             // just characters with active log data
             $this->has('corporationCharacters.characterLog', ['active = ?', 1]);
         }
@@ -316,7 +316,7 @@ class CorporationModel extends AbstractPathfinderModel {
         $right = self::getNew('RightModel');
         if($rights = $right->find(['active = ? AND name IN (?)', 1, $names])){
             // get already stored rights
-            if( !$options['addInactive'] ){
+            if( !($options['addInactive'] ?? false) ){
                 $this->filter('corporationRights', ['active = ?', 1]);
             }
 
@@ -407,7 +407,7 @@ class CorporationModel extends AbstractPathfinderModel {
             ':active' => 1
         ];
 
-        if( !$options['addNPC'] ){
+        if( !($options['addNPC'] ?? false) ){
             $query[0] .= ' AND isNPC = :isNPC';
             $query[':isNPC'] = 1;
         }

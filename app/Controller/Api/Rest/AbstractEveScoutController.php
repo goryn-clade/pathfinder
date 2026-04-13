@@ -43,6 +43,9 @@ abstract class AbstractEveScoutController extends AbstractRestController {
             $eveScoutSystem = (array)$eveScoutConnection[$key];
             $universe = new Universe();
             $staticData = $universe->getSystemData($eveScoutSystem['id']);
+            if($staticData === null){
+                throw new \RuntimeException('System data not found for id: ' . $eveScoutSystem['id']);
+            }
 
             $connectionData[$key] = [
                 'id' => (int)$staticData->id,
