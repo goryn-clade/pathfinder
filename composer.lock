@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9d5f1881b031a0bf8cbda82b9d0ef07",
+    "content-hash": "fb022a418d3567c2a266d321d4ea397c",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -840,16 +840,16 @@
         },
         {
             "name": "goryn-clade/pathfinder_esi",
-            "version": "3.0.9",
+            "version": "3.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goryn-clade/pathfinder_esi.git",
-                "reference": "6b204b1e770f60e606a58f5dc3db488a9ca279f4"
+                "reference": "50425ebdc8275b2866e335ea2405f2dba02c0c7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/6b204b1e770f60e606a58f5dc3db488a9ca279f4",
-                "reference": "6b204b1e770f60e606a58f5dc3db488a9ca279f4",
+                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/50425ebdc8275b2866e335ea2405f2dba02c0c7d",
+                "reference": "50425ebdc8275b2866e335ea2405f2dba02c0c7d",
                 "shasum": ""
             },
             "require": {
@@ -879,9 +879,9 @@
             "homepage": "https://github.com/goryn-clade/pathfinder_esi",
             "support": {
                 "issues": "https://github.com/goryn-clade/pathfinder_esi/issues",
-                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/3.0.9"
+                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/3.0.10"
             },
-            "time": "2026-04-14T07:01:28+00:00"
+            "time": "2026-04-14T07:03:57+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
