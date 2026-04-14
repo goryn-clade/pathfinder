@@ -387,6 +387,10 @@ define([
                                             let tabLinkEls = Util.getMapTabLinkElements(Util.getMapModule()[0], Util.getObjVal(mapData, 'id'));
                                             if(tabLinkEls.length === 1){
                                                 ModuleMap.updateTabData(tabLinkEls[0], mapData);
+                                            }else if(tabLinkEls.length === 0){
+                                                // new map — tab doesn't exist yet; inject into cache and trigger render
+                                                Util.updateCurrentMapData({config: mapData, data: {systems: [], connections: []}});
+                                                ModuleMap.updateMapModule(Util.getMapModule()[0]);
                                             }
 
                                             $(mapInfoDialog).modal('hide');
