@@ -21,8 +21,8 @@ class Connection extends AbstractRestController {
     public function get(\Base $f3,  $params) : void {
         $requestData = $this->getRequestData($f3);
         $connectionIds = array_map(intval(...), explode(',', (string)$params['id']));
-        $addData = (array)$requestData['addData'];
-        $filterData = (array)$requestData['filterData'];
+        $addData = (array)($requestData['addData'] ?? []);
+        $filterData = (array)($requestData['filterData'] ?? []);
         $connectionData = [];
 
         if($mapId = (int)$requestData['mapId']){
@@ -95,12 +95,12 @@ class Connection extends AbstractRestController {
                     $connection->target = $target;
 
                     // if scope + type data send -> use them ...
-                    if($requestData['scope'] && !empty($requestData['type'])){
+                    if(($requestData['scope'] ?? null) && !empty($requestData['type'] ?? [])){
                         $connection->copyfrom($requestData, ['scope', 'type']);
                     }
 
                     // ... set/change default scope + type
-                    if(!$requestData['disableAutoScope']){
+                    if(!($requestData['disableAutoScope'] ?? false)){
                         $connection->setAutoScopeAndType();
                     }
 
