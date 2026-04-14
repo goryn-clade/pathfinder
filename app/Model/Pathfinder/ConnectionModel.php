@@ -130,7 +130,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         $connectionData->source         = $this->source->id;
         $connectionData->target         = $this->target->id;
         $connectionData->scope          = $this->scope;
-        $connectionData->type           = (array)json_decode($this->get('type', true));
+        $connectionData->type           = (array)json_decode($this->get('type', true) ?? 'null');
         $connectionData->updated        = strtotime($this->updated);
         $connectionData->created        = strtotime($this->created);
         $connectionData->eolUpdated     = $this->eolUpdated ? strtotime($this->eolUpdated) : false;
@@ -183,10 +183,10 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param  $endpointsData
      */
     public function set_endpoints( $endpointsData){
-        if(!empty($endpointData = (array)$endpointsData['source'])){
+        if(!empty($endpointData = (array)($endpointsData['source'] ?? []))){
             $this->setEndpointData('source', $endpointData);
         }
-        if(!empty($endpointData = (array)$endpointsData['target'])){
+        if(!empty($endpointData = (array)($endpointsData['target'] ?? []))){
             $this->setEndpointData('target', $endpointData);
         }
     }
