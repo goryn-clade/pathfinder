@@ -547,7 +547,6 @@ class Controller {
      */
     public function getEveServerStatus(\Base $f3){
         $ttl = 60;
-        $esiStatusVersion = 'latest';
         $cacheKey = 'eve_server_status';
 
         if(!$exists = $f3->exists($cacheKey, $return)){
@@ -565,8 +564,8 @@ class Controller {
                 ];
                 $return->api = [
                     'name'              => 'ESI API',
-                    'status'            => 'offline',
-                    'statusColor'       => 'red',
+                    'status'            => 'OK',
+                    'statusColor'       => 'green',
                     'url'               => $client->getUrl(),
                     'timeout'           => $client->getTimeout(),
                     'connectTimeout'    => $client->getConnectTimeout(),
@@ -575,7 +574,6 @@ class Controller {
                     'verify'            => $client->getVerify(),
                     'debug'             => $client->getDebugRequests(),
                     'dataSource'        => $client->getDataSource(),
-                    'statusVersion'     => $esiStatusVersion,
                     'routes'            => []
                 ];
 
@@ -599,30 +597,6 @@ class Controller {
                     $return->server = $statusData;
                 }else{
                     $return->error[] = (new PathfinderException($serverStatus['error'], 500))->getError();
-                }
-
-                $apiStatus = $client->send('getStatus', 'latest', true);
-                if( !isset($apiStatus['error']) ){
-                    // find top status
-                    $status = 'OK';
-                    $color = 'green';
-                    foreach($apiStatus['status'] as &$statusData){
-                        if('red' == $statusData['status']){
-                            $status = 'unstable';
-                            $color = $statusData['status'] = 'orange'; // red is already in use for fatal API errors (e.g. no response at all, or offline)
-                            break;
-                        }
-                        if('yellow' == $statusData['status']){
-                            $status = 'degraded';
-                            $color = $statusData['status'];
-                        }
-                    }
-
-                    $return->api['status']      = $status;
-                    $return->api['statusColor'] = $color;
-                    $return->api['routes']      = $apiStatus['status'];
-                }else{
-                    $return->error[] = (new PathfinderException($apiStatus['error'], 500))->getError();
                 }
 
                 if(empty($return->error)){
