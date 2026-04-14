@@ -290,7 +290,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     public function beforeInsertEvent($self, $pkeys) : bool {
         // check for "default" connection type and add them if missing
         // -> get() with "true" returns RAW data! important for JSON table column check!
-        $types = (array)json_decode($this->get('type', true));
+        $types = (array)json_decode($this->get('type', true) ?? 'null');
         if(
             !$this->scope ||
             empty($types)
