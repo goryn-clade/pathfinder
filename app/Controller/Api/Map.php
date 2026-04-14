@@ -753,8 +753,8 @@ class Map extends Controller\AccessController {
             $sourceSystemId = (int)$sourceLog->systemId;
 
             if($sourceSystemId){
-                $defaultPositions = (array)$newSystemPositions['defaults'];
-                $currentPosition = (array)$newSystemPositions['location'];
+                $defaultPositions = (array)($newSystemPositions['defaults'] ?? []);
+                $currentPosition = (array)($newSystemPositions['location'] ?? []);
 
                 $sourceSystem = null;
                 $targetSystem = null;
