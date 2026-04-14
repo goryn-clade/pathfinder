@@ -130,7 +130,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param ConnectionModel|int $connectionId
      * @return int|null
      */
-    public function set_connectionId(ConnectionModel|int $connectionId){
+    public function set_connectionId(ConnectionModel|int|null $connectionId){
         $connectionId = (int)$connectionId;
         $validConnectionId = null;
 
