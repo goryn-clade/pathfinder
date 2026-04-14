@@ -750,17 +750,6 @@ class SystemModel extends AbstractMapTrackingModel {
             $log->addHandler('discordRally', null, $this->getMap()->getDiscordWebHookConfig($discordChannelKey));
         }
 
-        // Mail poke ------------------------------------------------------------------------------
-        $mailAddressKey = 'RALLY_SET';
-        if(
-            $rallyData['pokeMail'] === true &&
-            $this->getMap()->isMailSendEnabled('RALLY_SET')
-        ){
-            $isValidLog = true;
-            $mailConf = $this->getMap()->getSMTPConfig($mailAddressKey, false);
-            $log->addHandler('mail', 'mail', $mailConf);
-        }
-
         // Buffer log -----------------------------------------------------------------------------
         if($isValidLog){
             $log->setTempData($this->getLogObjectData(true));

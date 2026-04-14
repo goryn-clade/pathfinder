@@ -763,6 +763,8 @@ define([
                     Util.request('DELETE', 'Map', mapId, {}, {}).then(
                         payload => {
                             Util.showNotify({title: 'Map deleted', text: 'Map: ' + mapName, type: 'success'});
+                            Util.deleteCurrentMapData(mapId);
+                            ModuleMap.updateMapModule(Util.getMapModule()[0]);
                         },
                         Util.handleAjaxErrorResponse
                     ).finally(() => mapDeleteDialog.modal('hide'));

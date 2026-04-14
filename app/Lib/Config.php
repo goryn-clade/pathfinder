@@ -370,57 +370,6 @@ class Config extends \Prefab {
     }
 
     /**
-     * get SMTP config values
-     * @return \stdClass
-     */
-    static function getSMTPConfig() : \stdClass{
-        $config             = new \stdClass();
-        $config->host       = self::getEnvironmentData('SMTP_HOST');
-        $config->port       = self::getEnvironmentData('SMTP_PORT');
-        $config->scheme     = self::getEnvironmentData('SMTP_SCHEME');
-        $config->username   = self::getEnvironmentData('SMTP_USER');
-        $config->password   = self::getEnvironmentData('SMTP_PASS');
-        $config->from       = [
-            self::getEnvironmentData('SMTP_FROM') => self::getPathfinderData('name')
-        ];
-        return $config;
-    }
-
-    /**
-     * validates an SMTP config
-     * @param \stdClass $config
-     * @return bool
-     */
-    static function isValidSMTPConfig(\stdClass $config) : bool {
-        // validate email from either an configured array or plain string
-        $validateMailConfig = function($mailConf = null) : bool {
-            $email = null;
-            if(is_array($mailConf)){
-                $email = array_key_first($mailConf);
-            }elseif(is_string($mailConf)){
-                $email = $mailConf;
-            }
-            return \Audit::instance()->email($email);
-        };
-
-        return (
-            !empty($config->host) &&
-            !empty($config->username) &&
-            $validateMailConfig($config->from) &&
-            $validateMailConfig($config->to)
-        );
-    }
-
-    /**
-     * get email for notifications by hive key
-     * @param $key
-     * @return mixed
-     */
-    static function getNotificationMail(string $key){
-        return self::getPathfinderData('notification' . ($key ? '.' . $key : ''));
-    }
-
-    /**
      * get map default config values for map types (private/corp/ally)
      * -> read from pathfinder.ini
      * @param string $mapType

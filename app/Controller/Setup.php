@@ -45,14 +45,7 @@ class Setup extends Controller {
         'CCP_SSO_SECRET_KEY' => [],
         'CCP_SSO_DOWNTIME' => [],
         'CCP_ESI_URL' => [],
-        'CCP_ESI_DATASOURCE' => [],
-        'SMTP_HOST' => [],
-        'SMTP_PORT' => [],
-        'SMTP_SCHEME' => [],
-        'SMTP_USER' => [],
-        'SMTP_PASS' => [],
-        'SMTP_FROM' => [],
-        'SMTP_ERROR' => []
+        'CCP_ESI_DATASOURCE' => []
     ];
 
     /**
@@ -246,6 +239,7 @@ class Setup extends Controller {
         $f3->set('checkPHPConfig', $this->checkPHPConfig($f3));
 
         // Settings ---------------------------------------------------------------------------------------------------
+        $f3->set('isDockerEnvironment', $this->isDockerEnvironment());
         // Pathfinder environment config
         $f3->set('environmentInformation', $this->getEnvironmentInformation($f3));
 
@@ -313,6 +307,15 @@ class Setup extends Controller {
      * @param \Base $f3
      * @return array
      */
+    /**
+     * Detect whether the app is running inside a Docker container.
+     * Docker always creates /.dockerenv in the container root.
+     * @return bool
+     */
+    protected function isDockerEnvironment() : bool {
+        return file_exists('/.dockerenv');
+    }
+
     protected function getEnvironmentInformation(\Base $f3) : array {
         $environmentData = [];
         // exclude some sensitive data (e.g. database, passwords)
@@ -322,7 +325,7 @@ class Setup extends Controller {
         ];
 
         // obscure some values
-        $obscureVars = ['CCP_SSO_CLIENT_ID', 'CCP_SSO_SECRET_KEY', 'SMTP_PASS'];
+        $obscureVars = ['CCP_SSO_CLIENT_ID', 'CCP_SSO_SECRET_KEY'];
 
         foreach($this->environmentVars as $var => $options){
             if( !in_array($var, $excludeVars) ){
@@ -1009,6 +1012,16 @@ class Setup extends Controller {
             ];
         }
 
+        if($this->isDockerEnvironment()){
+            // In Docker the image is pre-built; build tools are not required at runtime.
+            foreach($systemConf as &$entry){
+                $entry['check'] = true;
+                $entry['version'] = 'not required';
+                unset($entry['required']);
+            }
+            unset($entry);
+        }
+
         return $systemConf;
     }
 
@@ -1064,10 +1077,6 @@ class Setup extends Controller {
                 case 'send_rally_discord_enabled':
                     $label = '<i class="fab fa-fw fa-discord"></i> Rally point poke Discord';
                     $tooltip = 'If "enabled", map admins can set a Discord channel for rally point pokes.';
-                    break;
-                case 'send_rally_mail_enabled':
-                    $label = '<i class="fas fa-fw fa-envelope"></i> Rally point poke Email';
-                    $tooltip = 'If "enabled", rally point pokes can be send by Email (SMTP config + recipient address required).';
                     break;
                 default:
                     $label = 'unknown';

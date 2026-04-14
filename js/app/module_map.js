@@ -1419,7 +1419,7 @@ define([
 
                         if(mapId > 0){
                             let tabMapData = Util.getCurrentMapData(mapId);
-                            if(tabMapData !== false){
+                            if(tabMapData){
                                 // map data available ->
                                 activeMapIds.push(mapId);
 

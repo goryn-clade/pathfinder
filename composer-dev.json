@@ -41,7 +41,6 @@
     "ikkez/f3-sheet": "0.4.*",
     "xfra35/f3-cron": "1.2.*",
     "monolog/monolog": "2.*",
-    "swiftmailer/swiftmailer": "6.2.*",
     "league/html-to-markdown": "4.9.*",
     "cache/redis-adapter": "1.0.*",
     "cache/filesystem-adapter": "1.0.*",

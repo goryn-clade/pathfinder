@@ -151,6 +151,16 @@
                         <div class="panel-heading text-left">
                             <h3 class="panel-title">Environment variables [optional]</h3>
                         </div>
+                        <check if="{{ @isDockerEnvironment }}">
+                            <true>
+                                <div class="panel-body text-left" style="padding: 10px 15px; border-bottom: 1px solid #2e3440;">
+                                    <p class="txt-color txt-color-success" style="margin:0;">
+                                        <i class="fab fa-fw fa-docker"></i>
+                                        <strong>Container environment detected.</strong>
+                                    </p>
+                                </div>
+                            </true>
+                        </check>
                         <div class="panel-body no-padding text-align-center">
                             <include href="templates/modules/requirements_table.html"/>
                         </div>

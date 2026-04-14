@@ -114,47 +114,6 @@ class UserModel extends AbstractPathfinderModel {
     }
 
     /**
-     * @param self $self
-     * @param $pkeys
-     */
-    public function afterEraseEvent($self, $pkeys){
-        $this->sendDeleteMail();
-    }
-
-    /**
-     * send delete confirm mail to  this user
-     */
-    protected function sendDeleteMail(){
-        if($this->isMailSendEnabled()){
-            $log = new Logging\UserLog('userDelete', $this->getLogChannelData());
-            $log->addHandler('mail', 'mail', $this->getSMTPConfig());
-            $log->setMessage('Delete Account - {channelName}');
-            $log->setData([
-                'message' =>'Your account was successfully deleted.'
-            ]);
-            $log->buffer();
-        }
-    }
-
-    /**
-     * checks whether user has a valid email address and pathfinder has a valid SMTP config
-     * @return bool
-     */
-    protected function isMailSendEnabled() : bool {
-        return Config::isValidSMTPConfig($this->getSMTPConfig());
-    }
-
-    /**
-     * get SMTP config for this user
-     * @return \stdClass
-     */
-    protected function getSMTPConfig() : \stdClass {
-        $config = Config::getSMTPConfig();
-        $config->to = $this->email;
-        return $config;
-    }
-
-    /**
      * validate name column
      * @param string $key
      * @param string $val
