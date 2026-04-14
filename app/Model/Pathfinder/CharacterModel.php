@@ -826,7 +826,7 @@ class CharacterModel extends AbstractPathfinderModel {
         $isOnline = false;
         $onlineData = $this->getOnlineData($accessToken);
 
-        if($onlineData['online'] === true){
+        if(($onlineData['online'] ?? false) === true){
             $isOnline = true;
         }
 
@@ -1005,7 +1005,7 @@ class CharacterModel extends AbstractPathfinderModel {
 
                         if(!$deleteLog){
                             // mark log as "updated" even if no changes were made
-                            if($additionalOptions['markUpdated'] === true){
+                            if(($additionalOptions['markUpdated'] ?? false) === true){
                                 $characterLog->touch('updated');
                             }
 
@@ -1099,10 +1099,10 @@ class CharacterModel extends AbstractPathfinderModel {
                 [$historyEntryPrev] = $logHistoryData;
                 if($historyLogPrev = $historyEntryPrev['log']){
                     if(
-                        $historyLog['system']['id']     === $historyLogPrev['system']['id'] &&
-                        $historyLog['ship']['typeId']   === $historyLogPrev['ship']['typeId'] &&
-                        $historyLog['station']['id']    === $historyLogPrev['station']['id'] &&
-                        $historyLog['structure']['id']  === $historyLogPrev['structure']['id']
+                        ($historyLog['system']['id'] ?? null)        === ($historyLogPrev['system']['id'] ?? null) &&
+                        ($historyLog['ship']['typeId'] ?? null)     === ($historyLogPrev['ship']['typeId'] ?? null) &&
+                        ($historyLog['station']['id'] ?? null)      === ($historyLogPrev['station']['id'] ?? null) &&
+                        ($historyLog['structure']['id'] ?? null)    === ($historyLogPrev['structure']['id'] ?? null)
                     ){
                         // no changes in 'relevant' fields -> just update timestamp
                         $task = 'update';
