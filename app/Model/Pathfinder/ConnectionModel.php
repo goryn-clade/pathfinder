@@ -198,7 +198,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      */
     public function setEndpointData(string $label,  $endpointData = []){
         if($this->exists($field = $label . 'EndpointType')){
-            $types = empty($types = (array)$endpointData['types']) ? null : $types;
+            $types = empty($types = (array)($endpointData['types'] ?? [])) ? null : $types;
             if($this->$field != $types){
                 $this->$field = $types;
             }
