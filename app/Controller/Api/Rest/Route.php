@@ -811,13 +811,13 @@ class Route extends AbstractRestController {
                     'wormholesSizeMin'      => (string) ($routeData['wormholesSizeMin'] ?? ''),
                     'excludeTypes'          => (array) ($routeData['excludeTypes'] ?? []),
                     'endpointsBubble'       => (bool) ($routeData['endpointsBubble'] ?? false),
-                    'flag'                  => $routeData['flag']
+                    'flag'                  => ($routeData['flag'] ?? '')
                 ];
 
                 $returnRoutData = [
-                    'systemFromData'        => $routeData['systemFromData'],
-                    'systemToData'          => $routeData['systemToData'],
-                    'skipSearch'            => (bool) $routeData['skipSearch'],
+                    'systemFromData'        => ($routeData['systemFromData'] ?? []),
+                    'systemToData'          => ($routeData['systemToData'] ?? []),
+                    'skipSearch'            => (bool) ($routeData['skipSearch'] ?? false),
                     'maps'                  => $mapData,
                     'mapIds'                => $mapIds
                 ];
