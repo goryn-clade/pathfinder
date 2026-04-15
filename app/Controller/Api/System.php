@@ -26,12 +26,12 @@ class System extends Controller\AccessController {
         $return->error = [];
         $return->destData = [];
 
-        if(!empty($destData = (array)$postData['destData'])){
+        if(!empty($destData = (array)($postData['destData'] ?? []))){
             $activeCharacter = $this->getCharacter();
 
             if($activeCharacter && ($accessToken = $activeCharacter->getAccessToken())){
-                $return->clearOtherWaypoints = (bool)$postData['clearOtherWaypoints'];
-                $return->first = (bool)$postData['first'];
+                $return->clearOtherWaypoints = (bool)($postData['clearOtherWaypoints'] ?? false);
+                $return->first = (bool)($postData['first'] ?? false);
                 $options = [
                     'clearOtherWaypoints' => $return->clearOtherWaypoints,
                     'addToBeginning' => $return->first,
@@ -45,7 +45,7 @@ class System extends Controller\AccessController {
                     }else{
                         $error = (object) [];
                         $error->type = 'error';
-                        $error->text = $response['error'];
+                        $error->text = $response['error'] ?? '';
                         $return->error[] = $error;
                     }
                 }
@@ -63,7 +63,7 @@ class System extends Controller\AccessController {
      */
     public function pokeRally(\Base $f3){
         $rallyData = (array)$f3->get('POST');
-        $systemId = (int)$rallyData['systemId'];
+        $systemId = (int)($rallyData['systemId'] ?? 0);
         $return = (object) [];
 
         if($systemId){
@@ -76,11 +76,11 @@ class System extends Controller\AccessController {
             $system->getById($systemId);
 
             if($system->hasAccess($activeCharacter)){
-                $rallyData['pokeDesktop']   = $rallyData['pokeDesktop'] === '1';
-                $rallyData['pokeMail']      = $rallyData['pokeMail'] === '1';
-                $rallyData['pokeSlack']     = $rallyData['pokeSlack'] === '1';
-                $rallyData['pokeDiscord']   = $rallyData['pokeDiscord'] === '1';
-                $rallyData['message']       = trim((string) $rallyData['message']);
+                $rallyData['pokeDesktop']   = ($rallyData['pokeDesktop'] ?? '0') === '1';
+                $rallyData['pokeMail']      = ($rallyData['pokeMail'] ?? '0') === '1';
+                $rallyData['pokeSlack']     = ($rallyData['pokeSlack'] ?? '0') === '1';
+                $rallyData['pokeDiscord']   = ($rallyData['pokeDiscord'] ?? '0') === '1';
+                $rallyData['message']       = trim((string)($rallyData['message'] ?? ''));
 
                 $system->sendRallyPoke($rallyData, $activeCharacter);
             }

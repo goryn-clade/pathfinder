@@ -117,7 +117,7 @@ class User extends Controller\Controller{
      */
     public function getCookieCharacter(\Base $f3){
         $data = $f3->get('POST');
-        $cookieName = (string)$data['cookie'];
+        $cookieName = (string)($data['cookie'] ?? '');
 
         $return = (object) [];
         $return->ccpImageServer = Config::getPathfinderData('api.ccp_image_server');
@@ -198,7 +198,7 @@ class User extends Controller\Controller{
      */
     public function logout(\Base $f3){
         $data = $f3->get('POST');
-        $deleteCookie = (bool)$data['deleteCookie'];
+        $deleteCookie = (bool)($data['deleteCookie'] ?? false);
 
         $this->logoutCharacter($f3, false, true, true, $deleteCookie, 200);
     }
@@ -215,7 +215,7 @@ class User extends Controller\Controller{
         $return = (object) [];
         $return->error = [];
 
-        if( $targetId = (int)$data['targetId']){
+        if( $targetId = (int)($data['targetId'] ?? 0)){
             $activeCharacter = $this->getCharacter();
 
             if($activeCharacter){
@@ -229,7 +229,7 @@ class User extends Controller\Controller{
             }else{
                 $error = (object) [];
                 $error->type = 'error';
-                $error->text = $response['error'];
+                $error->text = $response['error'] ?? '';
                 $return->error[] = $error;
             }
         }

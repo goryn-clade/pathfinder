@@ -169,9 +169,9 @@ class Universe extends AbstractCron {
      */
     function setup(\Base $f3){
         $params = (array)$f3->get('GET');
-        $type = (string)$params['type'];
-        $paramOffset = (int)$params['offset'];
-        $paramLength = (int)$params['length'];
+        $type = (string)($params['type'] ?? '');
+        $paramOffset = (int)($params['offset'] ?? 0);
+        $paramLength = (int)($params['length'] ?? 0);
         $timeTotalStart = microtime(true);
         $msg = '';
 

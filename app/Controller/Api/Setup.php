@@ -105,10 +105,10 @@ class Setup extends Controller\Controller {
      */
     public function buildIndex(\Base $f3){
         $postData = (array)$f3->get('POST');
-        $type = (string)$postData['type'];
-        $countAll = (int)$postData['countAll'];
-        $count = (int)$postData['count'];
-        $offset = (int)$postData['offset'];
+        $type = (string)($postData['type'] ?? '');
+        $countAll = (int)($postData['countAll'] ?? 0);
+        $count = (int)($postData['count'] ?? 0);
+        $offset = (int)($postData['offset'] ?? 0);
 
         $return = (object) [];
         $return->error = [];
@@ -224,7 +224,7 @@ class Setup extends Controller\Controller {
      */
     public function clearIndex(\Base $f3){
         $postData = (array)$f3->get('POST');
-        $type = (string)$postData['type'];
+        $type = (string)($postData['type'] ?? '');
 
         $return = (object) [];
         $return->error = [];

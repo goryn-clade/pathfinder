@@ -62,8 +62,8 @@ abstract class AbstractEveScoutController extends AbstractRestController {
         $enrichWithSignatureData = function(string $key,  $eveScoutConnection, array &$connectionData) : void {
             $eveScoutSignature = (array)$eveScoutConnection[$key];
             $signatureData = [
-                'name' => $eveScoutSignature['name'] ? : null,
-                'short_name' => str_split((string) $eveScoutSignature['name'], 3)[0] ? : null
+                'name' => ($eveScoutSignature['name'] ?? null) ?: null,
+                'short_name' => str_split((string)($eveScoutSignature['name'] ?? ''), 3)[0] ?: null
             ];
             if($key == 'sourceSignature' && ($eveScoutConnection['wh_exits_outward'] ?? false)) {
                 $signatureData['type'] = ['name' => strtoupper((string)($eveScoutConnection['wh_type'] ?? ''))];

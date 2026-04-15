@@ -40,7 +40,7 @@ class GitHub extends Controller\Controller {
         foreach($releases as $key => &$release){
             // check version ------------------------------------------------------------------------------------------
             if($key === 0){
-                $return->version->last = $release['name'];
+                $return->version->last = $release['name'] ?? '';
                 if(version_compare( $return->version->current, $return->version->last, '>')){
                     $return->version->dev = true;
                 }
@@ -54,7 +54,7 @@ class GitHub extends Controller\Controller {
             }
 
             // format body ------------------------------------------------------------------------------------
-            $body = $release['body'];
+            $body = $release['body'] ?? '';
 
             // remove "update information" from release text
             // -> keep everything until first "***" -> horizontal line

@@ -43,7 +43,7 @@ class SystemSearch extends AbstractRestController {
         //$searchToken = 'Naga'; // 0.033684 -> 0.1 (LS)
 
         if(strlen($search = (string)$params['id']) >= 3){
-            $page = max((int)$requestData['page'],1);
+            $page = max((int)($requestData['page'] ?? 1), 1);
             $offset = ($page - 1) * self::PAGE_SIZE_SYSTEMS;
             $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
 

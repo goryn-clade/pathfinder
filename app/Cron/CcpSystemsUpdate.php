@@ -106,8 +106,8 @@ class CcpSystemsUpdate extends AbstractCron {
         $execTimePrepareSystemLogTables = $time_end - $time_start;
 
         $total = count($systemIds);
-        $offset = ($params['offset'] > 0 && $params['offset'] < $total) ? $params['offset'] : 0;
-        $systemIds = array_slice($systemIds, $offset, $params['length']);
+        $offset = (($params['offset'] ?? 0) > 0 && ($params['offset'] ?? 0) < $total) ? $params['offset'] : 0;
+        $systemIds = array_slice($systemIds, $offset, $params['length'] ?? 0);
         $importCount = count($systemIds);
         $count = 0;
 
