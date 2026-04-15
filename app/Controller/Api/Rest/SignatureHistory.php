@@ -64,7 +64,7 @@ class SignatureHistory extends AbstractRestController {
 
         if(
             ($systemId = (int)$requestData['systemId']) &&
-            ($stamp = (string)$requestData['stamp'])
+            ($stamp = (string)($requestData['stamp'] ?? ''))
         ){
             $activeCharacter = $this->getCharacter();
 

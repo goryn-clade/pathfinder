@@ -21,7 +21,7 @@ class SystemGraph extends AbstractRestController {
      */
     public function get(\Base $f3,  $params){
         $requestData = $this->getRequestData($f3);
-        $systemIds = (array)$requestData['systemIds'];
+        $systemIds = (array)($requestData['systemIds'] ?? []);
         $graphsData = [];
 
         // valid response (data found) should be cached by server + client

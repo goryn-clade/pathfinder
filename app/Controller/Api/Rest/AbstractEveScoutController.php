@@ -65,11 +65,11 @@ abstract class AbstractEveScoutController extends AbstractRestController {
                 'name' => $eveScoutSignature['name'] ? : null,
                 'short_name' => str_split((string) $eveScoutSignature['name'], 3)[0] ? : null
             ];
-            if($key == 'sourceSignature' && $eveScoutConnection['wh_exits_outward']) {
-                $signatureData['type'] = ['name' => strtoupper((string)$eveScoutConnection['wh_type'])];
+            if($key == 'sourceSignature' && ($eveScoutConnection['wh_exits_outward'] ?? false)) {
+                $signatureData['type'] = ['name' => strtoupper((string)($eveScoutConnection['wh_type'] ?? ''))];
             }
-            if($key == 'targetSignature' && !$eveScoutConnection['wh_exits_outward']) {
-                $signatureData['type'] = ['name' => strtoupper((string)$eveScoutConnection['wh_type'])];
+            if($key == 'targetSignature' && !($eveScoutConnection['wh_exits_outward'] ?? false)) {
+                $signatureData['type'] = ['name' => strtoupper((string)($eveScoutConnection['wh_type'] ?? ''))];
             }
             $connectionData[$key] = $signatureData;
         };
@@ -77,10 +77,10 @@ abstract class AbstractEveScoutController extends AbstractRestController {
         $enrichWithWormholeData = function( $wormholeData, array &$connectionsData) : void {
             $type = ['wh_fresh'];
 
-            if($wormholeData['estimatedEol'] <= 4){
+            if(($wormholeData['estimatedEol'] ?? 0) <= 4){
                 $type[] = 'wh_eol';
             }
-            switch($wormholeData['jumpMass']) {
+            switch($wormholeData['jumpMass'] ?? '') {
                 case 'capital':
                 case 'xlarge':
                     $type[] = 'wh_jump_mass_xl';

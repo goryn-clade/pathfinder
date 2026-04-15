@@ -131,34 +131,34 @@ class Route extends AbstractRestController {
 
             $excludeEndpointTypes = [];
 
-            if( $filterData['stargates'] === true){
+            if( ($filterData['stargates'] ?? false) === true){
                 // include "stargates" for search
                 $includeScopes[] = 'stargate';
                 $includeTypes[] = 'stargate';
 
             }
 
-            if( $filterData['jumpbridges'] === true ){
+            if( ($filterData['jumpbridges'] ?? false) === true ){
                 // add jumpbridge connections for search
                 $includeScopes[] = 'jumpbridge';
                 $includeTypes[] = 'jumpbridge';
             }
 
-            if( $filterData['wormholes'] === true ){
+            if( ($filterData['wormholes'] ?? false) === true ){
                 // add wormhole connections for search
                 $includeScopes[] = 'wh';
                 $includeTypes[] = 'wh_fresh';
 
 
-                if( $filterData['wormholesReduced'] === true ){
+                if( ($filterData['wormholesReduced'] ?? false) === true ){
                     $includeTypes[] = 'wh_reduced';
                 }
 
-                if( $filterData['wormholesCritical'] === true ){
+                if( ($filterData['wormholesCritical'] ?? false) === true ){
                     $includeTypes[] = 'wh_critical';
                 }
 
-                if( $filterData['wormholesEOL'] === false ){
+                if( ($filterData['wormholesEOL'] ?? null) === false ){
                     $includeEOL = false;
                 }
 
@@ -167,7 +167,7 @@ class Route extends AbstractRestController {
                 }
             }
 
-            if( $filterData['endpointsBubble'] !== true ){
+            if( ($filterData['endpointsBubble'] ?? false) !== true ){
                 $excludeEndpointTypes[] = 'bubble';
             }
 
@@ -358,7 +358,7 @@ class Route extends AbstractRestController {
      * @param  $keepSystems
      */
     private function filterJumpData( $filterData = [],  $keepSystems = []){
-        if($filterData['flag'] == 'secure'){
+        if(($filterData['flag'] ?? '') == 'secure'){
             // remove all systems (TrueSec < 0.5) from search arrays
             $this->jumpArray = array_filter($this->jumpArray, function($systemId) use ($keepSystems) {
                 $systemNameData = $this->nameArray[$systemId];
@@ -536,7 +536,7 @@ class Route extends AbstractRestController {
             $this->setDynamicJumpData($mapIds, $filterData);
 
             // add current Thera connections data
-            if($filterData['wormholesThera']){
+            if($filterData['wormholesThera'] ?? false){
                 $this->setTheraJumpData();
             }
 
@@ -623,7 +623,7 @@ class Route extends AbstractRestController {
             $this->setDynamicJumpData($mapIds, $filterData);
 
             // add current Thera connections data
-            if($filterData['wormholesThera']){
+            if($filterData['wormholesThera'] ?? false){
                 $this->setTheraJumpData();
             }
 
@@ -674,7 +674,7 @@ class Route extends AbstractRestController {
 
             // search route -------------------------------------------------------------------------------------------
             $options = [
-                'flag' => $filterData['flag'],
+                'flag' => ($filterData['flag'] ?? ''),
                 'connections' => $connections
             ];
 

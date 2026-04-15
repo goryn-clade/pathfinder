@@ -174,14 +174,14 @@ class Map extends AbstractRestController {
         if($map->isPrivate()){
             $accessChangeCount = $setMapAccess(
                 $activeCharacter,
-                $typeChange ? [$activeCharacter->_id] : $mapData['mapCharacters'],
+                $typeChange ? [$activeCharacter->_id] : ($mapData['mapCharacters'] ?? []),
                 (int)$mapDefaultConf['private']['max_shared']
             );
         }elseif($map->isCorporation()){
             if($corporation = $activeCharacter->getCorporation()){
                 $accessChangeCount = $setMapAccess(
                     $corporation,
-                    $typeChange ? [$corporation->_id] : $mapData['mapCorporations'],
+                    $typeChange ? [$corporation->_id] : ($mapData['mapCorporations'] ?? []),
                     (int)$mapDefaultConf['corporation']['max_shared']
                 );
             }
@@ -189,7 +189,7 @@ class Map extends AbstractRestController {
             if($alliance = $activeCharacter->getAlliance()){
                 $accessChangeCount = $setMapAccess(
                     $alliance,
-                    $typeChange ? [$alliance->_id] : $mapData['mapAlliances'],
+                    $typeChange ? [$alliance->_id] : ($mapData['mapAlliances'] ?? []),
                     (int)$mapDefaultConf['alliance']['max_shared']
                 );
             }

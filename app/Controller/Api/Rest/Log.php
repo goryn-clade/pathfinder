@@ -22,7 +22,7 @@ class Log extends AbstractRestController {
         $requestData = $this->getRequestData($f3);
         $connectionData = [];
 
-        if($connectionId = (int)$requestData['connectionId']){
+        if($connectionId = (int)($requestData['connectionId'] ?? 0)){
             $activeCharacter = $this->getCharacter();
 
             /**

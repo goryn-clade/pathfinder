@@ -40,7 +40,7 @@ class Structure extends AbstractRestController {
      */
     public function patch(\Base $f3,  $params){
         $requestData = $this->getRequestData($f3);
-        $structuresData = (($structureId = (int)$params['id']) && ($structureId == (int)$requestData['id'])) ? $this->update([$requestData]) : [];
+        $structuresData = (($structureId = (int)$params['id']) && ($structureId == (int)($requestData['id'] ?? 0))) ? $this->update([$requestData]) : [];
         $this->out($structuresData);
     }
 
@@ -97,7 +97,7 @@ class Structure extends AbstractRestController {
                 }
             }elseif(!isset($structureData['id'])){
                 // from clipboard -> search by structure by name
-                $structure->getByName($corporation, (string)$structureData['name'], (int)$structureData['systemId']);
+                $structure->getByName($corporation, (string)($structureData['name'] ?? ''), (int)($structureData['systemId'] ?? 0));
             }
 
             $isNew = $structure->dry();

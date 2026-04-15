@@ -78,9 +78,9 @@ class Signature extends AbstractRestController {
                 }
 
                 // delete "old" signatures ----------------------------------------------------------------------------
-                if((bool)$requestData['deleteOld']){
+                if((bool)($requestData['deleteOld'] ?? false)){
                     // if linked ConnectionModels should be deleted as well
-                    $deleteConnectionId = (bool)$requestData['deleteConnection'];
+                    $deleteConnectionId = (bool)($requestData['deleteConnection'] ?? false);
 
                     $updatedSignatureIds = array_column($signaturesData, 'id');
                     $signatures = $system->getSignatures();
@@ -199,7 +199,7 @@ class Signature extends AbstractRestController {
 
             if($system->hasAccess($activeCharacter)){
                 // if linked ConnectionModels should be deleted as well
-                $deleteConnectionId = (bool)$requestData['deleteConnection'];
+                $deleteConnectionId = (bool)($requestData['deleteConnection'] ?? false);
 
                 // if there is any changed/deleted/updated signature
                 // -> we need to update signature history data for the system
