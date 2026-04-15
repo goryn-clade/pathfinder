@@ -170,7 +170,7 @@ class System extends AbstractRestController {
 
         // statusId === 0  is 'auto' status -> keep current status
         // -> relevant systems that already have a status (inactive systems)
-        if( (int)$systemData['statusId'] <= 0 ){
+        if( (int)($systemData['statusId'] ?? 0) <= 0 ){
             unset($systemData['statusId']);
         }
 
