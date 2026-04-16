@@ -157,8 +157,8 @@ define([
 
             this.setModuleObserver();
 
-            // init webSocket connection
-            SystemKillboardModule.initWebSocket();
+            // init R2Z2 polling connection
+            SystemKillboardModule.initPoller();
 
             return this.moduleElement;
         }
@@ -728,6 +728,10 @@ define([
          */
         static unsubscribeFromWS(module){
             SystemKillboardModule.wsSubscribtions = SystemKillboardModule.wsSubscribtions.filter(subscriber => subscriber !== module);
+            // stop polling when last subscriber leaves
+            if(!SystemKillboardModule.wsSubscribtions.length && SystemKillboardModule.pollActive){
+                SystemKillboardModule.stopPoller();
+            }
         }
 
         /**
@@ -744,43 +748,138 @@ define([
         }
 
         /**
-         * init/connect to WebSocket if not already done
+         * adapt R2Z2 response to the flat format expected by cacheWsResponse/onWsMessage
+         * R2Z2 wraps killmail fields inside 'esi'; old WS sent them at root level
+         * @param r2z2Data
+         * @returns {Object}
          */
-        static initWebSocket(){
-            if(!SystemKillboardModule.ws){
-                SystemKillboardModule.ws = new WebSocket('wss://zkillboard.com/websocket/');
-                SystemKillboardModule.wsStatus = 1;
+        static adaptR2z2Response(r2z2Data){
+            return Object.assign({}, r2z2Data.esi, {zkb: r2z2Data.zkb});
+        }
+
+        /**
+         * stop the R2Z2 polling loop
+         */
+        static stopPoller(){
+            SystemKillboardModule.pollActive = false;
+            if(SystemKillboardModule.pollTimer){
+                clearTimeout(SystemKillboardModule.pollTimer);
+                SystemKillboardModule.pollTimer = null;
+            }
+            SystemKillboardModule.wsStatus = 4;
+            SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+        }
+
+        /**
+         * single iteration of the R2Z2 poll loop
+         */
+        static async pollNext(){
+            if(!SystemKillboardModule.pollActive || !SystemKillboardModule.wsSubscribtions.length){
+                SystemKillboardModule.stopPoller();
+                return;
             }
 
-            let sendMessage = req => {
-                SystemKillboardModule.ws.send(JSON.stringify(req));
-            };
+            // pause when tab is hidden; resume via visibilitychange
+            if(document.hidden){
+                let resume = () => {
+                    document.removeEventListener('visibilitychange', resume);
+                    if(SystemKillboardModule.pollActive){
+                        SystemKillboardModule.pollNext();
+                    }
+                };
+                document.addEventListener('visibilitychange', resume);
+                return;
+            }
 
-            SystemKillboardModule.ws.onopen = e => {
-                SystemKillboardModule.wsStatus = 2;
-                SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.updateWsStatus());
+            let seqId = SystemKillboardModule.pollSequenceId;
 
-                sendMessage({action:'sub', channel:'killstream'});
-            };
+            try {
+                let resp = await fetch(`${Init.url.zKillboardR2z2}/${seqId}.json`);
 
-            SystemKillboardModule.ws.onmessage = e => {
-                let response = JSON.parse(e.data);
+                if(resp.status === 404){
+                    // caught up — check if sequence is stale (gap in stream)
+                    SystemKillboardModule.pollConsecutive404s = (SystemKillboardModule.pollConsecutive404s || 0) + 1;
+                    if(SystemKillboardModule.pollConsecutive404s >= 5){
+                        // resync to current head in case of a sequence gap
+                        SystemKillboardModule.pollConsecutive404s = 0;
+                        let seqResp = await fetch(`${Init.url.zKillboardR2z2}/sequence.json`);
+                        if(seqResp.ok){
+                            let seqData = await seqResp.json();
+                            if(seqData.sequence > SystemKillboardModule.pollSequenceId){
+                                SystemKillboardModule.pollSequenceId = seqData.sequence;
+                            }
+                        }
+                    }
+                    SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 6000);
+                    return;
+                }
 
-                let [zkbData, killmailData] = this.cacheWsResponse(response);
+                if(!resp.ok){
+                    throw new Error(`R2Z2 ${resp.status}`);
+                }
+
+                SystemKillboardModule.pollConsecutive404s = 0;
+                let r2z2Data = await resp.json();
+                let adapted = SystemKillboardModule.adaptR2z2Response(r2z2Data);
+                let [zkbData, killmailData] = SystemKillboardModule.cacheWsResponse(adapted);
                 SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.onWsMessage(zkbData, killmailData));
-            };
 
-            SystemKillboardModule.ws.onerror = e => {
+                // skip ahead if far behind current head (tab was backgrounded for a long time)
+                if(r2z2Data.sequence_id && (SystemKillboardModule.pollSequenceId - r2z2Data.sequence_id) > 500){
+                    let seqResp = await fetch(`${Init.url.zKillboardR2z2}/sequence.json`);
+                    if(seqResp.ok){
+                        let seqData = await seqResp.json();
+                        SystemKillboardModule.pollSequenceId = seqData.sequence;
+                    }
+                } else {
+                    SystemKillboardModule.pollSequenceId = seqId + 1;
+                }
+
+                // small delay to stay well within 20 req/s rate limit
+                SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 100);
+
+            } catch(e) {
+                console.error('R2Z2 poll error', e);
                 SystemKillboardModule.wsStatus = 3;
-                SystemKillboardModule.ws = null;
-                SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.updateWsStatus());
-            };
+                SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+                SystemKillboardModule.pollTimer = setTimeout(() => {
+                    SystemKillboardModule.wsStatus = 2;
+                    SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+                    SystemKillboardModule.pollNext();
+                }, 10000);
+            }
+        }
 
-            SystemKillboardModule.ws.onclose = e => {
-                SystemKillboardModule.wsStatus = 4;
-                SystemKillboardModule.ws = null;
-                SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.updateWsStatus());
-            };
+        /**
+         * initialise R2Z2 polling — fetches current head sequence then starts poll loop
+         */
+        static async initPoller(){
+            if(SystemKillboardModule.pollActive){
+                return;
+            }
+
+            SystemKillboardModule.pollActive = true;
+            SystemKillboardModule.wsStatus = 1;
+            SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+
+            try {
+                let seqResp = await fetch(`${Init.url.zKillboardR2z2}/sequence.json`);
+                if(!seqResp.ok){
+                    throw new Error(`sequence.json: ${seqResp.status}`);
+                }
+                let seqData = await seqResp.json();
+                SystemKillboardModule.pollSequenceId = seqData.sequence;
+                SystemKillboardModule.wsStatus = 2;
+                SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+                SystemKillboardModule.pollNext();
+            } catch(e) {
+                console.error('R2Z2 init failed', e);
+                SystemKillboardModule.pollActive = false;
+                SystemKillboardModule.wsStatus = 3;
+                SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+                // retry after 30s
+                SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.initPoller(), 30000);
+            }
         }
 
         /**
@@ -808,6 +907,10 @@ define([
     SystemKillboardModule.wsStatus = undefined;
     SystemKillboardModule.serverTime = BaseModule.Util.getServerTime();         // static Date() with current EVE server time
     SystemKillboardModule.wsSubscribtions = [];                                 // static container for all KB module instances (from multiple maps) for WS responses
+    SystemKillboardModule.pollActive = false;                                   // whether R2Z2 polling loop is running
+    SystemKillboardModule.pollTimer = null;                                     // setTimeout handle for polling loop
+    SystemKillboardModule.pollSequenceId = null;                                // current R2Z2 sequence cursor
+    SystemKillboardModule.pollConsecutive404s = 0;                              // consecutive 404 count for stale-sequence detection
     SystemKillboardModule.cacheConfig = {
         zkb: {                                                                  // cache for "zKillboard" responses -> short term cache
             ttl: 60 * 3,
