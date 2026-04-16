@@ -169,7 +169,7 @@ class UserModel extends AbstractPathfinderModel {
         $data = [];
         $currentSessionUser = (array)$this->getF3()->get(User::SESSION_KEY_USER);
 
-        if($this->_id === $currentSessionUser['ID']){
+        if($this->_id === ($currentSessionUser['ID'] ?? null)){
             // user matches session data
             if($characterId > 0){
                 $data = $this->findSessionCharacterData($characterId);
@@ -183,7 +183,7 @@ class UserModel extends AbstractPathfinderModel {
             }
         }
 
-        if($characterId = (int)$data['ID']){
+        if($characterId = (int)($data['ID'] ?? 0)){
             // check if character still exists on DB (e.g. was manually removed in the meantime)
             // -> This should NEVER happen just for security and "local development"
             /**
