@@ -176,7 +176,6 @@ class Map extends Controller\AccessController {
             $return->url = [
                 'ccpImageServer'        => Config::getPathfinderData('api.ccp_image_server'),
                 'zKillboard'            => Config::getPathfinderData('api.z_killboard'),
-                'zKillboardR2z2'        => Config::getPathfinderData('api.zkillboard_r2z2'),
                 'eveeye'                => Config::getPathfinderData('api.eveeye'),
                 'dotlan'                => Config::getPathfinderData('api.dotlan'),
                 'anoik'                 => Config::getPathfinderData('api.anoik'),

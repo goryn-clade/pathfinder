@@ -794,7 +794,7 @@ define([
             let seqId = SystemKillboardModule.pollSequenceId;
 
             try {
-                let resp = await fetch(`${Init.url.zKillboardR2z2}/${seqId}.json`);
+                let resp = await fetch(`/api/Killboard/r2z2/${seqId}`);
 
                 if(resp.status === 404){
                     // caught up — check if sequence is stale (gap in stream)
@@ -802,7 +802,7 @@ define([
                     if(SystemKillboardModule.pollConsecutive404s >= 5){
                         // resync to current head in case of a sequence gap
                         SystemKillboardModule.pollConsecutive404s = 0;
-                        let seqResp = await fetch(`${Init.url.zKillboardR2z2}/sequence.json`);
+                        let seqResp = await fetch('/api/Killboard/sequence');
                         if(seqResp.ok){
                             let seqData = await seqResp.json();
                             if(seqData.sequence > SystemKillboardModule.pollSequenceId){
@@ -826,7 +826,7 @@ define([
 
                 // skip ahead if far behind current head (tab was backgrounded for a long time)
                 if(r2z2Data.sequence_id && (SystemKillboardModule.pollSequenceId - r2z2Data.sequence_id) > 500){
-                    let seqResp = await fetch(`${Init.url.zKillboardR2z2}/sequence.json`);
+                    let seqResp = await fetch('/api/Killboard/sequence');
                     if(seqResp.ok){
                         let seqData = await seqResp.json();
                         SystemKillboardModule.pollSequenceId = seqData.sequence;
@@ -863,7 +863,7 @@ define([
             SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
 
             try {
-                let seqResp = await fetch(`${Init.url.zKillboardR2z2}/sequence.json`);
+                let seqResp = await fetch('/api/Killboard/sequence');
                 if(!seqResp.ok){
                     throw new Error(`sequence.json: ${seqResp.status}`);
                 }
