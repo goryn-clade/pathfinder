@@ -179,7 +179,7 @@ class UserModel extends AbstractPathfinderModel {
             ){
                 // no character was requested ($requestedCharacterId = 0) AND session characters were found
                 // -> get first matched character (e.g. user open /login browser tab)
-                $data = $sessionCharacters[0];
+                $data = reset($sessionCharacters);
             }
         }
 
