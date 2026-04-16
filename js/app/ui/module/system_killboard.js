@@ -116,7 +116,7 @@ define([
                     // get kills within the last 24h
                     let timeFrameInSeconds = 60 * 60 * 24;
 
-                    let url = `${Init.url.zKillboard}/npc/0/solarSystemID/${this._systemData.systemId}/pastSeconds/${timeFrameInSeconds}/`;
+                    let url = `${Init.url.zKillboard}/solarSystemID/${this._systemData.systemId}/pastSeconds/${timeFrameInSeconds}/`;
 
                     this.request(url).then(result => {
                         if(result.error){
