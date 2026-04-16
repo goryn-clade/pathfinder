@@ -174,10 +174,12 @@ self.addEventListener('connect', event => {   // jshint ignore:line
                 initSocket(data.uri);
                 break;
             case 'ws:send':
-                socket.send(JSON.stringify({
-                    task: MsgWorkerMessage.task(),
-                    load: MsgWorkerMessage.data()
-                }));
+                if(socket){
+                    socket.send(JSON.stringify({
+                        task: MsgWorkerMessage.task(),
+                        load: MsgWorkerMessage.data()
+                    }));
+                }
                 break;
             case 'sw:closePort':
                 port.close();
@@ -190,7 +192,7 @@ self.addEventListener('connect', event => {   // jshint ignore:line
                 // .. if not -> send "unsubscribe" event to WebSocket server
                 let portsLeft = getPortsByCharacterIds(characterIds);
 
-                if(!portsLeft.length){
+                if(!portsLeft.length && socket){
                     socket.send(JSON.stringify({
                         task: MsgWorkerMessage.task(),
                         load: characterIds

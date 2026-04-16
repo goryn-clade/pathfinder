@@ -779,18 +779,28 @@ define([
                 return;
             }
 
-            // pause when tab is hidden; resume via visibilitychange
-            if(document.hidden){
-                let resume = () => {
-                    document.removeEventListener('visibilitychange', resume);
-                    if(SystemKillboardModule.pollActive){
-                        SystemKillboardModule.pollNext();
-                    }
-                };
-                document.addEventListener('visibilitychange', resume);
+            // prevent concurrent executions (e.g. from accumulated visibilitychange listeners)
+            if(SystemKillboardModule.pollInFlight){
                 return;
             }
 
+            // pause when tab is hidden; resume via visibilitychange (register at most one listener)
+            if(document.hidden){
+                if(!SystemKillboardModule.pollVisibilityListening){
+                    SystemKillboardModule.pollVisibilityListening = true;
+                    let resume = () => {
+                        document.removeEventListener('visibilitychange', resume);
+                        SystemKillboardModule.pollVisibilityListening = false;
+                        if(SystemKillboardModule.pollActive){
+                            SystemKillboardModule.pollNext();
+                        }
+                    };
+                    document.addEventListener('visibilitychange', resume);
+                }
+                return;
+            }
+
+            SystemKillboardModule.pollInFlight = true;
             let seqId = SystemKillboardModule.pollSequenceId;
 
             try {
@@ -810,6 +820,7 @@ define([
                             }
                         }
                     }
+                    SystemKillboardModule.pollInFlight = false;
                     SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 6000);
                     return;
                 }
@@ -836,10 +847,12 @@ define([
                 }
 
                 // small delay to stay well within 20 req/s rate limit
+                SystemKillboardModule.pollInFlight = false;
                 SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 100);
 
             } catch(e) {
                 console.error('R2Z2 poll error', e);
+                SystemKillboardModule.pollInFlight = false;
                 SystemKillboardModule.wsStatus = 3;
                 SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
                 SystemKillboardModule.pollTimer = setTimeout(() => {
