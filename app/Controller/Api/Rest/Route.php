@@ -17,6 +17,21 @@ class Route extends AbstractRestController {
     const CACHE_KEY_THERA_JUMP_DATA = 'CACHED_THERA_JUMP_DATA';
 
     /**
+     * cache key for current Turnur connections from eve-scout.com
+     */
+    const CACHE_KEY_TURNUR_JUMP_DATA = 'CACHED_TURNUR_JUMP_DATA';
+
+    /**
+     * EVE system ID for Thera
+     */
+    const THERA_SYSTEM_ID = 31000005;
+
+    /**
+     * EVE system ID for Turnur
+     */
+    const TURNUR_SYSTEM_ID = 30002086;
+
+    /**
      * route search depth
      */
     const ROUTE_SEARCH_DEPTH_DEFAULT = 1;
@@ -261,23 +276,18 @@ class Route extends AbstractRestController {
     }
 
     /**
-     * set current Thera connections jump data for this instance
-     * -> Connected wormholes pulled from eve-scout.com
+     * build jump data from EVE Scout connections, filtered to a specific hub system
+     * @param int $hubSystemId only include connections where source OR target matches this system ID
+     * @param string $cacheKey
+     * @return array
      */
-    private function setTheraJumpData(){
-        if(!$this->getF3()->exists(self::CACHE_KEY_THERA_JUMP_DATA, $jumpData)){
+    private function buildEveScoutJumpData(int $hubSystemId, string $cacheKey) : array {
+        if(!$this->getF3()->exists($cacheKey, $jumpData)){
             $jumpData = [];
             $connectionsData = $this->getF3()->eveScoutClient()->send('getTheraConnections');
 
             if(!empty($connectionsData) && !isset($connectionsData['error'])){
-                /**
-                 * map Thera jump data to Pathfinder format
-                 * @param array $row
-                 * @param string $systemSourceKey
-                 * @param string $systemTargetKey
-                 */
                 $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData): void {
-                    // check if response data is valid
                     if(
                         is_array($systemSource = $row[$systemSourceKey]) && !empty($systemSource) &&
                         is_array($systemTarget = $row[$systemTargetKey]) && !empty($systemTarget)
@@ -286,30 +296,52 @@ class Route extends AbstractRestController {
                         $targetId = $systemTarget['id'];
                         if(!array_key_exists($srcId, $jumpData)){
                             $jumpData[$srcId] = [
-                                'systemId'          => $srcId,
-                                'systemName'        => $systemSource['name'],
-                                'jumpNodes'         => [],
+                                'systemId'   => $srcId,
+                                'systemName' => $systemSource['name'],
+                                'jumpNodes'  => [],
                             ];
                         }
-
-                        $jumpNodes = $jumpData[$srcId]['jumpNodes'];
-                        if( !in_array($targetId, $jumpData[$srcId]['jumpNodes']) ){
+                        if(!in_array($targetId, $jumpData[$srcId]['jumpNodes'])){
                             $jumpData[$srcId]['jumpNodes'][] = $targetId;
                         }
                     }
                 };
 
                 foreach((array)$connectionsData['connections'] as $connectionData){
+                    // only include connections involving the specified hub system
+                    $sourceId = (int)(is_array($connectionData['source'] ?? null) ? $connectionData['source']['id'] ?? 0 : 0);
+                    $targetId = (int)(is_array($connectionData['target'] ?? null) ? $connectionData['target']['id'] ?? 0 : 0);
+                    if($sourceId !== $hubSystemId && $targetId !== $hubSystemId){
+                        continue;
+                    }
                     $enrichJumpData($connectionData, 'source', 'target');
                     $enrichJumpData($connectionData, 'target', 'source');
                 }
 
                 if(!empty($jumpData)){
-                    $this->getF3()->set(self::CACHE_KEY_THERA_JUMP_DATA, $jumpData, $this->theraJumpDataCacheTime);
+                    $this->getF3()->set($cacheKey, $jumpData, $this->theraJumpDataCacheTime);
                 }
             }
         }
 
+        return $jumpData;
+    }
+
+    /**
+     * set current Thera connections jump data for this instance
+     * -> Connected wormholes pulled from eve-scout.com, filtered to Thera (31000005)
+     */
+    private function setTheraJumpData() : void {
+        $jumpData = $this->buildEveScoutJumpData(self::THERA_SYSTEM_ID, self::CACHE_KEY_THERA_JUMP_DATA);
+        $this->updateJumpData($jumpData);
+    }
+
+    /**
+     * set current Turnur connections jump data for this instance
+     * -> Connected wormholes pulled from eve-scout.com, filtered to Turnur (30002086)
+     */
+    private function setTurnurJumpData() : void {
+        $jumpData = $this->buildEveScoutJumpData(self::TURNUR_SYSTEM_ID, self::CACHE_KEY_TURNUR_JUMP_DATA);
         $this->updateJumpData($jumpData);
     }
 
@@ -540,6 +572,11 @@ class Route extends AbstractRestController {
                 $this->setTheraJumpData();
             }
 
+            // add current Turnur connections data
+            if($filterData['wormholesTurnur'] ?? false){
+                $this->setTurnurJumpData();
+            }
+
             // filter jump data (e.g. remove some systems (0.0, LS)
             // --> don´t filter some systems (e.g. systemFrom, systemTo) even if they are are WH,LS,0.0
             $this->filterJumpData($filterData, [$systemFromId, $systemToId]);
@@ -625,6 +662,11 @@ class Route extends AbstractRestController {
             // add current Thera connections data
             if($filterData['wormholesThera'] ?? false){
                 $this->setTheraJumpData();
+            }
+
+            // add current Turnur connections data
+            if($filterData['wormholesTurnur'] ?? false){
+                $this->setTurnurJumpData();
             }
 
             // filter jump data (e.g. remove some systems (0.0, LS)
@@ -808,6 +850,7 @@ class Route extends AbstractRestController {
                     'wormholesCritical'     => (bool) ($routeData['wormholesCritical'] ?? false),
                     'wormholesEOL'          => (bool) ($routeData['wormholesEOL'] ?? false),
                     'wormholesThera'        => (bool) ($routeData['wormholesThera'] ?? false),
+                    'wormholesTurnur'       => (bool) ($routeData['wormholesTurnur'] ?? false),
                     'wormholesSizeMin'      => (string) ($routeData['wormholesSizeMin'] ?? ''),
                     'excludeTypes'          => (array) ($routeData['excludeTypes'] ?? []),
                     'endpointsBubble'       => (bool) ($routeData['endpointsBubble'] ?? false),
