@@ -51,6 +51,16 @@
         {{ @tplResource->buildLinks() }}                                                            {* Prefetch / Preload *}
     </check>
 
+    <script>
+        // Apply saved theme before CSS loads to prevent flash of unstyled content
+        (function(){
+            var t = localStorage.getItem('pf_theme');
+            if(t === 'light' || t === 'high-contrast'){
+                document.documentElement.setAttribute('data-theme', t);
+            }
+        })();
+    </script>
+
     <link rel="stylesheet" href="{{ @tplResource->getLink('style', 'pathfinder') }}" type="text/css" media="screen">
 </head>
 <body class="pf-body {{ @tplBodyClass ?? 'pf-landing' }}" data-js-path="{{ @tplResource->getPath('script') }}" data-script="{{ @tplJsView }}" <check if="{{ @tplCharacterId }}">data-character-id="{{ @tplCharacterId }}"</check> data-version="{{ @PATHFINDER.VERSION }}">

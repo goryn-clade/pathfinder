@@ -1,0 +1,219 @@
+// =============================================================================
+// Themes — Light & High Contrast
+// =============================================================================
+// CSS custom properties per theme. The default dark styling comes from the
+// compiled SASS variables; these only activate when html[data-theme] is set.
+// Applied by an inline script in index.html before first paint to avoid FOUC.
+
+// ---------------------------------------------------------------------------
+// Light theme
+// ---------------------------------------------------------------------------
+html[data-theme="light"] {
+  --pf-bg:               #f0f2f5;
+  --pf-surface:          #ffffff;
+  --pf-surface-dark:     #e4e7ec;
+  --pf-surface-darker:   #d1d5db;
+  --pf-surface-darkest:  #bec3cc;
+  --pf-text:             #111827;
+  --pf-text-muted:       #4b5563;
+  --pf-border:           #d1d5db;
+  --pf-input-bg:         #ffffff;
+  --pf-scrollbar-track:  #e4e7ec;
+  --pf-scrollbar-thumb:  #9ca3af;
+
+  scrollbar-color: #9ca3af #e4e7ec; // Firefox
+}
+
+// ---------------------------------------------------------------------------
+// High contrast theme (darker darks, brighter text)
+// ---------------------------------------------------------------------------
+html[data-theme="high-contrast"] {
+  --pf-bg:               #000000;
+  --pf-surface:          #1a1a1a;
+  --pf-surface-dark:     #111111;
+  --pf-surface-darker:   #080808;
+  --pf-surface-darkest:  #000000;
+  --pf-text:             #ffffff;
+  --pf-text-muted:       #cccccc;
+  --pf-border:           #555555;
+  --pf-input-bg:         #111111;
+  --pf-scrollbar-track:  #111111;
+  --pf-scrollbar-thumb:  #aaaaaa;
+
+  scrollbar-color: #aaaaaa #111111; // Firefox
+}
+
+// ---------------------------------------------------------------------------
+// Rules that use the custom properties — only active when data-theme is set
+// ---------------------------------------------------------------------------
+html[data-theme] {
+
+  body {
+    background-color: var(--pf-bg);
+    color: var(--pf-text);
+  }
+
+  // Splash / loading overlay
+  .pf-splash {
+    background-color: var(--pf-bg) !important;
+    color: var(--pf-text) !important;
+  }
+
+  // Navbar
+  .navbar-default {
+    background: var(--pf-surface-darker) !important;
+    border-color: var(--pf-border) !important;
+  }
+  .navbar-default .navbar-brand,
+  .navbar-default .navbar-text {
+    color: var(--pf-text) !important;
+  }
+  .navbar-default .navbar-nav > li > a {
+    color: var(--pf-text-muted) !important;
+    &:hover, &:focus {
+      color: var(--pf-text) !important;
+      background-color: transparent !important;
+    }
+  }
+
+  // Modals
+  .modal-content {
+    background-color: var(--pf-surface);
+    border-color: var(--pf-border);
+    color: var(--pf-text);
+  }
+  .modal-header, .modal-footer {
+    border-color: var(--pf-border);
+    color: var(--pf-text);
+  }
+
+  // Popovers
+  .popover {
+    background-color: var(--pf-surface);
+    border-color: var(--pf-border);
+    color: var(--pf-text);
+  }
+  .popover-title {
+    background-color: var(--pf-surface-dark);
+    border-color: var(--pf-border);
+    color: var(--pf-text);
+  }
+  .popover.right > .arrow::after  { border-right-color:  var(--pf-surface); }
+  .popover.left  > .arrow::after  { border-left-color:   var(--pf-surface); }
+  .popover.top   > .arrow::after  { border-top-color:    var(--pf-surface); }
+  .popover.bottom > .arrow::after { border-bottom-color: var(--pf-surface); }
+
+  // Dropdowns
+  .dropdown-menu {
+    background-color: var(--pf-surface);
+    border-color: var(--pf-border);
+  }
+  .dropdown-menu > li > a {
+    color: var(--pf-text);
+    &:hover, &:focus {
+      background-color: var(--pf-surface-dark);
+      color: var(--pf-text);
+    }
+  }
+  .dropdown-header {
+    color: var(--pf-text-muted);
+  }
+  .divider {
+    background-color: var(--pf-border);
+  }
+
+  // Bootstrap panels
+  .panel-default {
+    border-color: var(--pf-border);
+    > .panel-heading {
+      background-color: var(--pf-surface-dark);
+      border-color: var(--pf-border);
+      color: var(--pf-text);
+    }
+    > .panel-body {
+      background-color: var(--pf-surface);
+      color: var(--pf-text);
+    }
+    > .panel-footer {
+      background-color: var(--pf-surface-dark);
+      border-color: var(--pf-border);
+      color: var(--pf-text);
+    }
+  }
+
+  // Well
+  .well {
+    background-color: var(--pf-surface-dark);
+    border-color: var(--pf-border);
+    color: var(--pf-text);
+  }
+
+  // Form inputs
+  .form-control, input[type="text"], input[type="password"],
+  input[type="email"], input[type="search"], textarea, select {
+    background-color: var(--pf-input-bg);
+    border-color: var(--pf-border);
+    color: var(--pf-text);
+    &::placeholder { color: var(--pf-text-muted); }
+  }
+
+  // Tables
+  .table {
+    color: var(--pf-text);
+    > thead > tr > th,
+    > tbody > tr > td,
+    > tfoot > tr > td {
+      border-color: var(--pf-border);
+    }
+  }
+  .table-hover > tbody > tr:hover {
+    background-color: var(--pf-surface-dark);
+  }
+  .table-striped > tbody > tr:nth-child(odd) {
+    background-color: var(--pf-surface-darker);
+  }
+
+  // Nav tabs
+  .nav-tabs > li > a {
+    color: var(--pf-text-muted);
+    &:hover {
+      background-color: var(--pf-surface-dark);
+      border-color: var(--pf-border) var(--pf-border) transparent;
+      color: var(--pf-text);
+    }
+  }
+  .nav-tabs > li.active > a,
+  .nav-tabs > li.active > a:hover,
+  .nav-tabs > li.active > a:focus {
+    color: var(--pf-text);
+    background-color: var(--pf-surface);
+    border-color: var(--pf-border) var(--pf-border) var(--pf-surface);
+  }
+
+  // List groups
+  .list-group-item {
+    background-color: var(--pf-surface);
+    border-color: var(--pf-border);
+    color: var(--pf-text);
+    &:hover, &:focus {
+      background-color: var(--pf-surface-dark);
+    }
+  }
+
+  // Scrollbars (webkit)
+  ::-webkit-scrollbar-track {
+    background-color: var(--pf-scrollbar-track);
+    border-color: var(--pf-border);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--pf-scrollbar-thumb);
+  }
+
+  // Slidebar (left nav menu)
+  .pf-head-menu {
+    color: var(--pf-text) !important;
+  }
+
+  // NOTE: The map canvas area, system nodes, and wormhole connections are
+  // intentionally not themed — they read better on dark backgrounds.
+}
