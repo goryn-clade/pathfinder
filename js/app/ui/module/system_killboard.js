@@ -233,6 +233,10 @@ define([
                     // next killmail to load -> reduce "local" index array
                     let nextZkb = result[this._tempZkbKillmailIndexes.shift()];
                     if(nextZkb){
+                        if(nextZkb.zkb.npc && !(this._filterStreams || []).includes('npc')){
+                            this.showKills(chunkSize);
+                            return;
+                        }
                         this.loadKillmailData({
                             killId: parseInt(nextZkb.killmail_id) || 0,
                             hash: nextZkb.zkb.hash
@@ -498,7 +502,7 @@ define([
             this.getLocalStore().getItem(cacheKey).then(streams => {
                 if(!streams){
                     // not saved yet -> default streams
-                    streams = ['system', 'map'];
+                    streams = ['system', 'map', 'npc'];
                     this.getLocalStore().setItem(cacheKey, streams);
                 }
                 this._filterStreams = streams;
@@ -512,6 +516,9 @@ define([
                 },{
                     value: 'all',
                     text: `All (New Eden)`
+                },{
+                    value: 'npc',
+                    text: 'NPC kills'
                 }];
 
                 $(this._iconFilterEl).editable({
@@ -565,12 +572,14 @@ define([
          * @param killmailData
          * @returns {boolean}
          */
-        filterKillmailByStreams(killmailData){
+        filterKillmailByStreams(killmailData, zkbData){
             let streams = this._filterStreams || [];
-            return !!(streams.includes('all') ||
+            let locationMatch = !!(streams.includes('all') ||
                 (streams.includes('system') && this._systemData.systemId === killmailData.solar_system_id) ||
                 (streams.includes('map') && MapUtil.getSystemData(this._mapId, killmailData.solar_system_id, 'systemId')));
-
+            if(!locationMatch) return false;
+            if(zkbData && zkbData.npc && !streams.includes('npc')) return false;
+            return true;
         }
 
         /**
@@ -580,7 +589,7 @@ define([
          */
         onWsMessage(zkbData, killmailData){
             // check if killmail belongs to current filtered "streams"
-            if(this.filterKillmailByStreams(killmailData)){
+            if(this.filterKillmailByStreams(killmailData, zkbData)){
                 
                 if(!this._killboardEl){
                     // Remove label which indicates that there are no kills
