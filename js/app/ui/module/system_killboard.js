@@ -817,7 +817,7 @@ define([
             try {
                 let resp = await fetch(`/api/Killboard/r2z2/${seqId}`, {headers: {'X-Requested-With': 'XMLHttpRequest'}});
 
-                if(resp.status === 404){
+                if(resp.status === 204){
                     // caught up — check if sequence is stale (gap in stream)
                     SystemKillboardModule.pollConsecutive404s = (SystemKillboardModule.pollConsecutive404s || 0) + 1;
                     if(SystemKillboardModule.pollConsecutive404s >= 5){

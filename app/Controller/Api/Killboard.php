@@ -71,7 +71,7 @@ class Killboard extends Controller\Controller {
             $statusCode = $response->getStatusCode();
 
             if($statusCode === 404){
-                $f3->status(404);
+                $f3->status(204);
                 return;
             }
 
