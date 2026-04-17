@@ -433,11 +433,13 @@ define([
          * @returns {string}
          */
         getImageUrl(resourceType, resourceId, size = 32){
-            let url = '#';
             if(resourceId){
-                url = BaseModule.Util.eveImageUrl(resourceType, resourceId, size);
+                return BaseModule.Util.eveImageUrl(resourceType, resourceId, size);
             }
-            return url;
+            if(resourceType === 'characters'){
+                return `https://images.evetech.net/characters/1/portrait?size=${size}`;
+            }
+            return '#';
         }
 
         /**
