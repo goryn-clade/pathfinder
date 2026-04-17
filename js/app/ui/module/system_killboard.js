@@ -587,7 +587,7 @@ define([
          * @param zkbData
          * @param killmailData
          */
-        onWsMessage(zkbData, killmailData){
+        async onWsMessage(zkbData, killmailData){
             // check if killmail belongs to current filtered "streams"
             if(this.filterKillmailByStreams(killmailData, zkbData)){
                 
@@ -626,6 +626,12 @@ define([
                 // get systemData for killmailData
                 // -> systemData should exist if KM belongs to any system on any map
                 let systemData = MapUtil.getSystemData(this._mapId, killmailData.solar_system_id, 'systemId') || null;
+
+                // for kills from systems not on any map (e.g. 'all' stream), look up the name via ESI
+                if(!systemData){
+                    let name = await SystemKillboardModule.getSystemName(killmailData.solar_system_id);
+                    if(name) systemData = {name};
+                }
 
                 this.renderKillmail(zkbData, killmailData, systemData, 0, 'top')
                     .catch(e => console.warn(e));
@@ -756,6 +762,28 @@ define([
             ){
                 SystemKillboardModule.wsSubscribtions.push(module);
             }
+        }
+
+        /**
+         * look up EVE system name by CCP systemId via ESI
+         * results are cached permanently (system names never change)
+         * @param systemId
+         * @returns {Promise<string|null>}
+         */
+        static async getSystemName(systemId){
+            if(SystemKillboardModule.systemNameCache.has(systemId)){
+                return SystemKillboardModule.systemNameCache.get(systemId);
+            }
+            try {
+                let resp = await fetch(`https://esi.evetech.net/latest/universe/systems/${systemId}/`);
+                if(resp.ok){
+                    let data = await resp.json();
+                    let name = data.name || null;
+                    SystemKillboardModule.systemNameCache.set(systemId, name);
+                    return name;
+                }
+            } catch(e) { /* ignore — system ID fallback used in template */ }
+            return null;
         }
 
         /**
@@ -935,6 +963,7 @@ define([
     SystemKillboardModule.pollTimer = null;                                     // setTimeout handle for polling loop
     SystemKillboardModule.pollSequenceId = null;                                // current R2Z2 sequence cursor
     SystemKillboardModule.pollConsecutive404s = 0;                              // consecutive 404 count for stale-sequence detection
+    SystemKillboardModule.systemNameCache = new Map();                             // permanent cache for EVE system names by systemId (names never change)
     SystemKillboardModule.cacheConfig = {
         zkb: {                                                                  // cache for "zKillboard" responses -> short term cache
             ttl: 60 * 3,
