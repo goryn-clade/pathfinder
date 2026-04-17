@@ -122,7 +122,7 @@ class Admin extends Controller{
      * @param null $character
      * @throws \Exception
      */
-    public function dispatch(\Base $f3,  $params, ?CharacterModel $character = null){
+    public function dispatch(\Base $f3,  $params, mixed $character = null){
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map(strtolower(...), explode('/', (string) $params['*']))));
