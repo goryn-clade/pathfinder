@@ -941,29 +941,44 @@ class Map extends Controller\AccessController {
                             !$connection
                         ){
                             // .. do not add connection if character got "podded" -------------------------------------
-                            if(
-                                $targetLog->shipTypeId == 670 &&
-                                $character->cloneLocationId
-                            ){
-                                // .. current character location must be clone location
-                                if(
-                                    (
-                                        'station' == $character->cloneLocationType &&
-                                        $character->cloneLocationId == $targetLog->stationId
-                                    ) || (
-                                        'structure' == $character->cloneLocationType &&
-                                        $character->cloneLocationId == $targetLog->structureId
-                                    )
-                                ){
-                                    // .. now we need to check jump distance between systems
-                                    // -> if > 1 it is !very likely! podded jump
-                                    if(empty($route)){
-                                        $route = (new Controller\Api\Rest\Route())->searchRoute($sourceSystem->systemId, $targetSystem->systemId, 1);
-                                    }
+                            if($targetLog->shipTypeId == 670){
+                                // refresh clone data from ESI — login-time data may be stale
+                                $character->updateCloneData();
 
-                                    if(!$route['routePossible']){
-                                        $addConnection = false;
+                                if($character->cloneLocationId){
+                                    if(
+                                        (
+                                            'station' == $character->cloneLocationType &&
+                                            $character->cloneLocationId == $targetLog->stationId
+                                        ) || (
+                                            'structure' == $character->cloneLocationType &&
+                                            $character->cloneLocationId == $targetLog->structureId
+                                        )
+                                    ){
+                                        if(empty($route)){
+                                            $route = (new Controller\Api\Rest\Route())->searchRoute($sourceSystem->systemId, $targetSystem->systemId, 1);
+                                        }
+
+                                        if(!$route['routePossible']){
+                                            $addConnection = false;
+                                        }
                                     }
+                                }
+                            }
+
+                            // .. do not add connection to/from trade hub systems (cannot spawn wormholes) ---------------
+                            // Jita, Amarr, Dodixie, Rens, Hek
+                            $tradeHubSystems = [30000142, 30002187, 30002659, 30002510, 30002053];
+                            if(
+                                in_array($targetSystemId, $tradeHubSystems) ||
+                                in_array($sourceSystemId, $tradeHubSystems)
+                            ){
+                                if(empty($route)){
+                                    $route = (new Controller\Api\Rest\Route())->searchRoute($sourceSystem->systemId, $targetSystem->systemId, 1);
+                                }
+
+                                if(!$route['routePossible']){
+                                    $addConnection = false;
                                 }
                             }
 
