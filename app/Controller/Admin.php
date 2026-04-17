@@ -126,13 +126,13 @@ class Admin extends Controller{
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map(strtolower(...), explode('/', (string) $params['*']))));
-            $f3->set('tplPage', $parts[0]);
+            $f3->set('tplPage', $parts[0] ?? 'settings');
 
-            switch($parts[0]){
+            switch($parts[0] ?? 'settings'){
                 case 'settings':
-                    switch($parts[1]){
+                    switch($parts[1] ?? null){
                         case 'save':
-                            $objectId = (int)$parts[2];
+                            $objectId = (int)($parts[2] ?? 0);
                             $values  = (array)$f3->get('GET');
                             $this->saveSettings($character, $objectId, $values);
 
@@ -144,17 +144,17 @@ class Admin extends Controller{
                     $this->initSettings($f3, $character);
                     break;
                 case 'members':
-                    switch($parts[1]){
+                    switch($parts[1] ?? null){
                         case 'kick':
-                            $objectId = (int)$parts[2];
-                            $value  = (int)$parts[3];
+                            $objectId = (int)($parts[2] ?? 0);
+                            $value  = (int)($parts[3] ?? 0);
                             $this->kickCharacter($character, $objectId, $value);
 
                             $f3->reroute('@admin(@*=/' . $parts[0] . ')');
                             break;
                         case 'ban':
-                            $objectId = (int)$parts[2];
-                            $value  = (int)$parts[3];
+                            $objectId = (int)($parts[2] ?? 0);
+                            $value  = (int)($parts[3] ?? 0);
                             $this->banCharacter($character, $objectId, $value);
                             break;
                     }
@@ -162,16 +162,16 @@ class Admin extends Controller{
                     $this->initMembers($f3, $character);
                     break;
                 case 'maps':
-                    switch($parts[1]){
+                    switch($parts[1] ?? null){
                         case 'active':
-                            $objectId = (int)$parts[2];
-                            $value  = (int)$parts[3];
+                            $objectId = (int)($parts[2] ?? 0);
+                            $value  = (int)($parts[3] ?? 0);
                             $this->activateMap($character, $objectId, $value);
 
                             $f3->reroute('@admin(@*=/' . $parts[0] . ')');
                             break;
                         case 'delete':
-                            $objectId = (int)$parts[2];
+                            $objectId = (int)($parts[2] ?? 0);
                             $this->deleteMap($character, $objectId);
                             $f3->reroute('@admin(@*=/' . $parts[0] . ')');
                             break;
@@ -201,10 +201,10 @@ class Admin extends Controller{
             foreach($corporations as $corporation){
                 if($corporation->_id === $corporationId){
                     // character has access to that corporation -> create/update/delete rights...
-                    if($corporationRightsData = (array)$settings['rights']){
+                    if($corporationRightsData = (array)($settings['rights'] ?? [])){
                         // get existing corp rights
                         foreach($corporation->getRights($corporation::RIGHTS, ['addInactive' => true]) as $corporationRight){
-                            $corporationRightData = $corporationRightsData[$corporationRight->rightId->_id];
+                            $corporationRightData = $corporationRightsData[$corporationRight->rightId->_id] ?? null;
                             if(
                                 $corporationRightData &&
                                 $corporationRightData['roleId'] != $defaultRole->_id // default roles should not be saved
@@ -361,7 +361,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      */
     protected function initSettings(\Base $f3, CharacterModel $character){
-        $data = (object) [];
+        $data = (object) ['corporations' => []];
         $corporations = $this->getAccessibleCorporations($character);
 
         foreach($corporations as $corporation){
@@ -377,7 +377,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      */
     protected function initMembers(\Base $f3, CharacterModel $character){
-        $data = (object) [];
+        $data = (object) ['corpMembers' => []];
         if($characterCorporation = $character->getCorporation()){
             $corporations = $this->getAccessibleCorporations($character);
 
@@ -402,7 +402,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      */
     protected function initMaps(\Base $f3, CharacterModel $character){
-        $data = (object) [];
+        $data = (object) ['corpMaps' => []];
         if($characterCorporation = $character->getCorporation()){
             $corporations = $this->getAccessibleCorporations($character);
 
@@ -415,7 +415,7 @@ class Admin extends Controller{
 
         $f3->set('tplMaps', $data);
 
-        if( !isset($data->corpMaps) ){
+        if( empty($data->corpMaps) ){
             $f3->set('tplNotification', $this->getNotificationObject('No maps found',
                 'Only corporation maps could get loaded' ,
                 'info'
