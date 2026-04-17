@@ -895,10 +895,17 @@ define([
             if(document.hidden){
                 if(!SystemKillboardModule.pollVisibilityListening){
                     SystemKillboardModule.pollVisibilityListening = true;
-                    let resume = () => {
+                    let resume = async () => {
                         document.removeEventListener('visibilitychange', resume);
                         SystemKillboardModule.pollVisibilityListening = false;
                         if(SystemKillboardModule.pollActive){
+                            try {
+                                let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+                                if(seqResp.ok){
+                                    let seqData = await seqResp.json();
+                                    SystemKillboardModule.pollSequenceId = seqData.sequence;
+                                }
+                            } catch(e) { /* fall through with old sequence */ }
                             SystemKillboardModule.pollNext();
                         }
                     };
@@ -942,16 +949,7 @@ define([
                 let [zkbData, killmailData] = SystemKillboardModule.cacheWsResponse(adapted);
                 SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.onWsMessage(zkbData, killmailData));
 
-                // skip ahead if far behind current head (tab was backgrounded for a long time)
-                if(r2z2Data.sequence_id && (SystemKillboardModule.pollSequenceId - r2z2Data.sequence_id) > 500){
-                    let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}});
-                    if(seqResp.ok){
-                        let seqData = await seqResp.json();
-                        SystemKillboardModule.pollSequenceId = seqData.sequence;
-                    }
-                } else {
-                    SystemKillboardModule.pollSequenceId = seqId + 1;
-                }
+                SystemKillboardModule.pollSequenceId = seqId + 1;
 
                 // small delay to stay well within 20 req/s rate limit
                 SystemKillboardModule.pollInFlight = false;
