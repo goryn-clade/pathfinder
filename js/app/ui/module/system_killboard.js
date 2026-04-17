@@ -555,7 +555,51 @@ define([
                 $(this._iconFilterEl).on('save', (e, params) => {
                     this.getLocalStore().setItem(cacheKey, params.newValue).then(streams => this._filterStreams = streams);
                 });
+
+                $(this._iconFilterEl).on('shown', (e, editable) => {
+                    this.renderExcludeListInPopover(editable);
+                });
             });
+        }
+
+        renderExcludeListInPopover(editable){
+            let formEl = editable.container.$form[0];
+            let existing = formEl.querySelector('.pf-kb-exclude-list');
+            if(existing) existing.remove();
+
+            let excluded = SystemKillboardModule.getExcludedSystems(this._mapId);
+            if(!excluded.length) return;
+
+            let wrapperEl = Object.assign(document.createElement('div'), {
+                className: 'pf-kb-exclude-list'
+            });
+
+            let labelEl = Object.assign(document.createElement('div'), {
+                className: 'pf-kb-exclude-label',
+                textContent: 'Excluded systems'
+            });
+            wrapperEl.append(labelEl);
+
+            excluded.forEach(sys => {
+                let tagEl = Object.assign(document.createElement('div'), {
+                    className: 'pf-kb-exclude-tag'
+                });
+
+                let removeEl = Object.assign(document.createElement('span'), {
+                    className: 'pf-kb-exclude-remove',
+                    innerHTML: '&times;'
+                });
+                removeEl.addEventListener('click', () => {
+                    SystemKillboardModule.toggleExcludedSystem(this._mapId, sys.systemId, sys.name);
+                    this.renderExcludeListInPopover(editable);
+                });
+
+                let nameEl = document.createTextNode(sys.name || sys.systemId);
+                tagEl.append(removeEl, nameEl);
+                wrapperEl.append(tagEl);
+            });
+
+            formEl.append(wrapperEl);
         }
 
         /**
@@ -568,8 +612,9 @@ define([
         }
 
         /**
-         * check if killmailData matches any killStream
+         * check if killmailData matches any killStream (live R2Z2 stream only)
          * @param killmailData
+         * @param zkbData
          * @returns {boolean}
          */
         filterKillmailByStreams(killmailData, zkbData){
@@ -579,6 +624,8 @@ define([
                 (streams.includes('map') && MapUtil.getSystemData(this._mapId, killmailData.solar_system_id, 'systemId')));
             if(!locationMatch) return false;
             if(zkbData && zkbData.npc && !streams.includes('npc')) return false;
+            let excluded = SystemKillboardModule.getExcludedSystems(this._mapId);
+            if(excluded.some(s => s.systemId === killmailData.solar_system_id)) return false;
             return true;
         }
 
@@ -786,6 +833,27 @@ define([
             return null;
         }
 
+        static getExcludedSystems(mapId){
+            try {
+                return JSON.parse(localStorage.getItem(`pf_kb_exclude_${mapId}`) || '[]');
+            } catch(e) { return []; }
+        }
+
+        static setExcludedSystems(mapId, systems){
+            localStorage.setItem(`pf_kb_exclude_${mapId}`, JSON.stringify(systems));
+        }
+
+        static toggleExcludedSystem(mapId, systemId, name){
+            let excluded = SystemKillboardModule.getExcludedSystems(mapId);
+            let idx = excluded.findIndex(s => s.systemId === systemId);
+            if(idx >= 0){
+                excluded.splice(idx, 1);
+            } else {
+                excluded.push({systemId, name});
+            }
+            SystemKillboardModule.setExcludedSystems(mapId, excluded);
+        }
+
         /**
          * adapt R2Z2 response to the flat format expected by cacheWsResponse/onWsMessage
          * R2Z2 wraps killmail fields inside 'esi'; old WS sent them at root level
@@ -964,6 +1032,11 @@ define([
     SystemKillboardModule.pollSequenceId = null;                                // current R2Z2 sequence cursor
     SystemKillboardModule.pollConsecutive404s = 0;                              // consecutive 404 count for stale-sequence detection
     SystemKillboardModule.systemNameCache = new Map();                             // permanent cache for EVE system names by systemId (names never change)
+    document.addEventListener('pf:toggleKillboardExclude', e => {
+        let {mapId, systemId, name} = e.detail;
+        SystemKillboardModule.toggleExcludedSystem(mapId, systemId, name);
+    });
+
     SystemKillboardModule.cacheConfig = {
         zkb: {                                                                  // cache for "zKillboard" responses -> short term cache
             ttl: 60 * 3,

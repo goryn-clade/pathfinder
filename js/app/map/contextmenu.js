@@ -169,6 +169,7 @@ define([
                 {icon: 'fa-lock', action: 'lock_system', text: 'lock system'},
                 {icon: 'fa-volume-up', action: 'set_rally', text: 'set rally point'},
                 {icon: 'fa-tags', text: 'set status', subitems: statusData},
+                {icon: 'fa-eye-slash', action: 'toggle_killboard_exclude', text: 'exclude from killboard'},
                 {icon: 'fa-route', action: 'find_route', text: 'find route'},
                 {icon: 'fa-object-group', action: 'select_connections', text: 'select connections'},
                 {icon: 'fa-reply fa-rotate-180', text: 'waypoints', subitems: [

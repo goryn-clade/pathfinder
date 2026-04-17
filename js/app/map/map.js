@@ -642,6 +642,16 @@ define([
                 $.uniqueSort(selectedSystems);
                 $.fn.showDeleteSystemDialog(map, selectedSystems);
                 break;
+            case 'toggle_killboard_exclude':
+                systemData = system.getSystemData();
+                document.dispatchEvent(new CustomEvent('pf:toggleKillboardExclude', {
+                    detail: {
+                        mapId: parseInt(system.attr('data-mapid')),
+                        systemId: systemData.systemId,
+                        name: systemData.name
+                    }
+                }));
+                break;
             case 'set_destination':
             case 'add_first_waypoint':
             case 'add_last_waypoint':
@@ -1798,6 +1808,16 @@ define([
             if(system.data('rallyUpdated') > 0){
                 options.active.push('set_rally');
             }
+
+            // active: killboard exclude
+            let kbExcludeKey = `pf_kb_exclude_${parseInt(system.attr('data-mapid'))}`;
+            try {
+                let excluded = JSON.parse(localStorage.getItem(kbExcludeKey) || '[]');
+                let sysData = system.getSystemData();
+                if(excluded.some(s => s.systemId === sysData.systemId)){
+                    options.active.push('toggle_killboard_exclude');
+                }
+            } catch(e) { /* ignore */ }
 
             // disabled menu actions
             if(system.hasClass(MapUtil.config.systemActiveClass)){
