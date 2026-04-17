@@ -25,7 +25,7 @@ html[data-theme="light"] {
 }
 
 // ---------------------------------------------------------------------------
-// High contrast theme (darker darks, brighter text)
+// High contrast theme (pure black bg, pure white text)
 // ---------------------------------------------------------------------------
 html[data-theme="high-contrast"] {
   --pf-bg:               #000000;
@@ -48,7 +48,8 @@ html[data-theme="high-contrast"] {
 // ---------------------------------------------------------------------------
 html[data-theme] {
 
-  body {
+  // Page background
+  body, .pf-site {
     background-color: var(--pf-bg);
     color: var(--pf-text);
   }
@@ -59,13 +60,18 @@ html[data-theme] {
     color: var(--pf-text) !important;
   }
 
-  // Navbar
+  // Navbars (header + footer)
   .navbar-default {
     background: var(--pf-surface-darker) !important;
     border-color: var(--pf-border) !important;
   }
+  #pf-footer {
+    background: var(--pf-surface-darker) !important;
+    color: var(--pf-text-muted) !important;
+  }
   .navbar-default .navbar-brand,
-  .navbar-default .navbar-text {
+  .navbar-default .navbar-text,
+  #pf-footer .navbar-text {
     color: var(--pf-text) !important;
   }
   .navbar-default .navbar-nav > li > a {
@@ -74,6 +80,52 @@ html[data-theme] {
       color: var(--pf-text) !important;
       background-color: transparent !important;
     }
+  }
+
+  // Slide-out menus (left/right)
+  .pf-menu {
+    background-color: var(--pf-surface-dark) !important;
+    color: var(--pf-text);
+  }
+  .pf-menu .panel-heading {
+    background-color: var(--pf-surface-darker) !important;
+    color: var(--pf-text-muted) !important;
+    border-color: var(--pf-border) !important;
+  }
+
+  // Map tab bar
+  .pf-map-tab-bar {
+    background-color: var(--pf-surface-darker);
+    border-color: var(--pf-border);
+  }
+  .pf-map-tab.active > a {
+    background: var(--pf-surface-dark) !important;
+    color: var(--pf-text) !important;
+    border-color: var(--pf-border) !important;
+  }
+  .pf-map-tab > a {
+    color: var(--pf-text-muted) !important;
+    &:hover {
+      color: var(--pf-text) !important;
+    }
+  }
+
+  // Module panels (Thera, Turnur, system info, killboard, etc.)
+  // The map canvas area (.pf-map-tab-content-area-map) is intentionally excluded.
+  .pf-module {
+    background: var(--pf-surface) !important;
+    color: var(--pf-text);
+    border-color: var(--pf-border);
+    &:before {
+      border-color: transparent transparent transparent var(--pf-border);
+    }
+  }
+  .pf-module-head {
+    color: var(--pf-text);
+    border-color: var(--pf-border);
+  }
+  .pf-module-body {
+    color: var(--pf-text);
   }
 
   // Modals
@@ -122,7 +174,7 @@ html[data-theme] {
     background-color: var(--pf-border);
   }
 
-  // Bootstrap panels
+  // Bootstrap panels (used in menus, dialogs)
   .panel-default {
     border-color: var(--pf-border);
     > .panel-heading {
@@ -165,6 +217,9 @@ html[data-theme] {
     > tfoot > tr > td {
       border-color: var(--pf-border);
     }
+    > thead > tr > th {
+      color: var(--pf-text-muted);
+    }
   }
   .table-hover > tbody > tr:hover {
     background-color: var(--pf-surface-dark);
@@ -172,8 +227,13 @@ html[data-theme] {
   .table-striped > tbody > tr:nth-child(odd) {
     background-color: var(--pf-surface-darker);
   }
+  // DataTables group rows
+  .dtrg-group td {
+    background-color: var(--pf-surface-dark) !important;
+    color: var(--pf-text-muted) !important;
+  }
 
-  // Nav tabs
+  // Nav tabs (Bootstrap generic — map tabs handled above)
   .nav-tabs > li > a {
     color: var(--pf-text-muted);
     &:hover {
@@ -190,13 +250,17 @@ html[data-theme] {
     border-color: var(--pf-border) var(--pf-border) var(--pf-surface);
   }
 
-  // List groups
+  // List groups (slide-out menu items)
   .list-group-item {
-    background-color: var(--pf-surface);
+    background-color: var(--pf-surface-dark);
     border-color: var(--pf-border);
     color: var(--pf-text);
     &:hover, &:focus {
-      background-color: var(--pf-surface-dark);
+      background-color: var(--pf-surface-darker);
+      color: var(--pf-text);
+    }
+    &.list-group-item-info {
+      color: var(--pf-text);
     }
   }
 
@@ -209,11 +273,6 @@ html[data-theme] {
     background-color: var(--pf-scrollbar-thumb);
   }
 
-  // Slidebar (left nav menu)
-  .pf-head-menu {
-    color: var(--pf-text) !important;
-  }
-
-  // NOTE: The map canvas area, system nodes, and wormhole connections are
-  // intentionally not themed — they read better on dark backgrounds.
+  // NOTE: .pf-map-tab-content-area-map, .pf-system, and SVG connections are
+  // intentionally NOT themed — map data reads better on dark backgrounds.
 }
