@@ -70,6 +70,7 @@ class Admin extends Controller{
     public function afterroute(\Base $f3) {
         // js view (file)
         $f3->set('tplJsView', 'admin');
+        if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
 
         // render view
         echo \Template::instance()->render( Config::getPathfinderData('view.index') );
