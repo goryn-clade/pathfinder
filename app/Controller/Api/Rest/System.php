@@ -216,6 +216,11 @@ class System extends AbstractRestController {
      * @return bool
      */
     private function checkDeleteMode(Pathfinder\MapModel $map, Pathfinder\SystemModel $system) : bool {
+        // unknown systems have no persistent data worth keeping
+        if($system->systemId === null){
+            return true;
+        }
+
         $delete = true;
 
         if(!empty($system->description)){

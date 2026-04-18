@@ -323,6 +323,14 @@ $mapBubbleWidth:        30px;
       transform: translate3d(0, -1px, 0) !important;
     }
 
+    &.pf-system-unknown{
+      border-style: dashed;
+
+      .pf-system-head-name{
+        color: $gray-light;
+      }
+    }
+
     .pf-system-head{
       padding: 0 3px 0 4px;
       cursor: pointer;

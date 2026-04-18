@@ -543,6 +543,7 @@ define([
         system.data('systemId', data.systemId !== null ? parseInt(data.systemId) : null);
         system.data('isUnknown', Boolean(data.isUnknown));
         system.data('securityClass', data.securityClass || null);
+        system.toggleClass('pf-system-unknown', Boolean(data.isUnknown));
         system.data('name', data.name);
         system.data('typeId', parseInt(data.type.id));
         system.data('effect', data.effect);
