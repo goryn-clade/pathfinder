@@ -74,6 +74,8 @@ class Admin extends Controller{
         $f3->set('tplJsView', 'admin');
         if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
         if(!$f3->exists('tplNotification')) $f3->set('tplNotification', null);
+        if(!$f3->exists('registrationStatusButton')) $f3->set('registrationStatusButton', '');
+        if(!$f3->exists('registrationStatusTitle')) $f3->set('registrationStatusTitle', '');
 
         // render view
         echo \Template::instance()->render( Config::getPathfinderData('view.index') );
