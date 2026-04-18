@@ -20,6 +20,12 @@ html[data-theme="light"] {
   --pf-input-bg:         #ffffff;
   --pf-scrollbar-track:  #e4e7ec;
   --pf-scrollbar-thumb:  #9ca3af;
+  --pf-map-bg:           #dde1e7;
+  --pf-system-bg:        #ffffff;
+  --pf-system-border:    #9ca3af;
+  --pf-system-text:      #111827;
+  --pf-table-row:        #ffffff;
+  --pf-table-row-alt:    #f0f2f5;
 
   scrollbar-color: #9ca3af #e4e7ec; // Firefox
 }
@@ -39,6 +45,12 @@ html[data-theme="high-contrast"] {
   --pf-input-bg:         #111111;
   --pf-scrollbar-track:  #111111;
   --pf-scrollbar-thumb:  #aaaaaa;
+  --pf-map-bg:           #000000;
+  --pf-system-bg:        #1a1a1a;
+  --pf-system-border:    #ffffff;
+  --pf-system-text:      #ffffff;
+  --pf-table-row:        #1a1a1a;
+  --pf-table-row-alt:    #111111;
 
   scrollbar-color: #aaaaaa #111111; // Firefox
 }
@@ -273,6 +285,46 @@ html[data-theme] {
     background-color: var(--pf-scrollbar-thumb);
   }
 
-  // NOTE: .pf-map-tab-content-area-map, .pf-system, and SVG connections are
-  // intentionally NOT themed — map data reads better on dark backgrounds.
+  // DataTables rows
+  table.dataTable tbody tr {
+    background-color: var(--pf-table-row) !important;
+    color: var(--pf-text);
+  }
+  table.dataTable.stripe tbody tr.odd,
+  table.dataTable.display tbody tr.odd {
+    background-color: var(--pf-table-row-alt) !important;
+  }
+  table.dataTable tbody tr:hover > td {
+    background-color: var(--pf-surface-dark) !important;
+  }
+  table.dataTable thead th,
+  table.dataTable thead td {
+    border-color: var(--pf-border);
+    color: var(--pf-text-muted);
+  }
+
+  // Map canvas background
+  .pf-map-tab-content-area-map {
+    background-color: var(--pf-map-bg) !important;
+  }
+  .pf-map {
+    background-color: var(--pf-map-bg) !important;
+  }
+
+  // System nodes
+  .pf-system {
+    background-color: var(--pf-system-bg) !important;
+    border-color: var(--pf-system-border) !important;
+
+    .pf-system-head-name {
+      color: var(--pf-system-text) !important;
+    }
+    .pf-system-head-expand {
+      color: var(--pf-system-border) !important;
+    }
+    .pf-system-body {
+      color: var(--pf-system-text) !important;
+      border-color: var(--pf-system-border) !important;
+    }
+  }
 }
