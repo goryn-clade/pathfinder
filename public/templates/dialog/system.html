@@ -40,10 +40,46 @@
                             </label>
                             <div class="help-block with-errors"></div>
                         </div>
+
+                        {{#allowUnknownSystems}}
+                        <div class="checkbox checkbox-warning">
+                            <input id="{{unknownToggleId}}" name="unknownSystem" value="1" type="checkbox">
+                            <label for="{{unknownToggleId}}">
+                                Unknown
+                            </label>
+                        </div>
+                        {{/allowUnknownSystems}}
                     </div>
                 </div>
             </div>
         </div>
+
+        {{#allowUnknownSystems}}
+        <div class="row" id="pf-system-dialog-sec-class-row" style="display:none;">
+            <div class="col-xs-9">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="{{securityClassSelectId}}">Class</label>
+                    <div class="col-sm-6">
+                        <select id="{{securityClassSelectId}}" name="securityClass" class="form-control">
+                            <option value="C1">C1</option>
+                            <option value="C2">C2</option>
+                            <option value="C3" selected>C3</option>
+                            <option value="C4">C4</option>
+                            <option value="C5">C5</option>
+                            <option value="C6">C6</option>
+                            <option value="C12">C12</option>
+                            <option value="C13">C13</option>
+                            <option value="C17">C17</option>
+                            <option value="H">H</option>
+                            <option value="L">L</option>
+                            <option value="0.0">0.0</option>
+                            <option value="T">T</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/allowUnknownSystems}}
 
         <div class="row">
             <div class="col-xs-9">

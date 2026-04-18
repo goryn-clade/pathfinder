@@ -101,6 +101,12 @@ define([
         });
 
         $(tabContentWrapperEl).on('pf:renderSystemModules', `.${Util.config.mapTabContentClass}`, function(e, data){
+            if(data && data.payload && data.payload.isUnknown){
+                getModules()
+                    .then(modules => filterModules(modules, 'system'))
+                    .then(modules => removeModules(modules, e.target));
+                return;
+            }
             getModules()
                 .then(modules => filterModules(modules, 'system'))
                 .then(modules => renderModules(modules, e.target, data));
@@ -131,6 +137,9 @@ define([
         });
 
         $(tabContentWrapperEl).on('pf:updateSystemModules', `.${Util.config.mapTabContentClass}`, (e, data) => {
+            if(data && data.payload && data.payload.isUnknown){
+                return;
+            }
             getModules()
                 .then(modules => filterModules(modules, true, 'fullDataUpdate'))
                 .then(modules => updateModules(modules, e.target, data));

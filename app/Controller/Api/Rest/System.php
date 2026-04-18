@@ -66,7 +66,20 @@ class System extends AbstractRestController {
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
             if($map->hasAccess($activeCharacter)){
-                $system = $map->getNewSystem($requestData['systemId']);
+                $systemId = isset($requestData['systemId']) ? (int)$requestData['systemId'] : null;
+                if($systemId === 0){
+                    $systemId = null;
+                }
+                if($systemId === null){
+                    if(!$map->allowUnknownSystems){
+                        $this->out([]);
+                        return;
+                    }
+                    $securityClass = $requestData['securityClass'] ?? null;
+                    $system = $map->getNewSystem(null, $securityClass);
+                }else{
+                    $system = $map->getNewSystem($systemId);
+                }
                 $systemData = $this->update($system, $requestData)->getData();
             }
         }

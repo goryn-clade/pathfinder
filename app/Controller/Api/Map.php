@@ -854,7 +854,9 @@ class Map extends Controller\AccessController {
                                 $addConnection = true;
                             }elseif(
                                 !$sourceSystem->isWormhole() &&
-                                !$targetSystem->isWormhole()
+                                !$targetSystem->isWormhole() &&
+                                $sourceSystem->systemId !== null &&
+                                $targetSystem->systemId !== null
                             ){
                                 // check distance between systems (in jumps)
                                 // -> if > 1 it is !very likely! a wormhole
@@ -955,11 +957,11 @@ class Map extends Controller\AccessController {
                                             $character->cloneLocationId == $targetLog->structureId
                                         )
                                     ){
-                                        if(empty($route)){
+                                        if(empty($route) && $sourceSystem->systemId !== null && $targetSystem->systemId !== null){
                                             $route = (new Controller\Api\Rest\Route())->searchRoute($sourceSystem->systemId, $targetSystem->systemId, 1);
                                         }
 
-                                        if(!$route['routePossible']){
+                                        if(!empty($route) && !$route['routePossible']){
                                             $addConnection = false;
                                         }
                                     }
@@ -973,11 +975,11 @@ class Map extends Controller\AccessController {
                                 in_array($targetSystemId, $tradeHubSystems) ||
                                 in_array($sourceSystemId, $tradeHubSystems)
                             ){
-                                if(empty($route)){
+                                if(empty($route) && $sourceSystem->systemId !== null && $targetSystem->systemId !== null){
                                     $route = (new Controller\Api\Rest\Route())->searchRoute($sourceSystem->systemId, $targetSystem->systemId, 1);
                                 }
 
-                                if(!$route['routePossible']){
+                                if(!empty($route) && !$route['routePossible']){
                                     $addConnection = false;
                                 }
                             }

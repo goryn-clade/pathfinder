@@ -419,8 +419,9 @@ define([
 
         if(!system){
             // set system name or alias
-            let systemName = data.name;
+            let systemName = data.isUnknown ? '???' : data.name;
             if(
+                !data.isUnknown &&
                 data.alias &&
                 data.alias !== ''
             ){
@@ -429,14 +430,15 @@ define([
 
             let systemHeadClasses = [config.systemHeadNameClass];
             // Abyssal system
-            if(data.type.id === 3){
+            if(!data.isUnknown && data.type.id === 3){
                 systemHeadClasses.push(Util.config.fontTriglivianClass);
             }
 
             // get system info classes
             let effectBasicClass = MapUtil.getEffectInfoForSystem('effect', 'class');
-            let effectClass = MapUtil.getEffectInfoForSystem(data.effect, 'class');
-            let secClass = Util.getSecurityClassForSystem(data.security);
+            let effectClass = data.isUnknown ? '' : MapUtil.getEffectInfoForSystem(data.effect, 'class');
+            let secClass = data.isUnknown ? 'pf-system-sec-unknown-placeholder' : Util.getSecurityClassForSystem(data.security);
+            let secText = data.isUnknown ? (data.securityClass || '?') : data.security;
 
             system = $('<div>', {
                 id: systemId,
@@ -447,7 +449,7 @@ define([
                 }).append(
                     $('<span>', {
                         class: [config.systemSec, secClass].join(' '),
-                        text: data.security
+                        text: secText
                     }),
                     // System name is editable
                     $('<span>', {
@@ -538,7 +540,9 @@ define([
         // set system status
         system.setSystemStatus(data.status.name);
         system.data('id', parseInt(data.id));
-        system.data('systemId', parseInt(data.systemId));
+        system.data('systemId', data.systemId !== null ? parseInt(data.systemId) : null);
+        system.data('isUnknown', Boolean(data.isUnknown));
+        system.data('securityClass', data.securityClass || null);
         system.data('name', data.name);
         system.data('typeId', parseInt(data.type.id));
         system.data('effect', data.effect);
@@ -656,7 +660,9 @@ define([
             case 'add_first_waypoint':
             case 'add_last_waypoint':
                 systemData = system.getSystemData();
-                Util.setDestination(action, 'system', {id: systemData.systemId, name: systemData.name});
+                if(systemData.systemId !== null){
+                    Util.setDestination(action, 'system', {id: systemData.systemId, name: systemData.name});
+                }
                 break;
         }
     };
@@ -3103,7 +3109,7 @@ define([
 
         if(!minimal){
             let systemDataComplete = {
-                systemId: parseInt(data.systemId),
+                systemId: data.systemId !== null ? parseInt(data.systemId) : null,
                 name: data.name,
                 alias: system.getSystemInfo(['alias']),
                 effect: data.effect,

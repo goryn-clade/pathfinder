@@ -29,6 +29,8 @@ define([
 
         // dialogs
         dialogSystemId: 'pf-system-dialog',                                             // id for system dialog
+        dialogSystemUnknownToggleId: 'pf-system-dialog-unknown-toggle',                 // id for "unknown system" toggle
+        dialogSystemSecurityClassSelectId: 'pf-system-dialog-security-class-select',    // id for security class select (unknown)
         dialogSystemSelectClass: 'pf-system-dialog-select',                             // class for system select element
         dialogSystemStatusSelectId: 'pf-system-dialog-status-select',                   // id for "status" select
         dialogSystemLockId: 'pf-system-dialog-lock',                                    // id for "locked" checkbox
@@ -162,6 +164,8 @@ define([
         // disable systems that are already on it ---------------------------------------------------------------------
         let mapSystemIds = mapSystems.map(systemData => systemData.systemId);
 
+        let allowUnknownSystems = Boolean(mapData.config.allowUnknownSystems);
+
         // dialog data ------------------------------------------------------------------------------------------------
         let data = {
             id: config.dialogSystemId,
@@ -178,7 +182,10 @@ define([
             descriptionId: config.dialogSystemDescriptionId,
             createdId: config.dialogSystemCreatedId,
             updatedId: config.dialogSystemUpdatedId,
-            statusData: statusData
+            statusData: statusData,
+            allowUnknownSystems: allowUnknownSystems,
+            unknownToggleId: config.dialogSystemUnknownToggleId,
+            securityClassSelectId: config.dialogSystemSecurityClassSelectId
         };
 
         // check for pre-selected system ------------------------------------------------------------------------------
@@ -221,14 +228,25 @@ define([
 
                             let formData = $(form).getFormValues();
 
-                            // validate form
-                            form.validator('validate');
+                            // handle unknown system mode
+                            if(allowUnknownSystems){
+                                let unknownToggle = this.find('#' + config.dialogSystemUnknownToggleId);
+                                if(unknownToggle.length && unknownToggle.prop('checked')){
+                                    let secClass = this.find('#' + config.dialogSystemSecurityClassSelectId).val();
+                                    formData.systemId = null;
+                                    formData.securityClass = secClass;
+                                    // skip validator for unknown mode (no systemId required)
+                                    formData.position = null; // set below
+                                }
+                            }
 
-                            // check whether the form is valid
-                            let formValid = form.isValidForm();
-
-                            // don't close dialog on invalid data
-                            if(formValid === false) return false;
+                            // validate form (skip if unknown — no CCP system required)
+                            let isUnknownMode = formData.systemId === null;
+                            if(!isUnknownMode){
+                                form.validator('validate');
+                                let formValid = form.isValidForm();
+                                if(formValid === false) return false;
+                            }
 
                             // calculate new system position ----------------------------------------------------------
                             let newPosition;
@@ -329,6 +347,29 @@ define([
                         }
                     }
                 });
+
+                // wire Unknown toggle (only present when allowUnknownSystems is enabled)
+                if(allowUnknownSystems){
+                    let unknownToggle = dialogElement.find('#' + config.dialogSystemUnknownToggleId);
+                    let systemSelectRow = dialogElement.find('.' + config.dialogSystemSelectClass).closest('.row');
+                    let secClassRow = dialogElement.find('#pf-system-dialog-sec-class-row');
+
+                    let setUnknownMode = (isUnknown) => {
+                        if(isUnknown){
+                            systemSelectRow.hide();
+                            secClassRow.show();
+                        }else{
+                            systemSelectRow.show();
+                            secClassRow.hide();
+                        }
+                    };
+
+                    setUnknownMode(false);
+
+                    unknownToggle.on('change', function(){
+                        setUnknownMode(this.checked);
+                    });
+                }
             });
 
             // show dialog
@@ -787,7 +828,7 @@ define([
             }));
         }
 
-        if(data.type.id === 2){
+        if(data.type.id === 2 && !data.isUnknown){
             headInfoLeft.push(Object.assign(document.createElement('span'), {
                 className: config.systemHeadRegionClass,
                 textContent: data.region.name

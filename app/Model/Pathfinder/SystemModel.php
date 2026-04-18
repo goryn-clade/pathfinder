@@ -76,7 +76,13 @@ class SystemModel extends AbstractMapTrackingModel {
         'systemId' => [
             'type' => Schema::DT_INT,
             'index' => true,
+            'nullable' => true,
             'validate' => true
+        ],
+        'securityClass' => [
+            'type' => Schema::DT_VARCHAR128,
+            'nullable' => true,
+            'default' => null
         ],
         'alias' => [
             'type' => Schema::DT_VARCHAR128,
@@ -171,6 +177,8 @@ class SystemModel extends AbstractMapTrackingModel {
             $data->id                       = $this->_id;
             $data->mapId                    = is_object($this->mapId) ? $this->get('mapId', true) : 0;
             $data->systemId                 = $this->systemId;
+            $data->isUnknown                = ($this->systemId === null);
+            $data->securityClass            = $this->securityClass;
             $data->alias                    = $this->alias;
 
             if(is_object($this->typeId)){
@@ -255,6 +263,18 @@ class SystemModel extends AbstractMapTrackingModel {
      * @throws \Exception
      */
     private function getStaticSystemData(){
+        if($this->systemId === null){
+            $stub = (object)[];
+            $stub->name           = '???';
+            $stub->security       = $this->securityClass ?? 'C1';
+            $stub->trueSec        = 0.0;
+            $stub->constellationId = 0;
+            $stub->constellation  = '';
+            $stub->regionId       = 0;
+            $stub->region         = '';
+            return $stub;
+        }
+
         $staticData = null;
         if(!is_object(self::$priorityCacheStore)){
             self::$priorityCacheStore = new PriorityCacheStore();
@@ -294,7 +314,10 @@ class SystemModel extends AbstractMapTrackingModel {
      * @return bool
      * @throws \Exception
      */
-    protected function validate_systemId(string $key, int $val) : bool {
+    protected function validate_systemId(string $key, ?int $val) : bool {
+        if($val === null){
+            return true;
+        }
         $valid = true;
         // check if static system data exists for systemId = $val
         if( !(bool)(new Universe())->getSystemData($val) ){
@@ -671,6 +694,9 @@ class SystemModel extends AbstractMapTrackingModel {
      * @return \stdClass[]
      */
     public function getStructuresData() : array {
+        if($this->systemId === null){
+            return [];
+        }
         return $this->getMap()->getStructuresData($this->systemId);
     }
 

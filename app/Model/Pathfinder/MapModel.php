@@ -110,6 +110,12 @@ class MapModel extends AbstractMapTrackingModel {
             'default' => 1,
             'activity-log' => true
         ],
+        'allowUnknownSystems' => [
+            'type' => Schema::DT_BOOL,
+            'nullable' => false,
+            'default' => 0,
+            'activity-log' => true
+        ],
         'logActivity' => [
             'type' => Schema::DT_BOOL,
             'nullable' => false,
@@ -235,6 +241,7 @@ class MapModel extends AbstractMapTrackingModel {
             $mapData->persistentAliases                     = $this->persistentAliases;
             $mapData->persistentSignatures                  = $this->persistentSignatures;
             $mapData->trackAbyssalJumps                     = $this->trackAbyssalJumps;
+            $mapData->allowUnknownSystems                   = $this->allowUnknownSystems;
 
             // map scope
             $mapData->scope                                 = (object) [];
@@ -485,9 +492,9 @@ class MapModel extends AbstractMapTrackingModel {
      * @return SystemModel
      * @throws \Exception
      */
-    public function getNewSystem(int $systemId) : SystemModel {
-        // check for "inactive" system
-        $system = $this->getSystemByCCPId($systemId);
+    public function getNewSystem(?int $systemId, ?string $securityClass = null) : SystemModel {
+        // check for "inactive" system (only for known systems)
+        $system = ($systemId !== null) ? $this->getSystemByCCPId($systemId) : null;
         if(is_null($system)){
             /**
              * NO ->rel() here! we work with unsaved models
@@ -496,6 +503,9 @@ class MapModel extends AbstractMapTrackingModel {
             $system = self::getNew('SystemModel');
             $system->systemId = $systemId;
             $system->mapId = $this;
+            if($systemId === null && $securityClass !== null){
+                $system->securityClass = $securityClass;
+            }
             $system->setType();
         }
 
@@ -1403,7 +1413,7 @@ class MapModel extends AbstractMapTrackingModel {
             foreach($activeUserCharactersData as $key => $activeUserCharacterData){
                 if(isset($activeUserCharacterData->log)){
                     // user as log data
-                    if($activeUserCharacterData->log->system->id == $systemData->systemId){
+                    if($systemData->systemId !== null && $activeUserCharacterData->log->system->id == $systemData->systemId){
                         $systemUserData->user[] = $activeUserCharacterData;
 
                         // remove user from array -> speed up looping over characters.

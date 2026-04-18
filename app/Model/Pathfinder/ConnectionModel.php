@@ -236,6 +236,8 @@ class ConnectionModel extends AbstractMapTrackingModel {
             }elseif(
                 $this->source->isKspace() &&
                 $this->target->isKspace() &&
+                $this->source->systemId !== null &&
+                $this->target->systemId !== null &&
                 (new Route())->searchRoute($this->source->systemId, $this->target->systemId, 1)['routePossible']
             ){
                 $this->scope = 'stargate';
