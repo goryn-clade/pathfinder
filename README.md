@@ -2,80 +2,26 @@
 
 #### Mapping tool for [*EVE ONLINE*](https://www.eveonline.com)
 
-This Pathfinder Fork is an attempt to make a community supported fork in the absence of [Exodus4d](https://github.com/exodus4d) that will include bug fixes and be upgraded for any changes to the Eve Online universe.
+This is a community-maintained fork of [Pathfinder](https://github.com/exodus4d/pathfinder) by Exodus4d, kept alive with bug fixes, PHP 8 compatibility, and EVE universe data updates.
 
-**For installation please see our [Docker-compose solution](https://github.com/goryn-clade/pathfinder-containers) that includes a detailed guide on how to get up and running.**
+**For installation, see the [pathfinder-containers](https://github.com/goryn-clade/pathfinder-containers) repository.**
 
+---
 
+## Community
 
-**To Do** Update to Discord
-If you wish to contribute please join the [Pathfinder Slack](https://join.slack.com/t/pathfinder-eve-online/shared_invite/enQtMzMyOTkyMjczMTA3LWI2NGE1OTY5ODBmNDZlMDY3MDIzYjk5ZTljM2JjZjIwNDRkNzMyMTEwMDUzOGQwM2E3ZjE1NGEwNThlMzYzY2Y).
+Join the discussion on Discord: [https://discord.gg/PLACEHOLDER](https://discord.gg/PLACEHOLDER)
 
+> **Note:** The Pathfinder Slack workspace is no longer active. Slack's commercial model change reduced free workspace history to 90 days, making it unsuitable for a small open-source community. Discord is now the primary community channel.
 
-- Licence [MIT](http://opensource.org/licenses/MIT)
+---
 
-#### Development
+## Contributing
 
-**Feel free to check the code for bugs and security issues.
-Issues should be reported in the [Issue](https://github.com/goryn-clade/pathfinder/issues) section.**
+Issues and pull requests are welcome. Please report bugs in the [Issue tracker](https://github.com/goryn-clade/pathfinder/issues).
 
-***
+---
 
-### Project structure
-<pre>
- ─╮
-  ├─ app/              [0755] → PHP root
-  │  ├─ Controller/           → controller classes for app/ajax endpoints (see routes.ini)
-  │  ├─ Cron/                 → controller classes cronjob endpoints (see cron.ini)
-  │  ├─ Data/                 → classes for data handling
-  │  ├─ Db/                   → classes for DB handling
-  │  ├─ Exception/            → custom exceptions
-  │  ├─ Lib/                  → libs
-  │  ├─ Model/                → ORM
-  │  ├─ config.ini            → config - F3 core config: <a href="//fatfreeframework.com/3.7/quick-reference#SystemVariables" title="Fat-Free Framework - SystemVariables">SystemVariables</a>
-  │  ├─ cron.ini              → config - cronjobs
-  │  ├─ environment.ini       → config - system environment
-  │  ├─ pathfinder.ini        → config - pathfinder
-  │  ├─ plugin.ini            → config - custom plugins
-  │  ├─ requirements.ini      → config - system requirements
-  │  └─ routes.ini            → config - routes
-  ├─ export/           [0755] → static data
-  │  ├─ csv/                  → *.csv used by /setup page
-  │  └─ sql/                  → DB dump for import (eve_universe.sql.zip)
-  ├─ favicon/          [0755] → favicons
-  ├─ history/          [0777] → log files (map history logs) [optional]
-  ├─ js/               [0755] → JS source files (not used for production)
-  │  ├─ app/                  → "PATHFINDER" core files
-  │  ├─ lib/                  → 3rd party libs
-  │  └─ app.js                → require.js config
-  ├─ logs/             [0777] → log files
-  │  └─ …
-  ├─ public/           [0755] → static resources
-  │  ├─ css/                  → CSS dist/build folder (minified)
-  │  ├─ fonts/                → icon-/fonts
-  │  ├─ img/                  → images
-  │  ├─ js/                   → JS dist/build folder and source maps (minified, uglified)
-  │  └─ templates/            → templates
-  ├─ sass/                    → SCSS sources (not used for production)
-  ├─ tmp/              [0777] → cache folder (PHP templates)
-  │  └─ cache/         [0777] → cache folder (PHP cache)
-  ├─ .htaccess         [0755] → reroute/caching rules ("Apache" only!)
-  └─ index.php         [0755]
+## License
 
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━
-  CI/CD config files:
-  
-  ├─ .jshintrc                → "JSHint" config (not used for production)
-  ├─ composer.json            → "Composer" package definition
-  ├─ gulpfile.js              → "Gulp" task config (not used for production)
-  ├─ package.json             → "Node.js" dependency config (not used for production)
-  └─ README.md                → This file :) (not used for production)
-</pre>
-
-***
-
-### Contributing
-
-[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/0)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/0)[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/1)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/1)[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/2)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/2)[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/3)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/3)[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/4)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/4)[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/5)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/5)[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/6)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/6)[![](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/images/7)](https://sourcerer.io/fame/exodus4d/exodus4d/pathfinder/links/7)
-
-
+[MIT](http://opensource.org/licenses/MIT)
