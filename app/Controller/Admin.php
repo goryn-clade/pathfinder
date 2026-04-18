@@ -43,6 +43,7 @@ class Admin extends Controller{
         $return = parent::beforeroute($f3, $params);
 
         $f3->set('tplPage', 'login');
+        $f3->set('tplLogged', false);
 
         if($character = $this->getAdminCharacter($f3)){
             $f3->set('tplLogged', true);

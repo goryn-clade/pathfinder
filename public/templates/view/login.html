@@ -187,7 +187,7 @@
                             </ul>
                         </li>
                         <li><i></i><em>CCP</em> s <em>SSO</em> login</li>
-                        <li><i></i>Cookie based <a target="_blank" href="//github.com/exodus4d/pathfinder/issues/138#issuecomment-216036606" rel="noopener">login system</a></li>
+                        <li><i></i>Cookie based login system</li>
                         <li><i></i><em>ESI</em> API support</a></li>
                         <li><i></i>HTML5 features</li>
                         <li>
@@ -844,36 +844,18 @@
                 <div class="col-md-6 col-md-offset-3">
                     <h2><span class="text-primary">About</span> this Application</h2>
                     <p class="lead">
-                        <em>PATHFINDER</em> is a one-man spare time project with the aim of combining the latest web technology with clean and attractive interfaces.
+                        <em>PATHFINDER</em> is an open source project combining the latest web technology with clean and attractive interfaces.
                     </p>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
-                    <h4>About Me</h4>
                     <p>
-                        I am playing <em><a  target="_blank" href="//www.eveonline.com/" rel="noopener">EVE Online</a></em> since almost 4 years.
-                        The majority of time (3+ years), my characters were a part of the <em><a target="_blank" href="//www.themittani.com/news/j150020-three-alliances-enter-none-leave" rel="noopener">"No Holes Barred"</a></em> alliance.
-                        ,one of the oldest and best known wormhole entities that existed in <em>"New Eden"</em> (R.I.P).
-                        The <em>Pathfinder</em> project was started just a few weeks before the failed invasion of <em>"Polaris"</em> took place.
-                        The intention behind this project was not to create another mapping tool that already exist.
-                        I wanted to make the easiest to use and most powerful 3rd party system mapper, build with the newest web technology available.
+                        <em>Pathfinder</em> is an open source wormhole mapping tool for <em>EVE Online</em>, maintained by the community at
+                        <a target="_blank" href="{{ @PATHFINDER.REPO }}" rel="noopener">goryn-clade/pathfinder</a>.
+                        Contributions, bug reports and pull requests are welcome.
                     </p>
-                    <p>
-                        I am currently working as a professional software developer for one of the largest German web pages.
-                        The main focus of my daily work is based on large scale frontend applications.
-                    </p>
-                    <p>
-                        I decided to make this project <a target="_blank" href="{{ @PATHFINDER.REPO }}" rel="noopener">"Open Source"</a>, once the beta testing is finished.
-                        It would be a great pleasure to me if you would help me to improve this project by submitting <a target="_blank" href="//github.com/exodus4d/pathfinder/issues" rel="noopener">bug reports</a>
-                        or any kind of security issues.
-                    </p>
-                </div>
-
-                <div class="col-xs-12 col-sm-5 col-md-4 col-lg-4 text-center pf-animate-on-visible pf-animate">
-                    <set srcChar="{{ @tplImage->eveSrcUrl('characters', 1946320202, 256) }}" />
-                    <include href="templates/modules/lazy_image.html" with="src={{ @srcChar }},alt=PhpStorm on 4k resolution,size=256"/>
                 </div>
             </div>
 
@@ -890,7 +872,7 @@
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                     <h4>Technology stack</h4>
                     <p>
-                        If you are planning to get deeper into the project or even think about hosting it on your own webserver, you should  be aware of some important key points.
+                        If you are planning to get deeper into the project or even think about hosting it on your own webserver, you should be aware of some important key points.
                         <em>Pathfinder</em> is not comparable with any "out of the box" web applications or common CMS systems that come along with an auto-install feature.
                         If you don´t have any experience with the following technologies, stop thinking about your own hosted <em>Pathfinder</em> app.
                     </p>
@@ -962,7 +944,6 @@
             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
                 <h3>Can you give me an introduction into <em>Pathfinder</em> ?</h3>
                 <p>
-                    Unfortunately not. I will probably not have the time to answer any question personally.
                     Make sure you have read the <span class="pf-navbar-manual"><a href="javascript:void(0);">manual</a></span>.
                     <br>
                     If there are still some open questions, please ask in the <a target="_blank" href="//forums.eveonline.com/" rel="noopener">official forums</a> thread for help.
@@ -977,27 +958,21 @@
                     Yes, you can add as many characters to your account you want. By accepting the 'Cookie hint', your current logged-in characters
                     are stored. If you don´t want cookies, you need to re-assign bei <em>CCP</em>´s SSO login the next time.<br>
                     Cookies are valid for {{ @PATHFINDER.LOGIN.COOKIE_EXPIRE }} days and will be destroyed on 'logout'.
-                    Read <a target="_blank" href="//github.com/exodus4d/pathfinder/issues/138#issuecomment-216036606" rel="noopener">more</a>.
+                    Read <a target="_blank" href="//github.com/goryn-clade/pathfinder/issues/138#issuecomment-216036606" rel="noopener">more</a>.
                 </p>
                 <h3>Are my data safe?</h3>
                 <p>
-                    Whoever said, his program is "bullet proof", is lying! But I promise to give my very best to protect any personal or map data that is stored on my server.
                     The login process is handled by <em>CCP</em>´s SSO. There is no account data (or even your <em>EVE Online</em> login data) stored or available to <em>Pathfinder</em>.<br>
                     All client side cookie data is encrypted stored server side and is protected against manipulation or abuse.
                 </p>
                 <h3>Can i report bugs or security issues?</h3>
                 <p>
-                    Good work! I am very happy for any technical feedback and improvements.
-                    Feel free to contact me with your problem, either by submitting a <a target="_blank" href="//github.com/exodus4d/pathfinder/issues" rel="noopener">bug report</a> or contact me in game.
-                    I´ll give my best to find a solution for your problem or path <em>Pathfinder</em>.
+                    Feel free to submit a <a target="_blank" href="//github.com/goryn-clade/pathfinder/issues" rel="noopener">bug report</a> on GitHub.
                 </p>
-                <h3>I don´t trust you, can I host <em>Pathfinder</em> on my own?</h3>
+                <h3>Can I host <em>Pathfinder</em> on my own?</h3>
                 <p>
-                    Yes you can! I developed this application for the great community of <em>EVE Online</em>.
-                    The program code is open source and can be used by anyone who have the required software skills.
-                    Please make sure to keep all 3rd party plugin licence and respect them.
-                    At the moment there is no developer guide available. But one the beta phase is finished, i will probably write a short technical documentation.
-                    Do not expect any "out of the box" install routine at this point.
+                    Yes! The program code is open source and can be used by anyone with the required software skills.
+                    Please make sure to keep all 3rd party plugin licences and respect them.
                     <br>
                     Server requirements:
                 </p>
@@ -1018,11 +993,10 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-                Copyright <i class="far fa-copyright"></i> Exodus 4D - All Rights Reserved.
+                Copyright <i class="far fa-copyright"></i> Goryn Clade - All Rights Reserved.
             </div>
             <div class="col-sm-6">
                 <ul class="pf-social-networks text-right">
-                    <li><a target="_blank" href="//www.youtube.com/channel/UC7HU7XEoMbqRwqxDTbMjSPg" rel="noopener"> <i class="fab fa-lg fa-youtube fa-fw"></i> </a></li>
                     <li><a target="_blank" href="{{ @PATHFINDER.REPO }}" rel="noopener"> <i class="fab fa-lg fa-github fa-fw"></i> </a></li>
                 </ul>
             </div>
@@ -1034,7 +1008,7 @@
 <footer class="navbar-default navbar-fixed-bottom collapse" id="pf-cookie-hint">
     <div class="container-fluid">
         <p class="navbar-text">
-            Pathfinder requires cookies to maintain your login state between browser sessions. Read <a target="_blank" href="//github.com/exodus4d/pathfinder/issues/138" rel="noopener">more</a>.
+            Pathfinder requires cookies to maintain your login state between browser sessions. Read <a target="_blank" href="//github.com/goryn-clade/pathfinder/issues/138" rel="noopener">more</a>.
         </p>
         <div class="pull-right">
             <button type="button" class="btn btn-default navbar-btn btn-success" data-toggle="collapse" data-target="#pf-cookie-hint" aria-expanded="false">
