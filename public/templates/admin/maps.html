@@ -69,7 +69,7 @@
 
         <check if="{{ !empty(@tplMaps->allianceMaps) }}">
         <true>
-            <h4 class="pf-dynamic-area" style="margin-top: 30px;"><i class="fas fa-fw fa-globe"></i>&nbsp;Alliance maps</h4>
+            <h4 style="margin-top: 30px;"><i class="fas fa-fw fa-globe"></i>&nbsp;Alliance maps</h4>
             <repeat group="{{ @tplMaps->allianceMaps }}" value="{{ @allianceMap }}" key="{{@allianceName}}" counter="{{ @allianceCount }}">
                 <div class="row text-center">
                     <div class="col-xs-12 pf-landing-pricing-panel">
