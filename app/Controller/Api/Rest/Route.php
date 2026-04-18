@@ -265,6 +265,10 @@ class Route extends AbstractRestController {
                     };
 
                     for($i = 0; $i < count($rows); $i++){
+                        // skip connections involving unknown systems (null systemId)
+                        if(is_null($rows[$i]['systemSourceId']) || is_null($rows[$i]['systemTargetId'])){
+                            continue;
+                        }
                         $enrichJumpData($rows[$i],  'systemSourceId', 'systemTargetId');
                         $enrichJumpData($rows[$i],  'systemTargetId', 'systemSourceId');
                     }

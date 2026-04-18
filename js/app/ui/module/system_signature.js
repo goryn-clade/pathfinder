@@ -1845,9 +1845,14 @@ define([
          * @param cell
          */
         editableConnectionOnSave(cell){
+            // capture the value before the popup opens — .value is already updated by save time
+            let prevConnectionId = 0;
+            $(cell).on('shown', (e, editable) => {
+                prevConnectionId = parseInt(editable.value) || 0;
+            });
+
             $(cell).on('save', (e, params) => {
-                // capture old connectionId before xEditable updates .value
-                let oldConnectionId = parseInt($(e.target).data('editable').value) || 0;
+                let oldConnectionId = prevConnectionId;
                 let newConnectionId = parseInt(params.newValue) || 0;
 
                 if(oldConnectionId && oldConnectionId !== newConnectionId){
