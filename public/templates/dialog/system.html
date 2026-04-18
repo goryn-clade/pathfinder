@@ -18,6 +18,15 @@
                             </span>
                             <span class="help-block with-errors">Search system name</span>
                         </div>
+                        {{#allowUnknownSystems}}
+                        <div class="checkbox checkbox-warning" style="margin-top: 4px;">
+                            <input id="{{unknownToggleId}}" name="unknownSystem" value="1" type="checkbox">
+                            <label for="{{unknownToggleId}}">
+                                Unknown system
+                                <i class="fas fa-fw fa-question-circle pf-help-light" title="Add a placeholder node for an unscanned wormhole destination — select its class instead of searching for a known system"></i>
+                            </label>
+                        </div>
+                        {{/allowUnknownSystems}}
                     </div>
                 </div>
             </div>
@@ -40,15 +49,6 @@
                             </label>
                             <div class="help-block with-errors"></div>
                         </div>
-
-                        {{#allowUnknownSystems}}
-                        <div class="checkbox checkbox-warning">
-                            <input id="{{unknownToggleId}}" name="unknownSystem" value="1" type="checkbox">
-                            <label for="{{unknownToggleId}}">
-                                Unknown
-                            </label>
-                        </div>
-                        {{/allowUnknownSystems}}
                     </div>
                 </div>
             </div>

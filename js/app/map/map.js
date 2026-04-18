@@ -437,7 +437,7 @@ define([
             // get system info classes
             let effectBasicClass = MapUtil.getEffectInfoForSystem('effect', 'class');
             let effectClass = data.isUnknown ? '' : MapUtil.getEffectInfoForSystem(data.effect, 'class');
-            let secClass = data.isUnknown ? 'pf-system-sec-unknown-placeholder' : Util.getSecurityClassForSystem(data.security);
+            let secClass = data.isUnknown ? Util.getSecurityClassForSystem(data.securityClass) : Util.getSecurityClassForSystem(data.security);
             let secText = data.isUnknown ? (data.securityClass || '?') : data.security;
 
             system = $('<div>', {
