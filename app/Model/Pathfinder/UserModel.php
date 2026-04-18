@@ -39,12 +39,6 @@ class UserModel extends AbstractPathfinderModel {
             'index' => true,
             'validate' => true
         ],
-        'email' => [
-            'type' => Schema::DT_VARCHAR128,
-            'nullable' => false,
-            'default' => '',
-            'validate' => true
-        ],
         'userCharacters' => [
             'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\UserCharacterModel::class, 'userId']
         ]
@@ -52,8 +46,7 @@ class UserModel extends AbstractPathfinderModel {
 
     /**
      * get all data for this user
-     * -> ! caution ! this function returns sensitive data! (e.g. email,..)
-     * -> user getSimpleData() for faster performance and public user data
+     * -> use getSimpleData() for faster performance and public user data
      * @return \stdClass
      * @throws \Exception
      */
@@ -61,9 +54,6 @@ class UserModel extends AbstractPathfinderModel {
 
         // get public user data for this user
         $userData = $this->getSimpleData();
-
-        // add sensitive user data
-        $userData->email = $this->email;
 
         // all chars
         $userData->characters = [];
@@ -126,22 +116,6 @@ class UserModel extends AbstractPathfinderModel {
             mb_strlen($val) < 3 ||
             mb_strlen($val) > 80
         ){
-            $valid = false;
-            $this->throwValidationException($key);
-        }
-        return $valid;
-    }
-
-    /**
-     * validate email column
-     * @param string $key
-     * @param string $val
-     * @return bool
-     * @throws Exception\ValidationException
-     */
-    protected function validate_email(string $key, string $val) : bool {
-        $valid = true;
-        if ( !empty($val) && \Audit::instance()->email($val) == false ){
             $valid = false;
             $this->throwValidationException($key);
         }

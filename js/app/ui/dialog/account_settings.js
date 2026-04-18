@@ -11,18 +11,12 @@ define([
     'use strict';
 
     let config = {
-        // select character dialog
-        settingsDialogId: 'pf-settings-dialog',                                 // id for "settings" dialog
-        settingsAccountContainerId: 'pf-settings-dialog-account',               // id for the "account" container
-        settingsShareContainerId: 'pf-settings-dialog-share',                   // id for the "share" container
-        settingsCharacterContainerId: 'pf-settings-dialog-character',           // id for the "character" container
+        settingsDialogId: 'pf-settings-dialog',
+        settingsAccountContainerId: 'pf-settings-dialog-account',
+        settingsShareContainerId: 'pf-settings-dialog-share',
+        settingsCharacterContainerId: 'pf-settings-dialog-character',
 
-        // captcha
-        captchaKeyUpdateAccount: 'SESSION.CAPTCHA.ACCOUNT.UPDATE',              // key for captcha reason
-        captchaImageWrapperId: 'pf-dialog-captcha-wrapper',                     // id for "captcha image" wrapper
-        captchaImageId: 'pf-dialog-captcha-image',                              // id for "captcha image"
-
-        loadingOptions: {                                                       // config for loading overlay
+        loadingOptions: {
             icon: {
                 size: 'fa-2x'
             }
@@ -49,8 +43,6 @@ define([
                 settingsShareContainerId: config.settingsShareContainerId,
                 settingsCharacterContainerId: config.settingsCharacterContainerId,
                 userData: Init.currentUserData,
-                captchaImageWrapperId: config.captchaImageWrapperId,
-                captchaImageId: config.captchaImageId,
                 formErrorContainerClass: Util.config.formErrorContainerClass,
                 ccpImageServer: Init.url.ccpImageServer,
                 roleLabel: Util.getLabelByRole(Util.getCurrentCharacterData('role')).prop('outerHTML'),
@@ -101,35 +93,15 @@ define([
                                 }).done(function(responseData){
                                     accountSettingsDialog.find('.modal-content').hideLoadingAnimation();
 
-                                    // set new captcha for any request
-                                    // captcha is required for sensitive data (not for all data)
-                                    if(
-                                        responseData.error &&
-                                        responseData.error.length > 0
-                                    ){
+                                    if(responseData.error && responseData.error.length > 0){
                                         form.showFormMessage(responseData.error);
-
-                                        $('#' + config.captchaImageWrapperId).showCaptchaImage(config.captchaKeyUpdateAccount, function(){
-                                            $('#captcha').resetFormFields();
-                                        });
                                     }else{
-                                        // store new/updated user data -> update head
                                         if(responseData.userData){
                                             Util.setCurrentUserData(responseData.userData);
                                         }
 
-                                        form.find('.alert').velocity('transition.slideDownOut',{
-                                            duration: 500,
-                                            complete: function(){
-                                                $('#' + config.captchaImageWrapperId).showCaptchaImage(config.captchaKeyUpdateAccount, function(){
-                                                    $('#captcha').resetFormFields();
-                                                });
-                                            }
-                                        });
-
                                         Util.showNotify({title: 'Account saved', type: 'success'});
 
-                                        // close dialog/menu
                                         Util.triggerMenuAction(document, 'Close');
                                         accountSettingsDialog.modal('hide');
                                     }
@@ -139,29 +111,14 @@ define([
                                     let reason = status + ' ' + error;
                                     Util.showNotify({title: jqXHR.status + ': saveAccountSettings', text: reason, type: 'error'});
 
-                                    // set new captcha for any request
-                                    // captcha is required for sensitive data (not for all)
-                                    $('#' + config.captchaImageWrapperId).showCaptchaImage(config.captchaKeyUpdateAccount, function(){
-                                        $('#captcha').resetFormFields();
-                                    });
-
-                                    // check for DB errors
-                                    if(jqXHR.status === 500){
-
-                                        if(jqXHR.responseText){
-                                            let errorObj = $.parseJSON(jqXHR.responseText);
-
-                                            if(
-                                                errorObj.error &&
-                                                errorObj.error.length > 0
-                                            ){
-                                                form.showFormMessage(errorObj.error);
-                                            }
+                                    if(jqXHR.status === 500 && jqXHR.responseText){
+                                        let errorObj = $.parseJSON(jqXHR.responseText);
+                                        if(errorObj.error && errorObj.error.length > 0){
+                                            form.showFormMessage(errorObj.error);
                                         }
                                     }
 
                                     $(document).setProgramStatus('problem');
-
                                 });
                             }
 
@@ -169,17 +126,6 @@ define([
                         }
                     }
                 }
-            });
-
-            accountSettingsDialog.on('show.bs.modal', function(e){
-                // request captcha image and show
-                let captchaImageWrapperContainer = $('#' + config.captchaImageWrapperId);
-                captchaImageWrapperContainer.showCaptchaImage(config.captchaKeyUpdateAccount);
-
-                // init captcha refresh button
-                captchaImageWrapperContainer.find('i').on('click', function(){
-                    captchaImageWrapperContainer.showCaptchaImage(config.captchaKeyUpdateAccount);
-                });
             });
 
             // after modal is shown =======================================================================

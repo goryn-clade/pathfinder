@@ -16,8 +16,7 @@ use Exodus4D\Pathfinder\Exception;
 
 class User extends Controller\Controller{
 
-    // captcha specific session keys
-    const SESSION_CAPTCHA_ACCOUNT_UPDATE            = 'SESSION.CAPTCHA.ACCOUNT.UPDATE';
+    // captcha session key (account deletion only)
     const SESSION_CAPTCHA_ACCOUNT_DELETE            = 'SESSION.CAPTCHA.ACCOUNT.DELETE';
 
     // user specific session keys
@@ -40,7 +39,7 @@ class User extends Controller\Controller{
      * valid reasons for captcha images
      * @var array
      */
-    private static $captchaReason = [self::SESSION_CAPTCHA_ACCOUNT_UPDATE, self::SESSION_CAPTCHA_ACCOUNT_DELETE];
+    private static $captchaReason = [self::SESSION_CAPTCHA_ACCOUNT_DELETE];
 
     /**
      * login a valid character
@@ -250,11 +249,6 @@ class User extends Controller\Controller{
         $return = (object)[];
         $return->error = [];
 
-        $captcha = $f3->get(self::SESSION_CAPTCHA_ACCOUNT_UPDATE);
-
-        // reset captcha -> forces user to enter new one
-        $f3->clear(self::SESSION_CAPTCHA_ACCOUNT_UPDATE);
-
         $newUserData = null;
 
         if(isset($data['formData'])){
@@ -263,38 +257,9 @@ class User extends Controller\Controller{
             try{
                 if($activeCharacter = $this->getCharacter()){
                     if($user = $activeCharacter->getUser()){
-                        // captcha is send -> check captcha ---------------------------------------------------------------
-                        if(isset($formData['captcha']) && !empty($formData['captcha'])){
-                            if($formData['captcha'] === $captcha){
-                                // change/set sensitive user data requires captcha!
-
-                                // set username
-                                if(isset($formData['name']) && !empty($formData['name'])){
-                                    $user->name = $formData['name'];
-                                }
-
-                                // set email
-                                if(
-                                    isset($formData['email']) &&
-                                    isset($formData['email_confirm']) &&
-                                    !empty($formData['email']) &&
-                                    !empty($formData['email_confirm']) &&
-                                    $formData['email'] == $formData['email_confirm']
-                                ){
-                                    $user->email = $formData['email'];
-                                }
-
-                                // save/update user model
-                                // this will fail if model validation fails!
-                                $user->save();
-
-                            }else{
-                                // captcha was send but not valid -> return error
-                                $captchaError = (object)[];
-                                $captchaError->type = 'error';
-                                $captchaError->text = 'Captcha does not match';
-                                $return->error[] = $captchaError;
-                            }
+                        if(isset($formData['name']) && !empty($formData['name'])){
+                            $user->name = $formData['name'];
+                            $user->save();
                         }
                     }
 
