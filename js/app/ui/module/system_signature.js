@@ -1846,6 +1846,43 @@ define([
          */
         editableConnectionOnSave(cell){
             $(cell).on('save', (e, params) => {
+                // capture old connectionId before xEditable updates .value
+                let oldConnectionId = parseInt($(e.target).data('editable').value) || 0;
+                let newConnectionId = parseInt(params.newValue) || 0;
+
+                if(oldConnectionId && oldConnectionId !== newConnectionId){
+                    let mapId = this._systemData.mapId;
+                    let oldConnection = $().getConnectionById(mapId, oldConnectionId);
+
+                    if(oldConnection){
+                        // find the far-side system endpoint
+                        let ep0 = $(oldConnection.endpoints[0].element);
+                        let ep1 = $(oldConnection.endpoints[1].element);
+                        let farSystem = ep0.data('id') !== this._systemData.id ? ep0 : ep1;
+
+                        if(farSystem.data('isUnknown')){
+                            bootbox.confirm({
+                                title: 'Unknown system orphaned',
+                                message: 'The previous connection led to an unknown placeholder system. Delete the unknown system and its connection?',
+                                buttons: {
+                                    cancel: {label: 'Keep', className: 'btn-default'},
+                                    confirm: {label: 'Delete', className: 'btn-danger'}
+                                },
+                                callback: result => {
+                                    if(result){
+                                        let map = MapUtil.getMapInstance(mapId);
+                                        let mapContainer = $(map.getContainer());
+                                        mapContainer.trigger('pf:deleteSystems', {
+                                            systems: [farSystem],
+                                            callback: () => {}
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+
                 this.checkConnectionConflicts();
             });
         }
