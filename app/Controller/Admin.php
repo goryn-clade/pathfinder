@@ -11,6 +11,7 @@ namespace Exodus4D\Pathfinder\Controller;
 
 use Exodus4D\Pathfinder\Controller\Ccp\Sso;
 use Exodus4D\Pathfinder\Lib\Config;
+use Exodus4D\Pathfinder\Model\Pathfinder\AllianceMapModel;
 use Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel;
 use Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel;
 use Exodus4D\Pathfinder\Model\Pathfinder\MapModel;
@@ -404,22 +405,34 @@ class Admin extends Controller{
      * @param CharacterModel $character
      */
     protected function initMaps(\Base $f3, CharacterModel $character){
-        $data = (object) ['corpMaps' => []];
-        if($characterCorporation = $character->getCorporation()){
-            $corporations = $this->getAccessibleCorporations($character);
+        $data = (object) ['corpMaps' => [], 'allianceMaps' => []];
 
-            foreach($corporations as $corporation){
-                if($maps = $corporation->getMaps(null, ['addInactive' => true, 'ignoreMapCount' => true])){
-                    $data->corpMaps[$corporation->name] = $maps;
+        $corporations = $this->getAccessibleCorporations($character);
+        foreach($corporations as $corporation){
+            if($maps = $corporation->getMaps(null, ['addInactive' => true, 'ignoreMapCount' => true])){
+                $data->corpMaps[$corporation->name] = $maps;
+            }
+        }
+
+        // alliance maps visible to SUPER admins only
+        if($character->roleId->name === 'SUPER'){
+            $allianceMaps = (new AllianceMapModel())->find();
+            if($allianceMaps){
+                foreach($allianceMaps as $allianceMap){
+                    $alliance = $allianceMap->allianceId;
+                    $map = $allianceMap->mapId;
+                    if($alliance && $alliance->id && $map && $map->id){
+                        $data->allianceMaps[$alliance->name][] = $map;
+                    }
                 }
             }
         }
 
         $f3->set('tplMaps', $data);
 
-        if( empty($data->corpMaps) ){
+        if(empty($data->corpMaps) && empty($data->allianceMaps)){
             $f3->set('tplNotification', $this->getNotificationObject('No maps found',
-                'Only corporation maps could get loaded' ,
+                'No corporation or alliance maps found',
                 'info'
             ));
         }

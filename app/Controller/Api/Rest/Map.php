@@ -89,6 +89,11 @@ class Map extends AbstractRestController {
                             }
                         }
                     }
+                }elseif($map->isAlliance()){
+                    // alliance maps can only be deleted by SUPER admins
+                    if($activeCharacter->roleId->name !== 'SUPER'){
+                        $hasRight = false;
+                    }
                 }
 
                 if($hasRight){
