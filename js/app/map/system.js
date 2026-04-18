@@ -164,7 +164,8 @@ define([
         // disable systems that are already on it ---------------------------------------------------------------------
         let mapSystemIds = mapSystems.map(systemData => systemData.systemId);
 
-        let allowUnknownSystems = Boolean(mapData.config.allowUnknownSystems);
+        let currentMapData = Util.getCurrentMapData(mapId);
+        let allowUnknownSystems = currentMapData ? Boolean(currentMapData.config.allowUnknownSystems) : false;
 
         // dialog data ------------------------------------------------------------------------------------------------
         let data = {
