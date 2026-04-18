@@ -425,7 +425,7 @@ class Admin extends Controller{
                 foreach($allianceMaps as $allianceMap){
                     $alliance = $allianceMap->allianceId;
                     $map = $allianceMap->mapId;
-                    if($alliance && $alliance->id && $map && $map->id){
+                    if($alliance && $alliance->_id && $map && $map->_id){
                         $data->allianceMaps[$alliance->name][] = $map;
                     }
                 }
