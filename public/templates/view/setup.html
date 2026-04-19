@@ -705,7 +705,7 @@
                                                                 <true>
                                                                     <check if="{{ @columnData.changedType }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredType }}">{{ @columnData.currentType }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredType ?? '' }}">{{ @columnData.currentType }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentType }}</kbd>
@@ -713,7 +713,7 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredType }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredType ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
