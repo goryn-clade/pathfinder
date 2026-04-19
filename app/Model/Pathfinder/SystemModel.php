@@ -360,6 +360,25 @@ class SystemModel extends AbstractMapTrackingModel {
     }
 
     /**
+     * setter for systemId — auto-populates alias for known drifter hole systems
+     * @param int|null $systemId
+     * @return int|null
+     */
+    public function set_systemId(?int $systemId): ?int {
+        static $drifterAliases = [
+            31000001 => 'Sentinel MZ',
+            31000002 => 'Liberated Barbican',
+            31000003 => 'Sanctified Vidette',
+            31000004 => 'Conflux Eyrie',
+            31000006 => 'Azdaja Redoubt',
+        ];
+        if($systemId !== null && isset($drifterAliases[$systemId]) && empty($this->alias)){
+            $this->alias = $drifterAliases[$systemId];
+        }
+        return $systemId;
+    }
+
+    /**
      * setter for system alias
      * @param string $alias
      * @return string
@@ -513,18 +532,6 @@ class SystemModel extends AbstractMapTrackingModel {
     public function afterInsertEvent($self, $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemCreate');
-
-        static $drifterAliases = [
-            31000001 => 'Sentinel MZ',
-            31000002 => 'Liberated Barbican',
-            31000003 => 'Sanctified Vidette',
-            31000004 => 'Conflux Eyrie',
-            31000006 => 'Azdaja Redoubt',
-        ];
-        if($self->systemId !== null && isset($drifterAliases[$self->systemId]) && empty($self->alias)){
-            $self->alias = $drifterAliases[$self->systemId];
-            $self->save();
-        }
     }
 
     /**
