@@ -632,17 +632,17 @@
                                             <td>
                                                 <check if="{{ @tableData.exists ?? false }}">
                                                     <true>
-                                                        <check if="{{ @tableData.currentCharset == @tableData.requiredCharset }}">
+                                                        <check if="{{ @tableData.currentCharset == (@tableData.requiredCharset ?? '') }}">
                                                             <true>
-                                                                <kbd class="txt-color txt-color-success" title="{{ @tableData.currentCollation }}">{{ @tableData.currentCharset }}</kbd>
+                                                                <kbd class="txt-color txt-color-success" title="{{ @tableData.currentCollation ?? '' }}">{{ @tableData.currentCharset }}</kbd>
                                                             </true>
                                                             <false>
-                                                                <kbd class="txt-color txt-color-warning" title="{{ @tableData.requiredCollation }}">{{ @tableData.requiredCharset }}</kbd>
+                                                                <kbd class="txt-color txt-color-warning" title="{{ @tableData.requiredCollation ?? '' }}">{{ @tableData.requiredCharset ?? '' }}</kbd>
                                                             </false>
                                                         </check>
                                                     </true>
                                                     <false>
-                                                        <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @tableData.requiredCharset }}"></i>
+                                                        <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @tableData.requiredCharset ?? '' }}"></i>
                                                     </false>
                                                 </check>
                                             </td>
@@ -722,7 +722,7 @@
                                                                 <true>
                                                                     <check if="{{ @columnData.changedNullable }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredNullable }}">{{ @columnData.currentNullable }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredNullable ?? '' }}">{{ @columnData.currentNullable }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentNullable }}</kbd>
@@ -730,7 +730,7 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredNullable }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredNullable ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
@@ -739,7 +739,7 @@
                                                                 <true>
                                                                     <check if="{{ @columnData.changedIndex }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredIndex }}">{{ @columnData.currentIndex }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredIndex ?? '' }}">{{ @columnData.currentIndex }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentIndex }}</kbd>
@@ -747,7 +747,7 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredIndex }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredIndex ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
@@ -756,7 +756,7 @@
                                                                 <true>
                                                                     <check if="{{ @columnData.changedUnique }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredUnique }}">{{ @columnData.currentUnique }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredUnique ?? '' }}">{{ @columnData.currentUnique }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentUnique }}</kbd>
@@ -764,7 +764,7 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredUnique }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredUnique ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
