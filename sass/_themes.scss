@@ -302,6 +302,26 @@ html[data-theme] {
     border-color: var(--pf-border);
     color: var(--pf-text-muted);
   }
+  // DataTables sorted-column tint is applied per-td and overrides the tr rule
+  table.dataTable tbody td.sorting_1,
+  table.dataTable tbody td.sorting_2,
+  table.dataTable tbody td.sorting_3 {
+    background-color: inherit !important;
+  }
+  table.dataTable tbody td {
+    color: var(--pf-text);
+  }
+
+  // Bootstrap badges — default background is dark (#777)
+  .badge {
+    background-color: var(--pf-surface-darker);
+    color: var(--pf-text);
+  }
+
+  // Local overlay sidebar border
+  .pf-map-overlay-local .pf-map-overlay-local-main {
+    border-left-color: var(--pf-border);
+  }
 
   // Map canvas background
   .pf-map-tab-content-area-map {
