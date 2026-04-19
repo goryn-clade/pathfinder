@@ -109,16 +109,6 @@ define([], () => {
         5: 'Hollow Asteroid'
     };
 
-    // Wormholes spawning inside all Drifter holes (C14–C18)
-    let drifterWH = {
-        1: 'Z647 - C1',
-        2: 'D382 - C2',
-        3: 'O477 - C3',
-        4: 'Y683 - C4',
-        5: 'N062 - C5',
-        6: 'R474 - C6'
-    };
-
     // Relic sites ====================================================================================================
 
     // NullSec Relic sites, which can also spawn in C1, C2, C3 wormholes
@@ -648,24 +638,19 @@ define([], () => {
                 7: whGh
             },
             14: {   // Drifter Sentinel WH
-                1: c14Combat,
-                5: drifterWH
+                1: c14Combat
             },
             15: {   // Drifter Barbican WH
-                1: c15Combat,
-                5: drifterWH
+                1: c15Combat
             },
             16: {   // Drifter Vidette WH
-                1: c16Combat,
-                5: drifterWH
+                1: c16Combat
             },
             17: {   // Drifter Conflux WH
-                1: c17Combat,
-                5: drifterWH
+                1: c17Combat
             },
             18: {   // Drifter Redoubt WH
-                1: c18Combat,
-                5: drifterWH
+                1: c18Combat
             }
         }, // system type (k-space)
         2: {
