@@ -513,6 +513,18 @@ class SystemModel extends AbstractMapTrackingModel {
     public function afterInsertEvent($self, $pkeys){
         $self->clearCacheData();
         $self->logActivity('systemCreate');
+
+        static $drifterAliases = [
+            31000001 => 'Sentinel MZ',
+            31000002 => 'Liberated Barbican',
+            31000003 => 'Sanctified Vidette',
+            31000004 => 'Conflux Eyrie',
+            31000006 => 'Azdaja Redoubt',
+        ];
+        if($self->systemId !== null && isset($drifterAliases[$self->systemId]) && empty($self->alias)){
+            $self->alias = $drifterAliases[$self->systemId];
+            $self->save();
+        }
     }
 
     /**
