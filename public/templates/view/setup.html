@@ -703,7 +703,7 @@
                                                         <td class="bg-color bg-color-tealDarker">
                                                             <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedType }}">
+                                                                    <check if="{{ @columnData.changedType ?? false }}">
                                                                         <true>
                                                                             <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredType ?? '' }}">{{ @columnData.currentType }}</kbd>
                                                                         </true>
@@ -720,7 +720,7 @@
                                                         <td class="bg-color bg-color-tealDarker text-center">
                                                             <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedNullable }}">
+                                                                    <check if="{{ @columnData.changedNullable ?? false }}">
                                                                         <true>
                                                                             <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredNullable ?? '' }}">{{ @columnData.currentNullable }}</kbd>
                                                                         </true>
@@ -737,7 +737,7 @@
                                                         <td class="bg-color bg-color-tealDarker text-center">
                                                             <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedIndex }}">
+                                                                    <check if="{{ @columnData.changedIndex ?? false }}">
                                                                         <true>
                                                                             <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredIndex ?? '' }}">{{ @columnData.currentIndex }}</kbd>
                                                                         </true>
@@ -754,7 +754,7 @@
                                                         <td class="bg-color bg-color-tealDarker text-center">
                                                             <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedUnique }}">
+                                                                    <check if="{{ @columnData.changedUnique ?? false }}">
                                                                         <true>
                                                                             <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredUnique ?? '' }}">{{ @columnData.currentUnique }}</kbd>
                                                                         </true>
@@ -769,7 +769,7 @@
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-right">
-                                                            <check if="{{ @columnData.statusCheck }}">
+                                                            <check if="{{ @columnData.statusCheck ?? false }}">
                                                                 <true>
                                                                     <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                                 </true>
