@@ -93,30 +93,47 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param  $record
+     * Build the POST body. Subclasses can override to return a different format (e.g. Discord embeds).
      */
-    protected function write(array $record) : void {
-        $record = $this->excludeFields($record);
+    protected function getPostData(array $record): array {
+        return $this->getSlackData($record);
+    }
 
-        $postData = $this->getSlackData($record);
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record): void {
+        $record   = $this->excludeFields($record);
+        $postData = $this->getPostData($record);
 
-        $postData = $this->cleanAttachments($postData);
-
-        $postString = json_encode($postData);
+        // Slack-format attachment cap; skip for native Discord embed payloads
+        if (isset($postData['attachments'])) {
+            $postData = $this->cleanAttachments($postData);
+        }
 
         $ch = curl_init();
-        $options = [
-            CURLOPT_URL => $this->webhookUrl,
-            CURLOPT_CUSTOMREQUEST => 'POST',
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $this->webhookUrl,
+            CURLOPT_CUSTOMREQUEST  => 'POST',
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_POSTFIELDS => $postString
-        ];
-        curl_setopt_array($ch, $options);
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+            CURLOPT_POSTFIELDS     => json_encode($postData),
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 3,
+        ]);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr  = curl_error($ch);
+        curl_close($ch);
 
-        Handler\Curl\Util::execute($ch);
+        if ($curlErr || ($httpCode && ($httpCode < 200 || $httpCode >= 300))) {
+            error_log(sprintf(
+                'Webhook POST failed [HTTP %d%s]: %s',
+                $httpCode,
+                $curlErr ? " — $curlErr" : '',
+                $this->webhookUrl
+            ));
+        }
     }
 
     /**
@@ -182,6 +199,14 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
             'value' => !empty($value) ? ( $format ? sprintf('`%s`', $value) : $value ) : '',
             'short' => $short
         ];
+    }
+
+    /**
+     * @param string $tag
+     * @return int
+     */
+    protected function getAttachmentColorInt(string $tag): int {
+        return (int) hexdec(ltrim($this->getAttachmentColor($tag), '#'));
     }
 
     /**

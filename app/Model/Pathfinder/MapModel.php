@@ -1217,7 +1217,7 @@ class MapModel extends AbstractMapTrackingModel {
         $config = (object) [];
         $config->slackUsername = $this->discordUsername;
         if($channel && $this->exists($channel) && !empty($this->$channel)){
-            $config->slackWebHookURL = $this->$channel . '/slack';
+            $config->slackWebHookURL = $this->$channel;
         }
         return $config;
     }
