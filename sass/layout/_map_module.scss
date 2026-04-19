@@ -381,6 +381,19 @@ $mapModuleGridRowMinHeight: 38px;
   }
 }
 
+// Dismiss button on "add system" control bar (Thera/Turnur modules)
+.pf-control-dismiss-btn {
+  float: right;
+  padding: 0 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  line-height: inherit;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 // "Fake" spacer module -> preserves height during hide -> show animation for a module
 .pf-module-spacer {
   margin-bottom: 10px; // same as .pf-module -> no UI jump
