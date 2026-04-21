@@ -723,11 +723,12 @@ class Controller {
                 $error = $exception->getError();
             }else{
                 // ... handle error $f3->error() calls
+                $debug = (int)$f3->get('DEBUG');
                 $error = $this->getErrorObject(
                     $errorData['code'],
                     $errorData['status'],
-                    $errorData['text'],
-                    $f3->get('DEBUG') >= 1 ? $errorData['trace'] : null
+                    $debug >= 1 ? $errorData['text'] : 'An internal error occurred',
+                    $debug >= 1 ? $errorData['trace'] : null
                 );
             }
 

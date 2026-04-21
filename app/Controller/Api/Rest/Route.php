@@ -178,7 +178,10 @@ class Route extends AbstractRestController {
                 }
 
                 if(!empty($filterData['excludeTypes'])){
-                    $excludeTypes = $filterData['excludeTypes'];
+                    $excludeTypes = array_values(array_intersect(
+                        array_map('strval', (array)$filterData['excludeTypes']),
+                        Pathfinder\ConnectionModel::getConnectionTypeWhitelist()
+                    ));
                 }
             }
 
