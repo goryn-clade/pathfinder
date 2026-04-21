@@ -116,6 +116,12 @@ class MapModel extends AbstractMapTrackingModel {
             'default' => 0,
             'activity-log' => true
         ],
+        'granularK162' => [
+            'type' => Schema::DT_BOOL,
+            'nullable' => false,
+            'default' => 0,
+            'activity-log' => true
+        ],
         'logActivity' => [
             'type' => Schema::DT_BOOL,
             'nullable' => false,
@@ -242,6 +248,7 @@ class MapModel extends AbstractMapTrackingModel {
             $mapData->persistentSignatures                  = $this->persistentSignatures;
             $mapData->trackAbyssalJumps                     = $this->trackAbyssalJumps;
             $mapData->allowUnknownSystems                   = $this->allowUnknownSystems;
+            $mapData->granularK162                          = $this->granularK162;
 
             // map scope
             $mapData->scope                                 = (object) [];

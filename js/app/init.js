@@ -559,8 +559,8 @@ define([], () => {
             4: 'C414 - C17 Conflux',
             5: 'R259 - C18 Redoubt'
         },
-        // incoming wormholes
-        incomingWormholes: {
+        // incoming wormholes — generic grouped labels (default)
+        incomingWormholesGeneric: {
             1: 'K162 - C1/2/3 (unknown)',
             2: 'K162 - C4/5 (dangerous)',
             3: 'K162 - C6 (deadly)',
@@ -568,11 +568,27 @@ define([], () => {
             5: 'K162 - L',
             6: 'K162 - 0.0',
             7: 'K162 - C12 Thera',
-            8: 'K162 - C1',
-            9: 'K162 - C2',
-            10: 'K162 - C3',
-            11: 'K162 - C4',
-            12: 'K162 - C5'
+            8: 'K162 - T Pochven',
+            9: 'K162 - Drifter'
+        },
+        // incoming wormholes — granular per-class labels (enabled per map)
+        incomingWormholesSpecific: {
+            1:  'K162 - C1',
+            2:  'K162 - C2',
+            3:  'K162 - C3',
+            4:  'K162 - C4',
+            5:  'K162 - C5',
+            6:  'K162 - C6',
+            7:  'K162 - H',
+            8:  'K162 - L',
+            9:  'K162 - 0.0',
+            10: 'K162 - C12 Thera',
+            11: 'K162 - T Pochven',
+            12: 'K162 - C14 Sentinel',
+            13: 'K162 - C15 Barbican',
+            14: 'K162 - C16 Vidette',
+            15: 'K162 - C17 Conflux',
+            16: 'K162 - C18 Redoubt'
         }
     };
 });

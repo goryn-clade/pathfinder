@@ -41,6 +41,7 @@ define([
         persistentSignaturesId: 'pf-map-dialog-persistent-signatures',                  // id for "persistentSignatures" checkbox
         trackAbyssalJumpsId: 'pf-map-dialog-track-abyss-jumps',                         // id for "trackAbyssalJumps" checkbox
         allowUnknownSystemsId: 'pf-map-dialog-allow-unknown',                           // id for "allowUnknownSystems" checkbox
+        granularK162Id: 'pf-map-dialog-granular-k162',                                   // id for "granularK162" checkbox
 
         logHistoryId: 'pf-map-dialog-history',                                          // id for "history logging" checkbox
         logActivityId: 'pf-map-dialog-activity',                                        // id for "activity" checkbox
@@ -165,6 +166,7 @@ define([
                     persistentSignaturesId : config.persistentSignaturesId,
                     trackAbyssalJumpsId : config.trackAbyssalJumpsId,
                     allowUnknownSystemsId : config.allowUnknownSystemsId,
+                    granularK162Id : config.granularK162Id,
                     logHistoryId: config.logHistoryId,
                     logActivityId: config.logActivityId,
 
@@ -174,6 +176,7 @@ define([
                     persistentSignatures: true,
                     trackAbyssalJumps: false,
                     allowUnknownSystems: false,
+                    granularK162: false,
                     logActivity: true,
                     logHistory: true,
 
@@ -239,6 +242,7 @@ define([
                         persistentSignatures: mapData.config.persistentSignatures,
                         trackAbyssalJumps: mapData.config.trackAbyssalJumps,
                         allowUnknownSystems: mapData.config.allowUnknownSystems,
+                        granularK162: mapData.config.granularK162,
                         logActivity: mapData.config.logging.activity,
                         logHistory: mapData.config.logging.history,
 
