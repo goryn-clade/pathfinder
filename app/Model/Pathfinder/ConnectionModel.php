@@ -119,6 +119,13 @@ class ConnectionModel extends AbstractMapTrackingModel {
     ];
 
     /**
+     * @return string[]
+     */
+    public static function getConnectionTypeWhitelist() : array {
+        return self::$connectionTypeWhitelist;
+    }
+
+    /**
      * get connection data
      * @param bool $addSignatureData
      * @param bool $addLogData
