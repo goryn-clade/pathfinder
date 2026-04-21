@@ -376,7 +376,7 @@ class Config extends \Prefab {
      * @return mixed
      */
     static function getMapsDefaultConfig($mapType = ''){
-        if( $mapConfig = self::getPathfinderData('map' . ($mapType ? '.' . $mapType : '')) ){
+        if( ($mapConfig = self::getPathfinderData('map' . ($mapType ? '.' . $mapType : ''))) && is_array($mapConfig) ){
             $mapConfig = Util::arrayChangeKeyCaseRecursive($mapConfig);
         }
 
