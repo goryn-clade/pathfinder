@@ -43,6 +43,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
      */
     public function reset($mapper = true, $essentials = true){
         $this->fieldChanges = [];
+        parent::reset($mapper, $essentials);
     }
 
     /**
