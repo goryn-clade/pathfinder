@@ -273,15 +273,10 @@ class CorporationModel extends AbstractPathfinderModel {
             self::getFilter('active', true)
         ];
 
-        error_log('[STRUCT-DEBUG] getStructuresData: corp_id=' . $this->_id . ' systemId=' . $systemId);
         if($structures = $structure->find($this->mergeFilter($filters))){
-            error_log('[STRUCT-DEBUG] getStructuresData: found ' . count($structures) . ' structure(s)');
             foreach($structures as $structure){
-                error_log('[STRUCT-DEBUG] getStructuresData: found structure _id=' . $structure->_id . ' name=' . $structure->name);
                 $structuresData[] = $structure->getData();
             }
-        } else {
-            error_log('[STRUCT-DEBUG] getStructuresData: found 0 structures');
         }
 
         return $structuresData;
@@ -384,15 +379,13 @@ class CorporationModel extends AbstractPathfinderModel {
     public function saveStructure(StructureModel $structure){
         if( !$structure->dry() ){
             $corporationStructure = $this->rel('corporationStructures');
-            error_log('[STRUCT-DEBUG] saveStructure: structure_id=' . $structure->_id . ' junction_dry_before_reset=' . ($corporationStructure->dry() ? 'true' : 'false') . ' junction_id_before_reset=' . $corporationStructure->_id);
+
             // reset in case of potential "contiue" from parent loop
             $corporationStructure->reset();
-            error_log('[STRUCT-DEBUG] saveStructure: junction_dry_after_reset=' . ($corporationStructure->dry() ? 'true' : 'false'));
 
             $corporationStructure->corporationId = $this;
             $corporationStructure->structureId = $structure;
             $corporationStructure->save();
-            error_log('[STRUCT-DEBUG] saveStructure: junction saved, _id=' . $corporationStructure->_id);
         }
     }
 
