@@ -105,12 +105,15 @@ class Structure extends AbstractRestController {
             $structure->setData($structureData);
             $structure->save();
 
+            error_log('[STRUCT-DEBUG] name=' . ($structureData['name'] ?? '?') . ' isNew=' . ($isNew ? 'true' : 'false') . ' saved_id=' . $structure->_id);
+
             if($isNew){
                 $corporation->saveStructure($structure);
             }
 
             // group all updated structures by corporation -> just for return
             $corporationsStructureData = $structure->getDataByCorporations();
+            error_log('[STRUCT-DEBUG] getDataByCorporations returned ' . count($corporationsStructureData) . ' corp(s) for structure_id=' . $structure->_id);
             foreach($corporationsStructureData as $corporationId => $corporationStructureData){
                 if(isset($data[$corporationId])){
                     $data[$corporationId]['structures'] = array_merge(
