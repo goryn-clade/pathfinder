@@ -85,6 +85,7 @@ class Setup extends Controller {
                 'Model\Pathfinder\CharacterAuthenticationModel',
                 'Model\Pathfinder\CharacterLogModel',
 
+                'Model\Pathfinder\MapGroupModel',
                 'Model\Pathfinder\SystemModel',
 
                 'Model\Pathfinder\ConnectionModel',
