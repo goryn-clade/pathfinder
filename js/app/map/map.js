@@ -1309,6 +1309,7 @@ define([
             let systemEl = document.getElementById(MapUtil.getSystemId(mapId, systemData.id));
             if(group && systemEl && !systemEl._jsPlumbGroup){
                 group.add(systemEl);
+                map.revalidate(MapUtil.getSystemId(mapId, systemData.id));
             }
         }
     };
