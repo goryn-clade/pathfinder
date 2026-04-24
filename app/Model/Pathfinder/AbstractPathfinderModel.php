@@ -70,7 +70,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
                 // model has fields where changes should be logged
                 $schema = $this->getMapper()->schema();
                 foreach($fieldKeys as $key){
-                    if($this->changed($key)){
+                    if(isset($schema[$key]) && $this->changed($key)){
                         $changes[$key] = [
                             'old' => $schema[$key]['initial'],
                             'new' => $schema[$key]['value']
