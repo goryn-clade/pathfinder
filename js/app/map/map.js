@@ -1303,14 +1303,25 @@ define([
      * @param {object} systemData
      */
     let attachSystemToGroup = (map, mapId, systemData) => {
-        if(systemData.groupId){
-            let groupDomId = Group.getGroupId(mapId, systemData.groupId);
-            let group = map.getGroup(groupDomId);
-            let systemEl = document.getElementById(MapUtil.getSystemId(mapId, systemData.id));
-            if(group && systemEl && !systemEl._jsPlumbGroup){
-                group.add(systemEl);
-            }
-        }
+        if(!systemData.groupId){ return; }
+        let groupDomId = Group.getGroupId(mapId, systemData.groupId);
+        let group;
+        try{ group = map.getGroup(groupDomId); }catch(e){ return; }
+        let systemEl = document.getElementById(MapUtil.getSystemId(mapId, systemData.id));
+        if(!group || !systemEl || systemEl._jsPlumbGroup){ return; }
+
+        // addToGroup needs the system at its absolute canvas position so that
+        // the internal (elpos - cpos) calculation yields the stored group-relative coords.
+        // The system was drawn at group-relative posX/posY inside mapContainer, so
+        // we must first convert those to absolute canvas coords.
+        let groupEl = $(group.getEl());
+        let headerH = groupEl.find('.' + Group.config.groupHeaderClass).outerHeight() || 0;
+        let absX = parseInt(groupEl.css('left')) + (systemData.position ? systemData.position.x : 0);
+        let absY = parseInt(groupEl.css('top')) + headerH + (systemData.position ? systemData.position.y : 0);
+        $(systemEl).css({left: absX + 'px', top: absY + 'px'});
+
+        // doNotFireEvent=true prevents the group:addMember PATCH (system already has groupId in DB)
+        map.addToGroup(groupDomId, systemEl, true);
     };
 
     let updateMap = mapConfig => {
