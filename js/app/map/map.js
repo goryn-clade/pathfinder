@@ -20,7 +20,7 @@ define([
     'app/map/scrollbar',
     'app/map/local',
     'app/map/group'
-], ($, Init, Util, Key, DragSelect, EventHandler, bootbox, MapUtil, MapContextMenu, MapOverlay, MapOverlayUtil, System, Layout, Magnetizer, Scrollbar, Group) => {
+], ($, Init, Util, Key, DragSelect, EventHandler, bootbox, MapUtil, MapContextMenu, MapOverlay, MapOverlayUtil, System, Layout, Magnetizer, Scrollbar, Local, Group) => {
 
     'use strict';
 
