@@ -65,7 +65,7 @@ define([
 
         let body = $('<div>', {
             class: config.groupBodyClass
-        });
+        }).attr('jtk-group-content', '');
 
         let groupEl = $('<div>', {
             id: groupId,
@@ -182,20 +182,12 @@ define([
             });
         });
 
-        // ---- drag (header as handle) ----
-        // jsPlumb's addGroup with draggable:true manages the actual drag — we hook stop to persist
-        // We can't use header-only handle directly through addGroup API in 2.x,
-        // so we override draggable on the group element here
-        jsPlumbInstance.draggable(groupEl[0], {
-            handle: '.' + config.groupHeaderClass,
-            start: function(){
-                groupEl.css('z-index', 50); // raise above other groups during drag
-            },
-            stop: function(){
-                groupEl.css('z-index', ''); // restore
+        // drag stop → persist position (groupDragStop fires from addGroup's built-in stop handler)
+        jsPlumbInstance.bind('groupDragStop', function(params){
+            if(params.group && params.group.getEl() === groupEl[0]){
+                groupEl.css('z-index', '');
                 saveGroupPosition(groupEl);
-            },
-            containment: 'parent'
+            }
         });
     };
 
@@ -219,13 +211,19 @@ define([
         mapContainer.append(groupEl);
 
         // register with jsPlumb group manager
+        // dragOptions merges into the built-in drag setup (which keeps GROUP_DRAG_SCOPE and the drag repaint handler)
         jsPlumbInstance.addGroup({
             el:          groupEl[0],
             id:          groupDomId,
             droppable:   true,
             constrain:   Boolean(groupData.constrain),
-            orphan:      false,         // orphaned children stay on map (not removed)
-            dropOverride: Boolean(groupData.dropOverride)
+            orphan:      false,
+            dropOverride: Boolean(groupData.dropOverride),
+            dragOptions: {
+                handle:      '.' + config.groupHeaderClass,
+                containment: 'parent',
+                start:       function(){ groupEl.css('z-index', 50); }
+            }
         });
 
         bindGroupEvents(jsPlumbInstance, groupEl, mapContainer);
