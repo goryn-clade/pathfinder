@@ -80,10 +80,6 @@ define([
           .data('updated', groupData.updated.updated)
           .append(header, body);
 
-        if(groupData.isCollapsed){
-            groupEl.addClass(config.groupCollapsedClass);
-        }
-
         return groupEl;
     };
 
@@ -117,6 +113,7 @@ define([
 
     /**
      * set collapsed state on a group element (UI + persist)
+     * jsPlumb's collapseGroup/expandGroup proxy connections to the group boundary and manage jtk-group-collapsed class
      * @param {object} jsPlumbInstance
      * @param {jQuery} groupEl
      * @param {boolean} collapsed
@@ -125,12 +122,9 @@ define([
         let groupDomId = groupEl.attr('id');
 
         if(collapsed){
-            groupEl.addClass(config.groupCollapsedClass);
-            // tell jsPlumb to repaint connections — proxy connections appear automatically
-            jsPlumbInstance.repaintEverything();
+            jsPlumbInstance.collapseGroup(groupDomId);
         }else{
-            groupEl.removeClass(config.groupCollapsedClass);
-            jsPlumbInstance.repaintEverything();
+            jsPlumbInstance.expandGroup(groupDomId);
         }
 
         saveGroupCollapsed(groupEl, collapsed);
@@ -148,7 +142,7 @@ define([
         // ---- collapse toggle ----
         groupEl.find('.' + config.groupCollapseClass).on('click', function(e){
             e.stopPropagation();
-            let isNowCollapsed = !groupEl.hasClass(config.groupCollapsedClass);
+            let isNowCollapsed = !groupEl.hasClass('jtk-group-collapsed');
             setCollapsed(jsPlumbInstance, groupEl, isNowCollapsed);
         });
 
@@ -216,6 +210,7 @@ define([
             el:          groupEl[0],
             id:          groupDomId,
             droppable:   true,
+            collapsed:   Boolean(groupData.isCollapsed),
             constrain:   Boolean(groupData.constrain),
             orphan:      false,
             dropOverride: Boolean(groupData.dropOverride),
@@ -243,8 +238,8 @@ define([
             labelEl.text(groupData.label);
         }
 
-        let isCollapsed = groupEl.hasClass(config.groupCollapsedClass);
-        if(isCollapsed !== groupData.isCollapsed){
+        let isCollapsed = groupEl.hasClass('jtk-group-collapsed');
+        if(isCollapsed !== Boolean(groupData.isCollapsed)){
             setCollapsed(jsPlumbInstance, groupEl, groupData.isCollapsed);
         }
 
