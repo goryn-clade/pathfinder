@@ -107,6 +107,17 @@ class MapGroupModel extends AbstractMapTrackingModel {
         $self->logActivity('groupUpdate');
     }
 
+    public function beforeEraseEvent($self, $pkeys) : bool {
+        // nullify groupId on all child systems (replaces DB-level ON DELETE SET NULL)
+        if($systems = $self->groupSystems){
+            foreach($systems as $system){
+                $system->groupId = null;
+                $system->save();
+            }
+        }
+        return parent::beforeEraseEvent($self, $pkeys);
+    }
+
     public function afterEraseEvent($self, $pkeys){
         $self->clearCacheData();
         $self->logActivity('groupDelete');

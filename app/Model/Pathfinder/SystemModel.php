@@ -153,7 +153,6 @@ class SystemModel extends AbstractMapTrackingModel {
             'nullable'       => true,
             'default'        => null,
             'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapGroupModel::class,
-            'constraint'     => [['table' => 'map_group', 'on-delete' => 'SET NULL']],
             'activity-log'   => true
         ],
         'signatures' => [
