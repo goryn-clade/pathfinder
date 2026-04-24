@@ -112,6 +112,7 @@ class AccessController extends Controller {
                 'data' => [
                     'systems' => $mapData->systems,
                     'connections' => $mapData->connections,
+                    'groups' => $mapData->groups ?? [],
                 ]
             ];
         }catch(\Exception){
