@@ -1009,3 +1009,92 @@ $mapBubbleWidth:        30px;
   min-width: 25px; // make sure tooltip is not flickering on low numbers -> fix width
   @include transition( color 0.2s ease-out );
 }
+
+// map group container ============================================================================
+
+.pf-map-group {
+  position: absolute;
+  border: 1px dashed $gray-light;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.15);
+  // z-index must be below .pf-system (z-index: 100) so systems sit above the group background
+  z-index: 5;
+  box-sizing: border-box;
+  min-width: 120px;
+  min-height: 60px;
+
+  &.pf-map-group-collapsed {
+    height: auto !important;
+    min-height: 0;
+    border-style: solid;
+
+    .pf-map-group-body {
+      display: none;
+    }
+
+    .pf-map-group-header {
+      border-radius: 3px;
+    }
+  }
+
+  // highlight when a system is being dragged over it
+  &.jtk-drag-hover {
+    border-color: $blue;
+    background: rgba(0, 80, 160, 0.15);
+  }
+}
+
+.pf-map-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 5px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px 3px 0 0;
+  cursor: move;
+  user-select: none;
+  // z-index above child system nodes so header drag handle is always reachable
+  z-index: 95;
+  position: relative;
+}
+
+.pf-map-group-label {
+  color: $gray-lighter;
+  font-size: 11px;
+  font-family: $font-family-bold;
+  letter-spacing: 0.04em;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &.editable-open {
+    visibility: hidden; // hide text while x-editable input is open
+  }
+}
+
+.pf-map-group-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 4px;
+
+  i {
+    color: $gray-light;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px;
+
+    &:hover {
+      color: $gray-lighter;
+    }
+  }
+}
+
+.pf-map-group-body {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 22px); // subtract header height
+}

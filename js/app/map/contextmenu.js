@@ -75,6 +75,7 @@ define([
             id: config.mapContextMenuId,
             items: [
                 {icon: 'fa-plus', action: 'add_system', text: 'add system'},
+                {icon: 'fa-object-group', action: 'add_group', text: 'add group'},
                 {icon: 'fa-object-ungroup', action: 'select_all', text: 'select all'},
                 {icon: 'fa-filter', action: 'filter_scope', text: 'filter scope', subitems: [
                         {subIcon: '', subAction: 'filter_wh', subText: 'wormhole'},
@@ -178,6 +179,8 @@ define([
                         {subIcon: 'fa-step-backward', subAction: 'add_first_waypoint', subText: 'add new [start]'},
                         {subIcon: 'fa-step-forward', subAction: 'add_last_waypoint', subText: 'add new [end]'}
                     ]},
+                {icon: 'fa-sign-in-alt',  action: 'join_group',  text: 'add to group'},
+                {icon: 'fa-sign-out-alt', action: 'leave_group', text: 'remove from group'},
                 {divider: true, action: 'delete_system'},
                 {icon: 'fa-trash', action: 'delete_system', text: 'delete system(s)'}
             ]

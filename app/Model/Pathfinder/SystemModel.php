@@ -147,6 +147,15 @@ class SystemModel extends AbstractMapTrackingModel {
             'nullable' => false,
             'default' => 0
         ],
+        'groupId' => [
+            'type'           => Schema::DT_INT,
+            'index'          => true,
+            'nullable'       => true,
+            'default'        => null,
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapGroupModel::class,
+            'constraint'     => [['table' => 'map_group', 'on-delete' => 'SET NULL']],
+            'activity-log'   => true
+        ],
         'signatures' => [
             'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\SystemSignatureModel::class, 'systemId']
         ],
@@ -164,6 +173,11 @@ class SystemModel extends AbstractMapTrackingModel {
      */
     public function setData( $data){
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
+
+        // update group membership when provided (null detaches, int attaches)
+        if(array_key_exists('groupId', $data)){
+            $this->groupId = $data['groupId'] ? (int)$data['groupId'] : null;
+        }
     }
 
     /**
@@ -194,6 +208,8 @@ class SystemModel extends AbstractMapTrackingModel {
             $data->rallyUpdated             = $this->rallyUpdated ? strtotime($this->rallyUpdated) : false;
             $data->rallyPoke                = $this->rallyPoke;
             $data->description              = $this->description ? : '';
+
+            $data->groupId                  = $this->groupId ? $this->get('groupId', true) : null;
 
             $data->position                 = (object) [];
             $data->position->x              = $this->posX;

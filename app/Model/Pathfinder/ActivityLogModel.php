@@ -133,6 +133,27 @@ class ActivityLogModel extends AbstractPathfinderModel {
             'default' => 0,
             'counter' => true
         ],
+
+        // group actions -----------------------------------------------------
+
+        'groupCreate' => [
+            'type' => Schema::DT_SMALLINT,
+            'nullable' => false,
+            'default' => 0,
+            'counter' => true
+        ],
+        'groupUpdate' => [
+            'type' => Schema::DT_SMALLINT,
+            'nullable' => false,
+            'default' => 0,
+            'counter' => true
+        ],
+        'groupDelete' => [
+            'type' => Schema::DT_SMALLINT,
+            'nullable' => false,
+            'default' => 0,
+            'counter' => true
+        ],
     ];
 
     /**

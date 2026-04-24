@@ -188,6 +188,9 @@ class MapModel extends AbstractMapTrackingModel {
         'connections' => [
             'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel::class, 'mapId']
         ],
+        'mapGroups' => [
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\MapGroupModel::class, 'mapId']
+        ],
         'mapCharacters' => [
             'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterMapModel::class, 'mapId']
         ],
@@ -329,6 +332,9 @@ class MapModel extends AbstractMapTrackingModel {
             // merge all data -----------------------------------------------------------------------------------------
             $mapDataAll = (object) [];
             $mapDataAll->mapData = $mapData;
+
+            // map group data -----------------------------------------------------------------------------------------
+            $mapDataAll->groups = $this->getGroupsData();
 
             // map system data ----------------------------------------------------------------------------------------
             $mapDataAll->systems = $this->getSystemsData();
@@ -598,6 +604,26 @@ class MapModel extends AbstractMapTrackingModel {
         ];
 
         return $this->relFind('systems', $this->mergeFilter($filters)) ? : [];
+    }
+
+    /**
+     * get all group data for this map
+     * @return \stdClass[]
+     */
+    public function getGroupsData() : array {
+        $groupsData = [];
+        $filters = [self::getFilter('active', true)];
+
+        if($groups = $this->relFind('mapGroups', $this->mergeFilter($filters))){
+            foreach($groups as $group){
+                /**
+                 * @var MapGroupModel $group
+                 */
+                $groupsData[] = $group->getData();
+            }
+        }
+
+        return $groupsData;
     }
 
     /**
