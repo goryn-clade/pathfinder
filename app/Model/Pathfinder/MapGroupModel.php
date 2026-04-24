@@ -127,6 +127,13 @@ class MapGroupModel extends AbstractMapTrackingModel {
         }
     }
 
+    public function getLogObjectData(): array {
+        return [
+            'objId'   => $this->_id,
+            'objName' => $this->label
+        ];
+    }
+
     public function getLogData(): array {
         return [];
     }
