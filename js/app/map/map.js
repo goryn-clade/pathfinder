@@ -1309,7 +1309,6 @@ define([
             let systemEl = document.getElementById(MapUtil.getSystemId(mapId, systemData.id));
             if(group && systemEl && !systemEl._jsPlumbGroup){
                 group.add(systemEl);
-                map.revalidate(MapUtil.getSystemId(mapId, systemData.id));
             }
         }
     };
@@ -1417,6 +1416,7 @@ define([
             }
 
             // update systems =========================================================================================
+            let drawSystemPromises = [];
             for(let i = 0; i < mapConfig.data.systems.length; i++){
                 let systemData = mapConfig.data.systems[i];
 
@@ -1436,10 +1436,15 @@ define([
                 }
 
                 if(addNewSystem === true){
-                    drawSystem(mapConfig.map, systemData).then(
-                        attachSystemToGroup.bind(null, mapConfig.map, mapId, systemData)
-                    ).catch(console.warn);
+                    drawSystemPromises.push(
+                        drawSystem(mapConfig.map, systemData).then(
+                            attachSystemToGroup.bind(null, mapConfig.map, mapId, systemData)
+                        ).catch(console.warn)
+                    );
                 }
+            }
+            if(drawSystemPromises.length > 0){
+                Promise.all(drawSystemPromises).then(() => mapConfig.map.repaintEverything());
             }
 
             // check for systems that are gone -> delete system
