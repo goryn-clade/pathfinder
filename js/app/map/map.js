@@ -493,16 +493,10 @@ define([
             let currentPosX = system.css('left');
             let currentPosY = system.css('top');
 
-            console.log('[groups:getSystem] id=%o server pos=%o,%o current pos=%o,%o parent=%o',
-                data.id, newPosX, newPosY, currentPosX, currentPosY,
-                document.getElementById(systemId) ? document.getElementById(systemId).parentNode && document.getElementById(systemId).parentNode.className : 'n/a'
-            );
-
             if(
                 newPosX !== currentPosX ||
                 newPosY !== currentPosY
             ){
-                console.log('[groups:getSystem] REPOSITIONING id=%o from %o,%o → %o,%o', data.id, currentPosX, currentPosY, newPosX, newPosY);
                 // change position with animation
                 system.velocity(
                     {
@@ -1420,7 +1414,6 @@ define([
                     let groupId = groupEl.data('id');
                     if(systemId && groupId){
                         let pos = {x: Math.round(params.pos.left), y: Math.round(params.pos.top)};
-                        console.log('[groups:addMember] systemId=%o pos=%o', systemId, pos);
                         Util.request('PATCH', 'System', systemId, {
                             groupId: groupId,
                             position: pos
@@ -1431,14 +1424,12 @@ define([
                 mapConfig.map.bind('group:removeMember', function(params){
                     let systemEl = $(params.el);
                     let systemId = systemEl.data('id');
-                    if(systemId){
+                    if(systemId && !params.el.dataset.pfDeleting){
                         let pos = MapUtil.getSystemPosition(systemEl);
-                        console.log('[groups:removeMember] systemId=%o pos=%o parentNode=%o', systemId, pos, params.el.parentNode && params.el.parentNode.className);
                         Util.request('PATCH', 'System', systemId, {
                             groupId: null,
                             position: {x: pos.x, y: pos.y}
-                        }).then(r => console.log('[groups:removeMember] PATCH response updated=%o pos=%o,%o', r && r.data && r.data.updated, r && r.data && r.data.position && r.data.position.x, r && r.data && r.data.position && r.data.position.y))
-                          .catch(console.warn);
+                        }).catch(console.warn);
                     }
                 });
             }
@@ -2020,6 +2011,10 @@ define([
             options.selectCallback = mapActions;
 
             let mapContainer = $(map.getContainer());
+            let mapData = Util.getCurrentMapData(mapContainer.data('id'));
+            if(!Util.getObjVal(mapData, 'config.allowGroups')){
+                options.hidden.push('add_group');
+            }
 
             // active menu actions
             Util.getLocalStore('map').getItem(mapContainer.data('id')).then(dataStore => {
@@ -2205,10 +2200,6 @@ define([
 
                 // show tooltip
                 dragSystem.toggleSystemTooltip('show', {show: true});
-
-                console.log('[groups:dragStop] id=%o css left=%o top=%o parentNode=%o',
-                    dragSystem.data('id'), dragSystem.css('left'), dragSystem.css('top'),
-                    params.el.parentNode && params.el.parentNode.className);
 
                 // mark as "changed"
                 MapUtil.markAsChanged(dragSystem);

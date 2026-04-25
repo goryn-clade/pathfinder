@@ -1158,3 +1158,35 @@ $mapBubbleWidth:        30px;
   width: 100%;
   height: calc(100% - 22px); // subtract header height
 }
+
+.pf-map-group-resize {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  z-index: 10; // above group header so it's always clickable
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid $gray;
+    border-bottom: 2px solid $gray;
+    border-radius: 0 0 2px 0;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+
+  .jtk-group-collapsed & {
+    display: none;
+  }
+}

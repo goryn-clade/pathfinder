@@ -42,6 +42,7 @@ define([
         trackAbyssalJumpsId: 'pf-map-dialog-track-abyss-jumps',                         // id for "trackAbyssalJumps" checkbox
         allowUnknownSystemsId: 'pf-map-dialog-allow-unknown',                           // id for "allowUnknownSystems" checkbox
         granularK162Id: 'pf-map-dialog-granular-k162',                                   // id for "granularK162" checkbox
+        allowGroupsId: 'pf-map-dialog-allow-groups',                                    // id for "allowGroups" checkbox
 
         logHistoryId: 'pf-map-dialog-history',                                          // id for "history logging" checkbox
         logActivityId: 'pf-map-dialog-activity',                                        // id for "activity" checkbox
@@ -167,6 +168,7 @@ define([
                     trackAbyssalJumpsId : config.trackAbyssalJumpsId,
                     allowUnknownSystemsId : config.allowUnknownSystemsId,
                     granularK162Id : config.granularK162Id,
+                    allowGroupsId : config.allowGroupsId,
                     logHistoryId: config.logHistoryId,
                     logActivityId: config.logActivityId,
 
@@ -177,6 +179,7 @@ define([
                     trackAbyssalJumps: false,
                     allowUnknownSystems: false,
                     granularK162: false,
+                    allowGroups: true,
                     logActivity: true,
                     logHistory: true,
 
@@ -243,6 +246,7 @@ define([
                         trackAbyssalJumps: mapData.config.trackAbyssalJumps,
                         allowUnknownSystems: mapData.config.allowUnknownSystems,
                         granularK162: mapData.config.granularK162,
+                        allowGroups: mapData.config.allowGroups,
                         logActivity: mapData.config.logging.activity,
                         logHistory: mapData.config.logging.history,
 

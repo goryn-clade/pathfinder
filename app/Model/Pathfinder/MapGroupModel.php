@@ -110,9 +110,10 @@ class MapGroupModel extends AbstractMapTrackingModel {
     public function beforeEraseEvent($self, $pkeys) : bool {
         // nullify groupId on all child systems (replaces DB-level ON DELETE SET NULL)
         if($systems = $self->groupSystems){
+            $character = $self->updatedCharacterId;
             foreach($systems as $system){
                 $system->groupId = null;
-                $system->save();
+                $system->save($character);
             }
         }
         return parent::beforeEraseEvent($self, $pkeys);

@@ -23,6 +23,7 @@ define([
         groupCogMenuClass:  'pf-map-group-cog-menu',
         groupDeleteClass:   'pf-map-group-delete',
         groupCollapsedClass:'pf-map-group-collapsed',
+        groupResizeClass:   'pf-map-group-resize',
         groupIdPrefix:      'pf-map-group-'
     };
 
@@ -94,6 +95,11 @@ define([
             class: config.groupBodyClass
         }).attr('jtk-group-content', '');
 
+        let resizeHandle = $('<div>', {
+            class: config.groupResizeClass,
+            title: 'drag to resize'
+        });
+
         let groupEl = $('<div>', {
             id: groupId,
             class: config.groupClass
@@ -105,7 +111,7 @@ define([
         }).data('id', groupData.id)
           .data('mapId', mapId)
           .data('updated', groupData.updated.updated)
-          .append(header, body);
+          .append(header, body, resizeHandle);
 
         return groupEl;
     };
@@ -173,6 +179,43 @@ define([
                     Util.request('PATCH', 'MapGroup', groupId, {label: result.trim()}).catch(console.warn);
                 }
             }
+        });
+    };
+
+    /**
+     * wire up resize handle on bottom-right corner
+     * @param {object} jsPlumbInstance
+     * @param {jQuery} groupEl
+     */
+    let bindResizeHandle = (jsPlumbInstance, groupEl) => {
+        groupEl.find('.' + config.groupResizeClass).on('mousedown', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+
+            let scale   = jsPlumbInstance.getZoom ? jsPlumbInstance.getZoom() : 1;
+            let startX  = e.clientX;
+            let startY  = e.clientY;
+            let startW  = groupEl.outerWidth();
+            let startH  = groupEl.outerHeight();
+            let rafId   = null;
+
+            let onMouseMove = function(e){
+                let newW = Math.max(120, startW + (e.clientX - startX) / scale);
+                let newH = Math.max(60,  startH + (e.clientY - startY) / scale);
+                groupEl.css({ width: newW + 'px', height: newH + 'px' });
+                if(rafId){ cancelAnimationFrame(rafId); }
+                rafId = requestAnimationFrame(() => jsPlumbInstance.repaintEverything());
+            };
+
+            let onMouseUp = function(){
+                $(document).off('mousemove.groupResize mouseup.groupResize');
+                if(rafId){ cancelAnimationFrame(rafId); }
+                jsPlumbInstance.repaintEverything();
+                saveGroupPosition(groupEl);
+            };
+
+            $(document).on('mousemove.groupResize', onMouseMove)
+                       .on('mouseup.groupResize', onMouseUp);
         });
     };
 
@@ -245,11 +288,18 @@ define([
                                 let members   = group.getMembers();
                                 let systemIds = members.map(el => $(el).data('id')).filter(Boolean);
                                 if(systemIds.length){
-                                    Util.request('DELETE', 'System', systemIds.join(','), {mapId: mapId}).catch(console.warn);
-                                    members.forEach(el => jsPlumbInstance.remove(el));
+                                    Util.request('DELETE', 'System', systemIds, {mapId: mapId}).catch(console.warn);
                                 }
+                                // mark members so group:removeMember skips the PATCH
+                                group.getMembers().forEach(el => el.dataset.pfDeleting = '1');
+                                // pass true so jsPlumb removes members cleanly before orphaning;
+                                // calling jsPlumbInstance.remove(el) first then removeGroup(false)
+                                // causes parentNode=null errors when jsPlumb tries to re-orphan
+                                $(document).off('click.groupCog' + groupEl.attr('id'));
+                                jsPlumbInstance.removeGroup(group, true);
+                            } else {
+                                removeGroup(jsPlumbInstance, groupEl);
                             }
-                            removeGroup(jsPlumbInstance, groupEl);
                             Util.request('DELETE', 'MapGroup', groupId, {}).catch(console.warn);
                         }
                     }
@@ -264,6 +314,9 @@ define([
                 saveGroupPosition(groupEl);
             }
         });
+
+        // resize handle
+        bindResizeHandle(jsPlumbInstance, groupEl);
     };
 
     /**

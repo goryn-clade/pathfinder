@@ -201,6 +201,10 @@ class System extends AbstractRestController {
          */
         $newSystem = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
         $newSystem->getById($system->_id, 0);
+        if($newSystem->dry()){
+            // system was deleted between update and re-fetch (e.g. concurrent group delete)
+            return $system;
+        }
         $newSystem->clearCacheData();
 
         // broadcast map changes

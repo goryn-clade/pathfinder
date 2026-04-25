@@ -93,8 +93,11 @@ class MapGroup extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
             $group = Pathfinder\AbstractPathfinderModel::getNew('MapGroupModel');
             $group->getById($groupId);
-            if(!$group->dry() && $group->hasAccess($activeCharacter) && $group->erase()){
-                $deletedGroupIds[] = $groupId;
+            if(!$group->dry() && $group->hasAccess($activeCharacter)){
+                $group->updatedCharacterId = $activeCharacter;
+                if($group->erase()){
+                    $deletedGroupIds[] = $groupId;
+                }
             }
         }
 
