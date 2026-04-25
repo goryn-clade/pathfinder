@@ -493,10 +493,16 @@ define([
             let currentPosX = system.css('left');
             let currentPosY = system.css('top');
 
+            console.log('[groups:getSystem] id=%o server pos=%o,%o current pos=%o,%o parent=%o',
+                data.id, newPosX, newPosY, currentPosX, currentPosY,
+                document.getElementById(systemId) ? document.getElementById(systemId).parentNode && document.getElementById(systemId).parentNode.className : 'n/a'
+            );
+
             if(
                 newPosX !== currentPosX ||
                 newPosY !== currentPosY
             ){
+                console.log('[groups:getSystem] REPOSITIONING id=%o from %o,%o → %o,%o', data.id, currentPosX, currentPosY, newPosX, newPosY);
                 // change position with animation
                 system.velocity(
                     {
@@ -1413,7 +1419,12 @@ define([
                     let systemId = systemEl.data('id');
                     let groupId = groupEl.data('id');
                     if(systemId && groupId){
-                        Util.request('PATCH', 'System', systemId, {groupId: groupId}).catch(console.warn);
+                        let pos = {x: Math.round(params.pos.left), y: Math.round(params.pos.top)};
+                        console.log('[groups:addMember] systemId=%o pos=%o', systemId, pos);
+                        Util.request('PATCH', 'System', systemId, {
+                            groupId: groupId,
+                            position: pos
+                        }).catch(console.warn);
                     }
                 });
 
@@ -1421,7 +1432,13 @@ define([
                     let systemEl = $(params.el);
                     let systemId = systemEl.data('id');
                     if(systemId){
-                        Util.request('PATCH', 'System', systemId, {groupId: null}).catch(console.warn);
+                        let pos = MapUtil.getSystemPosition(systemEl);
+                        console.log('[groups:removeMember] systemId=%o pos=%o parentNode=%o', systemId, pos, params.el.parentNode && params.el.parentNode.className);
+                        Util.request('PATCH', 'System', systemId, {
+                            groupId: null,
+                            position: {x: pos.x, y: pos.y}
+                        }).then(r => console.log('[groups:removeMember] PATCH response updated=%o pos=%o,%o', r && r.data && r.data.updated, r && r.data && r.data.position && r.data.position.x, r && r.data && r.data.position && r.data.position.y))
+                          .catch(console.warn);
                     }
                 });
             }
@@ -1455,7 +1472,26 @@ define([
                 }
             }
             if(drawSystemPromises.length > 0){
-                Promise.all(drawSystemPromises).then(() => mapConfig.map.repaintEverything());
+                Promise.all(drawSystemPromises).then(() => {
+                    // When systems are added to a collapsed group one at a time, jsPlumb creates
+                    // cross-group proxies before knowing both endpoints will end up in the same
+                    // group ("double-proxy" problem). Hide those internal connections now.
+                    // setConnectionVisible() in util.js will guard against them being re-shown
+                    // by filterMapByScopes on every subsequent sync cycle.
+                    incomingGroups.filter(g => g.isCollapsed).forEach(gData => {
+                        let groupDomId = Group.getGroupId(mapId, gData.id);
+                        let group;
+                        try{ group = mapConfig.map.getGroup(groupDomId); }catch(e){ return; }
+                        let members = new Set(group.getMembers());
+                        mapConfig.map.getAllConnections().forEach(c => {
+                            let srcEl = (c.proxies && c.proxies[0]) ? c.proxies[0].originalEp.element : c.source;
+                            let tgtEl = (c.proxies && c.proxies[1]) ? c.proxies[1].originalEp.element : c.target;
+                            if(members.has(srcEl) && members.has(tgtEl)){
+                                c.setVisible(false);
+                            }
+                        });
+                    });
+                });
             }
 
             // check for systems that are gone -> delete system
@@ -2109,8 +2145,11 @@ define([
 
         // make system draggable
         map.draggable(system, {
-            containment: 'parent',
+            containment: mapContainer[0],
             constrain: true,
+            getConstrainingRectangle: function() {
+                return [mapContainer[0].offsetWidth, mapContainer[0].offsetHeight];
+            },
             //scroll: true,                                             // not working because of customized scrollbar
             filter: filterSystemHeadEvent,
             snapThreshold: MapUtil.config.mapSnapToGridDimension,       // distance for grid snapping "magnet" effect (optional)
@@ -2166,6 +2205,10 @@ define([
 
                 // show tooltip
                 dragSystem.toggleSystemTooltip('show', {show: true});
+
+                console.log('[groups:dragStop] id=%o css left=%o top=%o parentNode=%o',
+                    dragSystem.data('id'), dragSystem.css('left'), dragSystem.css('top'),
+                    params.el.parentNode && params.el.parentNode.className);
 
                 // mark as "changed"
                 MapUtil.markAsChanged(dragSystem);

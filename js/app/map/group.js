@@ -17,7 +17,10 @@ define([
         groupBodyClass:     'pf-map-group-body',
         groupLabelClass:    'pf-map-group-label',
         groupActionsClass:  'pf-map-group-actions',
+        groupHandleClass:   'pf-map-group-handle',
         groupCollapseClass: 'pf-map-group-collapse',
+        groupCogClass:      'pf-map-group-cog',
+        groupCogMenuClass:  'pf-map-group-cog-menu',
         groupDeleteClass:   'pf-map-group-delete',
         groupCollapsedClass:'pf-map-group-collapsed',
         groupIdPrefix:      'pf-map-group-'
@@ -40,10 +43,34 @@ define([
     let buildGroupElement = (mapId, groupData) => {
         let groupId = getGroupId(mapId, groupData.id);
 
+        let handle = $('<i>', {
+            class: ['fas', 'fa-grip-vertical', 'fa-fw', config.groupHandleClass].join(' '),
+            title: 'drag to move'
+        });
+
         let collapseIcon = $('<i>', {
             class: ['fas', 'fa-compress', 'fa-fw', config.groupCollapseClass].join(' '),
             title: 'toggle collapse'
         });
+
+        let cogMenu = $('<div>', {
+            class: config.groupCogMenuClass
+        }).append(
+            $('<a>', {
+                class: 'pf-map-group-cog-item',
+                text: 'Rename'
+            })
+        );
+
+        let cogWrapper = $('<span>', {
+            class: 'pf-map-group-cog-wrapper'
+        }).append(
+            $('<i>', {
+                class: ['fas', 'fa-cog', 'fa-fw', config.groupCogClass].join(' '),
+                title: 'options'
+            }),
+            cogMenu
+        );
 
         let deleteIcon = $('<i>', {
             class: ['fas', 'fa-times', 'fa-fw', config.groupDeleteClass].join(' '),
@@ -57,11 +84,11 @@ define([
 
         let actions = $('<span>', {
             class: config.groupActionsClass
-        }).append(collapseIcon, deleteIcon);
+        }).append(collapseIcon, cogWrapper, deleteIcon);
 
         let header = $('<div>', {
             class: config.groupHeaderClass
-        }).append(label, actions);
+        }).append(handle, label, actions);
 
         let body = $('<div>', {
             class: config.groupBodyClass
@@ -113,7 +140,6 @@ define([
 
     /**
      * set collapsed state on a group element (UI + persist)
-     * jsPlumb's collapseGroup/expandGroup proxy connections to the group boundary and manage jtk-group-collapsed class
      * @param {object} jsPlumbInstance
      * @param {jQuery} groupEl
      * @param {boolean} collapsed
@@ -131,13 +157,32 @@ define([
     };
 
     /**
-     * wire up header interactions (drag, collapse, label edit, delete)
+     * open rename prompt for a group
+     * @param {jQuery} groupEl
+     */
+    let promptRename = groupEl => {
+        let labelEl = groupEl.find('.' + config.groupLabelClass);
+        let groupId = groupEl.data('id');
+
+        bootbox.prompt({
+            title: 'Rename group',
+            value: labelEl.text(),
+            callback: result => {
+                if(result !== null && result.trim() !== ''){
+                    labelEl.text(result.trim());
+                    Util.request('PATCH', 'MapGroup', groupId, {label: result.trim()}).catch(console.warn);
+                }
+            }
+        });
+    };
+
+    /**
+     * wire up header interactions
      * @param {object} jsPlumbInstance
      * @param {jQuery} groupEl
      * @param {jQuery} mapContainer
      */
     let bindGroupEvents = (jsPlumbInstance, groupEl, mapContainer) => {
-        let header = groupEl.find('.' + config.groupHeaderClass);
 
         // ---- collapse toggle ----
         groupEl.find('.' + config.groupCollapseClass).on('click', function(e){
@@ -146,37 +191,73 @@ define([
             setCollapsed(jsPlumbInstance, groupEl, isNowCollapsed);
         });
 
+        // ---- cog menu toggle ----
+        groupEl.find('.' + config.groupCogClass).on('click', function(e){
+            e.stopPropagation();
+            let menu = $(this).siblings('.' + config.groupCogMenuClass);
+            let isOpen = menu.is(':visible');
+            // close any other open menus first
+            $('.' + config.groupCogMenuClass + ':visible').hide();
+            menu.toggle(!isOpen);
+        });
+
+        // ---- cog menu: rename ----
+        groupEl.find('.' + config.groupCogMenuClass).on('click', '.pf-map-group-cog-item', function(e){
+            e.stopPropagation();
+            groupEl.find('.' + config.groupCogMenuClass).hide();
+            promptRename(groupEl);
+        });
+
+        // close cog menu on outside click
+        $(document).on('click.groupCog' + groupEl.attr('id'), function(){
+            groupEl.find('.' + config.groupCogMenuClass).hide();
+        });
+
         // ---- delete ----
         groupEl.find('.' + config.groupDeleteClass).on('click', function(e){
             e.stopPropagation();
             let groupId = groupEl.data('id');
-            bootbox.confirm('Delete this group? Systems inside will remain on the map.', result => {
-                if(result){
-                    removeGroup(jsPlumbInstance, groupEl);
-                    Util.request('DELETE', 'MapGroup', groupId, {}).catch(console.warn);
-                }
-            });
-        });
+            let mapId   = groupEl.data('mapId');
 
-        // ---- inline label edit (double-click) ----
-        groupEl.find('.' + config.groupLabelClass).on('dblclick', function(e){
-            e.stopPropagation();
-            let labelEl = $(this);
-            let groupId = groupEl.data('id');
-
-            bootbox.prompt({
-                title: 'Rename group',
-                value: labelEl.text(),
-                callback: result => {
-                    if(result !== null && result.trim() !== ''){
-                        labelEl.text(result.trim());
-                        Util.request('PATCH', 'MapGroup', groupId, {label: result.trim()}).catch(console.warn);
+            bootbox.dialog({
+                title:   'Delete Group',
+                message: 'How would you like to delete this group?',
+                buttons: {
+                    cancel: {
+                        label:     'Cancel',
+                        className: 'btn-default pull-left'
+                    },
+                    keepSystems: {
+                        label:     '<i class="fas fa-sign-out-alt fa-fw"></i> Delete group, keep systems',
+                        className: 'btn-warning',
+                        callback:  function(){
+                            removeGroup(jsPlumbInstance, groupEl);
+                            Util.request('DELETE', 'MapGroup', groupId, {}).catch(console.warn);
+                        }
+                    },
+                    deleteSystems: {
+                        label:     '<i class="fas fa-trash fa-fw"></i> Delete group and systems',
+                        className: 'btn-danger',
+                        callback:  function(){
+                            let group;
+                            try{ group = jsPlumbInstance.getGroup(groupEl.attr('id')); }catch(e){}
+                            if(group){
+                                let members   = group.getMembers();
+                                let systemIds = members.map(el => $(el).data('id')).filter(Boolean);
+                                if(systemIds.length){
+                                    Util.request('DELETE', 'System', systemIds.join(','), {mapId: mapId}).catch(console.warn);
+                                    members.forEach(el => jsPlumbInstance.remove(el));
+                                }
+                            }
+                            removeGroup(jsPlumbInstance, groupEl);
+                            Util.request('DELETE', 'MapGroup', groupId, {}).catch(console.warn);
+                        }
                     }
                 }
             });
         });
 
-        // drag stop → persist position (groupDragStop fires from addGroup's built-in stop handler)
+        // drag stop → persist position
         jsPlumbInstance.bind('groupDragStop', function(params){
             if(params.group && params.group.getEl() === groupEl[0]){
                 groupEl.css('z-index', '');
@@ -204,18 +285,16 @@ define([
         let groupEl = buildGroupElement(mapId, groupData);
         mapContainer.append(groupEl);
 
-        // register with jsPlumb group manager
-        // dragOptions merges into the built-in drag setup (which keeps GROUP_DRAG_SCOPE and the drag repaint handler)
         jsPlumbInstance.addGroup({
             el:          groupEl[0],
             id:          groupDomId,
             droppable:   true,
             collapsed:   Boolean(groupData.isCollapsed),
             constrain:   Boolean(groupData.constrain),
-            orphan:      false,
+            orphan:      true,
             dropOverride: Boolean(groupData.dropOverride),
             dragOptions: {
-                handle:      '.' + config.groupHeaderClass,
+                handle:      '.' + config.groupHandleClass,
                 containment: 'parent',
                 start:       function(){ groupEl.css('z-index', 50); }
             }
@@ -243,7 +322,6 @@ define([
             setCollapsed(jsPlumbInstance, groupEl, groupData.isCollapsed);
         }
 
-        // update stored updated timestamp
         groupEl.data('updated', groupData.updated.updated);
     };
 
@@ -253,10 +331,12 @@ define([
      * @param {jQuery} groupEl
      */
     let removeGroup = (jsPlumbInstance, groupEl) => {
+        // clean up document-level click handler
+        $(document).off('click.groupCog' + groupEl.attr('id'));
+
         let groupDomId = groupEl.attr('id');
         let group = jsPlumbInstance.getGroup(groupDomId);
         if(group){
-            // false = do NOT remove child elements when group is removed
             jsPlumbInstance.removeGroup(group, false);
         }
         groupEl.remove();

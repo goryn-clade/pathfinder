@@ -971,6 +971,16 @@ define([
      * @param visible
      */
     let setConnectionVisible = (connection, visible) => {
+        if(visible){
+            // Don't show connections internal to a collapsed group
+            let srcEl = (connection.proxies && connection.proxies[0]) ? connection.proxies[0].originalEp.element : connection.source;
+            let tgtEl = (connection.proxies && connection.proxies[1]) ? connection.proxies[1].originalEp.element : connection.target;
+            let sg = srcEl && srcEl._jsPlumbGroup;
+            let tg = tgtEl && tgtEl._jsPlumbGroup;
+            if(sg && sg === tg && sg.collapsed){
+                return;
+            }
+        }
         if(connection.isVisible() !== visible){
             connection.setVisible(visible, true);
             for(let endpoint of connection.endpoints){
