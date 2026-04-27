@@ -346,6 +346,8 @@ class Controller {
                                 $character = $characterAuth->rel('characterId');
                                 $character->getById( $characterAuth->get('characterId', true) );
 
+                                $character->updateAffiliation();
+
                                 // check ESI scopes
                                 $scopeHash = Util::getHashFromScopes($character->esiScopes);
 

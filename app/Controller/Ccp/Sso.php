@@ -99,6 +99,8 @@ class Sso extends Api\User{
                     // -> this is not the case if e.g. userCharacters was removed "ownerHash" changed...
                     $character->getById($character->_id);
 
+                    $character->updateAffiliation();
+
                     if(
                         $character->hasUserCharacter() &&
                         ($character->isAuthorized() === 'OK')
@@ -215,6 +217,9 @@ class Sso extends Api\User{
                             $characterModel = $this->updateCharacter($characterData);
 
                             if( !is_null($characterModel) ){
+                                // refresh corp/alliance affiliation from ESI
+                                $characterModel->updateAffiliation();
+
                                 // check if character is authorized to log in
                                 if( ($authStatus = $characterModel->isAuthorized()) === 'OK'){
                                     // character is authorized to log in
@@ -500,39 +505,6 @@ class Sso extends Api\User{
                 // remove some "unwanted" data -> not relevant for Pathfinder
                 $characterData->character = array_filter($characterDataBasic, fn($key) => in_array($key, ['id', 'name', 'securityStatus']), ARRAY_FILTER_USE_KEY);
 
-                $characterData->corporation = null;
-                $characterData->alliance = null;
-                /**
-                 * TODO: Move to -> @var Pathfinder\CorporationModel $corporation
-                 * REF: https://github.com/goryn-clade/pathfinder/pull/157/files
-                 */
-                $characterAffiliation = $this->getF3()->ccpClient()->send('getCharacterAffiliation', [$characterId]);
-                if(count($characterAffiliation) === 1) {
-                    $characterCorporationId = $characterAffiliation[0]['corporation']['id'];
-                    $characterAllianceId = $characterAffiliation[0]['alliance']['id'] ?? null;
-
-                    if($corporationId = (int)$characterCorporationId){
-                        /**
-                         * @var Pathfinder\CorporationModel $corporation
-                         */
-                        $corporation = Pathfinder\AbstractPathfinderModel::getNew('CorporationModel');
-                        $corporation->getById($corporationId, 0);
-                        if($corporation->valid()){
-                            $characterData->corporation = $corporation;
-                        }
-                    }
-
-                    if($allianceId = (int)$characterAllianceId){
-                        /**
-                         * @var Pathfinder\AllianceModel $alliance
-                         */
-                        $alliance = Pathfinder\AbstractPathfinderModel::getNew('AllianceModel');
-                        $alliance->getById($allianceId, 0);
-                        if($alliance->valid()){
-                            $characterData->alliance = $alliance;
-                        }
-                    }
-                }
             }
         }
 
@@ -558,8 +530,6 @@ class Sso extends Api\User{
                 'id', 'name', 'ownerHash', 'esiAccessToken', 'esiAccessTokenExpires', 'esiRefreshToken', 'esiScopes', 'securityStatus'
             ]);
 
-            $character->corporationId = $characterData->corporation;
-            $character->allianceId = $characterData->alliance;
             $character->save();
         }
 

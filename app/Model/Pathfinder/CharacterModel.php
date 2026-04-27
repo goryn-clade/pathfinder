@@ -83,6 +83,12 @@ class CharacterModel extends AbstractPathfinderModel {
             'type' => Schema::DT_TIMESTAMP,
             'index' => true
         ],
+        'affiliationUpdated' => [
+            'type' => Schema::DT_TIMESTAMP,
+            'index' => true,
+            'default' => null,
+            'nullable' => true
+        ],
         'active' => [
             'type' => Schema::DT_BOOL,
             'nullable' => false,
@@ -1195,8 +1201,6 @@ class CharacterModel extends AbstractPathfinderModel {
                     $characterData->character['esiScopes'] = $verificationCharacterData->scp;
 
                     $this->copyfrom($characterData->character, ['ownerHash', 'esiScopes', 'securityStatus']);
-                    $this->corporationId = $characterData->corporation;
-                    $this->allianceId = $characterData->alliance;
                     $this->save();
                 }
             }else{
@@ -1207,6 +1211,72 @@ class CharacterModel extends AbstractPathfinderModel {
         }
 
         return $status;
+    }
+
+    /**
+     * Refresh corporation and alliance affiliation from ESI.
+     * Skips if affiliationUpdated is less than 1 hour old.
+     * Does not block login on ESI failure — returns false but lets caller proceed.
+     * @return bool
+     */
+    public function updateAffiliation() : bool {
+        if($this->affiliationUpdated){
+            $timezone = self::getF3()->get('getTimeZone')();
+            try{
+                $lastUpdate = new \DateTime($this->affiliationUpdated, $timezone);
+                $now = new \DateTime('now', $timezone);
+                if(($now->getTimestamp() - $lastUpdate->getTimestamp()) < 3600){
+                    return true;
+                }
+            }catch(\Exception $e){
+                // fall through and refresh
+            }
+        }
+
+        $affiliationData = self::getF3()->ccpClient()->send('getCharactersAffiliation', [$this->_id]);
+
+        if(empty($affiliationData) || count($affiliationData) !== 1){
+            Sso::getSSOLogger()->write(sprintf('updateAffiliation failed for character %d: empty or unexpected ESI response', $this->_id));
+            return false;
+        }
+
+        $newCorpId = (int)($affiliationData[0]['corporation']['id'] ?? 0);
+        $newAllianceId = (int)($affiliationData[0]['alliance']['id'] ?? 0);
+
+        if(!$newCorpId){
+            Sso::getSSOLogger()->write(sprintf('updateAffiliation failed for character %d: missing corporation_id in ESI response', $this->_id));
+            return false;
+        }
+
+        /** @var CorporationModel $corporation */
+        $corporation = self::getNew('CorporationModel');
+        $corporation->getById($newCorpId, 0);
+        if(!$corporation->valid()){
+            Sso::getSSOLogger()->write(sprintf('updateAffiliation failed for character %d: could not load corporation %d', $this->_id, $newCorpId));
+            return false;
+        }
+
+        $alliance = null;
+        if($newAllianceId){
+            /** @var AllianceModel $allianceModel */
+            $allianceModel = self::getNew('AllianceModel');
+            $allianceModel->getById($newAllianceId, 0);
+            if($allianceModel->valid()){
+                $alliance = $allianceModel;
+            }
+        }
+
+        $timezone = self::getF3()->get('getTimeZone')();
+        $this->corporationId = $corporation;
+        $this->allianceId = $alliance;
+        $this->affiliationUpdated = (new \DateTime('now', $timezone))->format('Y-m-d H:i:s');
+
+        if(!$this->save()){
+            Sso::getSSOLogger()->write(sprintf('updateAffiliation failed for character %d: save() returned false', $this->_id));
+            return false;
+        }
+
+        return true;
     }
 
     /**
