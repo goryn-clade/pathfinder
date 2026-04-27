@@ -528,11 +528,15 @@ define([
             this.request('POST', 'Route', [], requestData, this, context => {
                 $(this.moduleElement).hideLoadingAnimation();
             })
-                .then(payload => payload.context[callback](payload.data.routesData))
+                .then(payload => {
+                    if(Array.isArray(payload.data.routesData)){
+                        payload.context[callback](payload.data.routesData);
+                    }
+                })
                 .catch(payload => {
                     let reason = payload.data.status + ' ' + payload.data.error;
                     this.showNotify({
-                        title: payload.data.jqXHR.status + ': System route data',
+                        title: (payload.data.jqXHR ? payload.data.jqXHR.status : '') + ': System route data',
                         text: reason,
                         type: 'warning'
                     });

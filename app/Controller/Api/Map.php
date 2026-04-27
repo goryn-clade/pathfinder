@@ -795,7 +795,7 @@ class Map extends Controller\AccessController {
                     if($targetSystem){
                         $targetExists = true;
 
-                        if($targetSystemId === (int)$currentPosition['systemId']){
+                        if(isset($currentPosition['systemId']) && $targetSystemId === (int)$currentPosition['systemId']){
                             $systemPosX = (int)$currentPosition['position']['x'];
                             $systemPosY = (int)$currentPosition['position']['y'];
                         }
