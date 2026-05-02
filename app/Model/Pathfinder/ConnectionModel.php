@@ -12,6 +12,7 @@ use DB\SQL\Schema;
 use Exodus4D\Pathfinder\Controller\Api\Rest\Route;
 use Exodus4D\Pathfinder\Lib\Logging;
 use Exodus4D\Pathfinder\Exception;
+use Exodus4D\Pathfinder\Model\Universe;
 
 class ConnectionModel extends AbstractMapTrackingModel {
 
@@ -87,12 +88,28 @@ class ConnectionModel extends AbstractMapTrackingModel {
             'type' => Schema::DT_TIMESTAMP,
             'default' => null
         ],
+        'nominalLifespan' => [
+            'type' => Schema::DT_INT,
+            'default' => null
+        ],
         'signatures' => [
             'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\SystemSignatureModel::class, 'connectionId']
         ],
         'connectionLog' => [
             'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\ConnectionLogModel::class, 'connectionId']
         ]
+    ];
+
+    private const JUMP_MASS_TYPES = [
+        'wh_jump_mass_s', 'wh_jump_mass_m', 'wh_jump_mass_l', 'wh_jump_mass_xl',
+    ];
+
+    // Thresholds match Init.wormholeSizes in init.js (descending order)
+    private const JUMP_MASS_BUCKETS = [
+        1_000_000_000 => 'wh_jump_mass_xl',
+        375_000_000   => 'wh_jump_mass_l',
+        62_000_000    => 'wh_jump_mass_m',
+        5_000         => 'wh_jump_mass_s',
     ];
 
     /**
@@ -113,8 +130,13 @@ class ConnectionModel extends AbstractMapTrackingModel {
         'wh_jump_mass_m',
         'wh_jump_mass_l',
         'wh_jump_mass_xl',
-        // other types
+        // wh eol phase types
+        'wh_eol1',
+        'wh_eol2',
+        'wh_eol3',
+        // legacy (accepted but mapped to wh_eol1 on read)
         'wh_eol',
+        // other types
         'preserve_mass'
     ];
 
@@ -137,7 +159,10 @@ class ConnectionModel extends AbstractMapTrackingModel {
         $connectionData->source         = $this->source->id;
         $connectionData->target         = $this->target->id;
         $connectionData->scope          = $this->scope;
-        $connectionData->type           = (array)json_decode($this->get('type', true) ?? 'null');
+        $type = (array)json_decode($this->get('type', true) ?? 'null');
+        // backward compat: legacy wh_eol -> wh_eol1
+        $type = array_map(fn($t) => $t === 'wh_eol' ? 'wh_eol1' : $t, $type);
+        $connectionData->type           = array_values(array_unique($type));
         $connectionData->updated        = strtotime($this->updated);
         $connectionData->created        = strtotime($this->created);
         $connectionData->eolUpdated     = $this->eolUpdated ? strtotime($this->eolUpdated) : false;
@@ -171,14 +196,14 @@ class ConnectionModel extends AbstractMapTrackingModel {
         // -> reset keys! otherwise JSON format results in object and not in array
         $type = array_values(array_intersect(array_unique((array)$type), self::$connectionTypeWhitelist));
 
-        // set EOL timestamp
-        if( !in_array('wh_eol', $type) ){
+        // set EOL timestamp per phase transition
+        $eolPhaseTypes = ['wh_eol1', 'wh_eol2', 'wh_eol3', 'wh_eol'];
+        $newEolType = array_values(array_intersect($type, $eolPhaseTypes));
+        $currentEolType = array_values(array_intersect((array)$this->type, $eolPhaseTypes));
+        if(empty($newEolType)){
             $this->eolUpdated = null;
-        }elseif(
-            in_array('wh_eol', $type) &&
-            !in_array('wh_eol', (array)$this->type) // $this->type == null for new connection! (e.g. map import)
-        ){
-            // connection EOL status change
+        }elseif($newEolType !== $currentEolType){
+            // phase added or changed -> reset per-phase timer
             $this->touch('eolUpdated');
         }
 
@@ -251,9 +276,89 @@ class ConnectionModel extends AbstractMapTrackingModel {
                 $this->type = ['stargate'];
             }else{
                 $this->scope = 'wh';
-                $this->type = ['wh_fresh'];
+                $type = ['wh_fresh'];
+                if($defaultMass = $this->defaultMassFromEndpoints()){
+                    $type[] = $defaultMass;
+                }
+                $this->type = $type;
             }
         }
+    }
+
+    /**
+     * map massIndividual (kg) to a wh_jump_mass_* type using the same thresholds as Init.wormholeSizes
+     */
+    public static function jumpMassTypeFromMass(?int $massIndividual) : ?string {
+        $result = null;
+        if($massIndividual !== null){
+            foreach(self::JUMP_MASS_BUCKETS as $threshold => $type){
+                if($massIndividual >= $threshold){
+                    $result = $type;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * replace any existing wh_jump_mass_* with $massType (mutual exclusion)
+     * returns the new type array on change, or null if unchanged
+     */
+    public function setJumpMassType(string $massType) : ?array {
+        if(!in_array($massType, self::JUMP_MASS_TYPES, true)) return null;
+        $current = (array)$this->type;
+        if(in_array($massType, $current, true)) return null;
+        $next = array_values(array_diff($current, self::JUMP_MASS_TYPES));
+        $next[] = $massType;
+        $this->type = $next;
+        return $next;
+    }
+
+    /**
+     * look up a Universe wormhole typeId and apply the matching mass class to this connection.
+     * uses a direct SQL update to avoid AbstractMapTrackingModel::save() requiring a CharacterModel.
+     */
+    public function applyMassFromWormholeTypeId(int $typeId) : bool {
+        if($typeId <= 0 || $this->dry()) return false;
+        /** @var Universe\TypeModel $typeModel */
+        $typeModel = Universe\AbstractUniverseModel::getNew('TypeModel');
+        $typeModel->loadById($typeId);
+        if($typeModel->dry()) return false;
+        $whData = $typeModel->getWormholeData();
+        $massIndividual = isset($whData->massIndividual) ? (int)$whData->massIndividual : null;
+        $massType = self::jumpMassTypeFromMass($massIndividual);
+        if($massType === null) return false;
+        $newType = $this->setJumpMassType($massType);
+        if($newType === null) return false;
+        // bypass AbstractMapTrackingModel::save() — it requires a CharacterModel and would
+        // fail with not-null validation on updatedCharacterId when called without one
+        $this->db->exec(
+            'UPDATE `' . $this->getTable() . '` SET `type`=? WHERE `id`=?',
+            [json_encode($newType), $this->_id]
+        );
+        return true;
+    }
+
+    /**
+     * infer default jump-mass class from endpoint system security classes
+     * most restrictive endpoint wins: C13 → small, C1 → medium
+     */
+    private function defaultMassFromEndpoints() : ?string {
+        $securities = [];
+        if(is_object($this->source)){
+            $securities[] = (string)$this->source->security;
+        }
+        if(is_object($this->target)){
+            $securities[] = (string)$this->target->security;
+        }
+        if(in_array('C13', $securities, true)){
+            return 'wh_jump_mass_s';
+        }
+        if(in_array('C1',  $securities, true)){
+            return 'wh_jump_mass_m';
+        }
+        return null;
     }
 
     /**

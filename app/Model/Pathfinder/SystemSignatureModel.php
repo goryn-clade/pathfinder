@@ -249,6 +249,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      */
     public function afterInsertEvent($self, $pkeys){
         $self->logActivity('signatureCreate');
+        $self->syncConnectionMass();
     }
 
     /**
@@ -264,6 +265,18 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
         // -> makes it easier to see what signatures have not been updated
         $this->touch('updated');
 
+        // Capture effective typeId now, while the mapper's 'initial' values (pre-save DB state)
+        // are still available. After mapper->update() fires, initial is reset to the new value.
+        // This handles the common case where the client sets connId and clears typeId to 0
+        // in the same request (e.g. linking a connection resets the type dropdown).
+        $connId  = (int)$this->get('connectionId', true);
+        $typeId  = (int)$this->typeId;
+        if($connId > 0 && $typeId === 0){
+            $schema = $this->getMapper()->schema();
+            $typeId = isset($schema['typeId']) ? (int)$schema['typeId']['initial'] : 0;
+        }
+        $this->virtual('_syncTypeId', $typeId);
+
         return parent::beforeUpdateEvent($self, $pkeys);
     }
 
@@ -275,6 +288,30 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      */
     public function afterUpdateEvent($self, $pkeys){
         $self->logActivity('signatureUpdate');
+        $self->syncConnectionMass();
+    }
+
+    /**
+     * when a wormhole signature with a linked connection gets/changes its typeId,
+     * push the corresponding jump-mass class onto the connection
+     */
+    private function syncConnectionMass() : void {
+        $connId  = (int)$this->get('connectionId', true);
+        // use effective typeId captured in beforeUpdateEvent (handles client clearing typeId to 0
+        // when linking a connection in the same request). get() checks vFields; $this->_syncTypeId
+        // cannot be used because __isset() returns false for virtual fields (exists() checks DB only)
+        $typeId  = (int)$this->get('_syncTypeId') ?: (int)$this->typeId;
+        $groupId = (int)$this->groupId;
+        if($connId <= 0 || $typeId <= 0){
+            return;
+        }
+        if($groupId !== 5){
+            return;
+        }
+        $connection = $this->getConnection();
+        if($connection && !$connection->dry() && $connection->isWormhole()){
+            $connection->applyMassFromWormholeTypeId($typeId);
+        }
     }
 
     /**
@@ -319,4 +356,4 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
         }
         return $status;
     }
-} 
+}

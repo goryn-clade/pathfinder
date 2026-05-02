@@ -825,6 +825,7 @@ define([
                                         let newRowData = response[0];
                                         module.updateSignatureCell(tableApi, rowIndex, 'status:name', newRowData.updated);
                                         module.updateSignatureCell(tableApi, rowIndex, 'updated:name', newRowData.updated.updated);
+                                        module.syncConnectionMassType(newRowData);
                                     }
                                     tableApi.draw();
                                 }
@@ -941,6 +942,15 @@ define([
                                         let newRowData = response[0];
                                         module.updateSignatureCell(tableApi, rowIndex, 'status:name', newRowData.updated);
                                         module.updateSignatureCell(tableApi, rowIndex, 'updated:name', newRowData.updated.updated);
+                                        // server may return typeId=0 if the client cleared it when linking;
+                                        // fall back to the current row's typeId from the DataTables cache
+                                        if(!newRowData.typeId){
+                                            let currentRowData = tableApi.row($(cell).closest('tr')).data();
+                                            if(currentRowData && currentRowData.typeId){
+                                                newRowData = Object.assign({}, newRowData, {typeId: currentRowData.typeId});
+                                            }
+                                        }
+                                        module.syncConnectionMassType(newRowData);
                                     }
                                     tableApi.draw();
                                 }
@@ -1385,6 +1395,8 @@ define([
                     payload => {
                         // updates table with new/updated signature information
                         this.updateSignatureTable(payload.context.tableApi, payload.data, !!options.deleteOld);
+                        // immediately sync connection mass type for any wormhole sigs with a linked connection
+                        (payload.data || []).forEach(sig => this.syncConnectionMassType(sig));
                     },
                     Util.handleAjaxErrorResponse
                 );
@@ -1549,6 +1561,43 @@ define([
                     }
                 });
             }, 200);
+        }
+
+        /**
+         * if sigData is a wormhole sig with a typeId and a linked connection, immediately
+         * apply the matching jump-mass type to the connection on the client side.
+         * mirrors the context-menu path: setConnectionJumpMassType + markAsChanged.
+         * @param {object} sigData  — signature object from the server response
+         */
+        syncConnectionMassType(sigData){
+            if(!sigData || sigData.groupId !== 5 || !sigData.typeId){
+                return;
+            }
+            let connId = Util.getObjVal(sigData, 'connection.id');
+            if(!connId){
+                return;
+            }
+            let connection = $().getConnectionById(this._systemData.mapId, connId);
+            if(!connection){
+                return;
+            }
+            let whEntry = Object.values(Init.wormholes).find(wh => wh.typeId === sigData.typeId);
+            if(!whEntry || !whEntry.massIndividual){
+                return;
+            }
+            // thresholds in Init.wormholeSizes are ordered XL→L→M→S; first match wins
+            let massType = null;
+            for(let [type, sizeData] of Object.entries(Init.wormholeSizes)){
+                if(whEntry.massIndividual >= sizeData.jumpMassMin){
+                    massType = type;
+                    break;
+                }
+            }
+            if(!massType){
+                return;
+            }
+            MapUtil.setConnectionJumpMassType(connection, massType);
+            MapUtil.markAsChanged(connection);
         }
 
         /**
@@ -2940,8 +2989,12 @@ define([
                             key > 0 &&
                             tempSelectOptions.hasOwnProperty(key)
                         ){
-                            newSelectOptionsCount++;
-                            fixSelectOptions.push({value: newSelectOptionsCount, text: tempSelectOptions[key]});
+                            let text = tempSelectOptions[key];
+                            let whName = text.substring(0, 4);
+                            let optValue = (groupId === 5 && Init.wormholes[whName] && Init.wormholes[whName].typeId)
+                                ? Init.wormholes[whName].typeId
+                                : ++newSelectOptionsCount;
+                            fixSelectOptions.push({value: optValue, text: text});
                         }
                     }
 
@@ -2966,8 +3019,12 @@ define([
                             frigKey > 0 &&
                             frigateHoles.hasOwnProperty(frigKey)
                         ){
-                            newSelectOptionsCount++;
-                            frigateWHData.push({value: newSelectOptionsCount, text: frigateHoles[frigKey]});
+                            let text = frigateHoles[frigKey];
+                            let whName = text.substring(0, 4);
+                            let frigTypeId = (Init.wormholes[whName] && Init.wormholes[whName].typeId)
+                                ? Init.wormholes[whName].typeId
+                                : ++newSelectOptionsCount;
+                            frigateWHData.push({value: frigTypeId, text: text});
                         }
                     }
 
@@ -2983,8 +3040,12 @@ define([
                                 drifterKey > 0 &&
                                 Init.drifterWormholes.hasOwnProperty(drifterKey)
                             ){
-                                newSelectOptionsCount++;
-                                drifterWHData.push({value: newSelectOptionsCount, text: Init.drifterWormholes[drifterKey]});
+                                let text = Init.drifterWormholes[drifterKey];
+                                let whName = text.substring(0, 4);
+                                let drifterTypeId = (Init.wormholes[whName] && Init.wormholes[whName].typeId)
+                                    ? Init.wormholes[whName].typeId
+                                    : ++newSelectOptionsCount;
+                                drifterWHData.push({value: drifterTypeId, text: text});
                             }
                         }
 
@@ -3017,8 +3078,8 @@ define([
                         // filter staticWHName from existing options -> prevent duplicates in <optgroup>
                         SystemSignatureModule.filterGroupedOptions(newSelectOptions, filterOptionCallback(staticWHName));
 
-                        newSelectOptionsCount++;
-                        staticWHData.push({value: newSelectOptionsCount, text: staticWHName});
+                        let staticTypeId = wormholeData.typeId ? wormholeData.typeId : ++newSelectOptionsCount;
+                        staticWHData.push({value: staticTypeId, text: staticWHName});
                     }
 
                     if(staticWHData.length > 0){
