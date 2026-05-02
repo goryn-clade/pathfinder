@@ -2866,6 +2866,17 @@ define([
 
     // CurrentMapData =================================================================================================
 
+    // Guard against WS/poll races that re-add a map immediately after deletion.
+    let recentlyDeletedMapIds = new Map(); // id -> expiresAt (ms)
+    const RECENTLY_DELETED_TTL_MS = 5000;
+
+    let isRecentlyDeleted = mapId => {
+        let expiresAt = recentlyDeletedMapIds.get(mapId);
+        if(expiresAt && expiresAt > Date.now()) return true;
+        if(expiresAt) recentlyDeletedMapIds.delete(mapId);
+        return false;
+    };
+
     /**
      * set currentMapData as "global" variable
      * this function should be called continuously after data change
@@ -2873,7 +2884,7 @@ define([
      * @param mapData
      */
     let setCurrentMapData = mapData => {
-        Init.currentMapData = mapData;
+        Init.currentMapData = mapData.filter(m => !isRecentlyDeleted(m.config.id));
 
         return getCurrentMapData();
     };
@@ -2917,7 +2928,7 @@ define([
         if(mapDataIndex !== false){
             Init.currentMapData[mapDataIndex].config = mapData.config;
             Init.currentMapData[mapDataIndex].data = mapData.data;
-        }else{
+        }else if(!isRecentlyDeleted(mapData.config.id)){
             // new map data
             Init.currentMapData.push(mapData);
         }
@@ -2944,6 +2955,7 @@ define([
      */
     let deleteCurrentMapData = mapId => {
         Init.currentMapData = Init.currentMapData.filter(mapData => mapData.config.id !== mapId);
+        recentlyDeletedMapIds.set(mapId, Date.now() + RECENTLY_DELETED_TTL_MS);
     };
 
     /**
