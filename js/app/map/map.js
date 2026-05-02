@@ -819,9 +819,15 @@ define([
                 });
                 break;
             case 'preserve_mass':   // set "preserve mass
-            case 'wh_eol':          // set "end of life"
                 MapOverlayUtil.getMapOverlay(mapElement, 'timer').startMapUpdateCounter();
                 MapUtil.toggleConnectionType(connection, action);
+                MapUtil.markAsChanged(connection);
+                break;
+            case 'status_eol1':
+            case 'status_eol2':
+            case 'status_eol3':
+                MapOverlayUtil.getMapOverlay(mapElement, 'timer').startMapUpdateCounter();
+                MapUtil.setConnectionEolStatusType(connection, 'wh_' + action.split('_').slice(1).join('_'));
                 MapUtil.markAsChanged(connection);
                 break;
             case 'status_fresh':
@@ -1108,8 +1114,19 @@ define([
             currentConnectionData = MapUtil.getDataByConnection(connection);
         }
 
+        // update connection 'EOL phase' type -------------------------------------------------------------------------
+        let allEolTypes         = MapUtil.allConnectionEolStatusTypes();
+        let newEolTypes         = allEolTypes.intersect(newConnectionData.type);
+        let currentEolTypes     = allEolTypes.intersect(currentConnectionData.type);
+
+        if(!newEolTypes.equalValues(currentEolTypes)){
+            // -> only ONE EOL phase type is allowed -> take the first one
+            MapUtil.setConnectionEolStatusType(connection, newEolTypes.length ? newEolTypes[0] : undefined);
+            currentConnectionData = MapUtil.getDataByConnection(connection);
+        }
+
         // check for unhandled connection type changes ----------------------------------------------------------------
-        let allToggleTypes = ['wh_eol', 'preserve_mass'];
+        let allToggleTypes = ['preserve_mass'];
         let newTypes = allToggleTypes.intersect(newConnectionData.type.diff(currentConnectionData.type));
         let oldTypes = allToggleTypes.intersect(currentConnectionData.type.diff(newConnectionData.type));
 
@@ -2043,7 +2060,7 @@ define([
 
             // hidden menu actions
             if(scope === 'abyssal'){
-                options.hidden.push('wh_eol');
+                options.hidden.push('eol_status');
                 options.hidden.push('preserve_mass');
                 options.hidden.push('change_status');
                 options.hidden.push('wh_jump_mass_change');
@@ -2051,14 +2068,14 @@ define([
                 options.hidden.push('change_scope');
                 options.hidden.push('separator');
             }else if(scope === 'stargate'){
-                options.hidden.push('wh_eol');
+                options.hidden.push('eol_status');
                 options.hidden.push('preserve_mass');
                 options.hidden.push('change_status');
                 options.hidden.push('wh_jump_mass_change');
 
                 options.hidden.push('scope_stargate');
             }else if(scope === 'jumpbridge'){
-                options.hidden.push('wh_eol');
+                options.hidden.push('eol_status');
                 options.hidden.push('preserve_mass');
                 options.hidden.push('change_status');
                 options.hidden.push('wh_jump_mass_change');
@@ -2069,8 +2086,12 @@ define([
             }
 
             // active menu actions
-            if(connection.hasType('wh_eol') === true){
-                options.active.push('wh_eol');
+            if(connection.hasType('wh_eol1') === true){
+                options.active.push('status_eol1');
+            }else if(connection.hasType('wh_eol2') === true){
+                options.active.push('status_eol2');
+            }else if(connection.hasType('wh_eol3') === true){
+                options.active.push('status_eol3');
             }
             if(connection.hasType('preserve_mass') === true){
                 options.active.push('preserve_mass');
@@ -2424,13 +2445,11 @@ define([
 
                 // loop connection not allowed
                 if(sourceId === targetId){
-                    console.warn('Source/Target systems are identical');
                     return false;
                 }
 
                 // connection can not be dropped on an endpoint that already has other connections on it
                 if(dropEndpoint.connections.length > 0){
-                    console.warn('Endpoint already occupied');
                     return false;
                 }
 

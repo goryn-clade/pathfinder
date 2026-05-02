@@ -184,6 +184,7 @@ class TypeModel extends AbstractUniverseModel {
     public function getWormholeData() : \stdClass {
         $wormholeData = (object) [];
         if($this->valid()){
+            $wormholeData->typeId = $this->_id;
             $wormholeData->name = $this->getWormholeName();
             $wormholeData->static = $this->statics ? (bool)count($this->statics) : false;
             $wormholeData->security = '';

@@ -103,8 +103,11 @@ define([
         let moduleData = {
             id: config.connectionContextMenuId,
             items: [
-                {icon: 'fa-hourglass-end', action: 'wh_eol', text: 'toggle EOL'},
-                {icon: 'fa-exclamation-triangle', action: 'preserve_mass', text: 'preserve mass'},
+                {icon: 'fa-hourglass-end', action: 'eol_status', text: 'EOL phase', subitems: [
+                        {subIcon: 'fa-hourglass-start', subAction: 'status_eol1', subText: 'phase 1 (aging)'},
+                        {subIcon: 'fa-hourglass-half',  subAction: 'status_eol2', subText: 'phase 2 (expiring)'},
+                        {subIcon: 'fa-hourglass-end',   subAction: 'status_eol3', subText: 'phase 3 (zombie)'}
+                    ]},
                 {icon: 'fa-reply fa-rotate-180', action: 'change_status', text: 'mass status', subitems: [
                         {subIcon: 'fa-circle', subIconClass: 'txt-color txt-color-gray', subAction: 'status_fresh', subText: 'stage 1 (fresh)'},
                         {subIcon: 'fa-circle', subIconClass: 'txt-color txt-color-orange', subAction: 'status_reduced', subText: 'stage 2 (reduced)'},
@@ -124,6 +127,7 @@ define([
                         {subIcon: 'fa-minus-circle', subIconClass: 'txt-color txt-color-tealLighter', subAction: 'scope_jumpbridge', subText: 'jumpbridge'}
 
                     ]},
+                {icon: 'fa-exclamation-triangle', action: 'preserve_mass', text: 'preserve mass'},
                 {divider: true, action: 'separator'} ,
                 {icon: 'fa-unlink', action: 'delete_connection', text: 'detach'}
             ]

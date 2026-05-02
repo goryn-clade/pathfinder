@@ -1264,11 +1264,29 @@ define([
     };
 
     /**
+     * get all available connection types for "EOL phase"
+     * @returns {string[]}
+     */
+    let allConnectionEolStatusTypes = () => {
+        return ['wh_eol1', 'wh_eol2', 'wh_eol3'];
+    };
+
+    /**
      * get all available connection types for "jump mass size"
      * @returns {string[]}
      */
     let allConnectionJumpMassTypes = () => {
         return ['wh_jump_mass_s', 'wh_jump_mass_m', 'wh_jump_mass_l', 'wh_jump_mass_xl'];
+    };
+
+    /**
+     * set/change/remove connection EOL phase
+     * -> phaseType == undefined will remove (all) existing EOL phase types
+     * @param connection
+     * @param phaseType
+     */
+    let setConnectionEolStatusType = (connection, phaseType) => {
+        setUniqueConnectionType(connection, phaseType, allConnectionEolStatusTypes());
     };
 
     /**
@@ -2244,6 +2262,8 @@ define([
         getConnectionFakeClassesByTypes: getConnectionFakeClassesByTypes,
         checkForConnection: checkForConnection,
         getDefaultConnectionTypeByScope: getDefaultConnectionTypeByScope,
+        allConnectionEolStatusTypes: allConnectionEolStatusTypes,
+        setConnectionEolStatusType: setConnectionEolStatusType,
         allConnectionMassStatusTypes: allConnectionMassStatusTypes,
         allConnectionJumpMassTypes: allConnectionJumpMassTypes,
         setConnectionMassStatusType: setConnectionMassStatusType,

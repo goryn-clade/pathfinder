@@ -480,18 +480,22 @@ define([
             hoverIntent: {
                 over: function(e){
                     let map = getMapObjectFromOverlayIcon(this);
-                    let connections = MapUtil.searchConnectionsByScopeAndType(map, 'wh', ['wh_eol']);
+                    let eolTypes = MapUtil.allConnectionEolStatusTypes();
+                    let connections = MapUtil.searchConnectionsByScopeAndType(map, 'wh', eolTypes);
                     let serverDate = Util.getServerTime();
+                    let phaseLabel = {'wh_eol1': 'Ph.1', 'wh_eol2': 'Ph.2', 'wh_eol3': 'Ph.3'};
 
                     for(let connection of connections){
+                        let activePhase = eolTypes.find(t => connection.hasType(t)) || 'wh_eol1';
                         let eolTimestamp = connection.getParameter('eolUpdated');
                         let eolDate = Util.convertTimestampToServerTime(eolTimestamp);
                         let diff = Util.getTimeDiffParts(eolDate, serverDate);
+                        let label = (phaseLabel[activePhase] || 'EOL') + '&nbsp;<i class="fas fa-fw fa-hourglass-end"></i>&nbsp;' + Util.formatTimeParts(diff);
 
                         connection.addOverlay([
                             'Label',
                             {
-                                label: '<i class="fas fa-fw fa-hourglass-end"></i>&nbsp;' + Util.formatTimeParts(diff),
+                                label: label,
                                 id: MapOverlayUtil.config.connectionOverlayEolId,
                                 cssClass: [MapOverlayUtil.config.componentOverlayClass, 'eol'].join(' '),
                                 location: 0.25
@@ -501,7 +505,7 @@ define([
                 },
                 out: function(e){
                     let map = getMapObjectFromOverlayIcon(this);
-                    let connections = MapUtil.searchConnectionsByScopeAndType(map, 'wh', ['wh_eol']);
+                    let connections = MapUtil.searchConnectionsByScopeAndType(map, 'wh', MapUtil.allConnectionEolStatusTypes());
 
                     for(let connection of connections){
                         connection.removeOverlay(MapOverlayUtil.config.connectionOverlayEolId);

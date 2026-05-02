@@ -1566,8 +1566,16 @@ table{
   border-left: none;
   border-right: none;
 
-  &.pf-wh-eol{
+  &.pf-wh-eol1{
+    border-color: $pink-light;
+  }
+
+  &.pf-wh-eol2{
     border-color: $pink-dark;
+  }
+
+  &.pf-wh-eol3{
+    border-color: $pink-darker;
   }
 
   &.pf-wh-reduced{

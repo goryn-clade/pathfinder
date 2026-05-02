@@ -77,8 +77,15 @@ abstract class AbstractEveScoutController extends AbstractRestController {
         $enrichWithWormholeData = function( $wormholeData, array &$connectionsData) : void {
             $type = ['wh_fresh'];
 
-            if(($wormholeData['estimatedEol'] ?? 0) <= 4){
-                $type[] = 'wh_eol';
+            $estimatedEol = $wormholeData['estimatedEol'] ?? null;
+            if($estimatedEol !== null && $estimatedEol <= 4){
+                if($estimatedEol > 1){
+                    $type[] = 'wh_eol1';    // Phase 1 (aging): 1–4h remaining
+                }elseif($estimatedEol > 0){
+                    $type[] = 'wh_eol2';    // Phase 2 (expiring): 0–1h remaining
+                }else{
+                    $type[] = 'wh_eol3';    // Phase 3 (zombie): past natural end
+                }
             }
             switch($wormholeData['jumpMass'] ?? '') {
                 case 'capital':

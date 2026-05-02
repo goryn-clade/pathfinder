@@ -749,14 +749,27 @@ $mapBubbleWidth:        30px;
   .pf-map-connection-wh-fresh,
   .pf-map-connection-wh-reduced,
   .pf-map-connection-wh-critical,
-  .pf-map-connection-wh-eol{
+  .pf-map-connection-wh-eol1,
+  .pf-map-connection-wh-eol2,
+  .pf-map-connection-wh-eol3{
     z-index: 6;
   }
 
-  .pf-map-connection-wh-eol {
+  .pf-map-connection-wh-eol1 {
+    path:first-child{
+      stroke: $pink-light;
+    }
+  }
 
+  .pf-map-connection-wh-eol2 {
     path:first-child{
       stroke: $pink-dark;
+    }
+  }
+
+  .pf-map-connection-wh-eol3 {
+    path:first-child{
+      stroke: $pink-darker;
     }
   }
 
