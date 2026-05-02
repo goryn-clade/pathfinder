@@ -11,6 +11,9 @@ define([
 ], ($, Init, Util, bootbox, MapUtil) => {
     'use strict';
 
+    const GROUP_DEBUG = true;
+    const glog = (...args) => { if(GROUP_DEBUG) console.log('[GROUP]', ...args); };
+
     let config = {
         groupClass:         'pf-map-group',
         groupHeaderClass:   'pf-map-group-header',
@@ -42,6 +45,7 @@ define([
      * @returns {jQuery}
      */
     let buildGroupElement = (mapId, groupData) => {
+        glog('buildGroupElement <- server', {id: groupData.id, posX: groupData.posX, posY: groupData.posY, width: groupData.width, height: groupData.height, isCollapsed: groupData.isCollapsed});
         let groupId = getGroupId(mapId, groupData.id);
 
         let handle = $('<i>', {
@@ -123,13 +127,26 @@ define([
     let saveGroupPosition = groupEl => {
         let groupId = groupEl.data('id');
         let pos = groupEl.position();
+        let isCollapsed = groupEl.hasClass('jtk-group-collapsed');
 
-        Util.request('PATCH', 'MapGroup', groupId, {
-            posX:   Math.round(pos.left),
-            posY:   Math.round(pos.top),
-            width:  Math.round(groupEl.outerWidth()),
-            height: Math.round(groupEl.outerHeight())
-        }).catch(console.warn);
+        // when collapsed, outerHeight() returns the header-only height (~22px) due to
+        // `height: auto !important` in CSS — never save that as the group's real size
+        let payload = {
+            posX: Math.round(pos.left),
+            posY: Math.round(pos.top)
+        };
+        if(!isCollapsed){
+            payload.width  = Math.round(groupEl.outerWidth());
+            payload.height = Math.round(groupEl.outerHeight());
+        }
+
+        glog('saveGroupPosition', groupEl.attr('id'), {isCollapsed, payload,
+            outerWidth: groupEl.outerWidth(), outerHeight: groupEl.outerHeight(),
+            inlineHeight: groupEl[0].style.height,
+            computedHeight: getComputedStyle(groupEl[0]).height
+        });
+
+        Util.request('PATCH', 'MapGroup', groupId, payload).catch(console.warn);
     };
 
     /**
@@ -152,6 +169,7 @@ define([
      */
     let setCollapsed = (jsPlumbInstance, groupEl, collapsed) => {
         let groupDomId = groupEl.attr('id');
+        glog('setCollapsed BEFORE', groupDomId, {collapsed, inlineHeight: groupEl[0].style.height, outerHeight: groupEl.outerHeight()});
 
         if(collapsed){
             jsPlumbInstance.collapseGroup(groupDomId);
@@ -159,6 +177,7 @@ define([
             jsPlumbInstance.expandGroup(groupDomId);
         }
 
+        glog('setCollapsed AFTER', groupDomId, {collapsed, inlineHeight: groupEl[0].style.height, outerHeight: groupEl.outerHeight()});
         saveGroupCollapsed(groupEl, collapsed);
     };
 
@@ -211,6 +230,7 @@ define([
                 $(document).off('mousemove.groupResize mouseup.groupResize');
                 if(rafId){ cancelAnimationFrame(rafId); }
                 jsPlumbInstance.repaintEverything();
+                glog('resizeHandle mouseup', groupEl.attr('id'), {finalW: groupEl.outerWidth(), finalH: groupEl.outerHeight()});
                 saveGroupPosition(groupEl);
             };
 
@@ -311,6 +331,11 @@ define([
         jsPlumbInstance.bind('groupDragStop', function(params){
             if(params.group && params.group.getEl() === groupEl[0]){
                 groupEl.css('z-index', '');
+                glog('groupDragStop', groupEl.attr('id'), {
+                    isCollapsed: groupEl.hasClass('jtk-group-collapsed'),
+                    outerHeight: groupEl.outerHeight(),
+                    inlineHeight: groupEl[0].style.height
+                });
                 saveGroupPosition(groupEl);
             }
         });
@@ -351,6 +376,11 @@ define([
                 containment: 'parent',
                 start:       function(){ groupEl.css('z-index', 50); }
             }
+        });
+        glog('initGroup post-addGroup', groupDomId, {
+            styleLeft: groupEl[0].style.left, styleTop: groupEl[0].style.top,
+            styleWidth: groupEl[0].style.width, styleHeight: groupEl[0].style.height,
+            outerWidth: groupEl.outerWidth(), outerHeight: groupEl.outerHeight()
         });
 
         bindGroupEvents(jsPlumbInstance, groupEl, mapContainer);
