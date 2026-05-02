@@ -569,6 +569,7 @@ define([
                         name: 'sourceName',
                         title: 'source system',
                         data: 'sourceName',
+                        defaultContent: '',
                         className: [config.tableCellLinkClass].join(' '),
                         createdCell: function(cell, cellData, rowData, rowIndex, colIndex){
                             // select system
@@ -625,6 +626,7 @@ define([
                         name: 'targetName',
                         title: 'target system',
                         data: 'targetName',
+                        defaultContent: '',
                         className: [config.tableCellLinkClass].join(' '),
                         createdCell: function(cell, cellData, rowData, rowIndex, colIndex){
                             // select system
