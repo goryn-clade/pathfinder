@@ -9,6 +9,7 @@
 namespace Exodus4D\Pathfinder\Lib\Logging\Handler;
 
 
+use Exodus4D\Pathfinder\Lib\Config;
 use Monolog\Logger;
 
 class SocketHandler extends \Monolog\Handler\SocketHandler {
@@ -25,6 +26,9 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
      */
     protected $metaData = []){
         parent::__construct($connectionString, $level, $bubble);
+
+        $this->setConnectionTimeout(2);
+        $this->setTimeout(2);
     }
 
     /**
@@ -50,7 +54,14 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
 
         $record['formatted'] = $this->getFormatter()->format($record);
 
-        $this->write($record);
+        try {
+            $this->write($record);
+        } catch (\RuntimeException $e) {
+            // Mark socket as unavailable so subsequent writes in this request
+            // (and for the remainder of the cache TTL) skip the socket handler.
+            \Base::instance()->set(Config::CACHE_KEY_SOCKET_VALID, false, Config::CACHE_TTL_SOCKET_VALID);
+            return false;
+        }
 
         return false === $this->bubble;
     }
