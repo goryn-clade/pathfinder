@@ -25,7 +25,7 @@ class Killboard extends Controller\Controller {
 
         if(!$f3->exists($cacheKey, $body)){
             $r2z2Base = Config::getPathfinderData('api.zkillboard_r2z2');
-            $client = new Client(['timeout' => 10]);
+            $client = new Client(['timeout' => 10, 'connect_timeout' => 3]);
 
             try {
                 $response = $client->get($r2z2Base . '/sequence.json', ['http_errors' => false]);
@@ -36,7 +36,8 @@ class Killboard extends Controller\Controller {
                 }
                 $body = (string)$response->getBody();
                 $f3->set($cacheKey, $body, $ttl);
-            } catch(GuzzleException $e){
+            } catch(\Throwable $e){
+                error_log(sprintf('Killboard::sequence %s: %s', get_class($e), $e->getMessage()));
                 $f3->status(502);
                 echo json_encode(['error' => 'R2Z2 request failed']);
                 return;
@@ -64,7 +65,7 @@ class Killboard extends Controller\Controller {
         }
 
         $r2z2Base = Config::getPathfinderData('api.zkillboard_r2z2');
-        $client = new Client(['timeout' => 15]);
+        $client = new Client(['timeout' => 15, 'connect_timeout' => 3]);
 
         try {
             $response = $client->get($r2z2Base . '/' . $sequenceId . '.json', ['http_errors' => false]);
@@ -83,9 +84,9 @@ class Killboard extends Controller\Controller {
 
             header('Content-Type: application/json');
             echo (string)$response->getBody();
-        } catch(GuzzleException $e){
-            $f3->status(502);
-            echo json_encode(['error' => 'R2Z2 request failed']);
+        } catch(\Throwable $e){
+            error_log(sprintf('Killboard::r2z2 seq=%d %s: %s', $sequenceId, get_class($e), $e->getMessage()));
+            $f3->status(204);
         }
     }
 }

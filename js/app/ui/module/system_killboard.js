@@ -900,7 +900,10 @@ define([
                         SystemKillboardModule.pollVisibilityListening = false;
                         if(SystemKillboardModule.pollActive){
                             try {
-                                let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+                                const sc = new AbortController();
+                                const stid = setTimeout(() => sc.abort(), 10000);
+                                let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                                clearTimeout(stid);
                                 if(seqResp.ok){
                                     let seqData = await seqResp.json();
                                     SystemKillboardModule.pollSequenceId = seqData.sequence;
@@ -916,9 +919,15 @@ define([
 
             SystemKillboardModule.pollInFlight = true;
             let seqId = SystemKillboardModule.pollSequenceId;
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
 
             try {
-                let resp = await fetch(`/api/Killboard/r2z2/${seqId}`, {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+                let resp = await fetch(`/api/Killboard/r2z2/${seqId}`, {
+                    headers: {'X-Requested-With': 'XMLHttpRequest'},
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
 
                 if(resp.status === 204){
                     // caught up — check if sequence is stale (gap in stream)
@@ -926,16 +935,20 @@ define([
                     if(SystemKillboardModule.pollConsecutive404s >= 5){
                         // resync to current head in case of a sequence gap
                         SystemKillboardModule.pollConsecutive404s = 0;
-                        let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}});
-                        if(seqResp.ok){
-                            let seqData = await seqResp.json();
-                            if(seqData.sequence > SystemKillboardModule.pollSequenceId){
-                                SystemKillboardModule.pollSequenceId = seqData.sequence;
+                        const sc = new AbortController();
+                        const stid = setTimeout(() => sc.abort(), 10000);
+                        try {
+                            let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                            if(seqResp.ok){
+                                let seqData = await seqResp.json();
+                                if(seqData.sequence > SystemKillboardModule.pollSequenceId){
+                                    SystemKillboardModule.pollSequenceId = seqData.sequence;
+                                }
                             }
-                        }
+                        } finally { clearTimeout(stid); }
                     }
                     SystemKillboardModule.pollInFlight = false;
-                    SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 6000);
+                    SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 10000);
                     return;
                 }
 
@@ -944,6 +957,7 @@ define([
                 }
 
                 SystemKillboardModule.pollConsecutive404s = 0;
+                SystemKillboardModule.pollConsecutiveErrors = 0;
                 let r2z2Data = await resp.json();
                 let adapted = SystemKillboardModule.adaptR2z2Response(r2z2Data);
                 let [zkbData, killmailData] = SystemKillboardModule.cacheWsResponse(adapted);
@@ -956,15 +970,44 @@ define([
                 SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 100);
 
             } catch(e) {
-                console.error('R2Z2 poll error', e);
+                clearTimeout(timeoutId);
+                // suppress expected aborts from page unload or stopPoller()
+                if(e.name === 'AbortError' && !SystemKillboardModule.pollActive){
+                    SystemKillboardModule.pollInFlight = false;
+                    return;
+                }
+                console.error(`R2Z2 poll error seq=${seqId} type=${e.name}`, e);
                 SystemKillboardModule.pollInFlight = false;
                 SystemKillboardModule.wsStatus = 3;
                 SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+
+                SystemKillboardModule.pollConsecutiveErrors = (SystemKillboardModule.pollConsecutiveErrors || 0) + 1;
+
+                // after 3 consecutive failures, resync sequence before retrying
+                if(SystemKillboardModule.pollConsecutiveErrors >= 3){
+                    SystemKillboardModule.pollConsecutiveErrors = 0;
+                    try {
+                        const sc = new AbortController();
+                        const stid = setTimeout(() => sc.abort(), 10000);
+                        let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                        clearTimeout(stid);
+                        if(seqResp.ok){
+                            let seqData = await seqResp.json();
+                            if(seqData.sequence > SystemKillboardModule.pollSequenceId){
+                                SystemKillboardModule.pollSequenceId = seqData.sequence;
+                            }
+                        }
+                    } catch(_) { /* will retry on next poll */ }
+                }
+
+                // exponential backoff: 10s → 20s → 40s → 60s max
+                let errCount = Math.min(SystemKillboardModule.pollConsecutiveErrors, 3);
+                let delay = Math.min(60000, 10000 * Math.pow(2, errCount));
                 SystemKillboardModule.pollTimer = setTimeout(() => {
                     SystemKillboardModule.wsStatus = 2;
                     SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
                     SystemKillboardModule.pollNext();
-                }, 10000);
+                }, delay);
             }
         }
 
@@ -981,7 +1024,10 @@ define([
             SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
 
             try {
-                let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+                const sc = new AbortController();
+                const stid = setTimeout(() => sc.abort(), 10000);
+                let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                clearTimeout(stid);
                 if(!seqResp.ok){
                     throw new Error(`sequence.json: ${seqResp.status}`);
                 }
