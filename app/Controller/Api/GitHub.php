@@ -35,7 +35,17 @@ class GitHub extends Controller\Controller {
         $return->version->delta = null;
         $return->version->dev = false;
 
-        $releases = $f3->gitHubClient()->send('getProjectReleases', 'goryn-clade/pathfinder', $releaseCount);
+        try {
+            $releases = $f3->gitHubClient()->send('getProjectReleases', 'goryn-clade/pathfinder', $releaseCount);
+        } catch(\Exception $e) {
+            $releases = [];
+        }
+
+        if(!is_array($releases)){
+            $releases = [];
+        }
+
+        $return->version->unavailable = empty($releases);
 
         foreach($releases as $key => &$release){
             // check version ------------------------------------------------------------------------------------------
@@ -67,7 +77,14 @@ class GitHub extends Controller\Controller {
 
             // convert Markdown to HTML -> use either gitHub API (in oder to create abs, issue links)
             // -> or F3´s markdown as fallback
-            $html = $f3->gitHubClient()->send('markdownToHtml', 'exodus4d/pathfinder', $body);
+            try {
+                $html = $f3->gitHubClient()->send('markdownToHtml', 'exodus4d/pathfinder', $body);
+            } catch(\Exception $e) {
+                $html = '';
+            }
+            if(!is_string($html)){
+                $html = '';
+            }
 
             if(!empty($html)){
                 $body = $html;

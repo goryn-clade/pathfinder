@@ -27,7 +27,10 @@ define([
         let title = versionData.current;
         let text = 'Installed version check failed';
 
-        if(versionData.dev){
+        if(versionData.unavailable){
+            type = 'warning';
+            text = 'Release information not available.';
+        }else if(versionData.dev){
             // developer version
             type = 'info';
             title = versionData.current + ' (dev)';
