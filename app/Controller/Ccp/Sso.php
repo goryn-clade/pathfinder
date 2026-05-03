@@ -27,6 +27,13 @@ class Sso extends Api\User{
      */
     const SSO_TIMEOUT                               = 4;
 
+    /**
+     * SSO endpoints are pre-authentication by definition — skip the Api\User auth guard.
+     */
+    public function beforeroute(\Base $f3, $params): bool {
+        return Controller\Controller::beforeroute($f3, $params);
+    }
+
     // SSO specific session keys
     const SESSION_KEY_SSO                           = 'SESSION.SSO';
     const SESSION_KEY_SSO_ERROR                     = 'SESSION.SSO.ERROR';
