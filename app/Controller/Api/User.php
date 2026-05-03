@@ -17,7 +17,7 @@ use Exodus4D\Pathfinder\Exception;
 class User extends Controller\Controller{
 
     // Methods that do not require an authenticated session
-    private const PUBLIC_METHODS = ['getCookieCharacter', 'getCaptcha', 'logout'];
+    private const PUBLIC_METHODS = ['getCookieCharacter', 'getCaptcha', 'logout', 'getEveServerStatus'];
 
     /**
      * Require authentication for all methods except the public allow-list.
