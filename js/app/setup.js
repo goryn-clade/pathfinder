@@ -42,6 +42,8 @@ define([
      * @param context
      * @param callback
      */
+    let getSetupToken = () => $('section[data-setup-token]').first().attr('data-setup-token') || '';
+
     let sendRequest = (url, requestData, context, callback) => {
         if(requestData.count === 0){
             // first iteration
@@ -52,7 +54,7 @@ define([
             url: url,
             type: 'POST',
             dataType: 'json',
-            data: requestData,
+            data: Object.assign({token: getSetupToken()}, requestData),
             context: context
         }).done(function(data){
             callback(this, data);

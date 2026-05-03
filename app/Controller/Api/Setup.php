@@ -16,6 +16,17 @@ use Exodus4D\Pathfinder\Model;
 
 class Setup extends Controller\Controller {
 
+    public function beforeroute(\Base $f3, $params): bool {
+        $expected = getenv('APP_PASSWORD');
+        $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
+        if(!$expected || !hash_equals($expected, $provided)){
+            http_response_code(401);
+            echo json_encode(['error' => [['type' => 401, 'message' => 'Setup requires a valid token']]]);
+            return false;
+        }
+        return parent::beforeroute($f3, $params);
+    }
+
     /**
      * get HTML table <tr>´s for all cronjobs
      * @param \Base $f3
