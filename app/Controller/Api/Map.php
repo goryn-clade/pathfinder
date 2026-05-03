@@ -478,12 +478,16 @@ class Map extends Controller\AccessController {
             unset($characterData->corporation->rights);
         }
 
-        // access token
-        $token = bin2hex(random_bytes(16));
+        // HMAC-signed access token bound to the current PHP session
+        $nonce = bin2hex(random_bytes(16));
+        $sessionId = session_id();
+        $secret = (string)getenv('WS_TOKEN_SECRET');
+        $token = $nonce . '.' . hash_hmac('sha256', $nonce . ':' . $activeCharacter->_id . ':' . $sessionId, $secret);
 
         $return->data = [
             'id'            => $activeCharacter->_id,
             'token'         => $token, // character access
+            'sessionId'     => $sessionId,
             'characterData' => $characterData,
             'mapData'       => []
         ];
