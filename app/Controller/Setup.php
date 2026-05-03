@@ -2022,6 +2022,7 @@ class Setup extends Controller {
     protected function flushRedisDb(string $host, int $port, int $db = 0){
         $client = new \Redis();
         $client->pconnect($host, $port, 0.3);
+        if($password = getenv('REDIS_PASSWORD')) $client->auth($password);
         $client->select($db);
         $client->flushDB();
         $client->close();
