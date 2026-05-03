@@ -186,6 +186,16 @@ class Setup extends Controller {
     public function init(\Base $f3){
         $params = $f3->get('GET');
 
+        // Defense-in-depth behind nginx Basic Auth: require APP_PASSWORD token for any mutating action
+        if(isset($params['action'])){
+            $expected = getenv('APP_PASSWORD');
+            $provided = (string)($params['token'] ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
+            if(!$expected || !hash_equals($expected, $provided)){
+                $f3->error(401, 'Setup requires a valid token');
+                return;
+            }
+        }
+
         // enables automatic column fix
         $fixColumns = false;
 

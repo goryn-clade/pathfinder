@@ -102,6 +102,7 @@ class User extends Controller\Controller{
             // -> pass character data over for next http request (reroute())
             $this->setTempCharacterData($character->_id);
 
+            session_regenerate_id(true);
             $login = true;
         }
 
