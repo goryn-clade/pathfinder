@@ -16,6 +16,22 @@ use Exodus4D\Pathfinder\Exception;
 
 class User extends Controller\Controller{
 
+    // Methods that do not require an authenticated session
+    private const PUBLIC_METHODS = ['getCookieCharacter', 'getCaptcha', 'logout'];
+
+    /**
+     * Require authentication for all methods except the public allow-list.
+     * User extends Controller (not AccessController) so we enforce it here.
+     */
+    public function beforeroute(\Base $f3, $params): bool {
+        $return = parent::beforeroute($f3, $params);
+        if($return && !in_array($params['action'] ?? '', self::PUBLIC_METHODS, true) && !$this->getCharacter()){
+            $this->logoutCharacter($f3);
+            $return = false;
+        }
+        return $return;
+    }
+
     // captcha session key (account deletion only)
     const SESSION_CAPTCHA_ACCOUNT_DELETE            = 'SESSION.CAPTCHA.ACCOUNT.DELETE';
 
