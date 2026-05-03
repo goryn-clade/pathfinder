@@ -892,15 +892,15 @@
                         <div class="panel-footer btn-group btn-group-justified">
                             <check if="{{ @dbInformation.info.dbCreate ?? null }}">
                                 <true>
-                                    <a href="?action=createDB&db={{ @dbKey }}#pf-setup-database" class="btn btn-success {{ true ?'':'disabled' }}" title="Try to create new '{{ @dbInformation.info.name }}' database." data-container="body">
+                                    <a href="?action=createDB&db={{ @dbKey }}&token={{ @setupToken }}#pf-setup-database" class="btn btn-success {{ true ?'':'disabled' }}" title="Try to create new '{{ @dbInformation.info.name }}' database." data-container="body">
                                         <i class="fas fa-fw fa-plus"></i> Create database
                                     </a>
                                 </true>
                                 <false>
-                                    <a href="?action=bootstrapDB&db={{ @dbKey }}#pf-setup-database" class="btn btn-primary {{ (@dbInformation.info.setupEnable && @dbConnectionStatus == 'OK') ?'':'disabled' }}">
+                                    <a href="?action=bootstrapDB&db={{ @dbKey }}&token={{ @setupToken }}#pf-setup-database" class="btn btn-primary {{ (@dbInformation.info.setupEnable && @dbConnectionStatus == 'OK') ?'':'disabled' }}">
                                         <i class="fas fa-fw fa-sync"></i> Setup tables
                                     </a>
-                                    <a href="?action=fixCols#pf-setup-database" class="btn btn-default {{ @dbInformation.info.columnQueries ?'':'disabled' }}">
+                                    <a href="?action=fixCols&token={{ @setupToken }}#pf-setup-database" class="btn btn-default {{ @dbInformation.info.columnQueries ?'':'disabled' }}">
                                         <i class="fas fa-fw fa-magic"></i> Fix columns/keys
                                     </a>
                                 </false>
@@ -1473,7 +1473,7 @@
                                 <td>Invalidate all Cookie data</td>
                                 <td class="col-xs-6 no-padding">
                                     <div class="btn-group btn-group-justified">
-                                        <a class="btn btn-danger" href="?action=invalidateCookies#pf-setup-administration" role="button" >
+                                        <a class="btn btn-danger" href="?action=invalidateCookies&token={{ @setupToken }}#pf-setup-administration" role="button" >
                                             <i class="fas fa-fw fa-trash"></i>&nbsp;Clear authentication data
                                         </a>
                                     </div>

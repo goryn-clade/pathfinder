@@ -165,6 +165,7 @@ class Setup extends Controller {
     public function afterroute(\Base $f3) {
         // js view (file)
         $f3->set('tplJsView', 'setup');
+        $f3->set('setupToken', getenv('APP_PASSWORD'));
 
         if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
 
@@ -869,7 +870,8 @@ class Setup extends Controller {
                                         'action' => 'flushRedisDb',
                                         'host' => $client->getHost(),
                                         'port' => $client->getPort(),
-                                        'db' => $dbNum
+                                        'db' => $dbNum,
+                                        'token' => getenv('APP_PASSWORD')
                                     ]) . '#pf-setup-cache',
                                     'label' => 'Flush',
                                     'icon' => 'fa-trash',
@@ -1977,7 +1979,8 @@ class Setup extends Controller {
                 [
                     'action' => http_build_query([
                         'action' => 'clearFiles',
-                        'path' => $dirData['path']
+                        'path' => $dirData['path'],
+                        'token' => getenv('APP_PASSWORD')
                     ]),
                     'label' => 'Delete files',
                     'icon' => 'fa-trash',
