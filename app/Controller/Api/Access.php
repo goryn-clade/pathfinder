@@ -29,6 +29,8 @@ class Access extends Controller\AccessController {
         ){
             $searchType = strtolower((string) $params['arg1']);
             $searchToken = strtolower((string) $params['arg2']);
+            // strip LIKE wildcards so the user cannot widen the match arbitrarily
+            $searchToken = str_replace(['%', '_'], ['\\%', '\\_'], $searchToken);
 
             $accessModel = null;
             switch($searchType){
