@@ -11,7 +11,7 @@ define([
 ], ($, Init, Util, bootbox, MapUtil) => {
     'use strict';
 
-    const GROUP_DEBUG = true;
+    const GROUP_DEBUG = false;
     const glog = (...args) => { if(GROUP_DEBUG) console.log('[GROUP]', ...args); };
 
     let config = {
