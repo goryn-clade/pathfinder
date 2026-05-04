@@ -238,10 +238,10 @@ class SystemModel extends AbstractUniverseModel {
      */
     public function updateSovereigntyData( $sovData = []) : bool {
         $hasChanged     = false;
-        $systemId       = (int)$sovData['systemId'];
-        $factionId      = (int)$sovData['factionId'];
-        $allianceId     = (int)$sovData['allianceId'];
-        $corporationId  = (int)$sovData['corporationId'];
+        $systemId       = (int)($sovData['systemId'] ?? 0);
+        $factionId      = (int)($sovData['factionId'] ?? 0);
+        $allianceId     = (int)($sovData['allianceId'] ?? 0);
+        $corporationId  = (int)($sovData['corporationId'] ?? 0);
 
         if($this->valid()){
             if($systemId === $this->_id){

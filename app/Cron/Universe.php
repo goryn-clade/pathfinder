@@ -333,7 +333,7 @@ class Universe extends AbstractCron {
                 }
 
                 $changedFwData = false;
-                if(is_array($fwSystems[$id])){
+                if(isset($fwSystems[$id]) && is_array($fwSystems[$id])){
                     if($changedFwData = $system->updateFactionWarData($fwSystems[$id])){
                         $changes['factionWarfare'][] = $id;
                     }
