@@ -924,7 +924,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
             }
             $this->copyfrom($rowData, $fields);
             $this->save();
-            $rowIDs[] = $this->_id;
+            $rowIDs[] = (int)$this->_id;
             $this->reset();
         }
 
