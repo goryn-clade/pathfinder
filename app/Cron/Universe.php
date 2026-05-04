@@ -316,7 +316,7 @@ class Universe extends AbstractCron {
 
         $total = count($ids);
         $offset = ($params['offset'] > 0 && $params['offset'] < $total) ? $params['offset'] : 0;
-        $ids = array_slice($ids, $offset, $params['length']);
+        $ids = array_slice($ids, $offset, $params['length'] ?? null);
         $importCount = count($ids);
         $count = 0;
 
