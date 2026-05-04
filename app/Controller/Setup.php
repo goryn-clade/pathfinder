@@ -1504,7 +1504,18 @@ class Setup extends Controller {
         $mySQLConfig = array_change_key_case((array)$f3->get('REQUIREMENTS.MYSQL.VARS'));
         $mySQLConfigKeys = array_keys($mySQLConfig);
 
-        $results = $db->exec("SHOW VARIABLES WHERE Variable_Name IN ('" . implode("','", $mySQLConfigKeys) . "')");
+        // build a parameterised IN list to avoid string-concat of config-sourced keys
+        $placeholders = [];
+        $bindParams   = [];
+        foreach($mySQLConfigKeys as $i => $key){
+            $ph = ':var' . $i;
+            $placeholders[] = $ph;
+            $bindParams[$ph] = $key;
+        }
+        $results = $db->exec(
+            "SHOW VARIABLES WHERE Variable_Name IN (" . implode(',', $placeholders) . ")",
+            $bindParams
+        );
 
         $getValue = function(string $param) use ($results) : string {
             $match = array_filter($results, fn($k): bool => strtolower((string) $k['Variable_name']) == $param);
