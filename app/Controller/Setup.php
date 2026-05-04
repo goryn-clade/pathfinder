@@ -1421,7 +1421,9 @@ class Setup extends Controller {
                 $dbStatusCheckCount++;
 
                 foreach($f3->DB->getErrors($dbAlias, 10) as $dbException){
-                    $dbErrors[] = $dbException->getMessage();
+                    // log full detail server-side; surface only a generic message in the UI
+                    error_log('[setup] DB connection error for alias ' . $dbAlias . ': ' . $dbException->getMessage());
+                    $dbErrors[] = 'Database connection failed (see server log for details)';
                 }
 
                 // try to connect without! DB (-> offer option to create them)
