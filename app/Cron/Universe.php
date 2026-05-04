@@ -359,7 +359,7 @@ class Universe extends AbstractCron {
 
         // Log --------------------------------------------------------------------------------------------------------
         $text = sprintf(self::LOG_TEXT_SOV_FW,
-            count($changedIds), count($changes['sovereignty'] ? : []), count($changes['factionWarfare'] ? : []),
+            count($changedIds), count($changes['sovereignty'] ?? []), count($changes['factionWarfare'] ?? []),
             $msg);
 
         $this->logEnd(__FUNCTION__, $total, $count, $importCount, $offset, $text);
