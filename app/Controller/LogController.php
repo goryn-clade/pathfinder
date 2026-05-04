@@ -92,7 +92,10 @@ class LogController extends \Prefab  {
 
             $placeholderStr = (fn($str) => ':' . $str);
 
-            $updateRule = (fn($str) => $str . " = " . $str . " + VALUES(" . $str . ")");
+            $updateRule = function($str) use ($db) {
+                $key = $db->quotekey($str);
+                return $key . " = " . $key . " + VALUES(" . $key . ")";
+            };
 
             $year = (int)date('o');
             $yearWeek = (int)date('W');
