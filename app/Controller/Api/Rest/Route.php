@@ -122,6 +122,18 @@ class Route extends AbstractRestController {
     }
 
     /**
+     * filter an array of connection-type values against the model whitelist
+     * @param array $values
+     * @return string[] safe values, in original order, deduplicated, ready to inline into SQL
+     */
+    private function filterConnectionTypes(array $values) : array {
+        return array_values(array_intersect(
+            array_unique(array_map('strval', $values)),
+            Pathfinder\ConnectionModel::getConnectionTypeWhitelist()
+        ));
+    }
+
+    /**
      * set/add dynamic system jump data for specific "mapId"´s
      * -> this data is dynamic and could change on any map change
      * -> (e.g. new system added, connection added/updated, ...)
@@ -190,6 +202,12 @@ class Route extends AbstractRestController {
             }
 
             // search connections -------------------------------------------------------------------------------------
+
+            // run every type/scope list through the whitelist helper before inlining into SQL
+            $includeScopes        = $this->filterConnectionTypes($includeScopes);
+            $includeTypes         = $this->filterConnectionTypes($includeTypes);
+            $excludeTypes         = $this->filterConnectionTypes($excludeTypes);
+            $excludeEndpointTypes = array_values(array_intersect($excludeEndpointTypes, ['bubble']));
 
             if( !empty($includeScopes) ){
                 $whereQuery .= " `connection`.`scope` IN ('" . implode("', '", $includeScopes) . "') AND ";
