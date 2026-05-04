@@ -73,7 +73,7 @@ class CcpSystemsUpdate extends AbstractCron {
             foreach($this->logTables as $tableName){
                 $pfDB->begin();
                 // insert systems into jump log table
-                $sqlInsertSystem = "INSERT IGNORE INTO " . $tableName . " (`systemId`) VALUES (:systemId)";
+                $sqlInsertSystem = "INSERT IGNORE INTO " . $pfDB->quotekey($tableName) . " (`systemId`) VALUES (:systemId)";
 
                 foreach($systemIds as $systemId){
                     $pfDB->exec($sqlInsertSystem, [
