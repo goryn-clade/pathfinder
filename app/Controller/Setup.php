@@ -185,6 +185,11 @@ class Setup extends Controller {
      * @throws \Exception
      */
     public function init(\Base $f3){
+        if(!$f3->get('ENVIRONMENT.SETUP_ENABLED')){
+            $f3->error(404);
+            return;
+        }
+
         $params = $f3->get('GET');
 
         // Defense-in-depth behind nginx Basic Auth: require APP_PASSWORD token for any mutating action
