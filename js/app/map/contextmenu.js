@@ -104,9 +104,9 @@ define([
             id: config.connectionContextMenuId,
             items: [
                 {icon: 'fa-hourglass-end', action: 'eol_status', text: 'EOL phase', subitems: [
-                        {subIcon: 'fa-hourglass-start', subAction: 'status_eol1', subText: 'phase 1 (aging)'},
-                        {subIcon: 'fa-hourglass-half',  subAction: 'status_eol2', subText: 'phase 2 (expiring)'},
-                        {subIcon: 'fa-hourglass-end',   subAction: 'status_eol3', subText: 'phase 3 (zombie)'}
+                        {subIcon: 'fa-hourglass-start', subAction: 'status_eol1', subText: 'Aging 1-4h'},
+                        {subIcon: 'fa-hourglass-half',  subAction: 'status_eol2', subText: 'Expiring 0-1h'},
+                        {subIcon: 'fa-hourglass-end',   subAction: 'status_eol3', subText: 'Zombie <0h'}
                     ]},
                 {icon: 'fa-reply fa-rotate-180', action: 'change_status', text: 'mass status', subitems: [
                         {subIcon: 'fa-circle', subIconClass: 'txt-color txt-color-gray', subAction: 'status_fresh', subText: 'stage 1 (fresh)'},
