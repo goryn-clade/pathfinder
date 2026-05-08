@@ -507,9 +507,9 @@ define([
                 wormholesReduced:   (rowData.hasOwnProperty('wormholesReduced'))    ? rowData.wormholesReduced  | 0 : routeSettings.wormholesReduced,
                 wormholesCritical:  (rowData.hasOwnProperty('wormholesCritical'))   ? rowData.wormholesCritical | 0 : routeSettings.wormholesCritical,
                 wormholesEOL:       (rowData.hasOwnProperty('wormholesEOL'))        ? rowData.wormholesEOL      | 0 : routeSettings.wormholesEOL,
-                wormholesEOL1:      (rowData.hasOwnProperty('wormholesEOL1'))       ? rowData.wormholesEOL1     | 0 : (routeSettings.wormholesEOL1 ?? 1),
-                wormholesEOL2:      (rowData.hasOwnProperty('wormholesEOL2'))       ? rowData.wormholesEOL2     | 0 : (routeSettings.wormholesEOL2 ?? 1),
-                wormholesEOL3:      (rowData.hasOwnProperty('wormholesEOL3'))       ? rowData.wormholesEOL3     | 0 : (routeSettings.wormholesEOL3 ?? 1),
+                wormholesEOL1:      (rowData.hasOwnProperty('wormholesEOL1'))       ? rowData.wormholesEOL1     | 0 : (routeSettings.wormholesEOL1 !== undefined ? routeSettings.wormholesEOL1 : 1),
+                wormholesEOL2:      (rowData.hasOwnProperty('wormholesEOL2'))       ? rowData.wormholesEOL2     | 0 : (routeSettings.wormholesEOL2 !== undefined ? routeSettings.wormholesEOL2 : 1),
+                wormholesEOL3:      (rowData.hasOwnProperty('wormholesEOL3'))       ? rowData.wormholesEOL3     | 0 : (routeSettings.wormholesEOL3 !== undefined ? routeSettings.wormholesEOL3 : 1),
                 wormholesThera:     (rowData.hasOwnProperty('wormholesThera'))      ? rowData.wormholesThera    | 0 : routeSettings.wormholesThera,
                 wormholesTurnur:    (rowData.hasOwnProperty('wormholesTurnur'))     ? rowData.wormholesTurnur   | 0 : routeSettings.wormholesTurnur,
                 wormholesSizeMin:   (rowData.hasOwnProperty('wormholesSizeMin'))    ? rowData.wormholesSizeMin      : routeSettings.wormholesSizeMin,
@@ -692,9 +692,9 @@ define([
                 wormholesReduced: routeData.wormholesReduced,
                 wormholesCritical: routeData.wormholesCritical,
                 wormholesEOL: routeData.wormholesEOL,
-                wormholesEOL1: routeData.wormholesEOL1 ?? 1,
-                wormholesEOL2: routeData.wormholesEOL2 ?? 1,
-                wormholesEOL3: routeData.wormholesEOL3 ?? 1,
+                wormholesEOL1: routeData.wormholesEOL1 !== undefined ? routeData.wormholesEOL1 : 1,
+                wormholesEOL2: routeData.wormholesEOL2 !== undefined ? routeData.wormholesEOL2 : 1,
+                wormholesEOL3: routeData.wormholesEOL3 !== undefined ? routeData.wormholesEOL3 : 1,
                 wormholesThera: routeData.wormholesThera,
                 wormholesTurnur: routeData.wormholesTurnur,
                 wormholesSizeMin: routeData.wormholesSizeMin,
@@ -1229,9 +1229,9 @@ define([
                     wormholeEol1Checkbox.prop('disabled', false);
                     wormholeEol2Checkbox.prop('disabled', false);
                     wormholeEol3Checkbox.prop('disabled', false);
-                    wormholeEol1Checkbox.prop('checked', wormholeEol1Checkbox.data('selectState') ?? true);
-                    wormholeEol2Checkbox.prop('checked', wormholeEol2Checkbox.data('selectState') ?? true);
-                    wormholeEol3Checkbox.prop('checked', wormholeEol3Checkbox.data('selectState') ?? true);
+                    wormholeEol1Checkbox.prop('checked', wormholeEol1Checkbox.data('selectState') !== undefined ? wormholeEol1Checkbox.data('selectState') : true);
+                    wormholeEol2Checkbox.prop('checked', wormholeEol2Checkbox.data('selectState') !== undefined ? wormholeEol2Checkbox.data('selectState') : true);
+                    wormholeEol3Checkbox.prop('checked', wormholeEol3Checkbox.data('selectState') !== undefined ? wormholeEol3Checkbox.data('selectState') : true);
                 }else{
                     wormholeEol1Checkbox.data('selectState', wormholeEol1Checkbox.prop('checked'));
                     wormholeEol2Checkbox.data('selectState', wormholeEol2Checkbox.prop('checked'));
