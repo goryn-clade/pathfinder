@@ -189,6 +189,15 @@ class Route extends AbstractRestController {
                     $includeEOL = false;
                 }
 
+                // per-phase EOL exclusion (only applied when master EOL is included)
+                if($includeEOL){
+                    foreach(['wormholesEOL1' => 'wh_eol1', 'wormholesEOL2' => 'wh_eol2', 'wormholesEOL3' => 'wh_eol3'] as $key => $type){
+                        if(($filterData[$key] ?? true) === false){
+                            $excludeTypes[] = $type;
+                        }
+                    }
+                }
+
                 if(!empty($filterData['excludeTypes'])){
                     $excludeTypes = array_values(array_intersect(
                         array_map('strval', (array)$filterData['excludeTypes']),
@@ -875,6 +884,9 @@ class Route extends AbstractRestController {
                     'wormholesReduced'      => (bool) ($routeData['wormholesReduced'] ?? false),
                     'wormholesCritical'     => (bool) ($routeData['wormholesCritical'] ?? false),
                     'wormholesEOL'          => (bool) ($routeData['wormholesEOL'] ?? false),
+                    'wormholesEOL1'         => (bool) ($routeData['wormholesEOL1'] ?? true),
+                    'wormholesEOL2'         => (bool) ($routeData['wormholesEOL2'] ?? true),
+                    'wormholesEOL3'         => (bool) ($routeData['wormholesEOL3'] ?? true),
                     'wormholesThera'        => (bool) ($routeData['wormholesThera'] ?? false),
                     'wormholesTurnur'       => (bool) ($routeData['wormholesTurnur'] ?? false),
                     'wormholesSizeMin'      => (string) ($routeData['wormholesSizeMin'] ?? ''),

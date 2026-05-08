@@ -13,6 +13,15 @@
         if({{routeSettings.wormholesEOL}} == 0){
             $('#form_wormholes_eol').prop('checked', false);
         }
+        if({{routeSettings.wormholesEOL1}} == 0){
+            $('#form_wormholes_eol1').prop('checked', false);
+        }
+        if({{routeSettings.wormholesEOL2}} == 0){
+            $('#form_wormholes_eol2').prop('checked', false);
+        }
+        if({{routeSettings.wormholesEOL3}} == 0){
+            $('#form_wormholes_eol3').prop('checked', false);
+        }
         if({{routeSettings.stargates}} == 0){
             $('#form_stargates').prop('checked', false);
         }
@@ -103,6 +112,33 @@
                         <input id="form_wormholes_eol" name="wormholesEOL" value="1" type="checkbox" checked>
                         <label for="form_wormholes_eol">End of life (EOL)
                             <i class="fas fa-fw fa-question-circle pf-help-light" title="include EOL connections"></i>
+                        </label>
+                    </div>
+
+                    <i class="fas fa-tree-child col-sm-offset-4 hidden-xs"></i>
+
+                    <div class="col-xs-offset-9 col-xs-3 checkbox checkbox-danger checkbox-circle">
+                        <input id="form_wormholes_eol1" name="wormholesEOL1" value="1" type="checkbox" checked>
+                        <label for="form_wormholes_eol1">Phase 1 (aging)
+                            <i class="fas fa-fw fa-question-circle pf-help-light" title="include aging EOL connections (1–4h remaining)"></i>
+                        </label>
+                    </div>
+
+                    <i class="fas fa-tree-child col-sm-offset-4 hidden-xs"></i>
+
+                    <div class="col-xs-offset-9 col-xs-3 checkbox checkbox-danger checkbox-circle">
+                        <input id="form_wormholes_eol2" name="wormholesEOL2" value="1" type="checkbox" checked>
+                        <label for="form_wormholes_eol2">Phase 2 (expiring)
+                            <i class="fas fa-fw fa-question-circle pf-help-light" title="include expiring EOL connections (0–1h remaining)"></i>
+                        </label>
+                    </div>
+
+                    <i class="fas fa-tree-child col-sm-offset-4 hidden-xs"></i>
+
+                    <div class="col-xs-offset-9 col-xs-3 checkbox checkbox-danger checkbox-circle">
+                        <input id="form_wormholes_eol3" name="wormholesEOL3" value="1" type="checkbox" checked>
+                        <label for="form_wormholes_eol3">Phase 3 (zombie)
+                            <i class="fas fa-fw fa-question-circle pf-help-light" title="include zombie EOL connections (past natural end)"></i>
                         </label>
                     </div>
 
