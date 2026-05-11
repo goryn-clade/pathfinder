@@ -432,10 +432,24 @@ class Sso extends Api\User{
                 $accessData->refreshToken =  $authCodeRequestData['refreshToken'];
             }
         }else{
-            self::getSSOLogger()->write(sprintf(self::ERROR_ACCESS_TOKEN, print_r($requestParams, true)));
+            self::getSSOLogger()->write(sprintf(self::ERROR_ACCESS_TOKEN, print_r(self::redactSecrets($requestParams), true)));
         }
 
         return $accessData;
+    }
+
+    /**
+     * redact sensitive keys from a parameter array before logging
+     * @param array $params
+     * @return array
+     */
+    private static function redactSecrets(array $params) : array {
+        foreach (['refresh_token', 'code', 'client_secret'] as $key) {
+            if (isset($params[$key])) {
+                $params[$key] = '[REDACTED]';
+            }
+        }
+        return $params;
     }
 
     /**
