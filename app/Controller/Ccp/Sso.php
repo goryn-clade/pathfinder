@@ -345,24 +345,11 @@ class Sso extends Api\User{
 
     /**
      * get a valid "access_token" for oAuth 2.0 verification
-     * -> if $authCode is set -> request NEW "access_token"
-     * -> else check for existing (not expired) "access_token"
-     * -> else try to refresh auth and get fresh "access_token"
-     * @param bool $authCode
+     * @param string $authCode
      * @return null|\stdClass
      */
     protected function getSsoAccessData(string $authCode) : ?\stdClass {
-        $accessData = null;
-
-        if( !empty($authCode) ){
-            // Authentication Code is set -> request new "accessToken"
-            $accessData = $this->verifyAuthorizationCode($authCode);
-        }else{
-            // Unable to get Token -> trigger error
-            self::getSSOLogger()->write(sprintf(self::ERROR_ACCESS_TOKEN, $authCode));
-        }
-
-        return $accessData;
+        return $this->verifyAuthorizationCode($authCode);
     }
 
     /**
