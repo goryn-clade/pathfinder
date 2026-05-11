@@ -257,12 +257,11 @@ class Controller {
             // unique "selector" -> to facilitate database look-ups (small size)
             // -> This is preferable to simply using the database id field,
             // which leaks the number of active users on the application
-            $selector = bin2hex( openssl_random_pseudo_bytes(12) );
+            $selector = bin2hex( random_bytes(12) );
 
             // generate unique "validator" (strong encryption)
             // -> plaintext set to user (cookie), hashed version of this in DB
-            $size = openssl_cipher_iv_length('aes-256-cbc');
-            $validator = bin2hex(openssl_random_pseudo_bytes($size) );
+            $validator = bin2hex( random_bytes(16) );
 
             // generate unique cookie token
             $token = hash('sha256', $validator);

@@ -141,7 +141,7 @@ class Sso extends Api\User{
     private function rerouteAuthorization(\Base $f3,  $scopes = [], string $rootAlias = 'login'){
         if( !empty( Controller\Controller::getEnvironmentData('CCP_SSO_CLIENT_ID') ) ){
             // used for "state" check between request and callback
-            $state = bin2hex( openssl_random_pseudo_bytes(12) );
+            $state = bin2hex( random_bytes(32) );
             $f3->set(self::SESSION_KEY_SSO_STATE, $state);
 
             $urlParams = [
