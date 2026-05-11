@@ -473,9 +473,19 @@ class Sso extends Api\User{
     public function verifyJwtAccessToken(string $accessToken) : object {
         JWT::$leeway = 10;
         $ccpJwks = $this->getCcpJwkData();
+
+        // parse JWKS; on structural failure assume cached blob is corrupt and refetch once
+        try {
+            $keySet = JWK::parseKeySet($ccpJwks);
+        } catch (\UnexpectedValueException | \InvalidArgumentException $e) {
+            $this->getF3()->clear(self::JWKS_CACHE_KEY);
+            $ccpJwks = $this->getCcpJwkData();
+            $keySet = JWK::parseKeySet($ccpJwks);
+        }
+
         try {
             // firebase/php-jwt v6.4+: algs are embedded in Key objects returned by parseKeySet; no separate alg array needed
-            $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks));
+            $decodedJwt = JWT::decode($accessToken, $keySet);
         } catch (\UnexpectedValueException $e) {
             // "kid" invalid = CCP rotated keys while our JWKS was cached — bust cache and retry once
             if (str_contains($e->getMessage(), '"kid" invalid')) {
