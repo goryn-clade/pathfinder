@@ -439,44 +439,58 @@ class Sso extends Api\User{
     }
 
     /**
-     * verify character data by decloding JWT "access_token"
+     * verify character data by decoding JWT "access_token"
      * -> verify against CCP JWK
-     * -> get some basic information (like character id)     
+     * -> get some basic information (like character id)
      * @param string $accessToken
-     * @return object
+     * @return object|null null on any verification failure
      */
-    public function verifyCharacterData(string $accessToken) : object {
-        $characterData = $this->verifyJwtAccessToken($accessToken);
-
-        if( !empty($characterData) ){
-            $characterData->characterId = (int)explode(':',$characterData->sub)[2];
-        }else{
-            self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, __METHOD__));
+    public function verifyCharacterData(string $accessToken) : ?object {
+        try {
+            $characterData = $this->verifyJwtAccessToken($accessToken);
+            $characterData->characterId = (int)explode(':', $characterData->sub)[2];
+            return $characterData;
+        } catch (\Exception $e) {
+            self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, $e->getMessage()));
+            return null;
         }
-
-        return $characterData;
     }
 
-    /** 
+    /**
      * verify JWT by comparing to CCP public JWK
      * -> get Ccp JWKs
      * -> decode accessToken using JWKs
      * -> Verify token claim is correct
      * @param string $accessToken
      * @return object
+     * @throws \UnexpectedValueException on issuer or audience mismatch
     */
     public function verifyJwtAccessToken(string $accessToken) : object {
         $ccpJwks = $this->getCcpJwkData();
         // set $leeway in seconds to 10, since sometimes there can be verification errors due server clock skew resulting
         // in tokens that look like they were issued 1 second in the future.
         JWT::$leeway = 10;
-        // get decoded JWT using ccp supplied JWK
         // firebase/php-jwt v6.4+: algs are embedded in Key objects returned by parseKeySet; no separate alg array needed
         $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks));
-        // check if issuer matches correct ccp supplied claim values
-        if (strpos((string) $decodedJwt->iss, static::getSsoJwkClaim()) !== true) {            
-            self::getSSOLogger()->write(sprintf(self::ERROR_TOKEN_VERIFICATION, __METHOD__));
+
+        // F1: issuer must match configured claim (previous strpos !== true was always true — never actually blocked)
+        if (!hash_equals(static::getSsoJwkClaim(), (string)$decodedJwt->iss)) {
+            throw new \UnexpectedValueException('JWT issuer mismatch');
         }
+
+        // F2: audience must include our client ID (firebase/php-jwt does not verify aud automatically)
+        $expectedClientId = (string)Controller\Controller::getEnvironmentData('CCP_SSO_CLIENT_ID');
+        $aud = $decodedJwt->aud ?? null;
+        $audList = is_array($aud) ? $aud : (is_string($aud) ? [$aud] : []);
+        if (!in_array($expectedClientId, $audList, true)) {
+            throw new \UnexpectedValueException('JWT audience mismatch');
+        }
+
+        // azp (authorized party) must match client ID if present
+        if (isset($decodedJwt->azp) && (string)$decodedJwt->azp !== $expectedClientId) {
+            throw new \UnexpectedValueException('JWT authorized party mismatch');
+        }
+
         return $decodedJwt;
     }
 
