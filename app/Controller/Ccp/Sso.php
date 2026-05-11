@@ -40,6 +40,10 @@ class Sso extends Api\User{
     const SESSION_KEY_SSO_STATE                     = 'SESSION.SSO.STATE';
     const SESSION_KEY_SSO_FROM                      = 'SESSION.SSO.FROM';
 
+    // F3 cache key for CCP JWKS — avoids fetching on every login callback
+    const JWKS_CACHE_KEY                            = 'sso_jwks_keyset';
+    const JWKS_CACHE_TTL                            = 3600;
+
     // error messages
     const ERROR_CCP_SSO_URL                         = 'Invalid "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_URL" url. %s';
     const ERROR_CCP_CLIENT_ID                       = 'Missing "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_CLIENT_ID".';
@@ -467,12 +471,21 @@ class Sso extends Api\User{
      * @throws \UnexpectedValueException on issuer or audience mismatch
     */
     public function verifyJwtAccessToken(string $accessToken) : object {
-        $ccpJwks = $this->getCcpJwkData();
-        // set $leeway in seconds to 10, since sometimes there can be verification errors due server clock skew resulting
-        // in tokens that look like they were issued 1 second in the future.
         JWT::$leeway = 10;
-        // firebase/php-jwt v6.4+: algs are embedded in Key objects returned by parseKeySet; no separate alg array needed
-        $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks));
+        $ccpJwks = $this->getCcpJwkData();
+        try {
+            // firebase/php-jwt v6.4+: algs are embedded in Key objects returned by parseKeySet; no separate alg array needed
+            $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks));
+        } catch (\UnexpectedValueException $e) {
+            // "kid" invalid = CCP rotated keys while our JWKS was cached — bust cache and retry once
+            if (str_contains($e->getMessage(), '"kid" invalid')) {
+                $this->getF3()->clear(self::JWKS_CACHE_KEY);
+                $ccpJwks = $this->getCcpJwkData();
+                $decodedJwt = JWT::decode($accessToken, JWK::parseKeySet($ccpJwks));
+            } else {
+                throw $e;
+            }
+        }
 
         // F1: issuer must match configured claim (previous strpos !== true was always true — never actually blocked)
         if (!hash_equals(static::getSsoJwkClaim(), (string)$decodedJwt->iss)) {
@@ -497,14 +510,22 @@ class Sso extends Api\User{
 
     /**
      * get JWK from CCP and return decoded json object
-     * @return array     
+     * Results are cached in F3 for JWKS_CACHE_TTL seconds to avoid a round-trip on every login.
+     * @return array
     */
     protected function getCcpJwkData() : array {
-        $jwkJson = $this->getF3()->ssoClient()->send('getJWKS');
+        $f3 = $this->getF3();
+
+        if ($cached = $f3->get(self::JWKS_CACHE_KEY)) {
+            return $cached;
+        }
+
+        $jwkJson = $f3->ssoClient()->send('getJWKS');
 
         if( !empty($jwkJson) ){
             // ensure items in 'keys' are arrays and not objects
             array_walk($jwkJson['keys'], function(&$item): void{$item = (array) $item;});
+            $f3->set(self::JWKS_CACHE_KEY, $jwkJson, self::JWKS_CACHE_TTL);
             return $jwkJson;
         }
 
