@@ -423,7 +423,11 @@ class Sso extends Api\User{
                 $accessData->refreshToken =  $authCodeRequestData['refreshToken'];
             }
         }else{
-            self::getSSOLogger()->write(sprintf(self::ERROR_ACCESS_TOKEN, print_r(self::redactSecrets($requestParams), true)));
+            $grantType = $requestParams['grant_type'] ?? 'unknown';
+            self::getSSOLogger()->write(sprintf(self::ERROR_ACCESS_TOKEN . ' grant_type=[%s]',
+                print_r(self::redactSecrets($requestParams), true),
+                $grantType
+            ));
         }
 
         return $accessData;

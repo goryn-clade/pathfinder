@@ -579,6 +579,7 @@ class CharacterModel extends AbstractPathfinderModel {
             if(isset($accessData->accessToken, $accessData->esiAccessTokenExpires, $accessData->refreshToken)){
                 $this->esiAccessToken = $accessData->accessToken;
                 $this->esiAccessTokenExpires = $accessData->esiAccessTokenExpires;
+                $this->esiRefreshToken = $accessData->refreshToken;
                 $this->save();
 
                 $accessToken = $this->esiAccessToken;
