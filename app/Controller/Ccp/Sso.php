@@ -50,7 +50,7 @@ class Sso extends Api\User{
     const ERROR_ACCESS_TOKEN                        = 'Unable to get a valid "access_token. %s';
     const ERROR_VERIFY_CHARACTER                    = 'Unable to verify character data. %s';
     const ERROR_LOGIN_FAILED                        = 'Failed authentication due to technical problems: %s';
-    const ERROR_CHARACTER_VERIFICATION              = 'Character verification failed by SSP SSO';
+    const ERROR_CHARACTER_VERIFICATION              = 'Character verification failed by CCP SSO';
     const ERROR_CHARACTER_DATA                      = 'Failed to load characterData from ESI';
     const ERROR_CHARACTER_FORBIDDEN                 = 'Character "%s" is not authorized to log in. Reason: %s';
     const ERROR_SERVICE_TIMEOUT                     = 'CCP SSO service timeout (%ss). Try again later';
