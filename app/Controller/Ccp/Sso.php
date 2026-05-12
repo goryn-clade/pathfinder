@@ -145,8 +145,17 @@ class Sso extends Api\User{
     private function rerouteAuthorization(\Base $f3,  $scopes = [], string $rootAlias = 'login'){
         if( !empty( Controller\Controller::getEnvironmentData('CCP_SSO_CLIENT_ID') ) ){
             // used for "state" check between request and callback
-            $state = bin2hex( random_bytes(32) );
-            $f3->set(self::SESSION_KEY_SSO_STATE, $state);
+            $state = bin2hex(random_bytes(32));
+            $stateMap = (array)($f3->get(self::SESSION_KEY_SSO_STATE) ?: []);
+            // Drop any entries that aren't well-formed (e.g. legacy scalar value from
+            // an in-flight session pre-upgrade). Keeps the uasort below well-defined.
+            $stateMap = array_filter($stateMap, fn($v) => is_array($v) && isset($v['createdAt']));
+            if(count($stateMap) >= 5){
+                uasort($stateMap, fn($a, $b) => $a['createdAt'] <=> $b['createdAt']);
+                $stateMap = array_slice($stateMap, -4, null, true);
+            }
+            $stateMap[$state] = ['from' => (string)($f3->get(self::SESSION_KEY_SSO_FROM) ?: ''), 'createdAt' => time()];
+            $f3->set(self::SESSION_KEY_SSO_STATE, $stateMap);
 
             $urlParams = [
                 'response_type' => 'code',
@@ -187,17 +196,29 @@ class Sso extends Api\User{
             $rootAlias = $f3->get(self::SESSION_KEY_SSO_FROM);
         }
 
-        if($f3->exists(self::SESSION_KEY_SSO_STATE)){
+        $stateMap = (array)($f3->get(self::SESSION_KEY_SSO_STATE) ?: []);
+        $stateMap = array_filter($stateMap, fn($v) => is_array($v) && isset($v['createdAt']));
+        $incomingState = (string)($getParams['state'] ?? '');
+
+        if(!empty($stateMap)){
             // check response and validate 'state'
             if(
                 isset($getParams['code']) &&
-                isset($getParams['state']) &&
                 !empty($getParams['code']) &&
-                !empty($getParams['state']) &&
-                $f3->get(self::SESSION_KEY_SSO_STATE) === $getParams['state']
+                !empty($incomingState) &&
+                isset($stateMap[$incomingState])
             ){
-                // clear 'state' for new next login request
-                $f3->clear(self::SESSION_KEY_SSO_STATE);
+                // consume the matched state entry (getAndDelete semantics)
+                $entry = $stateMap[$incomingState];
+                if(!empty($entry['from'])){
+                    $rootAlias = $entry['from'];
+                }
+                unset($stateMap[$incomingState]);
+                if(empty($stateMap)){
+                    $f3->clear(self::SESSION_KEY_SSO_STATE);
+                }else{
+                    $f3->set(self::SESSION_KEY_SSO_STATE, $stateMap);
+                }
                 $f3->clear(self::SESSION_KEY_SSO_FROM);
 
                 $accessData = $this->getSsoAccessData($getParams['code']);
