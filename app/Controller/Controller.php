@@ -299,7 +299,7 @@ class Controller {
      * @return Pathfinder\CharacterModel[]
      * @throws \Exception
      */
-    protected function getCookieCharacters( $cookieData = [], bool $checkAuthorization = true) : array {
+    protected function getCookieCharacters( $cookieData = [], bool $checkAuthorization = true, bool $rotate = true) : array {
         $characters = [];
 
         if(
@@ -377,9 +377,22 @@ class Controller {
                             }else{
                                 $invalidCookie = true;
                             }
-                        }else{
-                            // clear existing authentication data from DB
+                            if ($rotate && isset($characters[$name])) {
+                                $newValidator = bin2hex(random_bytes(16));
+                                $characterAuth->token = hash('sha256', $newValidator);
+                                $characterAuth->save();
+
+                                $remainingTtl = max(0, strtotime((string) $characterAuth->expires) - $currentTime->getTimestamp());
+                                $cookieName = 'COOKIE.' . self::COOKIE_PREFIX_CHARACTER . '_' . $name;
+                                $this->getF3()->set($cookieName, $data[0] . ':' . $newValidator, $remainingTtl);
+                            }
+                        }elseif(strtotime((string) $characterAuth->expires) < $currentTime->getTimestamp()){
+                            // expired — drop the row
                             $characterAuth->erase();
+                            $invalidCookie = true;
+                        }else{
+                            // token mismatch on a non-expired row: stale or tampered cookie.
+                            // Do NOT erase — preserves the legit user's row against stale-cookie DoS after rotation.
                             $invalidCookie = true;
                         }
                     }else{

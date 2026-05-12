@@ -142,7 +142,7 @@ class User extends Controller\Controller{
         if( !empty($cookieData = $this->getCookieByName($cookieName) )){
             // cookie data is valid -> validate data against DB (security check!)
             // -> add characters WITHOUT permission to log in too!
-            if( !empty($characters = $this->getCookieCharacters(array_slice($cookieData, 0, 1, true), false)) ){
+            if( !empty($characters = $this->getCookieCharacters(array_slice($cookieData, 0, 1, true), false, false)) ){
                 // character is valid and allowed to login
                 $return->character = reset($characters)->getData();
                 // get Session status for character
