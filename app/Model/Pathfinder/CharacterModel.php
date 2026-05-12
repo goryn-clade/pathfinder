@@ -11,6 +11,7 @@ namespace Exodus4D\Pathfinder\Model\Pathfinder;
 use Exodus4D\Pathfinder\Controller\Ccp\Sso as Sso;
 use Exodus4D\Pathfinder\Controller\Api\User as User;
 use Exodus4D\Pathfinder\Lib\Config;
+use Exodus4D\Pathfinder\Lib\TokenCipher;
 use Exodus4D\Pathfinder\Model\Universe;
 use DB\SQL\Schema;
 
@@ -401,6 +402,22 @@ class CharacterModel extends AbstractPathfinderModel {
     }
 
     /**
+     * Encrypt esiAccessToken at rest (F5).
+     * Setter is invoked by Cortex on direct assignment and copyfrom(), so both
+     * write paths (SSO callback + refresh) are covered transparently.
+     */
+    public function set_esiAccessToken($value){
+        return TokenCipher::encrypt((string)$value);
+    }
+
+    /**
+     * Encrypt esiRefreshToken at rest (F5). See set_esiAccessToken.
+     */
+    public function set_esiRefreshToken($value){
+        return TokenCipher::encrypt((string)$value);
+    }
+
+    /**
      * kick character for $minutes
      * -> do NOT use $this->kicked!
      * -> this will not work (prevent abuse)
@@ -532,12 +549,16 @@ class CharacterModel extends AbstractPathfinderModel {
         $accessToken = false;
         $refreshToken = true;
 
+        // decrypt at-rest tokens once (F5). Empty/legacy/corrupt all surface as ''.
+        $accessPlain  = TokenCipher::decrypt((string)$this->esiAccessToken);
+        $refreshPlain = TokenCipher::decrypt((string)$this->esiRefreshToken);
+
         try{
             $timezone = self::getF3()->get('getTimeZone')();
             $now = new \DateTime('now', $timezone);
 
             if(
-                !empty($this->esiAccessToken) &&
+                !empty($accessPlain) &&
                 !empty($this->esiAccessTokenExpires)
             ){
                 $expireTime = \DateTime::createFromFormat(
@@ -549,7 +570,7 @@ class CharacterModel extends AbstractPathfinderModel {
                 // check if token is not expired
                 if($expireTime && $expireTime->getTimestamp() > $now->getTimestamp()){
                     // token still valid
-                    $accessToken = $this->esiAccessToken;
+                    $accessToken = $accessPlain;
 
                     // check if token should be renewed (close to expire)
                     $timeBuffer = 2 * 60;
@@ -571,18 +592,20 @@ class CharacterModel extends AbstractPathfinderModel {
         // -> in case request for new token fails (e.g. timeout) and old token is still valid -> keep old token
         if(
             $refreshToken &&
-            !empty($this->esiRefreshToken)
+            !empty($refreshPlain)
         ){
             $ssoController = new Sso();
-            $accessData =  $ssoController->refreshAccessToken($this->esiRefreshToken);
+            $accessData =  $ssoController->refreshAccessToken($refreshPlain);
 
             if(isset($accessData->accessToken, $accessData->esiAccessTokenExpires, $accessData->refreshToken)){
+                // setters encrypt before persistence
                 $this->esiAccessToken = $accessData->accessToken;
                 $this->esiAccessTokenExpires = $accessData->esiAccessTokenExpires;
                 $this->esiRefreshToken = $accessData->refreshToken;
                 $this->save();
 
-                $accessToken = $this->esiAccessToken;
+                // return plaintext directly — $this->esiAccessToken is now ciphertext
+                $accessToken = $accessData->accessToken;
             }
         }
 
