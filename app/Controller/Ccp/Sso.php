@@ -146,6 +146,14 @@ class Sso extends Api\User{
         if( !empty( Controller\Controller::getEnvironmentData('CCP_SSO_CLIENT_ID') ) ){
             // used for "state" check between request and callback
             $state = bin2hex(random_bytes(32));
+            // PKCE (RFC 7636): gated by env flag for runtime kill-switch
+            $usePkce = (bool)(int)(Controller\Controller::getEnvironmentData('CCP_SSO_USE_PKCE') ?? 1);
+            $pkceVerifier = '';
+            if ($usePkce) {
+                // 32 bytes -> exactly 43 base64url chars (RFC 7636 §4.1 minimum). Do not reduce.
+                $pkceVerifier  = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+                $pkceChallenge = rtrim(strtr(base64_encode(hash('sha256', $pkceVerifier, true)), '+/', '-_'), '=');
+            }
             $stateMap = (array)($f3->get(self::SESSION_KEY_SSO_STATE) ?: []);
             // Drop any entries that aren't well-formed (e.g. legacy scalar value from
             // an in-flight session pre-upgrade). Keeps the uasort below well-defined.
@@ -154,7 +162,11 @@ class Sso extends Api\User{
                 uasort($stateMap, fn($a, $b) => $a['createdAt'] <=> $b['createdAt']);
                 $stateMap = array_slice($stateMap, -4, null, true);
             }
-            $stateMap[$state] = ['from' => (string)($f3->get(self::SESSION_KEY_SSO_FROM) ?: ''), 'createdAt' => time()];
+            $stateMap[$state] = [
+                'from'         => (string)($f3->get(self::SESSION_KEY_SSO_FROM) ?: ''),
+                'createdAt'    => time(),
+                'pkceVerifier' => $pkceVerifier,
+            ];
             $f3->set(self::SESSION_KEY_SSO_STATE, $stateMap);
 
             $urlParams = [
@@ -164,6 +176,11 @@ class Sso extends Api\User{
                 'scope' => implode(' ', $scopes),
                 'state' => $state
             ];
+
+            if ($usePkce) {
+                $urlParams['code_challenge']        = $pkceChallenge;
+                $urlParams['code_challenge_method'] = 'S256';
+            }
 
             $ssoAuthUrl = $f3->ssoClient()->getUrl();
             $ssoAuthUrl .= $f3->ssoClient()->getAuthorizationEndpointURI();
@@ -213,6 +230,7 @@ class Sso extends Api\User{
                 if(!empty($entry['from'])){
                     $rootAlias = $entry['from'];
                 }
+                $pkceVerifier = (string)($entry['pkceVerifier'] ?? '');
                 unset($stateMap[$incomingState]);
                 if(empty($stateMap)){
                     $f3->clear(self::SESSION_KEY_SSO_STATE);
@@ -221,7 +239,7 @@ class Sso extends Api\User{
                 }
                 $f3->clear(self::SESSION_KEY_SSO_FROM);
 
-                $accessData = $this->getSsoAccessData($getParams['code']);
+                $accessData = $this->getSsoAccessData($getParams['code'], $pkceVerifier);
 
                 if(isset($accessData->accessToken, $accessData->esiAccessTokenExpires, $accessData->refreshToken)){
                     // login succeeded -> get basic character data for current login
@@ -373,8 +391,8 @@ class Sso extends Api\User{
      * @param string $authCode
      * @return null|\stdClass
      */
-    protected function getSsoAccessData(string $authCode) : ?\stdClass {
-        return $this->verifyAuthorizationCode($authCode);
+    protected function getSsoAccessData(string $authCode, string $pkceVerifier = '') : ?\stdClass {
+        return $this->verifyAuthorizationCode($authCode, $pkceVerifier);
     }
 
     /**
@@ -382,11 +400,14 @@ class Sso extends Api\User{
      * @param string $authCode
      * @return \stdClass
      */
-    protected function verifyAuthorizationCode(string $authCode) : \stdClass {
+    protected function verifyAuthorizationCode(string $authCode, string $pkceVerifier = '') : \stdClass {
         $requestParams = [
             'grant_type' => 'authorization_code',
-            'code' => $authCode
+            'code'       => $authCode,
         ];
+        if (!empty($pkceVerifier)) {
+            $requestParams['code_verifier'] = $pkceVerifier;
+        }
 
         return $this->requestAccessData($requestParams);
     }
