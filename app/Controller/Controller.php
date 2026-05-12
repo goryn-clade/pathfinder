@@ -257,7 +257,7 @@ class Controller {
             // unique "selector" -> to facilitate database look-ups (small size)
             // -> This is preferable to simply using the database id field,
             // which leaks the number of active users on the application
-            $selector = bin2hex( random_bytes(12) );
+            $selector = bin2hex( random_bytes(16) );
 
             // generate unique "validator" (strong encryption)
             // -> plaintext set to user (cookie), hashed version of this in DB
