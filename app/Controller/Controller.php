@@ -383,7 +383,7 @@ class Controller {
                                 $characterAuth->save();
 
                                 $remainingTtl = max(0, strtotime((string) $characterAuth->expires) - $currentTime->getTimestamp());
-                                $cookieName = 'COOKIE.' . self::COOKIE_PREFIX_CHARACTER . '_' . $name;
+                                $cookieName = 'COOKIE.' . $name;
                                 $this->getF3()->set($cookieName, $data[0] . ':' . $newValidator, $remainingTtl);
                             }
                         }elseif(strtotime((string) $characterAuth->expires) < $currentTime->getTimestamp()){
