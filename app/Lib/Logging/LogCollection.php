@@ -27,10 +27,7 @@ class LogCollection extends AbstractLog {
      */
     protected $processorConfig      = [];
 
-    /**
-     * @var null|\SplObjectStorage
-     */
-    private $collection             = null;
+    private \SplObjectStorage $collection;
 
     /**
      * LogCollection constructor.

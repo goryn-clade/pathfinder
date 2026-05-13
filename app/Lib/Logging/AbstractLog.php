@@ -54,10 +54,7 @@ abstract class AbstractLog implements LogInterface {
      */
     const TAG                       = ['danger', 'warning', 'information', 'success', 'primary', 'default'];
 
-    /**
-     * @var null|\Base
-     */
-    protected $f3                   = null;
+    protected \Base $f3;
 
     /**
      * log Handler type with Formatter type
