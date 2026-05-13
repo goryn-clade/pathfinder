@@ -9,6 +9,7 @@
 namespace Exodus4D\Pathfinder\Cron;
 
 
+use Exodus4D\Pathfinder\Enum\ConnectionType;
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Model\Pathfinder;
 
@@ -164,11 +165,9 @@ class MapUpdate extends AbstractCron {
     private function getEolExpireSeconds(array $data) : ?int {
         $types = (array)json_decode($data['type'] ?? 'null');
         $buffer = (int)((int)$data['nominalLifespan'] * 0.2);
-        // keyed by type string, value is the base seconds added to buffer
-        $phaseBase = ['wh_eol1' => 4 * 3600, 'wh_eol' => 4 * 3600, 'wh_eol2' => 1 * 3600, 'wh_eol3' => 0];
-        foreach($phaseBase as $type => $base){
-            if(in_array($type, $types)){
-                return $base + $buffer;
+        foreach(ConnectionType::eolCases() as $eolCase){
+            if(in_array($eolCase->value, $types)){
+                return $eolCase->eolBaseSeconds() + $buffer;
             }
         }
         return null;
@@ -208,7 +207,7 @@ class MapUpdate extends AbstractCron {
 
         $connectionsData = $pfDB->exec($sql, [
             'deleteExpiredConnections' => 1,
-            'scope' => 'wh',
+            'scope' => ConnectionType::Wh->value,
             'nominalDefault' => $nominalDefault
         ]);
 

@@ -10,6 +10,7 @@ namespace Exodus4D\Pathfinder\Model\Pathfinder;
 
 use DB\SQL\Schema;
 use Exodus4D\Pathfinder\Controller\Api\Rest\Route;
+use Exodus4D\Pathfinder\Enum\ConnectionType;
 use Exodus4D\Pathfinder\Lib\Logging;
 use Exodus4D\Pathfinder\Exception;
 use Exodus4D\Pathfinder\Model\Universe;
@@ -100,52 +101,27 @@ class ConnectionModel extends AbstractMapTrackingModel {
         ]
     ];
 
+    // Jump-mass type strings (sourced from enum for single source of truth)
     private const JUMP_MASS_TYPES = [
-        'wh_jump_mass_s', 'wh_jump_mass_m', 'wh_jump_mass_l', 'wh_jump_mass_xl',
+        ConnectionType::WhJumpMassS->value,
+        ConnectionType::WhJumpMassM->value,
+        ConnectionType::WhJumpMassL->value,
+        ConnectionType::WhJumpMassXl->value,
     ];
 
     // Thresholds match Init.wormholeSizes in init.js (descending order)
     private const JUMP_MASS_BUCKETS = [
-        1_000_000_000 => 'wh_jump_mass_xl',
-        375_000_000   => 'wh_jump_mass_l',
-        62_000_000    => 'wh_jump_mass_m',
-        5_000         => 'wh_jump_mass_s',
-    ];
-
-    /**
-     * allowed connection types
-     * @var array
-     */
-    protected static $connectionTypeWhitelist = [
-        // base type for scopes
-        'wh',
-        'abyssal',
-        'jumpbridge',
-        'stargate',
-        // wh mass reduction types
-        'wh_fresh',
-        'wh_reduced',
-        'wh_critical',
-        // wh jump mass types
-        'wh_jump_mass_s',
-        'wh_jump_mass_m',
-        'wh_jump_mass_l',
-        'wh_jump_mass_xl',
-        // wh eol phase types
-        'wh_eol1',
-        'wh_eol2',
-        'wh_eol3',
-        // legacy (accepted but mapped to wh_eol1 on read)
-        'wh_eol',
-        // other types
-        'preserve_mass'
+        1_000_000_000 => ConnectionType::WhJumpMassXl->value,
+        375_000_000   => ConnectionType::WhJumpMassL->value,
+        62_000_000    => ConnectionType::WhJumpMassM->value,
+        5_000         => ConnectionType::WhJumpMassS->value,
     ];
 
     /**
      * @return string[]
      */
     public static function getConnectionTypeWhitelist() : array {
-        return self::$connectionTypeWhitelist;
+        return ConnectionType::whitelist();
     }
 
     /**
@@ -162,7 +138,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         $connectionData->scope          = $this->scope;
         $type = (array)json_decode($this->get('type', true) ?? 'null');
         // backward compat: legacy wh_eol -> wh_eol1
-        $type = array_map(fn($t) => $t === 'wh_eol' ? 'wh_eol1' : $t, $type);
+        $type = array_map(fn($t) => $t === 'wh_eol' ? ConnectionType::WhEol1->value : $t, $type);
         $connectionData->type           = array_values(array_unique($type));
         $connectionData->updated        = strtotime($this->updated);
         $connectionData->created        = strtotime($this->created);
@@ -193,14 +169,22 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @return array
      */
     public function set_type( $type){
-        // remove unwanted types -> they should not be send from client
+        // normalise: map legacy 'wh_eol' to 'wh_eol1', then validate via enum
+        // (unknown strings return null from tryFrom and are filtered out)
         // -> reset keys! otherwise JSON format results in object and not in array
-        $type = array_values(array_intersect(array_unique((array)$type), self::$connectionTypeWhitelist));
+        $type = array_values(array_unique(array_filter(array_map(
+            function(mixed $t): ?string {
+                $s = (string)$t;
+                if ($s === 'wh_eol') return ConnectionType::WhEol1->value;
+                return ConnectionType::tryFrom($s)?->value;
+            },
+            (array)$type
+        ))));
 
         // set EOL timestamp per phase transition
-        $eolPhaseTypes = ['wh_eol1', 'wh_eol2', 'wh_eol3', 'wh_eol'];
-        $newEolType = array_values(array_intersect($type, $eolPhaseTypes));
-        $currentEolType = array_values(array_intersect((array)$this->type, $eolPhaseTypes));
+        $eolValues = array_map(fn(ConnectionType $c) => $c->value, ConnectionType::eolCases());
+        $newEolType = array_values(array_intersect($type, $eolValues));
+        $currentEolType = array_values(array_intersect((array)$this->type, $eolValues));
         if(empty($newEolType)){
             $this->eolUpdated = null;
         }elseif($newEolType !== $currentEolType){
@@ -264,8 +248,8 @@ class ConnectionModel extends AbstractMapTrackingModel {
                 $this->source->isAbyss() ||
                 $this->target->isAbyss()
             ){
-                $this->scope = 'abyssal';
-                $this->type = ['abyssal'];
+                $this->scope = ConnectionType::Abyssal->value;
+                $this->type = [ConnectionType::Abyssal->value];
             }elseif(
                 $this->source->isKspace() &&
                 $this->target->isKspace() &&
@@ -273,11 +257,11 @@ class ConnectionModel extends AbstractMapTrackingModel {
                 $this->target->systemId !== null &&
                 (new Route())->searchRoute($this->source->systemId, $this->target->systemId, 1)['routePossible']
             ){
-                $this->scope = 'stargate';
-                $this->type = ['stargate'];
+                $this->scope = ConnectionType::Stargate->value;
+                $this->type = [ConnectionType::Stargate->value];
             }else{
-                $this->scope = 'wh';
-                $type = ['wh_fresh'];
+                $this->scope = ConnectionType::Wh->value;
+                $type = [ConnectionType::WhFresh->value];
                 if($defaultMass = $this->defaultMassFromEndpoints()){
                     $type[] = $defaultMass;
                 }
@@ -354,10 +338,10 @@ class ConnectionModel extends AbstractMapTrackingModel {
             $securities[] = (string)$this->target->security;
         }
         if(in_array('C13', $securities, true)){
-            return 'wh_jump_mass_s';
+            return ConnectionType::WhJumpMassS->value;
         }
         if(in_array('C1',  $securities, true)){
-            return 'wh_jump_mass_m';
+            return ConnectionType::WhJumpMassM->value;
         }
         return null;
     }
@@ -367,7 +351,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @return bool
      */
     public function isWormhole() : bool {
-        return ($this->scope === 'wh');
+        return ($this->scope === ConnectionType::Wh->value);
     }
 
     /**

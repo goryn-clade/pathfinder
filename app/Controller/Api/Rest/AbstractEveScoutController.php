@@ -4,6 +4,7 @@
 namespace Exodus4D\Pathfinder\Controller\Api\Rest;
 
 use Exodus4D\Pathfinder\Controller\Ccp\Universe;
+use Exodus4D\Pathfinder\Enum\ConnectionType;
 use Exodus4D\Pathfinder\Lib\Config;
 
 abstract class AbstractEveScoutController extends AbstractRestController {
@@ -75,31 +76,31 @@ abstract class AbstractEveScoutController extends AbstractRestController {
         };
 
         $enrichWithWormholeData = function( $wormholeData, array &$connectionsData) : void {
-            $type = ['wh_fresh'];
+            $type = [ConnectionType::WhFresh->value];
 
             $estimatedEol = $wormholeData['estimatedEol'] ?? null;
             if($estimatedEol !== null && $estimatedEol <= 4){
                 if($estimatedEol > 1){
-                    $type[] = 'wh_eol1';    // Phase 1 (aging): 1–4h remaining
+                    $type[] = ConnectionType::WhEol1->value;
                 }elseif($estimatedEol > 0){
-                    $type[] = 'wh_eol2';    // Phase 2 (expiring): 0–1h remaining
+                    $type[] = ConnectionType::WhEol2->value;
                 }else{
-                    $type[] = 'wh_eol3';    // Phase 3 (zombie): past natural end
+                    $type[] = ConnectionType::WhEol3->value;
                 }
             }
             switch($wormholeData['jumpMass'] ?? '') {
                 case 'capital':
                 case 'xlarge':
-                    $type[] = 'wh_jump_mass_xl';
+                    $type[] = ConnectionType::WhJumpMassXl->value;
                     break;
                 case 'large':
-                    $type[] = 'wh_jump_mass_l';
+                    $type[] = ConnectionType::WhJumpMassL->value;
                     break;
                 case 'medium':
-                    $type[] = 'wh_jump_mass_m';
+                    $type[] = ConnectionType::WhJumpMassM->value;
                     break;
                 case 'small':
-                    $type[] = 'wh_jump_mass_s';
+                    $type[] = ConnectionType::WhJumpMassS->value;
                     break;
             }
 
@@ -118,7 +119,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
                     try{
                         $data = [
                             'id' => (int)$eveScoutConnection['id'],
-                            'scope' => 'wh',
+                            'scope' => ConnectionType::Wh->value,
                             'created' => [
                                 'created' => (new \DateTime($eveScoutConnection['created']))->getTimestamp(),
                                 'character' => (array)$eveScoutConnection['character']

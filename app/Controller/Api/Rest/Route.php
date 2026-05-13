@@ -6,6 +6,7 @@ namespace Exodus4D\Pathfinder\Controller\Api\Rest;
 
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Controller\Ccp\Universe;
+use Exodus4D\Pathfinder\Enum\ConnectionType;
 use Exodus4D\Pathfinder\Model\Pathfinder;
 
 class Route extends AbstractRestController {
@@ -159,32 +160,36 @@ class Route extends AbstractRestController {
 
             if( ($filterData['stargates'] ?? false) === true){
                 // include "stargates" for search
-                $includeScopes[] = 'stargate';
-                $includeTypes[] = 'stargate';
+                $includeScopes[] = ConnectionType::Stargate->value;
+                $includeTypes[] = ConnectionType::Stargate->value;
 
             }
 
             if( ($filterData['jumpbridges'] ?? false) === true ){
                 // add jumpbridge connections for search
-                $includeScopes[] = 'jumpbridge';
-                $includeTypes[] = 'jumpbridge';
+                $includeScopes[] = ConnectionType::Jumpbridge->value;
+                $includeTypes[] = ConnectionType::Jumpbridge->value;
             }
 
             if( ($filterData['wormholes'] ?? false) === true ){
                 // add wormhole connections for search
-                $includeScopes[] = 'wh';
-                $includeTypes[] = 'wh_fresh';
+                $includeScopes[] = ConnectionType::Wh->value;
+                $includeTypes[] = ConnectionType::WhFresh->value;
 
 
                 if( ($filterData['wormholesReduced'] ?? false) === true ){
-                    $includeTypes[] = 'wh_reduced';
+                    $includeTypes[] = ConnectionType::WhReduced->value;
                 }
 
                 if( ($filterData['wormholesCritical'] ?? false) === true ){
-                    $includeTypes[] = 'wh_critical';
+                    $includeTypes[] = ConnectionType::WhCritical->value;
                 }
 
-                foreach(['wormholesEOL1' => 'wh_eol1', 'wormholesEOL2' => 'wh_eol2', 'wormholesEOL3' => 'wh_eol3'] as $key => $type){
+                foreach([
+                    'wormholesEOL1' => ConnectionType::WhEol1->value,
+                    'wormholesEOL2' => ConnectionType::WhEol2->value,
+                    'wormholesEOL3' => ConnectionType::WhEol3->value,
+                ] as $key => $type){
                     if(($filterData[$key] ?? true) === false){
                         $excludeTypes[] = $type;
                     }
