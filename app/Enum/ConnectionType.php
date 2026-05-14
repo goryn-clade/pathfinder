@@ -72,7 +72,7 @@ enum ConnectionType: string
      */
     public function eolBaseSeconds(): ?int
     {
-        return match($this) {
+        return match($this) { // phpcs:ignore PHPCompatibility.Variables.ForbiddenThisUseContexts.OutsideObjectContext
             self::WhEol1 => 4 * 3600,
             self::WhEol2 => 1 * 3600,
             self::WhEol3 => 0,
