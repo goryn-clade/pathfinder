@@ -73,7 +73,7 @@ class TypeAttributeModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {}
 
     /**
      * overwrites parent

@@ -406,14 +406,14 @@ class CharacterModel extends AbstractPathfinderModel {
      * Setter is invoked by Cortex on direct assignment and copyfrom(), so both
      * write paths (SSO callback + refresh) are covered transparently.
      */
-    public function set_esiAccessToken($value){
+    public function set_esiAccessToken(mixed $value): string {
         return TokenCipher::encrypt((string)$value);
     }
 
     /**
      * Encrypt esiRefreshToken at rest (F5). See set_esiAccessToken.
      */
-    public function set_esiRefreshToken($value){
+    public function set_esiRefreshToken(mixed $value): string {
         return TokenCipher::encrypt((string)$value);
     }
 
@@ -871,7 +871,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @return CharacterModel
      * @throws \Exception
      */
-    public function updateLog( $additionalOptions = []) : self {
+    public function updateLog( array $additionalOptions = []) : self {
         $deleteLog = false;
         $invalidResponse = false;
 
@@ -1168,7 +1168,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param  $historyEntry
      * @return bool
      */
-    protected function updateLogHistoryEntry( $historyEntry) : bool {
+    protected function updateLogHistoryEntry( array $historyEntry) : bool {
         $updated = false;
 
         if(
@@ -1472,7 +1472,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * delete current location
      */
-    protected function deleteLog(){
+    protected function deleteLog(): void {
         if($characterLog = $this->getLog()){
             $characterLog->erase();
         }
@@ -1481,7 +1481,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * delete authentications data
      */
-    protected function deleteAuthentications(){
+    protected function deleteAuthentications(): void {
         if(is_object($this->characterAuthentications)){
             foreach($this->characterAuthentications as $characterAuthentication){
                 /**
@@ -1539,7 +1539,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param  $characterDataBase
      * @return array<string, mixed>
      */
-    public static function mergeSessionCharacterData( $characterDataBase = []) : array {
+    public static function mergeSessionCharacterData( array $characterDataBase = []) : array {
         $addData = [];
         // get current session characters to be merged with
         $characterData = (array)self::getF3()->get(User::SESSION_KEY_CHARACTERS);
@@ -1564,7 +1564,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param  $characterIds
      * @return \DB\CortexCollection
      */
-    public static function getAll( $characterIds = []){
+    public static function getAll( array $characterIds = []){
         $query = [
             'active = :active AND id IN :characterIds',
             ':active' => 1,

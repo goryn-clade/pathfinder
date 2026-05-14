@@ -21,7 +21,7 @@ class AccessController extends Controller {
      * @throws \Exception
      */
     #[\Override]
-    function beforeroute(\Base $f3,  $params) : bool {
+    function beforeroute(\Base $f3,  array $params) : bool {
         if($return = parent::beforeroute($f3, $params)){
             // Any route/endpoint of a child class of this one,
             // requires a valid logged in user!

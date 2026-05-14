@@ -193,7 +193,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param  $options
      * @return array<string, mixed>
      */
-    public function getMaps(?int $mapId = null,  $options = []) : array {
+    public function getMaps(?int $mapId = null,  array $options = []) : array {
         $maps = [];
         $this->filterRel();
 
@@ -227,7 +227,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param  $options
      * @return CharacterModel[]
      */
-    public function getCharacters( $characterIds = [],  $options = []) : array {
+    public function getCharacters( array $characterIds = [],  array $options = []) : array {
         $characters = [];
         $filter = ['active = ?', 1];
 
@@ -310,7 +310,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @return CorporationRightModel[]
      * @throws \Exception
      */
-    public function getRights( $names = self::RIGHTS,  $options = []) : array {
+    public function getRights( array $names = self::RIGHTS,  array $options = []) : array {
         $corporationRights = [];
         // get available rights
         $right = self::getNew('RightModel');
@@ -376,7 +376,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * add new structure for this corporation
      * @param StructureModel $structure
      */
-    public function saveStructure(StructureModel $structure){
+    public function saveStructure(StructureModel $structure): void {
         if( !$structure->dry() ){
             $corporationStructure = $this->rel('corporationStructures');
 
@@ -401,7 +401,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * @param  $options
      * @return \DB\CortexCollection
      */
-    public static function getAll( $options = []){
+    public static function getAll( array $options = []){
         $query = [
             'active = :active',
             ':active' => 1

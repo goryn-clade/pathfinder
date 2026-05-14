@@ -66,7 +66,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array<string, mixed> $data
      */
-    public function setData( $data){
+    public function setData( $data): void {
         unset($data['id']);
         unset($data['created']);
         unset($data['updated']);

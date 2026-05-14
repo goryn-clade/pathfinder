@@ -96,7 +96,7 @@ class Route extends AbstractRestController {
     /**
      * reset all jump data
      */
-    protected function resetJumpData(){
+    protected function resetJumpData(): void {
         $this->nameArray = [];
         $this->jumpArray = [];
         $this->idArray = [];
@@ -142,7 +142,7 @@ class Route extends AbstractRestController {
      * @param  $filterData
      * @throws \Exception
      */
-    private function setDynamicJumpData( $mapIds = [],  $filterData = []): void{
+    private function setDynamicJumpData( array $mapIds = [],  array $filterData = []): void{
         // make sure, mapIds are integers (protect against SQL injections)
         $mapIds = array_unique( array_map(intval(...), $mapIds), SORT_NUMERIC);
 
@@ -377,7 +377,7 @@ class Route extends AbstractRestController {
      * -> data is either coming from CCPs [SDE] OR from map specific data
      * @param  $rows
      */
-    private function updateJumpData( &$rows = []): void{
+    private function updateJumpData( array &$rows = []): void{
         foreach($rows as &$row){
             $regionId       = (int)($row['regionId'] ?? 0);
             $constId        = (int)($row['constellationId'] ?? 0);
@@ -416,7 +416,7 @@ class Route extends AbstractRestController {
      * @param  $filterData
      * @param  $keepSystems
      */
-    private function filterJumpData( $filterData = [],  $keepSystems = []): void{
+    private function filterJumpData( array $filterData = [],  array $keepSystems = []): void{
         if(($filterData['flag'] ?? '') == 'secure'){
             // remove all systems (TrueSec < 0.5) from search arrays
             $this->jumpArray = array_filter($this->jumpArray, function($systemId) use ($keepSystems) {
@@ -554,7 +554,7 @@ class Route extends AbstractRestController {
      * @return array<string, mixed>
      * @throws \Exception
      */
-    public function searchRoute(int $systemFromId, int $systemToId, int $searchDepth = 0,  $mapIds = [],  $filterData = []) : array {
+    public function searchRoute(int $systemFromId, int $systemToId, int $searchDepth = 0,  array $mapIds = [],  array $filterData = []) : array {
         // search root by ESI API
         $routeData = $this->searchRouteESI($systemFromId, $systemToId, $searchDepth, $mapIds, $filterData);
 
@@ -578,7 +578,7 @@ class Route extends AbstractRestController {
      * @return array<string, mixed>
      * @throws \Exception
      */
-    private function searchRouteCustom(int $systemFromId, int $systemToId, int $searchDepth = 0,  $mapIds = [],  $filterData = []) : array {
+    private function searchRouteCustom(int $systemFromId, int $systemToId, int $searchDepth = 0,  array $mapIds = [],  array $filterData = []) : array {
         // reset all previous set jump data
         $this->resetJumpData();
 
@@ -667,7 +667,7 @@ class Route extends AbstractRestController {
      * @return array<string, mixed>
      * @throws \Exception
      */
-    private function searchRouteESI(int $systemFromId, int $systemToId, int $searchDepth = 0,  $mapIds = [],  $filterData = []) : array {
+    private function searchRouteESI(int $systemFromId, int $systemToId, int $searchDepth = 0,  array $mapIds = [],  array $filterData = []) : array {
         // reset all previous set jump data
         $this->resetJumpData();
 
@@ -794,7 +794,7 @@ class Route extends AbstractRestController {
      * @param array<string, mixed> $filterData
      * @return string
      */
-    private function getRouteCacheKey( $mapIds, int $systemFrom, int $systemTo,  $filterData = []){
+    private function getRouteCacheKey( array $mapIds, int $systemFrom, int $systemTo,  $filterData = []){
 
         $keyParts = [
             implode('_', $mapIds),

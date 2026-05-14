@@ -31,7 +31,7 @@ class Sso extends Api\User{
      * SSO endpoints are pre-authentication by definition — skip the Api\User auth guard.
      */
     #[\Override]
-    public function beforeroute(\Base $f3, $params): bool {
+    public function beforeroute(\Base $f3, array $params): bool {
         return Controller\Controller::beforeroute($f3, $params);
     }
 

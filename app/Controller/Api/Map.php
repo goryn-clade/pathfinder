@@ -277,7 +277,7 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function import(\Base $f3){
+    public function import(\Base $f3): void {
         $importData = (array)$f3->get('POST');
 
         $return = (object) [];
@@ -291,7 +291,7 @@ class Map extends Controller\AccessController {
             $activeCharacter = $this->getCharacter();
 
             if(!$activeCharacter){
-                return $return;
+                return;
             }
 
             /**
@@ -443,7 +443,7 @@ class Map extends Controller\AccessController {
      * @param Pathfinder\MapModel $map
      * @throws \Exception
      */
-    protected function broadcastMapAccess(Pathfinder\MapModel $map){
+    protected function broadcastMapAccess(Pathfinder\MapModel $map): void {
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,
@@ -462,12 +462,12 @@ class Map extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getAccessData(\Base $f3){
+    public function getAccessData(\Base $f3): void {
         $return = (object) [];
 
         $activeCharacter = $this->getCharacter();
         if(!$activeCharacter){
-            return $return;
+            return;
         }
 
         $characterData = $activeCharacter->getData(true);

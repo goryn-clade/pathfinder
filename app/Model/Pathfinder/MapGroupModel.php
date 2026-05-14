@@ -101,7 +101,7 @@ class MapGroupModel extends AbstractMapTrackingModel {
     /**
      * @param array<string, mixed> $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void {
         $self->clearCacheData();
         $self->logActivity('groupCreate');
     }
@@ -109,7 +109,7 @@ class MapGroupModel extends AbstractMapTrackingModel {
     /**
      * @param array<string, mixed> $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void {
         $self->clearCacheData();
         $self->logActivity('groupUpdate');
     }
@@ -133,7 +133,7 @@ class MapGroupModel extends AbstractMapTrackingModel {
     /**
      * @param array<string, mixed> $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void {
         $self->clearCacheData();
         $self->logActivity('groupDelete');
     }

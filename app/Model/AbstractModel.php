@@ -534,7 +534,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param string $msg
      * @throws ValidationException
      */
-    protected function throwValidationException(string $col, string $msg = ''){
+    protected function throwValidationException(string $col, string $msg = ''): never {
         $msg = empty($msg) ? 'Validation failed: "' . $col . '".' : $msg;
         throw new ValidationException($msg, $col);
     }
@@ -543,7 +543,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param string $msg
      * @throws DatabaseException
      */
-    protected function throwDbException(string $msg){
+    protected function throwDbException(string $msg): never {
         throw new DatabaseException($msg);
     }
 
@@ -689,7 +689,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param self $self
      * @param array<string, mixed> $pkeys
      */
-    public function afterInsertEvent(self $self,  $pkeys){
+    public function afterInsertEvent(self $self,  $pkeys): void {
     }
 
     /**
@@ -711,7 +711,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param self $self
      * @param array<string, mixed> $pkeys
      */
-    public function afterUpdateEvent(self $self,  $pkeys){
+    public function afterUpdateEvent(self $self,  $pkeys): void {
     }
 
     /**
@@ -731,7 +731,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param self $self
      * @param array<string, mixed> $pkeys
      */
-    public function afterEraseEvent(self $self,  $pkeys){
+    public function afterEraseEvent(self $self,  $pkeys): void {
     }
 
     /**
@@ -968,7 +968,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * add new validation error
      * @param ValidationException $e
      */
-    protected function setValidationError(ValidationException $e){
+    protected function setValidationError(ValidationException $e): void {
         $this->validationError[] = $e->getError();
     }
 

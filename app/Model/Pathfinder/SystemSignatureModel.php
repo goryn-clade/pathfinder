@@ -85,7 +85,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param  $data
      */
-    public function setData( $data): void{
+    public function setData( array $data): void{
         $this->copyfrom($data, ['name', 'groupId', 'typeId', 'description', 'connectionId']);
     }
 
@@ -206,7 +206,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param  $signatureData
      * @return bool
      */
-    public function hasChanged( $signatureData) : bool {
+    public function hasChanged( array $signatureData) : bool {
         $hasChanged = false;
 
         foreach((array)$signatureData as $key => $value){

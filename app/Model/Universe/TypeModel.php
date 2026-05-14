@@ -133,7 +133,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param  $dogmaAttributesData
      * @return null
      */
-    public function set_dogma_attributes( $dogmaAttributesData){
+    public function set_dogma_attributes( array $dogmaAttributesData){
         $this->virtual('dogmaAttributes', (array)$dogmaAttributesData);
         return null;
     }
@@ -258,7 +258,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param $pkeys
      * @param array<string, mixed> $pkeys
      */
-    public function afterInsertEvent($self,  $pkeys){
+    public function afterInsertEvent($self,  $pkeys): void {
         $self->syncDogmaAttributes();
 
         return parent::afterInsertEvent($self, $pkeys);
@@ -270,7 +270,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param $pkeys
      * @param array<string, mixed> $pkeys
      */
-    public function afterUpdateEvent($self,  $pkeys){
+    public function afterUpdateEvent($self,  $pkeys): void {
         $self->syncDogmaAttributes();
 
         return parent::afterUpdateEvent($self, $pkeys);
@@ -280,7 +280,7 @@ class TypeModel extends AbstractUniverseModel {
      * sync existing 'dogma' typeAttributes data with "new/updated" typeAttributes
      * -> $this->dogmaAttributes must be set before calling this method
      */
-    protected function syncDogmaAttributes(){
+    protected function syncDogmaAttributes(): void {
         if(
             $this->storeDogmaAttributes &&
             !empty($dogmaAttributesData = (array)$this->dogmaAttributes)
@@ -324,7 +324,7 @@ class TypeModel extends AbstractUniverseModel {
      * -> used to inject custom attributes (not available from ESI)
      * @param array<string, mixed> $data
      */
-    private function manipulateDogmaAttributes( &$data){
+    private function manipulateDogmaAttributes( &$data): void {
         if(!$this->storeDogmaAttributes){
             // attributes should not get saved
             unset($data['dogma_attributes']);
@@ -354,7 +354,7 @@ class TypeModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getUniverseType', $id);
         if(!empty($data)){
             $this->manipulateDogmaAttributes($data);

@@ -168,7 +168,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param  $type
      * @return array<string, mixed>
      */
-    public function set_type( $type){
+    public function set_type( array $type){
         // normalise: map legacy 'wh_eol' to 'wh_eol1', then validate via enum
         // (unknown strings return null from tryFrom and are filtered out)
         // -> reset keys! otherwise JSON format results in object and not in array
@@ -199,7 +199,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * setter for endpoints data (data for source/target endpoint)
      * @param  $endpointsData
      */
-    public function set_endpoints( $endpointsData){
+    public function set_endpoints( array $endpointsData): void {
         if(!empty($endpointData = (array)($endpointsData['source'] ?? []))){
             $this->setEndpointData('source', $endpointData);
         }
@@ -213,7 +213,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param string $label (source||target)
      * @param  $endpointData
      */
-    public function setEndpointData(string $label,  $endpointData = []){
+    public function setEndpointData(string $label,  array $endpointData = []): void {
         if($this->exists($field = $label . 'EndpointType')){
             $types = empty($types = (array)($endpointData['types'] ?? [])) ? null : $types;
             if($this->$field != $types){
@@ -239,7 +239,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * set default connection scope + type by search route between endpoints
      * @throws \Exception
      */
-    public function setAutoScopeAndType(){
+    public function setAutoScopeAndType(): void {
         if(
             is_object($this->source) &&
             is_object($this->target)
@@ -407,7 +407,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array<string, mixed> $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void {
         $self->clearCacheData();
         $self->logActivity('connectionCreate');
     }
@@ -418,7 +418,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array<string, mixed> $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void {
         $self->clearCacheData();
         $self->logActivity('connectionUpdate');
     }
@@ -429,7 +429,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array<string, mixed> $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void {
         $self->clearCacheData();
         $self->logActivity('connectionDelete');
     }

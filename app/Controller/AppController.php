@@ -21,7 +21,7 @@ class AppController extends Controller {
      * @return bool
      */
     #[\Override]
-    public function beforeroute(\Base $f3,  $params) : bool {
+    public function beforeroute(\Base $f3,  array $params) : bool {
         // page title
         $f3->set('tplPageTitle',  Config::getPathfinderData('name'));
 

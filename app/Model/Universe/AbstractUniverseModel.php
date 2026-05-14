@@ -41,7 +41,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $position
      * @return null
      */
-    public function set_position( $position){
+    public function set_position( mixed $position){
         $position = (array)$position;
         if(count($position) === 3){
             $this->x = $position['x'];
@@ -168,7 +168,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array<string, mixed> $additionalOptions
      */
-    abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []);
+    abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void;
 
     /**
      * convert CCPs ids for system security into Pathfinder security label

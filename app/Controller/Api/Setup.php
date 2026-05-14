@@ -17,7 +17,7 @@ use Exodus4D\Pathfinder\Model;
 class Setup extends Controller\Controller {
 
     #[\Override]
-    public function beforeroute(\Base $f3, $params): bool {
+    public function beforeroute(\Base $f3, array $params): bool {
         $expected = getenv('APP_PASSWORD');
         $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
         if(!$expected || !hash_equals($expected, $provided)){

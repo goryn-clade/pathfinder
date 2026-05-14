@@ -170,7 +170,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param  $data
      */
-    public function setData( $data): void{
+    public function setData( array $data): void{
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
 
         // update group membership when provided (null detaches, int attaches)
@@ -394,7 +394,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * setter for statusId
      * @param  $status
      */
-    public function set_status( $status): void{
+    public function set_status( array $status): void{
         if($statusId = (int)$status['id']){
             $this->statusId = $statusId;
         }
@@ -405,7 +405,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param  $position
      * @return null
      */
-    public function set_position( $position): null{
+    public function set_position( mixed $position): null{
         $position = (array)$position;
         if(count($position) === 2){
             $this->posX = $position['x'];
@@ -460,63 +460,63 @@ class SystemModel extends AbstractMapTrackingModel {
         return $rally;
     }
 
-    public function get_name(){
+    public function get_name(): mixed {
         return $this->getStaticSystemValue('name');
     }
 
-    public function get_constellationId(){
+    public function get_constellationId(): mixed {
         $constellationData = $this->getStaticSystemValue('constellation');
         return $constellationData ? $constellationData->id : null;
     }
 
-    public function get_constellation(){
+    public function get_constellation(): mixed {
         $constellationData = $this->getStaticSystemValue('constellation');
         return $constellationData ? $constellationData->name : null;
     }
 
-    public function get_regionId(){
+    public function get_regionId(): mixed {
         $constellationData = $this->getStaticSystemValue('constellation');
         return ($constellationData && $constellationData->region) ? $constellationData->region->id : null;
     }
 
-    public function get_region(){
+    public function get_region(): mixed {
         $constellationData = $this->getStaticSystemValue('constellation');
         return ($constellationData && $constellationData->region) ? $constellationData->region->name : null;
     }
 
-    public function get_security(){
+    public function get_security(): mixed {
         return $this->getStaticSystemValue('security');
     }
 
-    public function get_trueSec(){
+    public function get_trueSec(): mixed {
         return $this->getStaticSystemValue('trueSec');
     }
 
-    public function get_effect(){
+    public function get_effect(): mixed {
         return $this->getStaticSystemValue('effect');
     }
 
-    public function get_shattered(){
+    public function get_shattered(): mixed {
         return $this->getStaticSystemValue('shattered');
     }
 
-    public function get_statics(){
+    public function get_statics(): mixed {
         return $this->getStaticSystemValue('statics');
     }
 
-    public function get_planets(){
+    public function get_planets(): mixed {
         return $this->getStaticSystemValue('planets');
     }
 
-    public function get_stations(){
+    public function get_stations(): mixed {
         return $this->getStaticSystemValue('stations');
     }
 
-    public function get_sovereignty(){
+    public function get_sovereignty(): mixed {
         return $this->getStaticSystemValue('sovereignty');
     }
 
-    public function get_factionWar(){
+    public function get_factionWar(): mixed {
         return $this->getStaticSystemValue('factionWar');
     }
 
@@ -768,7 +768,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @throws Exception\ConfigException
      * @throws \Exception
      */
-    public function sendRallyPoke( $rallyData, CharacterModel $characterModel): void{
+    public function sendRallyPoke( array $rallyData, CharacterModel $characterModel): void{
         // rally log needs at least one handler to be valid
         $isValidLog = false;
         $log = new Logging\RallyLog('rallySet', $this->getMap()->getLogChannelData());

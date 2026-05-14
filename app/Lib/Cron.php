@@ -55,7 +55,7 @@ class Cron extends \Cron {
      * @return string
      */
     #[\Override]
-    public function __get($name){
+    public function __get(mixed $name){
         if(in_array($name, ['jobs'])){
             return $this->$name;
         }else{

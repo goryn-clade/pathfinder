@@ -24,7 +24,7 @@ class User extends Controller\Controller{
      * User extends Controller (not AccessController) so we enforce it here.
      */
     #[\Override]
-    public function beforeroute(\Base $f3, $params): bool {
+    public function beforeroute(\Base $f3, array $params): bool {
         $return = parent::beforeroute($f3, $params);
         if($return && !in_array($params['action'] ?? '', self::PUBLIC_METHODS, true) && !$this->getCharacter()){
             $this->logoutCharacter($f3);

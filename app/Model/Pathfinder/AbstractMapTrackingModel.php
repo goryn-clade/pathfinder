@@ -56,7 +56,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
      * log character activity create/update/delete events
      * @param string $action
      */
-    protected function logActivity($action){
+    protected function logActivity($action): void {
         // check if activity logging is enabled for this object
         if($this->enableActivityLogging){
             // check for field changes

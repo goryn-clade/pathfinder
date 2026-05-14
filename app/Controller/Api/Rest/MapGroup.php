@@ -6,7 +6,7 @@ use Exodus4D\Pathfinder\Model\Pathfinder;
 
 class MapGroup extends AbstractRestController {
 
-    public function get(\Base $f3, $params) : void {
+    public function get(\Base $f3, array $params) : void {
         $requestData = $this->getRequestData($f3);
         $groupData = null;
 
@@ -55,7 +55,7 @@ class MapGroup extends AbstractRestController {
         $this->out($groupData);
     }
 
-    public function patch(\Base $f3, $params) : void {
+    public function patch(\Base $f3, array $params) : void {
         $requestData = $this->getRequestData($f3);
         $groupData = null;
 
@@ -86,7 +86,7 @@ class MapGroup extends AbstractRestController {
         $this->out($groupData);
     }
 
-    public function delete(\Base $f3, $params) : void {
+    public function delete(\Base $f3, array $params) : void {
         $deletedGroupIds = [];
 
         if($groupId = (int)$params['id']){

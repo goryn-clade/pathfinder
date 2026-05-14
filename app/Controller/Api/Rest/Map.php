@@ -24,7 +24,7 @@ class Map extends AbstractRestController {
      * @param       $test
      * @throws \Exception
      */
-    public function put(\Base $f3,  $test) : void {
+    public function put(\Base $f3,  array $test) : void {
         $requestData = $this->getRequestData($f3);
 
         /**
@@ -41,7 +41,7 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function patch(\Base $f3,  $params) : void {
+    public function patch(\Base $f3,  array $params) : void {
         $requestData = $this->getRequestData($f3);
         $mapData = [];
 
@@ -66,7 +66,7 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function delete(\Base $f3,  $params) : void {
+    public function delete(\Base $f3,  array $params) : void {
         $deletedMapIds = [];
 
         if($mapId = (int)$params['id']){
@@ -221,7 +221,7 @@ class Map extends AbstractRestController {
      * @param Pathfinder\MapModel $map
      * @throws \Exception
      */
-    protected function broadcastMapAccess(Pathfinder\MapModel $map){
+    protected function broadcastMapAccess(Pathfinder\MapModel $map): void {
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,

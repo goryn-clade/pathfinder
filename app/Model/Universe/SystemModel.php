@@ -377,7 +377,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param $pkeys
      * @param array<string, mixed> $pkeys
      */
-    public function afterUpdateEvent($self,  $pkeys){
+    public function afterUpdateEvent($self,  $pkeys): void {
         // build search index
         $self->buildIndex();
         return parent::afterUpdateEvent($self, $pkeys);
@@ -489,7 +489,7 @@ class SystemModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getUniverseSystem', $id);
 
         if(!empty($data)){

@@ -50,7 +50,7 @@ class Log extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3,  $params): void{
+    public function delete(\Base $f3,  array $params): void{
         $logId = (int)$params['id'];
         $connectionData = [];
 
@@ -69,7 +69,7 @@ class Log extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3,  $params): void{
+    public function patch(\Base $f3,  array $params): void{
         $logId = (int)$params['id'];
         $requestData = $this->getRequestData($f3);
         $connectionData = [];

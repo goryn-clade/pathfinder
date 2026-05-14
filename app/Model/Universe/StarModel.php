@@ -85,7 +85,7 @@ class StarModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getUniverseStar', $id);
         if(!empty($data)){
             /**

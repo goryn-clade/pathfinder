@@ -170,7 +170,7 @@ abstract class AbstractSocket implements SocketInterface {
      * @param $payload
      * @return callable
      */
-    protected function initWrite($payload) : callable {
+    protected function initWrite(array $payload) : callable {
         return function(Socket\ConnectionInterface $connection) use ($payload) : Promise\PromiseInterface {
             $deferred = new Promise\Deferred();
 

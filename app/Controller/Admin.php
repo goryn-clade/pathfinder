@@ -40,7 +40,7 @@ class Admin extends Controller{
      * @throws \Exception
      */
     #[\Override]
-    function beforeroute(\Base $f3,  $params): bool {
+    function beforeroute(\Base $f3,  array $params): bool {
         $return = parent::beforeroute($f3, $params);
 
         $f3->set('tplPage', 'login');
@@ -131,7 +131,7 @@ class Admin extends Controller{
      * @param null $character
      * @throws \Exception
      */
-    public function dispatch(\Base $f3,  $params, mixed $character = null): void{
+    public function dispatch(\Base $f3,  array $params, mixed $character = null): void{
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map(strtolower(...), explode('/', (string) $params['*']))));
@@ -202,7 +202,7 @@ class Admin extends Controller{
      * @param array<string, mixed> $settings
      * @throws \Exception
      */
-    protected function saveSettings(CharacterModel $character, int $corporationId,  $settings){
+    protected function saveSettings(CharacterModel $character, int $corporationId,  $settings): void {
         $defaultRole = RoleModel::getDefaultRole();
 
         if($corporationId && $defaultRole){
@@ -239,7 +239,7 @@ class Admin extends Controller{
      * @param int $kickCharacterId
      * @param int $minutes
      */
-    protected function kickCharacter(CharacterModel $character, $kickCharacterId, $minutes){
+    protected function kickCharacter(CharacterModel $character, $kickCharacterId, $minutes): void {
         $kickOptions = self::KICK_OPTIONS;
         $minKickTime = key($kickOptions) ;
         $maxKickTime = array_key_last($kickOptions);
@@ -267,7 +267,7 @@ class Admin extends Controller{
      * @param int $banCharacterId
      * @param int $value
      */
-    protected function banCharacter(CharacterModel $character, $banCharacterId, $value){
+    protected function banCharacter(CharacterModel $character, $banCharacterId, $value): void {
         $banCharacters = $this->filterValidCharacters($character, $banCharacterId);
         foreach($banCharacters as $banCharacter){
             $banCharacter->ban($value);
@@ -315,7 +315,7 @@ class Admin extends Controller{
      * @param int $mapId
      * @param int $value
      */
-    protected function activateMap(CharacterModel $character, int $mapId, int $value){
+    protected function activateMap(CharacterModel $character, int $mapId, int $value): void {
         $maps = $this->filterValidMaps($character, $mapId);
         foreach($maps as $map){
             $map->setActive((bool)$value);
@@ -327,7 +327,7 @@ class Admin extends Controller{
      * @param CharacterModel $character
      * @param int $mapId
      */
-    protected function deleteMap(CharacterModel $character, int $mapId){
+    protected function deleteMap(CharacterModel $character, int $mapId): void {
         $maps = $this->filterValidMaps($character, $mapId);
         foreach($maps as $map){
             $map->erase();
@@ -370,7 +370,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initSettings(\Base $f3, CharacterModel $character){
+    protected function initSettings(\Base $f3, CharacterModel $character): void {
         $data = (object) ['corporations' => []];
         $corporations = $this->getAccessibleCorporations($character);
 
@@ -386,7 +386,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initMembers(\Base $f3, CharacterModel $character){
+    protected function initMembers(\Base $f3, CharacterModel $character): void {
         $data = (object) ['corpMembers' => []];
         if($characterCorporation = $character->getCorporation()){
             $corporations = $this->getAccessibleCorporations($character);
@@ -411,7 +411,7 @@ class Admin extends Controller{
      * @param \Base $f3
      * @param CharacterModel $character
      */
-    protected function initMaps(\Base $f3, CharacterModel $character){
+    protected function initMaps(\Base $f3, CharacterModel $character): void {
         $data = (object) ['corpMaps' => [], 'allianceMaps' => []];
 
         $corporations = $this->getAccessibleCorporations($character);

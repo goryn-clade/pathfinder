@@ -144,7 +144,7 @@ class Signature extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3,  $params): void{
+    public function patch(\Base $f3,  array $params): void{
         $requestData = $this->getRequestData($f3);
         $signaturesData = [];
 
@@ -183,7 +183,7 @@ class Signature extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3,  $params): void{
+    public function delete(\Base $f3,  array $params): void{
         $requestData = $this->getRequestData($f3);
         $signatureIds = array_map(intval(...), explode(',', (string)$params['id']));
         $deletedSignatureIds = [];

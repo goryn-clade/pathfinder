@@ -260,7 +260,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * -> checks $this->fieldChanges
      * @param string $action
      */
-    protected function updateLogsHistory(string $action){
+    protected function updateLogsHistory(string $action): void {
         if(
             $this->valid() &&
             is_object($this->characterId)
@@ -272,7 +272,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
     /**
      * delete 'character log' history data
      */
-    protected function deleteLogsHistory(){
+    protected function deleteLogsHistory(): void {
         if(is_object($this->characterId)){
             $this->characterId->clearCacheDataWithPrefix(CharacterModel::DATA_CACHE_KEY_LOG_HISTORY);
         }

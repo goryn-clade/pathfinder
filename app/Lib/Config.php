@@ -204,7 +204,7 @@ class Config extends \Prefab {
      * that depend on environment settings
      * @param \Base $f3
      */
-    protected function setHiveVariables(\Base $f3){
+    protected function setHiveVariables(\Base $f3): void {
         // hive keys that can be overwritten
         $hiveKeys = ['BASE', 'URL', 'DEBUG', 'CACHE'];
 
@@ -271,7 +271,7 @@ class Config extends \Prefab {
      * -> FastCGI syntax
      *      fastcgi_param PF-ENV-DEBUG 3;
      */
-    protected function setServerData(){
+    protected function setServerData(): void {
         $data = [];
         foreach($_SERVER as $key => $value){
             if(str_starts_with((string) $key, self::PREFIX_KEY . self::ARRAY_DELIMITER)){

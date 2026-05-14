@@ -38,7 +38,7 @@ abstract class AbstractChannelLog extends AbstractLog {
     /**
      * @param array<string, mixed> $channelData
      */
-    protected function setChannelData(array $channelData){
+    protected function setChannelData(array $channelData): void {
         $this->channelData = $channelData;
     }
 

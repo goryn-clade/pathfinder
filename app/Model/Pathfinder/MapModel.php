@@ -212,7 +212,7 @@ class MapModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param  $data
      */
-    public function setData( $data): void{
+    public function setData( array $data): void{
         unset($data['id']);
         unset($data['created']);
         unset($data['updated']);
@@ -582,7 +582,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param  $addFilters
      * @return SystemModel|null
      */
-    public function getSystemByCCPId(int $systemId,  $addFilters = []) : ?SystemModel {
+    public function getSystemByCCPId(int $systemId,  array $addFilters = []) : ?SystemModel {
         /**
          * @var SystemModel $system
          */
@@ -856,7 +856,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param  $clearKeys
      * @return int
      */
-    public function clearAccess( $clearKeys = ['character', 'corporation', 'alliance']) : int {
+    public function clearAccess( array $clearKeys = ['character', 'corporation', 'alliance']) : int {
         $count = 0;
         foreach($clearKeys as $key){
             $field = null;
@@ -964,7 +964,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param  $options filter options
      * @return CharacterModel[]
      */
-    private function getAllCharacters( $options = []) : array {
+    private function getAllCharacters( array $options = []) : array {
         $characters = [];
 
         if($this->isPrivate()){
@@ -996,7 +996,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @return array<string, mixed>|null|\stdClass
      * @throws \Exception
      */
-    public function getCharactersData( $options = []){
+    public function getCharactersData( array $options = []){
         // check if there is cached data
         $charactersData = $this->getCacheData(self::DATA_CACHE_KEY_CHARACTER);
 
@@ -1408,7 +1408,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * delete existing log file
      */
-    protected function deleteLogFile(){
+    protected function deleteLogFile(): void {
         $config = $this->getStreamConfig();
         if(is_file($config->stream)){
             // try to set write access
@@ -1501,7 +1501,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param  $options
      * @return CortexCollection
      */
-    public static function getAll( $mapIds = [],  $options = []){
+    public static function getAll( array $mapIds = [],  array $options = []){
         $query = [
             'id IN :mapIds',
             ':mapIds' => $mapIds

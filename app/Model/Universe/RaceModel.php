@@ -65,7 +65,7 @@ class RaceModel extends AbstractUniverseModel {
      * @param string $accessToken
      * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getUniverseRace', $id);
         if(!empty($data) && !isset($data['error'])){
             /**

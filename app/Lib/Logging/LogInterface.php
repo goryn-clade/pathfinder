@@ -11,11 +11,11 @@ namespace Exodus4D\Pathfinder\Lib\Logging;
 
 interface LogInterface {
 
-    public function setMessage(string $message);
+    public function setMessage(string $message): void;
 
-    public function setLevel(string $level);
+    public function setLevel(string $level): void;
 
-    public function setTag(string $tag);
+    public function setTag(string $tag): void;
 
     /**
      * @param array<string, mixed> $data
@@ -93,9 +93,9 @@ interface LogInterface {
 
     public function isGrouped() : bool;
 
-    public function removeHandlerGroups();
+    public function removeHandlerGroups(): void;
 
-    public function removeHandlerGroup(string $handlerKey);
+    public function removeHandlerGroup(string $handlerKey): void;
 
-    public function buffer();
+    public function buffer(): void;
 }

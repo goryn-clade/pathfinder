@@ -23,7 +23,7 @@ class SystemSearch extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function get(\Base $f3,  $params): void{
+    public function get(\Base $f3,  array $params): void{
         $requestData = $this->getRequestData($f3);
         $morePages = false;
         $count = 0;
