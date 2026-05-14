@@ -59,6 +59,9 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @return bool
      */
     #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
     public function beforeUpdateEvent($self,  $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
@@ -147,7 +150,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * -> if $id not exists in DB -> query API
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     public function loadById(int $id, string $accessToken = '',  $additionalOptions = []): void{
         /**
@@ -163,7 +166,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * load data from API into $this and save $this
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []);
 
@@ -196,7 +199,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
     /**
      * add $rowKeys (hashKeys) to a search index that holds all rowKeys of a table
      * @param AbstractUniverseModel $model
-     * @param array $rowKeys
+     * @param array<string, mixed> $rowKeys
      */
     public static function buildTableIndex(AbstractUniverseModel $model,  $rowKeys = []): void{
         $hashKeyTable = static::generateHashKeyTable($model->getTable());

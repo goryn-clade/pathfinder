@@ -214,7 +214,7 @@ class Controller {
      * -> or get multiple cookies by their name (search by prefix)
      * @param $cookieName
      * @param bool $prefix
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getCookieByName(string $cookieName, bool $prefix = false) : array {
         $data = [];
@@ -294,7 +294,7 @@ class Controller {
      * -> validate characters
      * -> cf. Sso->requestAuthorization() ( equivalent DB based login)
      *
-     * @param array $cookieData
+     * @param array<string, mixed> $cookieData
      * @param bool $checkAuthorization
      * @return Pathfinder\CharacterModel[]
      * @throws \Exception
@@ -879,7 +879,7 @@ class Controller {
     /**
      * get scope array by a "role"
      * @param string $authType
-     * @return array
+     * @return array<string, mixed>
      */
     static function getScopesByAuthType(string $authType = '') : array {
         $scopes = array_filter((array)self::getEnvironmentData('CCP_ESI_SCOPES'));
@@ -896,7 +896,7 @@ class Controller {
     /**
      * Helper function to return all headers because
      * getallheaders() is not available under nginx
-     * @return array (string $key -> string $value)
+     * @return array<string, mixed> (string $key -> string $value)
      */
     static function getRequestHeaders() : array {
         $headers = [];
@@ -1002,7 +1002,7 @@ class Controller {
     /**
      * get environment specific configuration data
      * @param string $key
-     * @return string|array|null
+     * @return string|array<string, mixed>|null
      */
     static function getEnvironmentData($key){
         return Config::getEnvironmentData($key);

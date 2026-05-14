@@ -11,6 +11,9 @@ namespace Exodus4D\Pathfinder\Data\Mapper;
 
 class SortingIterator extends \ArrayIterator {
 
+    /**
+     * @param \Traversable<mixed, mixed> $iterator
+     */
     public function __construct(\Traversable $iterator, callable $callback){
         parent::__construct(iterator_to_array($iterator));
 

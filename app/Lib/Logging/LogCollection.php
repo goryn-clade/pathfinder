@@ -16,14 +16,14 @@ class LogCollection extends AbstractLog {
     /**
      * handlers for this collection
      * -> no default is set
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [];
 
     /**
      * processors for this collection
      * -> no default is set
-     * @var array
+     * @var array<string, mixed>
      */
     protected $processorConfig      = [];
 
@@ -135,7 +135,7 @@ class LogCollection extends AbstractLog {
 
     /**
      * get log data for all logs in this collection
-     * @return array
+     * @return array<string, mixed>
      */
     #[\Override]
     public function getData() : array{
@@ -176,7 +176,7 @@ class LogCollection extends AbstractLog {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     #[\Override]

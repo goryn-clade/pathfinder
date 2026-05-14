@@ -67,8 +67,8 @@ class Structure extends AbstractRestController {
     }
 
     /**
-     * @param array $structuresData
-     * @return array
+     * @param array<string, mixed> $structuresData
+     * @return array<string, mixed>
      * @throws \Exception
      */
     private function update( $structuresData) : array {

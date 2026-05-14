@@ -19,7 +19,7 @@ class AllianceModel extends AbstractPathfinderModel {
     protected $table = 'alliance';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -73,6 +73,9 @@ class AllianceModel extends AbstractPathfinderModel {
      * @return bool
      */
     #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
     public function beforeUpdateEvent($self, $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
@@ -107,8 +110,8 @@ class AllianceModel extends AbstractPathfinderModel {
 
     /**
      * get all characters in this alliance
-     * @param array $characterIds
-     * @param array $options
+     * @param array<string, mixed> $characterIds
+     * @param array<string, mixed> $options
      * @return CharacterModel[]
      */
     public function getCharacters(array $characterIds = [],  $options = []) : array {

@@ -19,7 +19,7 @@ class StructureStatusModel extends AbstractPathfinderModel {
     protected $table = 'structure_status';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -49,7 +49,7 @@ class StructureStatusModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

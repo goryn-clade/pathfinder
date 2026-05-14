@@ -52,7 +52,7 @@ class SystemModel extends AbstractMapTrackingModel {
     protected $table                        = 'system';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -523,7 +523,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -534,7 +534,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      */
     #[\Override]
@@ -565,7 +565,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -576,7 +576,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -720,7 +720,7 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * get data for all stations in this system
-     * @return array
+     * @return array<string, mixed>
      */
     public function getStationsData() : array {
         return $this->stations ? : [];
@@ -839,7 +839,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * get object relevant data for model log
      * @param bool $fullData
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogObjectData($fullData = false) : array{
         $objectData = [
@@ -864,7 +864,7 @@ class SystemModel extends AbstractMapTrackingModel {
 
     /**
      * @param string $stamp
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function getSignatureHistoryEntry(string $stamp) : ?array {
         $signatureHistoryData = array_filter($this->getSignaturesHistory(), fn($historyEntry) => md5((string) $historyEntry['stamp']) == $stamp);
@@ -872,7 +872,7 @@ class SystemModel extends AbstractMapTrackingModel {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getSignaturesHistory() : array {
         if(!is_array($signaturesHistoryData = $this->getCacheData(self::DATA_CACHE_KEY_SIGNATURES_HISTORY))){

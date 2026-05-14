@@ -19,7 +19,7 @@ class CharacterAuthenticationModel extends AbstractPathfinderModel{
     protected $table = 'character_authentication';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -68,6 +68,9 @@ class CharacterAuthenticationModel extends AbstractPathfinderModel{
      * @return bool
      */
     #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
     public function beforeEraseEvent($self, $pkeys) : bool {
         // clear existing client Cookies as well
         $cookieName = Controller\Controller::COOKIE_PREFIX_CHARACTER;

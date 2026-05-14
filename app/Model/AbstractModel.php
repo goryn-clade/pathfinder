@@ -126,7 +126,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
 
     /**
      * collection for validation errors
-     * @var array
+     * @var array<string, mixed>
      */
     protected $validationError              = [];
 
@@ -313,7 +313,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
 
     /**
      * get static fields for this model instance
-     * @return array
+     * @return array<string, array<string, string|bool>>
      */
     protected function getStaticFieldConf() : array {
         $staticFieldConfig = [];
@@ -583,7 +583,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * get dataSet by foreign column (single result)
      * @param string $key
      * @param mixed $value
-     * @param array $options
+     * @param array<string, int> $options
      * @param int $ttl
      * @param bool $isActive
      * @return bool
@@ -611,6 +611,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * get first model from a relation that matches $filter
      * @param string $key
      * @param  $filter
+     * @param array<string, mixed> $filter
      * @return mixed|null
      */
     protected function relFindOne(string $key, array $filter){
@@ -640,6 +641,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * get all models from a relation that match $filter
      * @param string $key
      * @param  $filter
+     * @param array<string, mixed> $filter
      * @return CortexCollection|null
      */
     protected function relFind(string $key, array $filter) : ?CortexCollection {
@@ -670,7 +672,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      */
     public function beforeInsertEvent(self $self,  $pkeys) : bool {
@@ -685,7 +687,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent(self $self,  $pkeys){
     }
@@ -695,7 +697,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      */
     public function beforeUpdateEvent(self $self,  $pkeys) : bool {
@@ -707,7 +709,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent(self $self,  $pkeys){
     }
@@ -716,7 +718,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      */
     public function beforeEraseEvent(self $self,  $pkeys) : bool {
@@ -727,7 +729,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent(self $self,  $pkeys){
     }
@@ -774,6 +776,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * export and download table data as *.csv
      * this is primarily used for static tables
      * @param  $fields
+     * @param array<string, mixed> $fields
      * @return bool
      */
     public function exportData(array $fields = []) : bool {
@@ -825,7 +828,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * -> 'group' by $getByKey column name and return array
      * @param string $table
      * @param string $getByKey
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getCSVData(string $table, string $getByKey = 'id') : array {
         $hashKeyTableCSV = static::generateHashKeyTable($table, static::CACHE_KEY_PREFIX . '_' . self::CACHE_KEY_CSV_PREFIX);
@@ -843,7 +846,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
     /**
      * load data from *.csv file
      * @param string $fileName
-     * @return array
+     * @return array<string, mixed>
      */
     protected static function loadCSV(string $fileName) : array {
         $tableData = [];
@@ -879,7 +882,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
 
     /**
      * import table data from a *.csv file
-     * @return array|bool
+     * @return array<string, mixed>|bool
      */
     public function importData(){
         $status = false;
@@ -900,7 +903,8 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * insert/update static data into this table
      * WARNING: rows will be deleted if not part of $tableData !
      * @param  $tableData
-     * @return array
+     * @param array<string, mixed> $tableData
+     * @return array<string, mixed>
      */
     protected function importStaticData(array $tableData = []) : array {
         $rowIDs = [];
@@ -970,7 +974,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
 
     /**
      * get all validation errors
-     * @return array
+     * @return array<string, mixed>
      */
     public function getErrors() : array {
         return $this->validationError;
@@ -1048,7 +1052,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
     /**
      * get model data as array
      * @param mixed $data
-     * @return array
+     * @return array<string, mixed>
      */
     public static function toArray(mixed $data) : array {
         return json_decode(json_encode($data), true);
@@ -1062,7 +1066,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param mixed $value
      * @param string $operator
      * @param string $suffix
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getFilter(string $key, $value, string $operator = '=', string $suffix = '') : array {
         $placeholder = ':' . implode('_', array_filter([$key, $suffix]));
@@ -1119,8 +1123,8 @@ abstract class AbstractModel extends Cortex implements \Stringable {
     /**
      * Check whether a (multi)-column index exists or not on a table
      * related to this model
-     * @param  $columns
-     * @return bool|array
+     * @param array<string, mixed> $columns
+     * @return bool|array<string, mixed>
      */
     public static function indexExists(array $columns = []){
         $tableModifier = self::getTableModifier();
@@ -1143,6 +1147,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param  $columns Column(s) to be indexed
      * @param bool $unique Unique index
      * @param int $length index length for text fields in mysql
+     * @param array<string, mixed> $columns
      * @return bool
      */
     public static function setMultiColumnIndex(array $columns = [], bool $unique = false, int $length = 20) : bool {

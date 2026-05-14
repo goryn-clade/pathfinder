@@ -18,7 +18,7 @@ class SystemStatusModel extends AbstractPathfinderModel {
     protected $table = 'system_status';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -45,7 +45,7 @@ class SystemStatusModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

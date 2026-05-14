@@ -54,7 +54,7 @@ class User extends Controller\Controller{
 
     /**
      * valid reasons for captcha images
-     * @var array
+     * @var array<string, mixed>
      */
     private static $captchaReason = [self::SESSION_CAPTCHA_ACCOUNT_DELETE];
 

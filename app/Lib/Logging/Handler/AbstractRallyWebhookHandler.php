@@ -14,8 +14,8 @@ use Exodus4D\Pathfinder\Lib\Util;
 abstract class AbstractRallyWebhookHandler extends AbstractWebhookHandler {
 
     /**
-     * @param array $record
-     * @return array
+     * @param array<string, mixed> $record
+     * @return array<string, mixed>
      */
     #[\Override]
     protected function getSlackData(array $record) : array {

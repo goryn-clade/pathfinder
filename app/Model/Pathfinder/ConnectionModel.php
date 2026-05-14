@@ -23,7 +23,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     protected $table = 'connection';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -166,7 +166,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * setter for connection type
      * @param  $type
-     * @return array
+     * @return array<string, mixed>
      */
     public function set_type( $type){
         // normalise: map legacy 'wh_eol' to 'wh_eol1', then validate via enum
@@ -289,6 +289,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * replace any existing wh_jump_mass_* with $massType (mutual exclusion)
      * returns the new type array on change, or null if unchanged
+     * @return array<string, mixed>
      */
     public function setJumpMassType(string $massType) : ?array {
         if(!in_array($massType, self::JUMP_MASS_TYPES, true)) return null;
@@ -381,7 +382,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * can be overwritten
      * return false will stop any further action
      * @param \Exodus4D\Pathfinder\Model\AbstractModel $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      * @throws Exception\DatabaseException
      * @throws \Exception
@@ -404,7 +405,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent($self, $pkeys){
         $self->clearCacheData();
@@ -415,7 +416,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self, $pkeys){
         $self->clearCacheData();
@@ -426,7 +427,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent($self, $pkeys){
         $self->clearCacheData();
@@ -460,7 +461,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * get object relevant data for model log
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogObjectData() : array {
         return [
@@ -511,7 +512,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * get endpoint data for $type (source || target)
      * @param string $type
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getEndpointData(string $type) : array {
         $endpointData = [];
@@ -525,7 +526,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * get all endpoint data for this connection
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getEndpointsData() : array {
         $endpointsData = [];
@@ -542,7 +543,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * get all signature data linked to this connection
-     * @return array
+     * @return array<string, mixed>
      */
     public function getSignaturesData() : array {
         $signaturesData = [];
@@ -557,7 +558,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
 
     /**
      * get all connection log data linked to this connection
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogsData() : array {
         $logsData = [];

@@ -13,7 +13,7 @@ class FactionWarSystemModel extends AbstractUniverseModel {
     protected $table = 'faction_war_system';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'systemId' => [
@@ -114,7 +114,7 @@ class FactionWarSystemModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
 }

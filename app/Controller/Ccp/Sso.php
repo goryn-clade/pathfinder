@@ -140,7 +140,7 @@ class Sso extends Api\User{
     /**
      * redirect user to CCPs SSO page
      * @param \Base $f3
-     * @param array $scopes
+     * @param array<string, mixed> $scopes
      * @param string $rootAlias
      */
     private function rerouteAuthorization(\Base $f3,  $scopes = [], string $rootAlias = 'login'): void{
@@ -432,7 +432,7 @@ class Sso extends Api\User{
      * request an "access_token" AND "refresh_token" data
      * -> this can either be done by sending a valid "authorization code"
      * OR by providing a valid "refresh_token"
-     * @param array $requestParams
+     * @param array<string, mixed> $requestParams
      * @return \stdClass
      */
     protected function requestAccessData( $requestParams) : \stdClass {
@@ -478,8 +478,8 @@ class Sso extends Api\User{
 
     /**
      * redact sensitive keys from a parameter array before logging
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      */
     private static function redactSecrets(array $params) : array {
         foreach (['refresh_token', 'code', 'client_secret'] as $key) {
@@ -568,7 +568,7 @@ class Sso extends Api\User{
     /**
      * get JWK from CCP and return decoded json object
      * Results are cached in F3 for JWKS_CACHE_TTL seconds to avoid a round-trip on every login.
-     * @return array
+     * @return array<string, mixed>
     */
     protected function getCcpJwkData() : array {
         $f3 = $this->getF3();
@@ -639,7 +639,7 @@ class Sso extends Api\User{
     /**
      * get data for HTTP "Authorization:" Header
      * -> This header is required for any Auth-required endpoints!
-     * @return array
+     * @return array<int, string|mixed[]|null>
      */
     protected function getAuthorizationData() : array {
         return [

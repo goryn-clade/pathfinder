@@ -97,7 +97,7 @@ class CorporationModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -176,7 +176,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      */
     public function beforeUpdateEvent($self, $pkeys) : bool {
@@ -191,7 +191,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * get all maps for this corporation
      * @param int|null $mapId
      * @param  $options
-     * @return array
+     * @return array<string, mixed>
      */
     public function getMaps(?int $mapId = null,  $options = []) : array {
         $maps = [];
@@ -255,7 +255,7 @@ class CorporationModel extends AbstractPathfinderModel {
     /**
      * get all structure data for this corporation
      * @param int $systemId
-     * @return array
+     * @return array<string, mixed>
      */
     public function getStructuresData(int $systemId) : array {
         $structuresData = [];
@@ -286,7 +286,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * get roles for each character in this corp
      * -> CCP API call
      * @param string $accessToken
-     * @return array
+     * @return array<string, mixed>
      */
     public function getCharactersRoles($accessToken){
         $characterRolesData = [];

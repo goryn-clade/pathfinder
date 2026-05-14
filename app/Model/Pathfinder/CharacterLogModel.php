@@ -24,7 +24,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
     protected $table = 'character_log';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -120,7 +120,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
 
     /**
      * set log data by associative array
-     * @param array $logData
+     * @param array<string, mixed> $logData
      */
     public function setData( $logData): void{
 
@@ -205,6 +205,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * return false will stop any further action
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -215,6 +216,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * return false will stop any further action
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self, $pkeys): void{
         $self->updateLogsHistory('update');
@@ -230,6 +232,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * can be overwritten
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent($self, $pkeys): void{
         $self->deleteLogsHistory();

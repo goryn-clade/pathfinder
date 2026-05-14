@@ -31,7 +31,7 @@ class MapModel extends AbstractMapTrackingModel {
     const ERROR_DISCORD_CHANNEL                     = 'Invalid #Discord channel column [%s]';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -466,7 +466,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -476,7 +476,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -488,7 +488,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -604,7 +604,7 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * get systems in this map
-     * @return CortexCollection|array
+     * @return CortexCollection|array<array-key, mixed>
      */
     protected function getSystems(){
         $filters = [
@@ -680,7 +680,7 @@ class MapModel extends AbstractMapTrackingModel {
      * -> $connectionIds can be used for filter
      * @param null $connectionIds
      * @param string $scope
-     * @return CortexCollection|array
+     * @return CortexCollection|array<array-key, mixed>
      */
     public function getConnections($connectionIds = null, $scope = ''){
         $filters = [
@@ -719,7 +719,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * get all structures data for this map
      * @param int $systemId
-     * @return array
+     * @return array<string, mixed>
      */
     public function getStructuresData(int $systemId) : array {
         $structuresData = [];
@@ -793,8 +793,8 @@ class MapModel extends AbstractMapTrackingModel {
     }
 
     /**
-     * @param array $stack
-     * @return array
+     * @param array<string, mixed> $stack
+     * @return array<string, mixed>
      */
     public function compareAccess( $stack) : array {
         $result = [];
@@ -993,7 +993,7 @@ class MapModel extends AbstractMapTrackingModel {
      * get data for ALL characters with map access
      * -> The result of this function is cached!
      * @param  $options
-     * @return array|null|\stdClass
+     * @return array<string, mixed>|null|\stdClass
      * @throws \Exception
      */
     public function getCharactersData( $options = []){
@@ -1106,7 +1106,7 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * get object relevant data for model log channel
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogChannelData() : array {
         return [
@@ -1116,7 +1116,7 @@ class MapModel extends AbstractMapTrackingModel {
     }
     /**
      * get object relevant data for model log object
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogObjectData() : array {
         return [
@@ -1327,7 +1327,7 @@ class MapModel extends AbstractMapTrackingModel {
      * get log file data
      * @param int $offset
      * @param int $limit
-     * @return array
+     * @return array<string, mixed>
      */
     #[\Override]
     public function getLogData(int $offset = FileHandler::LOG_FILE_OFFSET, int $limit = FileHandler::LOG_FILE_LIMIT) : array {

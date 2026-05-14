@@ -14,8 +14,12 @@ class DiscordMapWebhookHandler extends AbstractMapWebhookHandler {
 
     /**
      * Build a native Discord embed payload for map change events.
+     * @return array<string, string|list<array<string, (array<mixed> | int | string)>>>
      */
     #[\Override]
+    /**
+     * @param array<string, mixed> $record
+     */
     protected function getPostData(array $record): array {
         $tag     = (string)$record['context']['tag'];
         $content = '';

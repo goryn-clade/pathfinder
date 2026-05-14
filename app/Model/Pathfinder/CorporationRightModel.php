@@ -18,7 +18,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
     protected $table = 'corporation_right';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -64,7 +64,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function setData( $data){
         unset($data['id']);

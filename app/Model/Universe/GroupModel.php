@@ -23,7 +23,7 @@ class GroupModel extends AbstractUniverseModel {
     public $storeDogmaAttributes            = TypeModel::DEFAULT_STORE_DOGMA_ATTRIBUTES;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -56,7 +56,7 @@ class GroupModel extends AbstractUniverseModel {
 
     /**
      * get group data
-     * @param array $additionalData
+     * @param array<string, mixed> $additionalData
      * @return null|object
      */
     public function getData(array $additionalData = []){
@@ -93,8 +93,8 @@ class GroupModel extends AbstractUniverseModel {
     }
 
     /**
-     * @param array $additionalData
-     * @return array
+     * @param array<string, mixed> $additionalData
+     * @return array<string, mixed>
      */
     protected function getTypesData(array $additionalData = []) : array {
         $typesData = [];
@@ -119,7 +119,7 @@ class GroupModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         if(!empty($data = self::getUniverseGroupData($id))){
@@ -139,7 +139,7 @@ class GroupModel extends AbstractUniverseModel {
      * load types data for this group
      * @param int $offset
      * @param int $length   0 -> all types
-     * @return array
+     * @return array<string, int>
      */
     public function loadTypesData(int $offset = 0, int $length = 0) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
@@ -175,14 +175,14 @@ class GroupModel extends AbstractUniverseModel {
 
     /**
      * @param int $id
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getUniverseGroupData(int $id) : array {
         return self::getF3()->ccpClient()->send('getUniverseGroup', $id);
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getUniverseGroups() : array {
         return self::getF3()->ccpClient()->send('getUniverseGroups');
@@ -190,7 +190,7 @@ class GroupModel extends AbstractUniverseModel {
 
     /**
      * @param int $id
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getUniverseGroupTypes(int $id) : array {
         return empty($data = self::getUniverseGroupData($id)) ? [] : $data['types'];

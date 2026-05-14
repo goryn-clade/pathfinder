@@ -18,7 +18,7 @@ class RaceModel extends AbstractUniverseModel {
     protected $table = 'race';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -63,7 +63,7 @@ class RaceModel extends AbstractUniverseModel {
      * load data from API into $this and save $this
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseRace', $id);

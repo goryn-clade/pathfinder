@@ -54,7 +54,7 @@ class CronModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -109,7 +109,7 @@ class CronModel extends AbstractPathfinderModel {
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function setData( $data){
         $this->copyfrom($data, ['handler', 'expr', 'lastExecStart', 'lastExecEnd', 'lastExecMemPeak', 'lastExecState']);
@@ -162,7 +162,7 @@ class CronModel extends AbstractPathfinderModel {
 
     /**
      * @param bool $addLastIfFinished
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function getHistory(bool $addLastIfFinished = false) : array {
@@ -186,7 +186,7 @@ class CronModel extends AbstractPathfinderModel {
 
     /**
      * get current job status based on its current data
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function getStatus() : array {

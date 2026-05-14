@@ -35,7 +35,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getEveScoutConnections() : array {
         $connectionsData = [];

@@ -49,7 +49,7 @@ class ReverseSplFileObject extends \SplFileObject{
 
     /**
      * control characters
-     * @var array
+     * @var array<string, mixed>
      */
     protected $eol = ["\r", "\n"];
 

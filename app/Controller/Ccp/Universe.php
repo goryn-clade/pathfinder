@@ -58,8 +58,8 @@ class Universe extends Controller\Controller {
      * id 2 -> Celestial (>100 groups -> >1000 types)
      * id 6 -> Ship (46 groups -> 4xx types)
      * id 65 -> Structure (10 groups -> 33 types)
-     * @param array $categoriesWhitelist
-     * @return array
+     * @param array<string, mixed> $categoriesWhitelist
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function setupCategories( $categoriesWhitelist = []) : array {
@@ -78,7 +78,7 @@ class Universe extends Controller\Controller {
      * @param int $categoryId
      * @param int $offset
      * @param int $length
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function setupCategory(int $categoryId, int $offset = 0, int $length = 0) : array {
@@ -102,8 +102,8 @@ class Universe extends Controller\Controller {
      * id 7 -> Planet (9 types)
      * id 10 -> Stargate (17 types)
      * id 988 -> Wormhole (89 types)
-     * @param array $groupsWhitelist
-     * @return array
+     * @param array<string, mixed> $groupsWhitelist
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function setupGroups( $groupsWhitelist = []) : array {
@@ -122,7 +122,7 @@ class Universe extends Controller\Controller {
      * @param int $offset
      * @param int $length
      * @param bool $storeDogmaAttributes
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function setupGroup(int $groupId, int $offset = 0, int $length = 0, bool $storeDogmaAttributes = false) : array {
@@ -142,12 +142,11 @@ class Universe extends Controller\Controller {
     }
 
     // system search index methods ====================================================================================
-
     /**
      * build search index from all systems data
      * @param int $offset
      * @param int $length
-     * @return array
+     * @return array<string, int>
      * @throws \Exception
      */
     public function buildSystemsIndex(int $offset = 0, int $length = 10) : array {
@@ -182,7 +181,7 @@ class Universe extends Controller\Controller {
     /**
      * get systemIds for all systems
      * @param bool $ignoreCache
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getSystemIds(bool $ignoreCache = false) : array {
@@ -208,7 +207,7 @@ class Universe extends Controller\Controller {
     /**
      * get complete system index (all systems)
      * @param bool $all
-     * @return array
+     * @return array<string, mixed>
      */
     public function getSystemsIndex(bool $all = false) : array {
         $index = [];
@@ -297,12 +296,12 @@ class Universe extends Controller\Controller {
 
     /**
      * search universeName data by search term
-     * @param array $categories
+     * @param array<string, mixed> $categories
      * @param string $search
      * @param int $characterId
      * @param string $accessToken
      * @param bool $strict
-     * @return array
+     * @return array<string, mixed>
      */
     public static function searchUniverseNameData( $categories, string $search, int $characterId, string $accessToken, bool $strict = false) : array {
         $f3 = \Base::instance();

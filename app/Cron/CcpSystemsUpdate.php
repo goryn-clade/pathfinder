@@ -20,7 +20,7 @@ class CcpSystemsUpdate extends AbstractCron {
 
     /**
      * table names for all system log tables
-     * @var array
+     * @var array<string, mixed>
      */
     protected $logTables = [
         'jumps'         => 'system_jumps',

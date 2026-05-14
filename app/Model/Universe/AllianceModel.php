@@ -13,7 +13,7 @@ class AllianceModel extends AbstractUniverseModel {
     protected $table = 'alliance';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -82,7 +82,7 @@ class AllianceModel extends AbstractUniverseModel {
      * load alliance by Id either from DB or load data from API
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getAlliance', $id);

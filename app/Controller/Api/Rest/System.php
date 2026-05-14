@@ -174,7 +174,7 @@ class System extends AbstractRestController {
     /**
      * update system with new data
      * @param Pathfinder\SystemModel $system
-     * @param array $systemData
+     * @param array<string, mixed> $systemData
      * @return Pathfinder\SystemModel
      * @throws \Exception
      */

@@ -51,7 +51,7 @@ class Resource extends \Prefab {
 
     /**
      * absolute file path -> use setOption() for update
-     * @var array
+     * @var array<string, mixed>
      */
     private $filePath = [
         'style'         => '',
@@ -66,7 +66,7 @@ class Resource extends \Prefab {
     /**
      * default file extensions by $group
      * -> used if no fileExtension found in $file
-     * @var array
+     * @var array<string, mixed>
      */
     private $fileExt = [
         'style'         => 'css',
@@ -87,7 +87,7 @@ class Resource extends \Prefab {
 
     /**
      * resource file cache
-     * @var array
+     * @var array<string, mixed>
      */
     private $resources = [];
 
@@ -241,7 +241,7 @@ class Resource extends \Prefab {
      * get additional attributes by $group
      * -> e.g. or fonts
      * @param string $group
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getAdditionalAttrs(string $group) : array {
         return self::ATTR_ADD[$group] ?? [];

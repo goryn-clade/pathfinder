@@ -13,9 +13,9 @@ class Util {
 
     /**
      * convert array keys to upper/lowercase -> recursive
-     * @param array $arr
+     * @param array<string, mixed> $arr
      * @param int $case
-     * @return array
+     * @return array<string, mixed>
      */
     static function arrayChangeKeyCaseRecursive(array $arr, int $case = CASE_LOWER){
         if(is_array($arr)){
@@ -32,7 +32,8 @@ class Util {
     /**
      * flatten multidimensional array ignore keys
      * @param  $array
-     * @return array
+     * @param array<string, mixed> $array
+     * @return array<string, mixed>
      */
     static function arrayFlattenByValue(array $array) : array {
         $return = [];
@@ -44,7 +45,8 @@ class Util {
      * flatten multidimensional array merge keys
      * -> overwrites duplicate keys!
      * @param  $array
-     * @return array
+     * @param array<string, mixed> $array
+     * @return array<string, mixed>
      */
     static function arrayFlattenByKey(array $array) : array {
         $return = [];
@@ -58,7 +60,8 @@ class Util {
      * @param  $array
      * @param string $key
      * @param bool $unsetKey
-     * @return array
+     * @param array<string, mixed> $array
+     * @return mixed[][]
      */
     static function arrayGetBy(array $array, string $key, bool $unsetKey = true) : array {
         // we can remove $key from nested arrays
@@ -89,9 +92,9 @@ class Util {
 
     /**
      * convert array keys by a custom callback
-     * @param array $arr
+     * @param array<string, mixed> $arr
      * @param callable $callback
-     * @return array
+     * @return array<string, mixed>
      */
     static function arrayChangeKeys(array $arr, callable $callback){
         return array_combine(
@@ -102,7 +105,7 @@ class Util {
     /**
      * convert a string with multiple scopes into an array
      * @param string $scopes
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     static function convertScopesString($scopes){
         $scopes = array_filter(
@@ -140,6 +143,7 @@ class Util {
     /**
      * get hash from an array of ESI scopes
      * @param  $scopes
+     * @param array<string, mixed> $scopes
      * @return string
      */
     static function getHashFromScopes(array $scopes) : string {
@@ -151,7 +155,7 @@ class Util {
     /**
      * get some information about a $source file/dir
      * @param string|null $source
-     * @return array
+     * @return array<string, lowercase-string|bool>
      */
     static function filesystemInfo(?string $source) : array {
         $info = [];

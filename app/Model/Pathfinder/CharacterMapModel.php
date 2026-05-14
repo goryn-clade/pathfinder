@@ -18,7 +18,7 @@ class CharacterMapModel extends AbstractPathfinderModel {
     protected $table = 'character_map';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [

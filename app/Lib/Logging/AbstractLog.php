@@ -59,28 +59,28 @@ abstract class AbstractLog implements LogInterface {
     /**
      * log Handler type with Formatter type
      * -> check Monolog::HANDLER and Monolog::FORMATTER
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = ['stream' => 'line'];
 
     /**
      * log Processors, array with either callable functions or Processor class with __invoce() method
      * -> functions used to add "extra" data to a log
-     * @var array
+     * @var array<string, mixed>
      */
     protected $processorConfig      = ['psr' => null];
 
     /**
      * some handler need individual configuration parameters
      * -> see $handlerConfig end getHandlerParams()
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerParamsConfig  = [];
 
     /**
      * some processor need individual configuration parameters
      * -> see $processorConfig end getProcessorParams()
-     * @var array
+     * @var array<string, mixed>
      */
     protected $processorParamsConfig = [
         'psr' => ['Y-m-d\A\TH:i:s.uP', false]
@@ -89,7 +89,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * multiple Log() objects can be marked as "grouped"
      * -> Logs with Slack Handler should be grouped by map (send multiple log data in once
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerGroups        = [];
 
@@ -124,13 +124,13 @@ abstract class AbstractLog implements LogInterface {
 
     /**
      * log data (main log data)
-     * @var array
+     * @var array<string, mixed>
      */
     private $data                   = [];
 
     /**
      * (optional) temp data for logger (will not be stored with the log entry)
-     * @var array
+     * @var array<string, mixed>
      */
     private $tmpData                = [];
 
@@ -208,7 +208,7 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return LogInterface
      */
     public function setData(array $data) : LogInterface {
@@ -217,7 +217,7 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return LogInterface
      */
     public function setTempData(array $data) : LogInterface {
@@ -260,7 +260,7 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getHandlerConfig() : array {
         return $this->handlerConfig;
@@ -269,7 +269,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * get __construct() parameters for a given $handlerKey
      * @param string $handlerKey
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getHandlerParams(string $handlerKey) : array {
@@ -288,14 +288,14 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getHandlerParamsConfig() : array {
         return $this->handlerParamsConfig;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getProcessorConfig() : array {
         return $this->processorConfig;
@@ -304,7 +304,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * get __construct() parameters for a given $processorKey
      * @param string $processorKey
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getProcessorParams(string $processorKey) : array {
@@ -363,13 +363,13 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getData() : array {
         return $this->data;
     }
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getContext() : array {
         $context = [
@@ -384,14 +384,14 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getTempData() : array {
         return $this->tmpData;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getHandlerGroups() : array {
         return $this->handlerGroups;
@@ -466,9 +466,8 @@ abstract class AbstractLog implements LogInterface {
     }
 
     // Handler parameters for Monolog\Handler\* instances -------------------------------------------------------------
-
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     protected function getHandlerParamsStream() : array {
         $params = [];
@@ -484,7 +483,7 @@ abstract class AbstractLog implements LogInterface {
 
     /**
      * get __construct() parameters for SocketHandler() call
-     * @return array
+     * @return array<int, mixed>
      */
     protected function getHandlerParamsSocket() : array {
         $params = [];
@@ -507,7 +506,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * get __construct() params for SlackWebhookHandler() call
      * @param string $handlerKey
-     * @return array
+     * @return array<int, mixed>
      */
     protected function getHandlerParamsSlack(string $handlerKey) : array {
         $params = [];
@@ -532,7 +531,7 @@ abstract class AbstractLog implements LogInterface {
 
     /**
      * get __construct() params for PsrLogMessageProcessor() call
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getProcessorParamsPsr() : array {
         return !empty($conf = $this->processorParamsConfig['psr']) ? $conf : [];

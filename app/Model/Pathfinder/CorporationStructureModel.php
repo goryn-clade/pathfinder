@@ -18,7 +18,7 @@ class CorporationStructureModel extends AbstractPathfinderModel {
     protected $table = 'corporation_structure';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [

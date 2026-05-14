@@ -18,7 +18,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
     protected $table = 'activity_log';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -194,7 +194,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
 
     /**
      * get all table columns that are used as "counter" columns
-     * @return array
+     * @return array<string, mixed>
      */
     public function getCountableColumnNames(): array {
         $fieldConf = $this->getFieldConfiguration();

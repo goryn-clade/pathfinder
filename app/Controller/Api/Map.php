@@ -520,7 +520,7 @@ class Map extends Controller\AccessController {
     /**
      * update maps with $mapsData where $character has access to
      * @param Pathfinder\CharacterModel $character
-     * @param array $mapsData
+     * @param array<string, mixed> $mapsData
      * @return \stdClass
      */
     protected function updateMapsData(Pathfinder\CharacterModel $character,  $mapsData) : \stdClass {
@@ -736,7 +736,7 @@ class Map extends Controller\AccessController {
      * update map connections/systems based on $character´s location logs
      * @param Pathfinder\MapModel $map
      * @param Pathfinder\CharacterModel $character
-     * @param array $newSystemPositions
+     * @param array<string, mixed> $newSystemPositions
      * @return Pathfinder\MapModel
      * @throws \Exception
      */

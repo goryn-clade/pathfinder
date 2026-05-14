@@ -27,13 +27,13 @@ class LogController extends \Prefab  {
      * buffered activity log data for this singleton LogController() class
      * -> this buffered data can be stored somewhere (e.g. DB) before HTTP response
      * -> should be cleared afterwards!
-     * @var array
+     * @var array<string, mixed>
      */
     protected $activityLogBuffer                    = [];
 
     /**
      * get columns from ActivityLogModel that can be uses as counter
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function getActivityLogColumns(): array{

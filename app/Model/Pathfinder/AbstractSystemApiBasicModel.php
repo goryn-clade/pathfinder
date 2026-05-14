@@ -51,7 +51,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
     /**
      * get all "valX" column data as array
      * -> "start" (most recent) value is stored in column name stored in "lastUpdatedValue" column
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getValues() : array {
         $valueColumnNames = range(1, static::DATA_COLUMN_COUNT);

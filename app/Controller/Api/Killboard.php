@@ -53,7 +53,7 @@ class Killboard extends Controller\Controller {
      * Returns the killmail JSON on 200, or 404 when the sequence is not yet available.
      * Route: GET /api/Killboard/r2z2/@arg1
      * @param \Base $f3
-     * @param array $params
+     * @param array<string, mixed> $params
      */
     public function r2z2(\Base $f3, array $params) : void {
         $sequenceId = (int)($params['arg1'] ?? 0);

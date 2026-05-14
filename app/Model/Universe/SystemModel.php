@@ -18,7 +18,7 @@ class SystemModel extends AbstractUniverseModel {
     protected $table = 'system';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -233,7 +233,7 @@ class SystemModel extends AbstractUniverseModel {
     }
 
     /**
-     * @param array $sovData
+     * @param array<string, mixed> $sovData
      * @return bool true if sovereignty data changed
      */
     public function updateSovereigntyData( $sovData = []) : bool {
@@ -317,7 +317,7 @@ class SystemModel extends AbstractUniverseModel {
     }
 
     /**
-     * @param array $fwData
+     * @param array<string, mixed> $fwData
      * @return bool true if faction warfare data changed
      */
     public function updateFactionWarData( $fwData = []) : bool {
@@ -375,6 +375,7 @@ class SystemModel extends AbstractUniverseModel {
      * return false will stop any further action
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self,  $pkeys){
         // build search index
@@ -384,7 +385,7 @@ class SystemModel extends AbstractUniverseModel {
 
     /**
      * get data from all planets
-     * @return array
+     * @return \stdClass[]
      */
     protected function getPlanetsData() : array {
         $planetsData = [];
@@ -402,7 +403,7 @@ class SystemModel extends AbstractUniverseModel {
 
     /**
      * get data from all static wormholes
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getStaticsData() : array {
         $staticsData = [];
@@ -420,7 +421,7 @@ class SystemModel extends AbstractUniverseModel {
 
     /**
      * get data from all stargates
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getStargatesData() : array {
         $stargatesData = [];
@@ -438,7 +439,7 @@ class SystemModel extends AbstractUniverseModel {
 
     /**
      * get data from all stations
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getStationsData() : array {
         $stationsData = [];
@@ -486,7 +487,7 @@ class SystemModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseSystem', $id);

@@ -47,7 +47,7 @@ class Column extends SQL\Column
      * $constraintData['on-delete'] => ON DELETE action (optional) default: see \DB\SQL\MySQL\Constraint const
      * $constraintData['on-update'] => ON UPDATE action (optional) default: see \DB\SQL\MySQL\Constraint const
      *
-     * @param array $constraintData
+     * @param array<string, mixed> $constraintData
      * @return Constraint
      */
     public function newConstraint($constraintData): ?\Exodus4D\Pathfinder\Db\Sql\Mysql\Constraint

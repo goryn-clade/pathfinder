@@ -18,7 +18,7 @@ class UserCharacterModel extends AbstractPathfinderModel {
     protected $table = 'user_character';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -57,6 +57,7 @@ class UserCharacterModel extends AbstractPathfinderModel {
      * -> remove user if there are no other characters bound to this user
      * @param UserCharacterModel $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent($self, $pkeys): void{
         if(

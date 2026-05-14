@@ -16,7 +16,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * List of possible handlers (tested)
      * -> final handler will be set dynamic for per instance
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [
         // 'slackRally' => 'json',
@@ -31,7 +31,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * RallyLog constructor.
      * @param string $action
-     * @param array $objectData
+     * @param array<string, mixed> $objectData
      * @throws \Exception
      */
     public function __construct(string $action, array $objectData){
@@ -68,7 +68,7 @@ class RallyLog extends AbstractCharacterLog {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     #[\Override]
     public function getData() : array{
@@ -87,7 +87,7 @@ class RallyLog extends AbstractCharacterLog {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return string
      */
     protected function formatData(array $data): string{

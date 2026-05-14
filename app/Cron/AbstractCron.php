@@ -40,7 +40,7 @@ abstract class AbstractCron {
     /**
      * disables log file write entry for some cronJobs
      * -> either job runs too frequently, or no relevant data available for logging
-     * @var array
+     * @var array<string, mixed>
      */
     protected $logDisabled = [];
 
@@ -153,7 +153,7 @@ abstract class AbstractCron {
      * get either CLI GET params OR
      * check for params from last run -> incremental import
      * @param string $job
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getParams(string $job) : array {
         $params = [];
@@ -192,7 +192,7 @@ abstract class AbstractCron {
      * @param string $job
      * @param int $memPeak
      * @param float $execEnd
-     * @param array $state
+     * @param array<string, mixed> $state
      * @param string $logText for custom text
      */
     private function writeLog(string $job, int $memPeak = 0, float $execEnd = 0, array $state = [], string $logText = ''): void{

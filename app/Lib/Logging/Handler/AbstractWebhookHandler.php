@@ -37,6 +37,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param  int         $level                  The minimum logging level at which this handler will be triggered
      * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param   $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param array<string, mixed> $excludeFields
      */
     public function __construct(private $webhookUrl, /**
      * Slack channel (encoded ID or name)
@@ -66,7 +67,8 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     /**
      * format
      * @param  $record
-     * @return array
+     * @return array<string, string>
+     * @param array<string, mixed> $record
      */
     protected function getSlackData(array $record): array {
         $postData = [];
@@ -94,6 +96,8 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
 
     /**
      * Build the POST body. Subclasses can override to return a different format (e.g. Discord embeds).
+     * @param array<string, mixed> $record
+     * @return array<string, mixed>
      */
     protected function getPostData(array $record): array {
         return $this->getSlackData($record);
@@ -138,7 +142,8 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
 
     /**
      * @param  $postData
-     * @return array
+     * @return array<string, mixed>
+     * @param array<string, mixed> $postData
      */
     protected function cleanAttachments(array $postData): array{
         $attachmentCount = count($postData['attachments']);
@@ -161,7 +166,9 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     /**
      * @param  $attachment
      * @param  $characterData
-     * @return array
+     * @return array<string, mixed>
+     * @param array<string, mixed> $attachment
+     * @param array<string, mixed> $characterData
      */
     protected function setAuthor(array $attachment, array $characterData): array {
         if( !empty($characterData['id']) &&  !empty($characterData['name'])){
@@ -176,7 +183,9 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     /**
      * @param  $attachment
      * @param  $thumbData
-     * @return array
+     * @return array<string, mixed>
+     * @param array<string, mixed> $attachment
+     * @param array<string, mixed> $thumbData
      */
     protected function setThumb(array $attachment, array $thumbData): array {
         if( !empty($thumbData['url'])) {
@@ -191,7 +200,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param mixed $value
      * @param bool $format
      * @param bool $short
-     * @return array
+     * @return array<string, mixed>
      */
     protected function generateAttachmentField(string|int $title, mixed $value, bool $format = false, bool $short = true){
         return [
@@ -227,7 +236,8 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     /**
      * Get a copy of record with fields excluded according to $this->excludeFields
      * @param  $record
-     * @return array
+     * @return array<string, mixed>
+     * @param array<string, mixed> $record
      */
     private function excludeFields(array $record){
         foreach($this->excludeFields as $field){

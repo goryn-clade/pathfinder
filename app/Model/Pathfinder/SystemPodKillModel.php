@@ -18,7 +18,7 @@ class SystemPodKillModel extends AbstractSystemApiBasicModel {
     protected $table = 'system_kills_pods';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [

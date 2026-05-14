@@ -9,7 +9,7 @@ use Exodus4D\Pathfinder\Model\Pathfinder;
  * Class Cron
  * @package lib
  *
- * @property array $jobs
+ * @property array<string, mixed> $jobs
  */
 class Cron extends \Cron {
 
@@ -64,8 +64,8 @@ class Cron extends \Cron {
     }
 
     /**
-     * @param array $jobConf
-     * @return array
+     * @param array<int, mixed> $jobConf
+     * @return array<string, mixed>
      */
     public function getJobDataFromConf(array $jobConf) : array {
         return ['handler' => $jobConf[0], 'expr' => $jobConf[1]];
@@ -73,8 +73,8 @@ class Cron extends \Cron {
 
     /**
      * get all configured cronjobs (read from cron.ini)
-     * @param array $names
-     * @return array
+     * @param array<string, mixed> $names
+     * @return array<string, mixed>
      */
     public function getJobsConfig(array $names = []) : array {
         $config = [];
@@ -101,7 +101,7 @@ class Cron extends \Cron {
 
     /**
      * @param string $name
-     * @param array $jobConf
+     * @param array<string, mixed> $jobConf
      * @return mixed|void
      */
     public function registerJob(string $name, array $jobConf){

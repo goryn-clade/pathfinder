@@ -18,7 +18,7 @@ class SystemTypeModel extends AbstractPathfinderModel {
     protected $table = 'system_type';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -35,7 +35,7 @@ class SystemTypeModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

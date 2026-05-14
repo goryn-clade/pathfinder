@@ -19,7 +19,7 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
      * @param $connectionString
      * @param int $level
      * @param bool $bubble
-     * @param array $metaData
+     * @param array<string, mixed> $metaData
      */
     public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true, /**
      * some meta data (additional processing information)
@@ -34,7 +34,7 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
     /**
      * overwrite default handle()
      * -> change data structure after processor() calls and before formatter() calls
-     * @param array $record
+     * @param array<string, mixed> $record
      * @return bool
      */
     #[\Override]

@@ -20,7 +20,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
     protected $allowTruncate        = true;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'regionId' => [
@@ -86,7 +86,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
 }

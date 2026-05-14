@@ -36,14 +36,14 @@ abstract class AbstractSocket implements SocketInterface {
 
     /**
      * Socket Options
-     * @var array
+     * @var array<string, mixed>
      */
     protected $options;
 
     /**
      * AbstractSocket constructor.
      * @param string $uri
-     * @param array $options
+     * @param array<string, mixed> $options
      */
     public function __construct(string $uri, array $options = []){
         $this->uri = $uri;
@@ -230,7 +230,7 @@ abstract class AbstractSocket implements SocketInterface {
      * get new payload
      * @param string $task
      * @param null $load
-     * @return array
+     * @return array<string, string|null>
      */
     protected function newPayload(string $task, $load = null) : array {
         return [
@@ -243,7 +243,7 @@ abstract class AbstractSocket implements SocketInterface {
      * use this function to create new Socket instances
      * @param string $class
      * @param string $uri
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return SocketInterface
      */
     public static function factory(string $class, string $uri, array $options = []) : SocketInterface {

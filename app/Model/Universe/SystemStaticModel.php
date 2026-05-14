@@ -18,7 +18,7 @@ class SystemStaticModel extends AbstractUniverseModel {
     protected $table = 'system_static';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'systemId' => [
@@ -64,7 +64,7 @@ class SystemStaticModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
 

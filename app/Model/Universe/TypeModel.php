@@ -32,7 +32,7 @@ class TypeModel extends AbstractUniverseModel {
     public $storeDogmaAttributes            = self::DEFAULT_STORE_DOGMA_ATTRIBUTES;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -157,7 +157,7 @@ class TypeModel extends AbstractUniverseModel {
 
     /**
      * get type data
-     * @param array $additionalData
+     * @param array<string, mixed> $additionalData
      * @return null|object
      */
     public function getData( $additionalData = []){
@@ -235,7 +235,7 @@ class TypeModel extends AbstractUniverseModel {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getAttributesData() : array {
         $attributesData = [];
@@ -256,6 +256,7 @@ class TypeModel extends AbstractUniverseModel {
      * return false will stop any further action
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent($self,  $pkeys){
         $self->syncDogmaAttributes();
@@ -267,6 +268,7 @@ class TypeModel extends AbstractUniverseModel {
      * Event "Hook" function
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self,  $pkeys){
         $self->syncDogmaAttributes();
@@ -320,7 +322,7 @@ class TypeModel extends AbstractUniverseModel {
     /**
      * manipulate 'dogma_attributes' array be reference
      * -> used to inject custom attributes (not available from ESI)
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     private function manipulateDogmaAttributes( &$data){
         if(!$this->storeDogmaAttributes){
@@ -350,7 +352,7 @@ class TypeModel extends AbstractUniverseModel {
      * load data from API into $this and save $this
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseType', $id);

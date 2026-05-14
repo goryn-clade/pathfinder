@@ -29,7 +29,7 @@ class PriorityCacheStore implements \Stringable {
     protected $cleanupInterval;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $store;
 

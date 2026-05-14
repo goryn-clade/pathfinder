@@ -18,7 +18,7 @@ class StationModel extends AbstractUniverseModel {
     protected $table = 'station';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -120,7 +120,7 @@ class StationModel extends AbstractUniverseModel {
      * load data from API into $this and save $this
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
     protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []){
         $data = self::getF3()->ccpClient()->send('getUniverseStation', $id);

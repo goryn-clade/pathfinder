@@ -21,7 +21,7 @@ class Search {
      * @param string $dir
      * @param null $mTime
      * @param int $limit
-     * @return \Traversable
+     * @return \Traversable<mixed, \SplFileInfo>
      */
     static function getFilesByMTime(string $dir, ?int $mTime = null, int $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
         $mTime = is_null($mTime) ? time() : (int)$mTime;
@@ -50,7 +50,7 @@ class Search {
      * @param string $dir
      * @param int $size
      * @param int $limit
-     * @return \Traversable
+     * @return \Traversable<mixed, \SplFileInfo>
      */
     static function getFilesBySize(string $dir, int $size = 0, int $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
 
@@ -77,7 +77,7 @@ class Search {
      * @param string $dir
      * @param \Closure $filterCallback
      * @param int $limit
-     * @return \Traversable
+     * @return \Traversable<mixed, \SplFileInfo>
      */
     private static function getFilesByCallback(string $dir, \Closure $filterCallback, int $limit = self::DEFAULT_FILE_LIMIT) : \Traversable {
         $files = new \ArrayIterator();

@@ -199,7 +199,7 @@ class Admin extends Controller{
      * save or delete settings (e.g. corporation rights)
      * @param CharacterModel $character
      * @param int $corporationId
-     * @param array $settings
+     * @param array<string, mixed> $settings
      * @throws \Exception
      */
     protected function saveSettings(CharacterModel $character, int $corporationId,  $settings){
@@ -290,7 +290,7 @@ class Admin extends Controller{
      * -> must be in same corporation
      * @param CharacterModel $character
      * @param int $characterId
-     * @return array|\DB\CortexCollection
+     * @return array<string, mixed>|\DB\CortexCollection
      */
     protected function filterValidCharacters(CharacterModel $character, $characterId){
         $characters = [];

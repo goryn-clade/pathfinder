@@ -16,7 +16,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * List of possible handlers (tested)
      * -> final handler will be set dynamic for per instance
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [
         //'stream'   => 'json',
@@ -37,7 +37,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * MapLog constructor.
      * @param string $action
-     * @param array $objectData
+     * @param array<string, mixed> $objectData
      * @throws \Exception
      */
     public function __construct(string $action, array $objectData){
@@ -81,7 +81,7 @@ class MapLog extends AbstractCharacterLog {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     #[\Override]
     public function getData() : array {
@@ -100,7 +100,7 @@ class MapLog extends AbstractCharacterLog {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return string
      */
     protected function formatData(array $data) : string {
@@ -150,7 +150,7 @@ class MapLog extends AbstractCharacterLog {
 
     /**
      * split $action "CamelCase" wise
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getActionParts() : array {
         return array_map(strtolower(...), preg_split('/(?=[A-Z])/', $this->getAction()));

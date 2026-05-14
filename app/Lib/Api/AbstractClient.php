@@ -187,7 +187,7 @@ abstract class AbstractClient extends \Prefab {
     /**
      * get cachePool config from [D]ata [S]ource [N]ame string
      * @param \Base $f3
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getCachePoolConfig(\Base $f3) : array {
         $tag = 'API_CACHE';
@@ -295,7 +295,7 @@ abstract class AbstractClient extends \Prefab {
     /**
      * call request API data
      * @param string $name
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @return array|mixed
      */
     public function __call(string $name, array $arguments = []){

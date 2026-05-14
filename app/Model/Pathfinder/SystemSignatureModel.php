@@ -20,7 +20,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
     protected $table = 'system_signature';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -247,7 +247,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent($self, $pkeys): void{
         $self->logActivity('signatureCreate');
@@ -259,7 +259,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * can be overwritten
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      */
     #[\Override]
@@ -287,7 +287,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self, $pkeys): void{
         $self->logActivity('signatureUpdate');
@@ -321,7 +321,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * Event "Hook" function
      * can be overwritten
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent($self, $pkeys): void{
         $self->logActivity('signatureDelete');
@@ -336,7 +336,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
 
     /**
      * get object relevant data for model log
-     * @return array
+     * @return array<string, int|string>
      */
     public function getLogObjectData() : array{
         return [

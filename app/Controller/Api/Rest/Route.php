@@ -63,25 +63,25 @@ class Route extends AbstractRestController {
 
     /**
      * array system information grouped by systemId
-     * @var array
+     * @var array<string, mixed>
      */
     private $nameArray = [];
 
     /**
      * array neighbour systems grouped by systemName
-     * @var array
+     * @var array<string, mixed>
      */
     private $jumpArray = [];
 
     /**
      * array with systemName => systemId matching
-     * @var array
+     * @var array<string, mixed>
      */
     private $idArray = [];
 
     /**
      * template for routeData payload
-     * @var array
+     * @var array<string, mixed>
      */
     private $defaultRouteData = [
         'routePossible' => false,
@@ -124,7 +124,7 @@ class Route extends AbstractRestController {
 
     /**
      * filter an array of connection-type values against the model whitelist
-     * @param array $values
+     * @param array<string, mixed> $values
      * @return string[] safe values, in original order, deduplicated, ready to inline into SQL
      */
     private function filterConnectionTypes(array $values) : array {
@@ -306,7 +306,7 @@ class Route extends AbstractRestController {
      * build jump data from EVE Scout connections, filtered to a specific hub system
      * @param int $hubSystemId only include connections where source OR target matches this system ID
      * @param string $cacheKey
-     * @return array
+     * @return array<string, mixed>
      */
     private function buildEveScoutJumpData(int $hubSystemId, string $cacheKey) : array {
         if(!$this->getF3()->exists($cacheKey, $jumpData)){
@@ -465,7 +465,8 @@ class Route extends AbstractRestController {
      * @param string $A
      * @param string $B
      * @param int $M
-     * @return array
+     * @return array<string, mixed>
+     * @param array<string, mixed> $G
      */
     private function graph_find_path(array &$G, string $A, string $B, int $M = 50000): array{
         $maxDepth = $M;
@@ -533,7 +534,7 @@ class Route extends AbstractRestController {
     /**
      * get formatted jump node data
      * @param int $systemId
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getJumpNodeData(int $systemId) : array {
         return [
@@ -550,7 +551,7 @@ class Route extends AbstractRestController {
      * @param int $searchDepth
      * @param  $mapIds
      * @param  $filterData
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function searchRoute(int $systemFromId, int $systemToId, int $searchDepth = 0,  $mapIds = [],  $filterData = []) : array {
@@ -574,7 +575,7 @@ class Route extends AbstractRestController {
      * @param int $searchDepth
      * @param  $mapIds
      * @param  $filterData
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     private function searchRouteCustom(int $systemFromId, int $systemToId, int $searchDepth = 0,  $mapIds = [],  $filterData = []) : array {
@@ -663,7 +664,7 @@ class Route extends AbstractRestController {
      * @param int $searchDepth
      * @param  $mapIds
      * @param  $filterData
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     private function searchRouteESI(int $systemFromId, int $systemToId, int $searchDepth = 0,  $mapIds = [],  $filterData = []) : array {
@@ -790,7 +791,7 @@ class Route extends AbstractRestController {
      * @param $mapIds
      * @param $systemFrom
      * @param $systemTo
-     * @param array $filterData
+     * @param array<string, mixed> $filterData
      * @return string
      */
     private function getRouteCacheKey( $mapIds, int $systemFrom, int $systemTo,  $filterData = []){

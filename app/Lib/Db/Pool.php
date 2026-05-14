@@ -162,7 +162,7 @@ class Pool extends \Prefab {
     /**
      * build PDO DNS connect string from DB config array
      * -> Hint: dbName is not part of the DNS we need -> passed as extra parameter
-     * @param array $config
+     * @param array<string, mixed> $config
      * @return string
      */
     protected function buildDnsFromConfig(array $config) : string {
@@ -174,7 +174,7 @@ class Pool extends \Prefab {
     }
 
     /**
-     * @param array $config
+     * @param array<string, mixed> $config
      * @return Sql|null
      */
     protected function newDB(array $config) : ?Sql {

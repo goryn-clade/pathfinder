@@ -18,7 +18,7 @@ class CorporationMapModel extends AbstractPathfinderModel {
     protected $table = 'corporation_map';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [

@@ -18,7 +18,7 @@ class RoleModel extends AbstractPathfinderModel {
     protected $table = 'role';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -52,7 +52,7 @@ class RoleModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

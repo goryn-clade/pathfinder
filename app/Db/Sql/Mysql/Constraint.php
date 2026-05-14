@@ -27,9 +27,9 @@ class Constraint
     /**
      * Constraint constructor.
      * @param SQL\TableBuilder $table
-     * @param array $keys
+     * @param array<string, mixed> $keys
      * @param string $referencedTable
-     * @param array $referencedCols
+     * @param array<string, mixed> $referencedCols
      */
     public function __construct(SQL\TableBuilder $table, $keys = [], $referencedTable = '', $referencedCols = ['id'])
     {
@@ -88,7 +88,7 @@ class Constraint
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getKeys()
     {
@@ -104,7 +104,7 @@ class Constraint
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getReferencedCols()
     {

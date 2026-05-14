@@ -23,7 +23,7 @@ class UserModel extends AbstractPathfinderModel {
     protected $table = 'user';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -95,6 +95,9 @@ class UserModel extends AbstractPathfinderModel {
      * @throws Exception\RegistrationException
      */
     #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
     public function beforeInsertEvent($self,  $pkeys) : bool {
         $registrationStatus = Controller\Controller::getRegistrationStatus();
         return match ($registrationStatus) {
@@ -179,7 +182,7 @@ class UserModel extends AbstractPathfinderModel {
     /**
      * search in session data for $characterId
      * @param int $characterId
-     * @return array
+     * @return array<string, mixed>
      */
     public function findSessionCharacterData(int $characterId) : array {
         $data = [];
@@ -283,7 +286,7 @@ class UserModel extends AbstractPathfinderModel {
 
     /**
      * get object relevant data for model log channel
-     * @return array
+     * @return array<string, int|string>
      */
     public function getLogChannelData() : array{
         return [

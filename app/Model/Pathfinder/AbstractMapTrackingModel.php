@@ -14,7 +14,7 @@ use Exodus4D\Pathfinder\Exception;
 abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implements LogModelInterface {
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $trackingFieldConf = [
         'createdCharacterId' => [
@@ -45,7 +45,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
 
     /**
      * get static character  fields for this model instance
-     * @return array
+     * @return array<string, mixed>
      */
     #[\Override]
     protected function getStaticFieldConf(): array{
@@ -96,7 +96,7 @@ abstract class AbstractMapTrackingModel extends AbstractPathfinderModel implemen
 
     /**
      * get log file data
-     * @return array
+     * @return array{}
      */
     public function getLogData(): array {
         return [];

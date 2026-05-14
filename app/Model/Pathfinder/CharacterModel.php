@@ -50,7 +50,7 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * character authorization status
-     * @var array
+     * @var array<string, bool|string>
      */
     const AUTHORIZATION_STATUS = [
         'OK'            => true,                                        // success
@@ -77,7 +77,7 @@ class CharacterModel extends AbstractPathfinderModel {
     private $allowBanChange = false;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'lastLogin' => [
@@ -444,7 +444,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -453,7 +453,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterUpdateEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -462,7 +462,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param array $pkeys
+     * @param array<string, mixed> $pkeys
      */
     public function afterEraseEvent($self, $pkeys): void{
         $self->clearCacheData();
@@ -789,7 +789,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * get all character roles grouped by 'role type'
      * -> 'role types' are 'roles', 'rolesAtBase', 'rolesAtHq', 'rolesAtOther'
-     * @return array
+     * @return array<string, mixed>
      */
     protected function requestRoles() : array {
         $rolesData = [];
@@ -842,7 +842,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * get online status data from ESI
      * @param string $accessToken
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getOnlineData(string $accessToken) : array {
         return self::getF3()->ccpClient()->send('getCharacterOnline', $this->_id, $accessToken);
@@ -1074,7 +1074,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * get 'character log' history data. Filter all data that does not represent a 'jump' (systemId change)
      * -> e.g. If just 'shipTypeId' has changed, this entry is filtered
      * @param int $systemIdPrev
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getLogHistoryJumps(int $systemIdPrev =  0) : array {
         return $this->filterLogsHistory(function(array $historyEntry) use (&$systemIdPrev) : bool {
@@ -1095,14 +1095,14 @@ class CharacterModel extends AbstractPathfinderModel {
      * filter 'character log' history data by $callback
      * -> reindex array keys! Otherwise json_encode() on result would return object!
      * @param \Closure $callback
-     * @return array
+     * @return array<string, mixed>
      */
     protected function filterLogsHistory(\Closure $callback) : array {
         return array_values(array_filter($this->getLogsHistory() , $callback));
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogsHistory() : array {
         if(!is_array($logHistoryData = $this->getCacheData(self::DATA_CACHE_KEY_LOG_HISTORY))){
@@ -1204,7 +1204,7 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * update character data from CCPs ESI API
-     * @return array (some status messages)
+     * @return array<int, string> (some status messages)
      * @throws \Exception
      */
     public function updateFromESI() : array {
@@ -1537,7 +1537,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * merges two multidimensional characterSession arrays by checking characterID
      * @param  $characterDataBase
-     * @return array
+     * @return array<string, mixed>
      */
     public static function mergeSessionCharacterData( $characterDataBase = []) : array {
         $addData = [];

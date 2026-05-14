@@ -202,7 +202,7 @@ class Monolog extends \Prefab {
     /**
      * get Monolog Handler instance by key
      * @param string $handlerKey
-     * @param array $handlerParams
+     * @param array<string, mixed> $handlerParams
      * @return HandlerInterface
      * @throws \Exception
      */
@@ -220,7 +220,7 @@ class Monolog extends \Prefab {
     /**
      * get Monolog Processor instance by key
      * @param string $processorKey
-     * @param array $processorParams
+     * @param array<string, mixed> $processorParams
      * @return ProcessorInterface
      * @throws \Exception
      */

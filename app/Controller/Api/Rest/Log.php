@@ -88,7 +88,7 @@ class Log extends AbstractRestController {
     /**
      * update existing connectionLog with new data
      * @param int $logId
-     * @param array $logData
+     * @param array<string, mixed> $logData
      * @return bool|Pathfinder\ConnectionLogModel
      * @throws \Exception
      */

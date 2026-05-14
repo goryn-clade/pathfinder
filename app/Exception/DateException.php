@@ -12,7 +12,7 @@ namespace Exodus4D\Pathfinder\Exception;
 class DateException extends PathfinderException {
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $codes = [
         3000 => 500         // invalid DateRange

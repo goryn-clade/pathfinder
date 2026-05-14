@@ -23,7 +23,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
     /**
      * changed fields (columns) on update/insert
      * -> e.g. for character "activity logging"
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldChanges                 = [];
 
@@ -58,7 +58,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
 
     /**
      * get old and new value from field, in case field is configured with 'activity-log'
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getFieldChanges() : array {
         $changes = [];

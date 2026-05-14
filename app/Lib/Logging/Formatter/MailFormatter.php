@@ -14,7 +14,7 @@ use Monolog\Formatter;
 class MailFormatter implements Formatter\FormatterInterface {
 
     /**
-     * @param array $record
+     * @param array<string, mixed> $record
      * @return mixed|string
      */
     public function format(array $record){
@@ -39,7 +39,7 @@ class MailFormatter implements Formatter\FormatterInterface {
     }
 
     /**
-     * @param array $records
+     * @param array<string, mixed> $records
      * @return mixed|string
      */
     public function formatBatch(array $records){

@@ -114,7 +114,7 @@ class Map extends AbstractRestController {
 
     /**
      * @param Pathfinder\MapModel $map
-     * @param array               $mapData
+     * @param array<string, mixed>               $mapData
      * @return Pathfinder\MapModel
      * @throws \Exception
      */

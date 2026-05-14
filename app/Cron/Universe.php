@@ -101,7 +101,7 @@ class Universe extends AbstractCron {
      * @param int $total
      * @param int $offset
      * @param int $importCount
-     * @param array $ids
+     * @param array<string, mixed> $ids
      */
     private function echoInfo(int $total, int $offset, int $importCount, array $ids): void{
         echo 'info ─────────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;

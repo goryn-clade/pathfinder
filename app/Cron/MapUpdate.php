@@ -139,7 +139,7 @@ class MapUpdate extends AbstractCron {
 
     /**
      * @param Pathfinder\ConnectionModel $connection reusable model instance
-     * @param array $connectionsData rows from deleteEolConnections query
+     * @param array<string, mixed> $connectionsData rows from deleteEolConnections query
      * @return int number of connections erased
      */
     private function eraseExpiredEolConnections($connection, array $connectionsData) : int {
@@ -159,7 +159,7 @@ class MapUpdate extends AbstractCron {
     }
 
     /**
-     * @param array $data row with keys: type (JSON), nominalLifespan (seconds)
+     * @param array<string, mixed> $data row with keys: type (JSON), nominalLifespan (seconds)
      * @return int|null expiry window in seconds for the connection's EOL phase, null if no EOL type
      */
     private function getEolExpireSeconds(array $data) : ?int {

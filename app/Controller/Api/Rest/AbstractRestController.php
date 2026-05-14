@@ -17,7 +17,7 @@ abstract class AbstractRestController extends Controller\AccessController {
      * API requests require "Content-Type: application/json"
      * -> $_POST does not include request data -> request BODY might contain JSON
      * @param \Base $f3
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getRequestData(\Base $f3) : array {
         $data = [];

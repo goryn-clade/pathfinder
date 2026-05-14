@@ -90,7 +90,7 @@ class AccessController extends Controller {
     /**
      * broadcast map data to clients
      * -> send over TCP Socket
-     * @param array|null $mapData
+     * @param array<string, mixed>|null $mapData
      */
     protected function broadcastMapData(?array $mapData) : void {
         if(!empty($mapData)){
@@ -102,7 +102,7 @@ class AccessController extends Controller {
      * get formatted Map Data
      * @param Pathfinder\MapModel $map
      * @param bool                $noCache
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     protected function getFormattedMapData(Pathfinder\MapModel $map, bool $noCache = false) : ?array {
         $data = null;

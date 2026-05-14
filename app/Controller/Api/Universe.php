@@ -42,7 +42,7 @@ class Universe extends Controller\AccessController {
     /**
      * get system data for all systems within a constellation
      * @param \Base $f3
-     * @param array $params
+     * @param array<string, mixed> $params
      * @throws \Exception
      */
     public function constellationData(\Base $f3,  $params): void{

@@ -14,7 +14,7 @@ class ApiLog extends AbstractLog {
     /**
      * List of possible handlers (tested)
      * -> final handler will be set dynamic for per instance
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [
         //'stream' => 'json'

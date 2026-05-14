@@ -18,7 +18,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
     protected $table = 'alliance_map';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [

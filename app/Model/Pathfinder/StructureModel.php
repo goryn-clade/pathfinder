@@ -20,7 +20,7 @@ class StructureModel extends AbstractPathfinderModel {
     protected $table = 'structure';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -78,7 +78,7 @@ class StructureModel extends AbstractPathfinderModel {
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function setData( $data): void{
         $this->copyfrom($data, ['structureId', 'corporationId', 'systemId', 'statusId', 'name', 'description']);
@@ -186,6 +186,9 @@ class StructureModel extends AbstractPathfinderModel {
      * @return bool
      */
     #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
     public function beforeInsertEvent($self, $pkeys) : bool {
         return $this->isValid() ? parent::beforeInsertEvent($self, $pkeys) : false;
     }
@@ -213,7 +216,7 @@ class StructureModel extends AbstractPathfinderModel {
 
     /**
      * get structure data grouped by corporations
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getDataByCorporations() : array {

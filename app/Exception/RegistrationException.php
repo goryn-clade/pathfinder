@@ -12,7 +12,7 @@ namespace Exodus4D\Pathfinder\Exception;
 class RegistrationException extends PathfinderException{
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $codes = [
         2000 => 403

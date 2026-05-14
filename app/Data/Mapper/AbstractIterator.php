@@ -15,7 +15,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
     /**
      * iterator mapping
      * -> overwrite in child classes (late static binding)
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $map = [];
 
@@ -36,7 +36,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
 
     /**
      * map iterator
-     * @return array
+     * @return array<string, mixed>
      */
     public function getData(){
         iterator_apply($this, [static::class, 'recursiveIterator'], [$this]);
@@ -47,7 +47,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
     /**
      * convert array keys to camelCase
      * @param $array
-     * @return array
+     * @return array<string, mixed>
      */
     protected function camelCaseKeys( $array){
         return Util::arrayChangeKeys($array, [\Base::instance(), 'camelcase']);

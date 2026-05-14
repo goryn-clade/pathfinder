@@ -21,7 +21,7 @@ abstract class AbstractCharacterLog extends AbstractChannelLog {
     /**
      * AbstractCharacterLog constructor.
      * @param string $action
-     * @param array $objectData
+     * @param array<string, mixed> $objectData
      */
     public function __construct(string $action, array $objectData){
         parent::__construct($action, $objectData);
@@ -54,7 +54,7 @@ abstract class AbstractCharacterLog extends AbstractChannelLog {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     #[\Override]
     public function getData() : array{

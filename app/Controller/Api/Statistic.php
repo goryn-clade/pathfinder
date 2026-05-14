@@ -66,7 +66,7 @@ class Statistic extends Controller\AccessController {
      * @param int $week
      * @param int $weekCount
      * @param bool $backwards
-     * @return array
+     * @return array<string, int>
      */
     protected function calculateYearWeekOffset($year, $week, $weekCount, $backwards = false){
         $offset = [
@@ -119,7 +119,7 @@ class Statistic extends Controller\AccessController {
      * @param int $weekStart
      * @param int $yearEnd
      * @param int $weekEnd
-     * @return array
+     * @return array<string, mixed>
      */
     protected function queryStatistic(CharacterModel $character, $typeId, $yearStart, $weekStart, $yearEnd, $weekEnd){
         $data = [];

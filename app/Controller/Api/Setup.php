@@ -93,7 +93,7 @@ class Setup extends Controller\Controller {
 
     /**
      * get HTML for cronJobs
-     * @param array $jobsData
+     * @param array<string, mixed> $jobsData
      * @return string
      */
     protected function getCronHtml( $jobsData) : string {
@@ -268,7 +268,7 @@ class Setup extends Controller\Controller {
      * import static 'system_static` table data from *.csv
      * @param int $offset
      * @param int $length
-     * @return array
+     * @return array<string, int>
      * @throws \Exception
      */
     protected function setupSystemStaticTable(int $offset = 0, int $length = 0) : array {
@@ -326,7 +326,7 @@ class Setup extends Controller\Controller {
      * for system jump calculation. Call this function manually when CCP adds Systems/Stargates
      * @param int $offset
      * @param int $length
-     * @return array
+     * @return array<string, mixed>
      */
     protected function setupSystemJumpTable(int $offset = 0, int $length = 0) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
