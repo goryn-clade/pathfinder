@@ -195,7 +195,7 @@ abstract class AbstractCron {
      * @param array $state
      * @param string $logText for custom text
      */
-    private function writeLog(string $job, int $memPeak = 0, float $execEnd = 0, array $state = [], string $logText = ''){
+    private function writeLog(string $job, int $memPeak = 0, float $execEnd = 0, array $state = [], string $logText = ''): void{
         $percent = number_format($state['percent'], 1) . '%';
         $duration = number_format(round($execEnd - $_SERVER['REQUEST_TIME_FLOAT'], 3), 3) . 's';
         $log = new \Log('cron_' . $job . '.log');

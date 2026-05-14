@@ -65,7 +65,7 @@ class Pool extends \Prefab {
      * @param bool $silent
      * @param bool $clearErrors
      */
-    public function setSilent(bool $silent, bool $clearErrors = false){
+    public function setSilent(bool $silent, bool $clearErrors = false): void{
         $this->silent = $silent;
         if($clearErrors){
             $this->errors = [];

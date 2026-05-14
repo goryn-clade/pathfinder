@@ -66,7 +66,7 @@ class RegionModel extends AbstractUniverseModel {
     /**
      * load constellations data for this region
      */
-    public function loadConstellationsData(){
+    public function loadConstellationsData(): void{
         if( !$this->dry() ){
             $data = self::getF3()->ccpClient()->send('getUniverseRegion', $this->_id);
             if(!empty($data)){

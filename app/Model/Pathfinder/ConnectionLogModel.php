@@ -77,7 +77,7 @@ class ConnectionLogModel extends AbstractPathfinderModel {
      * set data by associative array
      * @param array $data
      */
-    public function setData( $data){
+    public function setData( $data): void{
         $this->copyfrom($data, ['shipTypeId', 'shipTypeName', 'shipMass', 'characterId', 'characterName']);
     }
 
@@ -134,6 +134,7 @@ class ConnectionLogModel extends AbstractPathfinderModel {
      * @param CharacterModel $characterModel
      * @return bool
      */
+    #[\Override]
     public function hasAccess(CharacterModel $characterModel) : bool {
         $access = false;
         if( !$this->dry() ){

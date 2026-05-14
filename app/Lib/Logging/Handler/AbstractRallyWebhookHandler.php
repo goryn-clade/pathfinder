@@ -17,6 +17,7 @@ abstract class AbstractRallyWebhookHandler extends AbstractWebhookHandler {
      * @param array $record
      * @return array
      */
+    #[\Override]
     protected function getSlackData(array $record) : array {
         $postData = parent::getSlackData($record);
 

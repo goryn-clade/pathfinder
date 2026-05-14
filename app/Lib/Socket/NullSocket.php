@@ -32,6 +32,7 @@ class NullSocket extends AbstractSocket {
      * @param null $load
      * @return Promise\PromiseInterface
      */
+    #[\Override]
     public function write(string $task, $load = null) : Promise\PromiseInterface {
         return new Promise\RejectedPromise();
     }

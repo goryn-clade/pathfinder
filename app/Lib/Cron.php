@@ -32,6 +32,7 @@ class Cron extends \Cron {
      * @param int $time
      * @return bool
      */
+    #[\Override]
     public function isDue($job, $time){
         if($isDue = parent::isDue($job, $time)){
             // check if job is not paused
@@ -44,6 +45,7 @@ class Cron extends \Cron {
         return $isDue;
     }
 
+    #[\Override]
     public function execute($job, $async = true) {
         return parent::execute($job, $async);
     }
@@ -52,6 +54,7 @@ class Cron extends \Cron {
      * @param $name
      * @return string
      */
+    #[\Override]
     public function __get($name){
         if(in_array($name, ['jobs'])){
             return $this->$name;

@@ -60,7 +60,7 @@ class PriorityCacheStore implements \Stringable {
      * @param $key
      * @param $data
      */
-    public function set(string $key, mixed $data){
+    public function set(string $key, mixed $data): void{
         if(!$this->exists($key)){
             $this->priorityQueue->insert($key, $this->priority--);
         }
@@ -83,7 +83,7 @@ class PriorityCacheStore implements \Stringable {
      * @param $key
      * @return bool
      */
-    public function exists(string $key){
+    public function exists(string $key): bool{
         return isset($this->store[$key]);
     }
 
@@ -96,7 +96,7 @@ class PriorityCacheStore implements \Stringable {
         }
     }
 
-    public function cleanup(){
+    public function cleanup(): void{
         while(
             $this->entryLimit < $this->priorityQueue->count() &&
             $this->priorityQueue->valid()
@@ -107,7 +107,7 @@ class PriorityCacheStore implements \Stringable {
         }
     }
 
-    public function clear(){
+    public function clear(): void{
         $limit = $this->entryLimit;
         $this->entryLimit = 0;
         $this->cleanup();

@@ -58,6 +58,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $pkeys
      * @return bool
      */
+    #[\Override]
     public function beforeUpdateEvent($self,  $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
@@ -148,7 +149,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $accessToken
      * @param array $additionalOptions
      */
-    public function loadById(int $id, string $accessToken = '',  $additionalOptions = []){
+    public function loadById(int $id, string $accessToken = '',  $additionalOptions = []): void{
         /**
          * @var self $model
          */
@@ -197,7 +198,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param AbstractUniverseModel $model
      * @param array $rowKeys
      */
-    public static function buildTableIndex(AbstractUniverseModel $model,  $rowKeys = []){
+    public static function buildTableIndex(AbstractUniverseModel $model,  $rowKeys = []): void{
         $hashKeyTable = static::generateHashKeyTable($model->getTable());
         if( !self::getF3()->exists($hashKeyTable, $cachedData) ){
             $cachedData = [];
@@ -224,6 +225,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $prefix
      * @return string
      */
+    #[\Override]
     public static function generateHashKeyTable(string $table, string $prefix = self::CACHE_KEY_PREFIX) : string {
         return parent::generateHashKeyTable($table, $prefix);
     }

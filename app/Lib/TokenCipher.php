@@ -18,7 +18,7 @@ namespace Exodus4D\Pathfinder\Lib;
  */
 class TokenCipher {
 
-    private const VERSION_PREFIX = 'v1:';
+    private const string VERSION_PREFIX = 'v1:';
 
     /**
      * Encrypt a plaintext token. Empty string passes through (no-op).
@@ -46,7 +46,7 @@ class TokenCipher {
         if ($blob === '') {
             return '';
         }
-        if (strncmp($blob, self::VERSION_PREFIX, strlen(self::VERSION_PREFIX)) !== 0) {
+        if (!str_starts_with($blob, self::VERSION_PREFIX)) {
             // legacy plaintext row — return as-is; will be re-stored encrypted on next refresh
             return $blob;
         }
@@ -74,7 +74,7 @@ class TokenCipher {
         }
         try {
             $key = sodium_hex2bin($hex);
-        } catch (\SodiumException $e) {
+        } catch (\SodiumException) {
             throw new \RuntimeException('TOKEN_ENCRYPTION_KEY must be hex-encoded');
         }
         if (strlen($key) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {

@@ -21,7 +21,7 @@ class Universe extends Controller\AccessController {
      * @param \Base $f3
      * @param $params
      */
-    public function search(\Base $f3,  $params){
+    public function search(\Base $f3,  $params): void{
         $postData = (array)$f3->get('POST');
         $categories = (array)$postData['categories'];
         $universeNameData = [];
@@ -45,7 +45,7 @@ class Universe extends Controller\AccessController {
      * @param array $params
      * @throws \Exception
      */
-    public function constellationData(\Base $f3,  $params){
+    public function constellationData(\Base $f3,  $params): void{
         $constellationId = isset($params['arg1']) ? (int)$params['arg1'] : 0;
 
         $return = (object) [];

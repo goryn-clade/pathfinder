@@ -93,7 +93,7 @@ class Sql extends \DB\SQL {
      * @param string $characterSetDatabase
      * @param string $collationDatabase
      */
-    public function prepareDatabase(string $characterSetDatabase, string $collationDatabase){
+    public function prepareDatabase(string $characterSetDatabase, string $collationDatabase): void{
         if($this->name() && $characterSetDatabase && $collationDatabase){
             // set/change default "character set" and "collation"
             $this->exec('ALTER DATABASE ' . $this->quotekey($this->name())
@@ -112,6 +112,7 @@ class Sql extends \DB\SQL {
      * @param bool $stamp
      * @return array|FALSE|int
      */
+    #[\Override]
     function exec($cmds, $args = null, $ttl = 0, $log = false, $stamp = false) {
         return parent::exec($cmds, $args, $ttl, $log, $stamp);
     }

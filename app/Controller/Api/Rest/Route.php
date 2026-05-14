@@ -108,7 +108,7 @@ class Route extends AbstractRestController {
      * -> jump data includes JUST "static" connections (Stargates)
      * -> this data is equal for EACH route search (does not depend on map data)
      */
-    private function setStaticJumpData(){
+    private function setStaticJumpData(): void{
         if($universeDB = $this->getDB('UNIVERSE')){
             $query = "SELECT * FROM system_neighbour";
             $rows = $universeDB->exec($query, null, $this->staticJumpDataCacheTime);
@@ -129,7 +129,7 @@ class Route extends AbstractRestController {
      */
     private function filterConnectionTypes(array $values) : array {
         return array_values(array_intersect(
-            array_unique(array_map('strval', $values)),
+            array_unique(array_map(strval(...), $values)),
             Pathfinder\ConnectionModel::getConnectionTypeWhitelist()
         ));
     }
@@ -142,7 +142,7 @@ class Route extends AbstractRestController {
      * @param  $filterData
      * @throws \Exception
      */
-    private function setDynamicJumpData( $mapIds = [],  $filterData = []){
+    private function setDynamicJumpData( $mapIds = [],  $filterData = []): void{
         // make sure, mapIds are integers (protect against SQL injections)
         $mapIds = array_unique( array_map(intval(...), $mapIds), SORT_NUMERIC);
 
@@ -197,7 +197,7 @@ class Route extends AbstractRestController {
 
                 if(!empty($filterData['excludeTypes'])){
                     $excludeTypes = array_values(array_intersect(
-                        array_map('strval', (array)$filterData['excludeTypes']),
+                        array_map(strval(...), (array)$filterData['excludeTypes']),
                         Pathfinder\ConnectionModel::getConnectionTypeWhitelist()
                     ));
                 }
@@ -377,7 +377,7 @@ class Route extends AbstractRestController {
      * -> data is either coming from CCPs [SDE] OR from map specific data
      * @param  $rows
      */
-    private function updateJumpData( &$rows = []){
+    private function updateJumpData( &$rows = []): void{
         foreach($rows as &$row){
             $regionId       = (int)($row['regionId'] ?? 0);
             $constId        = (int)($row['constellationId'] ?? 0);
@@ -416,7 +416,7 @@ class Route extends AbstractRestController {
      * @param  $filterData
      * @param  $keepSystems
      */
-    private function filterJumpData( $filterData = [],  $keepSystems = []){
+    private function filterJumpData( $filterData = [],  $keepSystems = []): void{
         if(($filterData['flag'] ?? '') == 'secure'){
             // remove all systems (TrueSec < 0.5) from search arrays
             $this->jumpArray = array_filter($this->jumpArray, function($systemId) use ($keepSystems) {
@@ -467,7 +467,7 @@ class Route extends AbstractRestController {
      * @param int $M
      * @return array
      */
-    private function graph_find_path(array &$G, string $A, string $B, int $M = 50000){
+    private function graph_find_path(array &$G, string $A, string $B, int $M = 50000): array{
         $maxDepth = $M;
 
         // $P will hold the result path at the end.
@@ -811,7 +811,7 @@ class Route extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function post(\Base $f3){
+    public function post(\Base $f3): void{
         $requestData = $this->getRequestData($f3);
 
         $activeCharacter = $this->getCharacter();

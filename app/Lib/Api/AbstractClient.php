@@ -286,7 +286,7 @@ abstract class AbstractClient extends \Prefab {
      * unload function
      * @param \Redis $client
      */
-    public function unloadCache(\Redis $client){
+    public function unloadCache(\Redis $client): void{
         if($client->isConnected()){
             $client->close();
         }

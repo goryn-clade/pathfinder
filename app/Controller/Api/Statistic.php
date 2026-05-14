@@ -234,7 +234,7 @@ class Statistic extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getData(\Base $f3){
+    public function getData(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $return = (object) [];
 

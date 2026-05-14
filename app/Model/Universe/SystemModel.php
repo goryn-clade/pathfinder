@@ -476,7 +476,7 @@ class SystemModel extends AbstractUniverseModel {
     /**
      * update system from ESI
      */
-    public function updateModel(){
+    public function updateModel(): void{
         if($this->valid()){
             $this->loadData($this->_id);
             $this->loadPlanetsData();
@@ -517,7 +517,7 @@ class SystemModel extends AbstractUniverseModel {
     /**
      * load planets data for this system
      */
-    public function loadPlanetsData(){
+    public function loadPlanetsData(): void{
         if($this->valid()){
             $data = self::getF3()->ccpClient()->send('getUniverseSystem', $this->_id);
             if($data['planets']){
@@ -538,7 +538,7 @@ class SystemModel extends AbstractUniverseModel {
      * load stargates for this system
      * -> stargates to destination system which is not in DB get ignored
      */
-    public function loadStargatesData(){
+    public function loadStargatesData(): void{
         if($this->valid()){
             $data = self::getF3()->ccpClient()->send('getUniverseSystem', $this->_id);
             if($data['stargates']){
@@ -557,7 +557,7 @@ class SystemModel extends AbstractUniverseModel {
     /**
      * load NPC owned stations for this system
      */
-    public function loadStationsData(){
+    public function loadStationsData(): void{
         if($this->valid()){
             $data = self::getF3()->ccpClient()->send('getUniverseSystem', $this->_id);
             if($data['stations']){

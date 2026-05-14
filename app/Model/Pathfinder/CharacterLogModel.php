@@ -122,7 +122,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * set log data by associative array
      * @param array $logData
      */
-    public function setData( $logData){
+    public function setData( $logData): void{
 
         if( isset($logData['system']) ){
             $this->systemId = (int)$logData['system']['id'];
@@ -206,7 +206,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
     }
 
@@ -216,7 +216,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void{
         $self->updateLogsHistory('update');
 
         // check if any "relevant" column has changed
@@ -231,7 +231,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         $self->deleteLogsHistory();
         $self->clearCacheData();
     }
@@ -239,7 +239,8 @@ class CharacterLogModel extends AbstractPathfinderModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         // clear character "LOG" cache
         // -> character data without "LOG" has not changed!
         if(is_object($this->characterId)){

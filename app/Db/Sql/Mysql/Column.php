@@ -17,7 +17,7 @@ class Column extends SQL\Column
      * drop constraint from this column
      * @param Constraint $constraint
      */
-    public function dropConstraint(Constraint $constraint)
+    public function dropConstraint(Constraint $constraint): void
     {
         $this->table->dropConstraint($constraint);
     }
@@ -26,7 +26,7 @@ class Column extends SQL\Column
      * add constraint to this column
      * @param Constraint $constraint
      */
-    public function addConstraint(Constraint $constraint)
+    public function addConstraint(Constraint $constraint): void
     {
         $this->table->addConstraint($constraint);
     }
@@ -50,7 +50,7 @@ class Column extends SQL\Column
      * @param array $constraintData
      * @return Constraint
      */
-    public function newConstraint($constraintData)
+    public function newConstraint($constraintData): ?\Exodus4D\Pathfinder\Db\Sql\Mysql\Constraint
     {
 
         $constraint = null;

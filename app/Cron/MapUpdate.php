@@ -30,7 +30,7 @@ class MapUpdate extends AbstractCron {
      * >> php index.php "/cron/deactivateMapData"
      * @param \Base $f3
      */
-    function deactivateMapData(\Base $f3){
+    function deactivateMapData(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
         $privateMapLifetime = (int)Config::getMapsDefaultConfig('private.lifetime');
 
@@ -56,7 +56,7 @@ class MapUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteMapData(\Base $f3){
+    function deleteMapData(\Base $f3): void{
         $this->logStart(__FUNCTION__);
         $total = 0;
 
@@ -96,7 +96,7 @@ class MapUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteEolConnections(\Base $f3){
+    function deleteEolConnections(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
         $nominalDefault = (int)($f3->get('PATHFINDER.CACHE.EXPIRE_CONNECTIONS_NOMINAL_DEFAULT') ?: 86400);
         $pfDB = $f3->DB->getDB('PF');
@@ -179,7 +179,7 @@ class MapUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteExpiredConnections(\Base $f3){
+    function deleteExpiredConnections(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
         $nominalDefault = (int)($f3->get('PATHFINDER.CACHE.EXPIRE_CONNECTIONS_NOMINAL_DEFAULT') ?: 86400);
         $pfDB = $f3->DB->getDB('PF');
@@ -234,7 +234,7 @@ class MapUpdate extends AbstractCron {
      * >> php index.php "/cron/deleteSignatures"
      * @param \Base $f3
      */
-    function deleteSignatures(\Base $f3){
+    function deleteSignatures(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
         $signatureExpire = (int)$f3->get('PATHFINDER.CACHE.EXPIRE_SIGNATURES');
 

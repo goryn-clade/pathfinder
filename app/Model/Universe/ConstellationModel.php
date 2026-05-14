@@ -97,7 +97,7 @@ class ConstellationModel extends AbstractUniverseModel {
     /**
      * load systems data for this constellation
      */
-    public function loadSystemsData(){
+    public function loadSystemsData(): void{
         if( !$this->dry() ){
             $data = self::getF3()->ccpClient()->send('getUniverseConstellation', $this->_id);
             if(!empty($data)){

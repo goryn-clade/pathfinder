@@ -39,6 +39,7 @@ class Admin extends Controller{
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     function beforeroute(\Base $f3,  $params): bool {
         $return = parent::beforeroute($f3, $params);
 
@@ -69,7 +70,8 @@ class Admin extends Controller{
      * event handler after routing
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) {
+    #[\Override]
+    public function afterroute(\Base $f3): void {
         // js view (file)
         $f3->set('tplJsView', 'admin');
         if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
@@ -93,7 +95,7 @@ class Admin extends Controller{
      * @return CharacterModel|null
      * @throws \Exception
      */
-    protected function getAdminCharacter(\Base $f3){
+    protected function getAdminCharacter(\Base $f3): ?\Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel{
         $adminCharacter = null;
         if( !$f3->exists(Sso::SESSION_KEY_SSO_ERROR) ){
             if( $character = $this->getCharacter(0) ){
@@ -129,7 +131,7 @@ class Admin extends Controller{
      * @param null $character
      * @throws \Exception
      */
-    public function dispatch(\Base $f3,  $params, mixed $character = null){
+    public function dispatch(\Base $f3,  $params, mixed $character = null): void{
         if($character instanceof CharacterModel){
             // user logged in
             $parts = array_values(array_filter(array_map(strtolower(...), explode('/', (string) $params['*']))));
@@ -358,6 +360,7 @@ class Admin extends Controller{
      * @param string $type
      * @return \Log
      */
+    #[\Override]
     static function getLogger($type = 'ADMIN') : \Log {
         return parent::getLogger('ADMIN');
     }

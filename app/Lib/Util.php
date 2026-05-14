@@ -173,7 +173,7 @@ class Util {
      * @param int $interval
      * @param string $round
      */
-    static function roundToInterval(\DateTime &$dateTime, string $type = 'sec', int $interval = 5, string $round = 'floor'){
+    static function roundToInterval(\DateTime &$dateTime, string $type = 'sec', int $interval = 5, string $round = 'floor'): void{
         $hours = $minutes = $seconds = 0;
 
         $roundInterval = (fn(string $format, int $interval, string $round): int => call_user_func($round, $format / $interval) * $interval);

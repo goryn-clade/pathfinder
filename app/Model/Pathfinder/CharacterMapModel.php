@@ -54,7 +54,8 @@ class CharacterMapModel extends AbstractPathfinderModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         // clear map cache
         $this->mapId->clearCacheData();
     }
@@ -67,6 +68,7 @@ class CharacterMapModel extends AbstractPathfinderModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['characterId', 'mapId'], true);

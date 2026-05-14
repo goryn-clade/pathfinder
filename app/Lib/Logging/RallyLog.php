@@ -44,6 +44,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     protected function getThumbUrl() : string{
         $url = '';
         if(is_object($character = $this->getCharacter())){
@@ -61,6 +62,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getMessage() : string{
         return "*New RallyPoint system '{objName}'* _#{objId}_ *map '{channelName}'* _#{channelId}_ ";
     }
@@ -68,6 +70,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * @return array
      */
+    #[\Override]
     public function getData() : array{
         $data = parent::getData();
 

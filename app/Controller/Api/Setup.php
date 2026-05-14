@@ -16,6 +16,7 @@ use Exodus4D\Pathfinder\Model;
 
 class Setup extends Controller\Controller {
 
+    #[\Override]
     public function beforeroute(\Base $f3, $params): bool {
         $expected = getenv('APP_PASSWORD');
         $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
@@ -31,7 +32,7 @@ class Setup extends Controller\Controller {
      * get HTML table <tr>´s for all cronjobs
      * @param \Base $f3
      */
-    public function cronTable(\Base $f3){
+    public function cronTable(\Base $f3): void{
         $return = (object) [];
         $return->error = [];
         $return->jobsData = Cron::instance()->getJobsConfig();
@@ -43,7 +44,7 @@ class Setup extends Controller\Controller {
      * toggle "isPaused" for a cronjob by its name
      * @param \Base $f3
      */
-    public function cronPause(\Base $f3){
+    public function cronPause(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];
@@ -70,7 +71,7 @@ class Setup extends Controller\Controller {
      * -> max execution time might be lower than CLI calls!
      * @param \Base $f3
      */
-    public function cronExecute(\Base $f3){
+    public function cronExecute(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];
@@ -114,7 +115,7 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function buildIndex(\Base $f3){
+    public function buildIndex(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $type = (string)($postData['type'] ?? '');
         $countAll = (int)($postData['countAll'] ?? 0);
@@ -233,7 +234,7 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function clearIndex(\Base $f3){
+    public function clearIndex(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $type = (string)($postData['type'] ?? '');
 

@@ -58,7 +58,7 @@ class UserCharacterModel extends AbstractPathfinderModel {
      * @param UserCharacterModel $self
      * @param $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         if(
             is_object($self->userId) &&
             is_null($self->userId->userCharacters)
@@ -83,6 +83,7 @@ class UserCharacterModel extends AbstractPathfinderModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['userId', 'characterId'], true);

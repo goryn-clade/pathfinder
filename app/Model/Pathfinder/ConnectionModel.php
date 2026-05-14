@@ -472,7 +472,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    public function clearCacheData(): void {
         $this->mapId->clearCacheData();
     }
 

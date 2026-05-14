@@ -220,7 +220,7 @@ class Config extends \Prefab {
      * @param \Base $f3
      * @return array|mixed|null
      */
-    protected function setAllEnvironmentData(\Base $f3){
+    protected function setAllEnvironmentData(\Base $f3): ?array{
         $environmentData = null;
 
         if( !empty($this->serverConfigData['ENV']) ){
@@ -556,7 +556,7 @@ class Config extends \Prefab {
             $timezone = \Base::instance()->get('getTimeZone')();
 
             // if not set -> use current time
-            $dateCheck = is_null($dateCheck) ? new \DateTime('now', $timezone) : $dateCheck;
+            $dateCheck ??= new \DateTime('now', $timezone);
             $dateDowntimeStart = new \DateTime('now', $timezone);
             $dateDowntimeStart->setTime($downTimeParts[0],$downTimeParts[1]);
             $dateDowntimeStart->sub(new \DateInterval('PT' . self::DOWNTIME_BUFFER . 'M'));

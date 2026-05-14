@@ -238,7 +238,7 @@ class Map extends AbstractRestController {
      * broadcast map delete information to clients
      * @param int $mapId
      */
-    private function broadcastMapDeleted(int $mapId){
+    private function broadcastMapDeleted(int $mapId): void{
         $this->getF3()->webSocket()->write('mapDeleted', $mapId);
     }
 }

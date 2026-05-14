@@ -115,7 +115,7 @@ class Controller {
      * -> render view
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3){
+    public function afterroute(\Base $f3): void{
         // send preload/prefetch headers
         $resource = Resource::instance();
         if($resource->getOption('output') === 'header'){
@@ -559,7 +559,7 @@ class Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getEveServerStatus(\Base $f3){
+    public function getEveServerStatus(\Base $f3): void{
         $ttl = 60;
         $cacheKey = 'eve_server_status';
 
@@ -725,7 +725,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function showError(\Base $f3){
+    public function showError(\Base $f3): bool{
 
         if(!headers_sent()){
             // collect error info -------------------------------------------------------------------------------------
@@ -747,8 +747,8 @@ class Controller {
             }
 
             // check if error is a PDO Exception ----------------------------------------------------------------------
-            if(str_contains(strtolower( $f3->get('ERROR.text') ), 'duplicate')){
-                preg_match_all('/\'([^\']+)\'/', $f3->get('ERROR.text'), $matches, PREG_SET_ORDER);
+            if(str_contains(strtolower( (string) $f3->get('ERROR.text') ), 'duplicate')){
+                preg_match_all('/\'([^\']+)\'/', (string) $f3->get('ERROR.text'), $matches, PREG_SET_ORDER);
 
                 if(count($matches) === 2){
                     $error->field = $matches[1][1];
@@ -808,7 +808,7 @@ class Controller {
      * @param \Base $f3
      * @return bool
      */
-    public function unload(\Base $f3){
+    public function unload(\Base $f3): bool{
         // store all user activities that are buffered for logging in this request
         // this should work even on non HTTP200 responses
         $this->logActivities();
@@ -851,7 +851,7 @@ class Controller {
      * @return null|Controller
      * @throws \Exception
      */
-    static function getController(string $className){
+    static function getController(string $className): object{
         $controller = null;
         // add subNamespaces for controller classes
         $subNamespaces = ['Api', 'Ccp'];
@@ -975,7 +975,7 @@ class Controller {
      * 0=registration stop |1=new registration allowed
      * @return int
      */
-    static function getRegistrationStatus(){
+    static function getRegistrationStatus(): int{
         return (int)Config::getPathfinderData('registration.status');
     }
 

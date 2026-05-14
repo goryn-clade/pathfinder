@@ -30,6 +30,7 @@ class Sso extends Api\User{
     /**
      * SSO endpoints are pre-authentication by definition — skip the Api\User auth guard.
      */
+    #[\Override]
     public function beforeroute(\Base $f3, $params): bool {
         return Controller\Controller::beforeroute($f3, $params);
     }
@@ -142,7 +143,7 @@ class Sso extends Api\User{
      * @param array $scopes
      * @param string $rootAlias
      */
-    private function rerouteAuthorization(\Base $f3,  $scopes = [], string $rootAlias = 'login'){
+    private function rerouteAuthorization(\Base $f3,  $scopes = [], string $rootAlias = 'login'): void{
         if( !empty( Controller\Controller::getEnvironmentData('CCP_SSO_CLIENT_ID') ) ){
             // used for "state" check between request and callback
             $state = bin2hex(random_bytes(32));

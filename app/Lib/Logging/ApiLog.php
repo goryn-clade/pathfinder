@@ -43,6 +43,7 @@ class ApiLog extends AbstractLog {
      * -> otherwise logs would be bundled into the first log file handler
      * @return string
      */
+    #[\Override]
     public function getChannelName(): string{
         return $this->getChannelType() . '_' . $this->getAction();
     }

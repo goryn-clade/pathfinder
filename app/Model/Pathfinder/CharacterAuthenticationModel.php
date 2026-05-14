@@ -67,6 +67,7 @@ class CharacterAuthenticationModel extends AbstractPathfinderModel{
      * @param $pkeys
      * @return bool
      */
+    #[\Override]
     public function beforeEraseEvent($self, $pkeys) : bool {
         // clear existing client Cookies as well
         $cookieName = Controller\Controller::COOKIE_PREFIX_CHARACTER;

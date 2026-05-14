@@ -40,16 +40,16 @@ class Monolog extends \Prefab {
      * available formatters
      */
     const FORMATTER = [
-        'line'          => 'Monolog\Formatter\LineFormatter',
-        'json'          => 'Monolog\Formatter\JsonFormatter',
-        'html'          => 'Monolog\Formatter\HtmlFormatter'
+        'line'          => \Monolog\Formatter\LineFormatter::class,
+        'json'          => \Monolog\Formatter\JsonFormatter::class,
+        'html'          => \Monolog\Formatter\HtmlFormatter::class
     ];
 
     /**
      * available handlers
      */
     const HANDLER = [
-        'stream'        => 'Monolog\Handler\StreamHandler',
+        'stream'        => \Monolog\Handler\StreamHandler::class,
         'socket'        => \Exodus4D\Pathfinder\Lib\Logging\Handler\SocketHandler::class,
         'slackMap'      => \Exodus4D\Pathfinder\Lib\Logging\Handler\SlackMapWebhookHandler::class,
         'slackRally'    => \Exodus4D\Pathfinder\Lib\Logging\Handler\SlackRallyWebhookHandler::class,
@@ -61,7 +61,7 @@ class Monolog extends \Prefab {
      * available processors
      */
     const PROCESSOR = [
-        'psr'           => 'Monolog\Processor\PsrLogMessageProcessor'
+        'psr'           => \Monolog\Processor\PsrLogMessageProcessor::class
     ];
 
     /**
@@ -85,7 +85,7 @@ class Monolog extends \Prefab {
      * @param Logging\AbstractLog $log
      * @throws \Exception
      */
-    public function push(Logging\AbstractLog $log){
+    public function push(Logging\AbstractLog $log): void{
         // check whether $log should be "grouped" by common handlers
         if($log->isGrouped()){
             $groupHash = $log->getGroupHash();
@@ -108,7 +108,7 @@ class Monolog extends \Prefab {
     /**
      * bulk process all stored logs -> send to Monolog lib
      */
-    public function log(){
+    public function log(): void{
 
         foreach($this->logs as $logs){
             foreach($logs as $log){

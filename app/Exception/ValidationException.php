@@ -34,6 +34,7 @@ class ValidationException extends PathfinderException {
      * get error object
      * @return \stdClass
      */
+    #[\Override]
     public function getError() : \stdClass {
         $error = parent::getError();
         $error->field = $this->field;

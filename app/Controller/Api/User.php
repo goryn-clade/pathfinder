@@ -17,12 +17,13 @@ use Exodus4D\Pathfinder\Exception;
 class User extends Controller\Controller{
 
     // Methods that do not require an authenticated session
-    private const PUBLIC_METHODS = ['getCookieCharacter', 'getCaptcha', 'logout', 'getEveServerStatus'];
+    private const array PUBLIC_METHODS = ['getCookieCharacter', 'getCaptcha', 'logout', 'getEveServerStatus'];
 
     /**
      * Require authentication for all methods except the public allow-list.
      * User extends Controller (not AccessController) so we enforce it here.
      */
+    #[\Override]
     public function beforeroute(\Base $f3, $params): bool {
         $return = parent::beforeroute($f3, $params);
         if($return && !in_array($params['action'] ?? '', self::PUBLIC_METHODS, true) && !$this->getCharacter()){
@@ -131,7 +132,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getCookieCharacter(\Base $f3){
+    public function getCookieCharacter(\Base $f3): void{
         $data = $f3->get('POST');
         $cookieName = (string)($data['cookie'] ?? '');
 
@@ -168,7 +169,7 @@ class User extends Controller\Controller{
      * get captcha image and store key to session
      * @param \Base $f3
      */
-    public function getCaptcha(\Base $f3){
+    public function getCaptcha(\Base $f3): void{
         $data = $f3->get('POST');
 
         $return = (object) [];
@@ -212,7 +213,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function logout(\Base $f3){
+    public function logout(\Base $f3): void{
         $data = $f3->get('POST');
         $deleteCookie = (bool)($data['deleteCookie'] ?? false);
 
@@ -225,7 +226,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function openIngameWindow(\Base $f3){
+    public function openIngameWindow(\Base $f3): void{
         $data = $f3->get('POST');
 
         $return = (object) [];
@@ -260,7 +261,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function saveAccount(\Base $f3){
+    public function saveAccount(\Base $f3): void{
         $data = $f3->get('POST');
 
         $return = (object)[];
@@ -333,7 +334,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function deleteAccount(\Base $f3){
+    public function deleteAccount(\Base $f3): void{
         $data = $f3->get('POST.formData');
         $return = (object) [];
 

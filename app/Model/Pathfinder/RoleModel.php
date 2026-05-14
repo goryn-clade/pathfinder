@@ -121,7 +121,7 @@ class RoleModel extends AbstractPathfinderModel {
      * @param int $roleId
      * @return self|null
      */
-    public static function getRoleById(int $roleId = 1){
+    public static function getRoleById(int $roleId = 1): ?\Exodus4D\Pathfinder\Model\Pathfinder\RoleModel{
         $role = new self();
         $role->getById($roleId);
         return $role->dry() ? null : $role;

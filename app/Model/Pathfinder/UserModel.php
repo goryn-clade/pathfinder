@@ -94,6 +94,7 @@ class UserModel extends AbstractPathfinderModel {
      * @return bool
      * @throws Exception\RegistrationException
      */
+    #[\Override]
     public function beforeInsertEvent($self,  $pkeys) : bool {
         $registrationStatus = Controller\Controller::getRegistrationStatus();
         return match ($registrationStatus) {

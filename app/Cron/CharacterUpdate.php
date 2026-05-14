@@ -40,7 +40,7 @@ class CharacterUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteLogData(\Base $f3){
+    function deleteLogData(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
         $logInactiveTime = $this->getCharacterLogInactiveTime($f3);
 
@@ -100,7 +100,7 @@ class CharacterUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function cleanUpCharacterData(\Base $f3){
+    function cleanUpCharacterData(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
 
         /**
@@ -133,7 +133,7 @@ class CharacterUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteAuthenticationData(\Base $f3){
+    function deleteAuthenticationData(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
 
         /**

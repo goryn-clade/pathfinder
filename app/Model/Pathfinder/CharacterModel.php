@@ -423,7 +423,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * -> this will not work (prevent abuse)
      * @param bool|int $minutes
      */
-    public function kick($minutes = false){
+    public function kick($minutes = false): void{
         // enables "kicked" change for this model
         $this->allowKickChange = true;
         $this->kicked = $minutes;
@@ -435,7 +435,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * -> this will not work (prevent abuse)
      * @param bool|int $status
      */
-    public function ban($status = false){
+    public function ban($status = false): void{
         // enables "banned" change for this model
         $this->allowBanChange = true;
         $this->banned = $status;
@@ -446,7 +446,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
     }
 
@@ -455,7 +455,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void{
         $self->clearCacheData();
     }
 
@@ -464,14 +464,15 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         $self->clearCacheData();
     }
 
     /**
      * see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         parent::clearCacheData();
 
         // clear data with "log" as well!
@@ -481,7 +482,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * resets some columns that could have changed by admins (e.g. kick/ban)
      */
-    private function resetAdminColumns(){
+    private function resetAdminColumns(): void{
         $this->kick();
         $this->ban();
     }
@@ -818,7 +819,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * update clone data
      */
-    public function updateCloneData(){
+    public function updateCloneData(): void{
         if($accessToken = $this->getAccessToken()){
             $clonesData = self::getF3()->ccpClient()->send('getCharacterClones', $this->_id, $accessToken);
             if(!isset($clonesData['error'])){
@@ -834,7 +835,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * @throws \Exception
      */
-    public function updateRoleData(){
+    public function updateRoleData(): void{
         $this->roleId = $this->getRole();
     }
 
@@ -1195,7 +1196,7 @@ class CharacterModel extends AbstractPathfinderModel {
     /**
      * broadcast characterData
      */
-    public function broadcastCharacterUpdate(){
+    public function broadcastCharacterUpdate(): void{
         $characterData = $this->getData(true);
 
         self::getF3()->webSocket()->write('characterUpdate', $characterData);
@@ -1252,7 +1253,7 @@ class CharacterModel extends AbstractPathfinderModel {
                 if(($now->getTimestamp() - $lastUpdate->getTimestamp()) < 3600){
                     return true;
                 }
-            }catch(\Exception $e){
+            }catch(\Exception){
                 // fall through and refresh
             }
         }
@@ -1496,7 +1497,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @param bool $deleteSession
      * @param bool $deleteCookie
      */
-    public function logout(bool $deleteSession = true, bool $deleteLog = true, bool $deleteCookie = false){
+    public function logout(bool $deleteSession = true, bool $deleteLog = true, bool $deleteCookie = false): void{
         // delete current session data --------------------------------------------------------------------------------
         if($deleteSession){
             $sessionCharacterData = (array)$this->getF3()->get(User::SESSION_KEY_CHARACTERS);

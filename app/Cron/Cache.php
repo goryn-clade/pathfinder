@@ -36,7 +36,7 @@ class Cache extends AbstractCron {
      * >> php index.php "/cron/deleteExpiredCacheData"
      * @param \Base $f3
      */
-    function deleteExpiredCacheData(\Base $f3){
+    function deleteExpiredCacheData(\Base $f3): void{
         $this->logStart(__FUNCTION__);
 
         // cache dir (dir is recursively searched...)

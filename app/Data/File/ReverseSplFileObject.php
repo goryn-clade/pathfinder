@@ -164,7 +164,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * move pointer to line begin
      * -> skip line breaks
      */
-    private function findLineBegin(){
+    private function findLineBegin(): void{
         //Check the character over and over till we hit another new line
         $c = $this->fgetc();
 
@@ -192,7 +192,7 @@ class ReverseSplFileObject extends \SplFileObject{
     /**
      * set total line count. No matter if there are empty lines in between
      */
-    private function setLineCount(){
+    private function setLineCount(): void{
         // Store flags and position
         $flags = $this->getFlags();
         $currentPointer = $this->ftell();

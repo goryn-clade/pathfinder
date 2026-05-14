@@ -59,6 +59,7 @@ abstract class AbstractChannelLog extends AbstractLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getChannelName() : string{
         return (string)$this->getChannelData()['channelName'];
     }
@@ -66,6 +67,7 @@ abstract class AbstractChannelLog extends AbstractLog {
     /**
      * @return array
      */
+    #[\Override]
     public function getData() : array{
         $data['main'] = parent::getData();
 
@@ -80,6 +82,7 @@ abstract class AbstractChannelLog extends AbstractLog {
     /**
      * @return array
      */
+    #[\Override]
     public function getContext(): array{
         $context = parent::getContext();
 

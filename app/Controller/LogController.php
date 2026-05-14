@@ -59,7 +59,7 @@ class LogController extends \Prefab  {
      * @param MapLog $log
      * @throws \Exception
      */
-    public function push(MapLog $log){
+    public function push(MapLog $log): void{
         $action = $log->getAction();
 
         // check $action to be valid (table column exists)
@@ -84,7 +84,7 @@ class LogController extends \Prefab  {
     /**
      * store all buffered activity log data to DB
      */
-    public function logActivities(){
+    public function logActivities(): void{
         if( !empty($this->activityLogBuffer) ){
             $db = \Base::instance()->DB->getDB('PF');
 

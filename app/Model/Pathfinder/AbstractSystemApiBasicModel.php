@@ -43,7 +43,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
         $data               = (object)[];
         $data->systemId     = $this->getRaw('systemId');
         $data->values       = $this->getValues();
-        $data->updated      = $this->updated ? strtotime($this->updated) : null;
+        $data->updated      = $this->updated ? strtotime((string) $this->updated) : null;
 
         return $data;
     }
@@ -73,7 +73,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticKillFieldConfig(){
+    private function addStaticKillFieldConfig(): void{
         if(is_array($this->fieldConf)){
             $staticFieldConfig = [];
 

@@ -93,6 +93,7 @@ class MapGroupModel extends AbstractMapTrackingModel {
         return $data;
     }
 
+    #[\Override]
     public function hasAccess(CharacterModel $characterModel) : bool {
         return $this->mapId ? $this->mapId->hasAccess($characterModel) : false;
     }
@@ -107,6 +108,7 @@ class MapGroupModel extends AbstractMapTrackingModel {
         $self->logActivity('groupUpdate');
     }
 
+    #[\Override]
     public function beforeEraseEvent($self, $pkeys) : bool {
         // nullify groupId on all child systems (replaces DB-level ON DELETE SET NULL)
         if($systems = $self->groupSystems){
@@ -124,6 +126,7 @@ class MapGroupModel extends AbstractMapTrackingModel {
         $self->logActivity('groupDelete');
     }
 
+    #[\Override]
     public function newLog(string $action = '') : Logging\LogInterface {
         return $this->getMap()->newLog($action);
     }
@@ -132,7 +135,8 @@ class MapGroupModel extends AbstractMapTrackingModel {
         return $this->get('mapId');
     }
 
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void {
         parent::clearCacheData();
         if($this->mapId){
             $this->mapId->clearCacheData();
@@ -146,6 +150,7 @@ class MapGroupModel extends AbstractMapTrackingModel {
         ];
     }
 
+    #[\Override]
     public function getLogData(): array {
         return [];
     }

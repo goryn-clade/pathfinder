@@ -170,7 +170,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param  $data
      */
-    public function setData( $data){
+    public function setData( $data): void{
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
 
         // update group membership when provided (null detaches, int attaches)
@@ -394,7 +394,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * setter for statusId
      * @param  $status
      */
-    public function set_status( $status){
+    public function set_status( $status): void{
         if($statusId = (int)$status['id']){
             $this->statusId = $statusId;
         }
@@ -405,7 +405,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param  $position
      * @return null
      */
-    public function set_position( $position){
+    public function set_position( $position): null{
         $position = (array)$position;
         if(count($position) === 2){
             $this->posX = $position['x'];
@@ -447,7 +447,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param int $rally
      * @return null|string
      */
-    public function set_rallyUpdated($rally){
+    public function set_rallyUpdated($rally): ?string{
         $rally = (int)$rally;
 
         $rally = match ($rally) {
@@ -525,7 +525,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
         $self->logActivity('systemCreate');
     }
@@ -537,6 +537,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
+    #[\Override]
     public function beforeUpdateEvent($self, $pkeys) : bool {
         $status = parent::beforeUpdateEvent($self, $pkeys);
 
@@ -566,7 +567,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void{
         $self->clearCacheData();
         $activity = ($self->isActive()) ? 'systemUpdate' : 'systemDelete';
         $self->logActivity($activity);
@@ -577,7 +578,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         $self->clearCacheData();
         $self->logActivity('systemDelete');
     }
@@ -601,6 +602,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @return Logging\LogInterface
      * @throws Exception\ConfigException
      */
+    #[\Override]
     public function newLog(string $action = '') : Logging\LogInterface{
         return $this->getMap()->newLog($action)->setTempData($this->getLogObjectData());
     }
@@ -617,6 +619,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @param CharacterModel $characterModel
      * @return bool
      */
+    #[\Override]
     public function hasAccess(CharacterModel $characterModel) : bool {
         return $this->mapId ? $this->mapId->hasAccess($characterModel) : false;
     }
@@ -765,7 +768,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @throws Exception\ConfigException
      * @throws \Exception
      */
-    public function sendRallyPoke( $rallyData, CharacterModel $characterModel){
+    public function sendRallyPoke( $rallyData, CharacterModel $characterModel): void{
         // rally log needs at least one handler to be valid
         $isValidLog = false;
         $log = new Logging\RallyLog('rallySet', $this->getMap()->getLogChannelData());
@@ -807,7 +810,7 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * set system type based on security
      */
-    public function setType(){
+    public function setType(): void{
         $typeId = match ($this->security) {
             'H', 'L', '0.0', 'T' => 2,
             'A' => 3,
@@ -913,7 +916,8 @@ class SystemModel extends AbstractMapTrackingModel {
     /**
      * @see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         parent::clearCacheData();
 
         // clear map cache as well
@@ -936,6 +940,7 @@ class SystemModel extends AbstractMapTrackingModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['mapId', 'systemId'], true);

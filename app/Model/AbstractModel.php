@@ -257,6 +257,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @return mixed
      * @throws ValidationException
      */
+    #[\Override]
     public function set($key, $val){
         if(is_string($val)){
             $val = trim($val);
@@ -339,7 +340,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticFieldConfig(){
+    private function addStaticFieldConfig(): void{
         $this->fieldConf = array_merge($this->getStaticFieldConf(), $this->fieldConf);
     }
 
@@ -481,7 +482,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param string $dataCacheKeyPrefix
      * @param int $data_ttl
      */
-    public function updateCacheData(mixed $cacheData, string $dataCacheKeyPrefix = '', int $data_ttl = self::DEFAULT_CACHE_TTL){
+    public function updateCacheData(mixed $cacheData, string $dataCacheKeyPrefix = '', int $data_ttl = self::DEFAULT_CACHE_TTL): void{
         $cacheDataTmp = (array)$cacheData;
 
         // check if data should be cached
@@ -501,7 +502,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * unset the getData() cache for this object
      * -> see also clearCacheDataWithPrefix(), for more information
      */
-    public function clearCacheData(){
+    public function clearCacheData(): void{
         $this->clearCache($this->getCacheKey());
     }
 
@@ -510,7 +511,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * -> primarily used by object cache with multiple data caches
      * @param string $dataCacheKeyPrefix
      */
-    public function clearCacheDataWithPrefix(string $dataCacheKeyPrefix = ''){
+    public function clearCacheDataWithPrefix(string $dataCacheKeyPrefix = ''): void{
         $this->clearCache($this->getCacheKey($dataCacheKeyPrefix));
     }
 
@@ -518,7 +519,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * unset object cached data (if exists)
      * @param string|null $cacheKey
      */
-    private function clearCache(string|null $cacheKey){
+    private function clearCache(string|null $cacheKey): void{
         if(!empty($cacheKey)){
             $f3 = self::getF3();
             if($f3->exists($cacheKey)){
@@ -561,7 +562,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * -> this will not work (prevent abuse)
      * @param bool $active
      */
-    public function setActive(bool $active){
+    public function setActive(bool $active): void{
         // enables "active" change for this model
         $this->allowActiveChange = true;
         $this->active = $active;
@@ -751,7 +752,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * truncate all table rows
      * -> Use with Caution!!!
      */
-    public function truncate(){
+    public function truncate(): void{
         if($this->allowTruncate && is_object($this->db)){
             $this->db->exec("TRUNCATE " . $this->getTable());
         }
@@ -761,10 +762,12 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * format dateTime column
      * @param string $column
      * @param string $format
-     * @return false|null|string
+     * @return string|null
      */
-    public function getFormattedColumn(string $column, string $format = 'Y-m-d H:i'){
-        return $this->get($column) ? date($format, strtotime( $this->get($column) )) : null;
+    public function getFormattedColumn(string $column, string $format = 'Y-m-d H:i'): ?string {
+        $col = $this->get($column);
+        $ts  = $col ? strtotime((string)$col) : false;
+        return $ts !== false ? date($format, $ts) : null;
     }
 
     /**
@@ -1004,6 +1007,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
     /**
      * @return mixed
      */
+    #[\Override]
     public function save(){
         $return = false;
         try{
@@ -1075,7 +1079,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param mixed $data
      * @param int $ttl
      */
-    public static function setCacheValue(string $key, mixed $data, int $ttl = 0){
+    public static function setCacheValue(string $key, mixed $data, int $ttl = 0): void{
         $cache = \Cache::instance();
         $cache->set(self::getF3()->hash($key).'.var', $data, $ttl);
     }
@@ -1098,7 +1102,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @param string $text
      * @param string $type
      */
-    public static function log($text, $type = 'DEBUG'){
+    public static function log($text, $type = 'DEBUG'): void{
         Controller\LogController::getLogger($type)->write($text);
     }
 
@@ -1193,6 +1197,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         $status = parent::setup($db, $table, $fields);
 

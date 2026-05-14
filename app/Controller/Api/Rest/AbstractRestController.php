@@ -26,7 +26,7 @@ abstract class AbstractRestController extends Controller\AccessController {
             $data = (array)$f3->get('GET');
         }elseif( !empty($body = $f3->get('BODY')) ){
             // get data from HTTP body
-            $bodyDecode = json_decode($body, true);
+            $bodyDecode = json_decode((string) $body, true);
             if(($jsonError = json_last_error()) === JSON_ERROR_NONE){
                 $data = $bodyDecode;
             }else{

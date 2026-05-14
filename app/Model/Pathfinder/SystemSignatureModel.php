@@ -85,7 +85,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param  $data
      */
-    public function setData( $data){
+    public function setData( $data): void{
         $this->copyfrom($data, ['name', 'groupId', 'typeId', 'description', 'connectionId']);
     }
 
@@ -180,6 +180,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @return Logging\LogInterface
      * @throws Exception\ConfigException
      */
+    #[\Override]
     public function newLog(string $action = ''): Logging\LogInterface{
         return $this->getMap()->newLog($action)->setTempData($this->getLogObjectData());
     }
@@ -229,6 +230,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param CharacterModel $characterModel
      * @return bool
      */
+    #[\Override]
     public function hasAccess(CharacterModel $characterModel) : bool {
         return $this->systemId ? $this->systemId->hasAccess($characterModel) : false;
     }
@@ -247,7 +249,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void{
         $self->logActivity('signatureCreate');
         $self->syncConnectionMass();
     }
@@ -260,6 +262,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param array $pkeys
      * @return bool
      */
+    #[\Override]
     public function beforeUpdateEvent($self, $pkeys) : bool {
         // "updated" column should always be updated if no changes made this signature
         // -> makes it easier to see what signatures have not been updated
@@ -286,7 +289,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void{
         $self->logActivity('signatureUpdate');
         $self->syncConnectionMass();
     }
@@ -320,7 +323,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         $self->logActivity('signatureDelete');
 
         if(
@@ -350,6 +353,7 @@ class SystemSignatureModel extends AbstractMapTrackingModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['systemId', 'typeId', 'groupId']);

@@ -72,6 +72,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
+    #[\Override]
     public function beforeUpdateEvent($self, $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
@@ -143,6 +144,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param bool $isActive
      * @return bool
      */
+    #[\Override]
     public function getById(int $id, int $ttl = self::DEFAULT_SQL_TTL, bool $isActive = true) : bool {
         /**
          * @var AllianceModel $alliance

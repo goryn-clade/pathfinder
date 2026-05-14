@@ -56,6 +56,7 @@ abstract class AbstractCharacterLog extends AbstractChannelLog {
     /**
      * @return array
      */
+    #[\Override]
     public function getData() : array{
         $data = parent::getData();
 

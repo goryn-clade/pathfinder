@@ -24,7 +24,7 @@ class GitHub extends Controller\Controller {
      * get release information from  GitHub
      * @param \Base $f3
      */
-    public function releases(\Base $f3){
+    public function releases(\Base $f3): void{
         $releaseCount = 4;
 
         $return = (object) [];
@@ -37,7 +37,7 @@ class GitHub extends Controller\Controller {
 
         try {
             $releases = $f3->gitHubClient()->send('getProjectReleases', 'goryn-clade/pathfinder', $releaseCount);
-        } catch(\Exception $e) {
+        } catch(\Exception) {
             $releases = [];
         }
 
@@ -79,7 +79,7 @@ class GitHub extends Controller\Controller {
             // -> or F3´s markdown as fallback
             try {
                 $html = $f3->gitHubClient()->send('markdownToHtml', 'exodus4d/pathfinder', $body);
-            } catch(\Exception $e) {
+            } catch(\Exception) {
                 $html = '';
             }
             if(!is_string($html)){

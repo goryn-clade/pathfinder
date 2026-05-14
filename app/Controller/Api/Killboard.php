@@ -37,7 +37,7 @@ class Killboard extends Controller\Controller {
                 $body = (string)$response->getBody();
                 $f3->set($cacheKey, $body, $ttl);
             } catch(\Throwable $e){
-                error_log(sprintf('Killboard::sequence %s: %s', get_class($e), $e->getMessage()));
+                error_log(sprintf('Killboard::sequence %s: %s', $e::class, $e->getMessage()));
                 $f3->status(502);
                 echo json_encode(['error' => 'R2Z2 request failed']);
                 return;
@@ -85,7 +85,7 @@ class Killboard extends Controller\Controller {
             header('Content-Type: application/json');
             echo (string)$response->getBody();
         } catch(\Throwable $e){
-            error_log(sprintf('Killboard::r2z2 seq=%d %s: %s', $sequenceId, get_class($e), $e->getMessage()));
+            error_log(sprintf('Killboard::r2z2 seq=%d %s: %s', $sequenceId, $e::class, $e->getMessage()));
             $f3->status(204);
         }
     }

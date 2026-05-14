@@ -212,7 +212,7 @@ class MapModel extends AbstractMapTrackingModel {
      * set data by associative array
      * @param  $data
      */
-    public function setData( $data){
+    public function setData( $data): void{
         unset($data['id']);
         unset($data['created']);
         unset($data['updated']);
@@ -468,7 +468,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
         $self->logActivity('mapCreate');
     }
@@ -478,7 +478,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void{
         $self->clearCacheData();
 
         $activity = ($self->isActive()) ? 'mapUpdate' : 'mapDelete';
@@ -490,7 +490,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param self $self
      * @param array $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         $self->clearCacheData();
         $self->deleteLogFile();
     }
@@ -498,7 +498,8 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         parent::clearCacheData();
 
         // clear character data with map access as well!
@@ -881,6 +882,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel $characterModel
      * @return bool
      */
+    #[\Override]
     public function hasAccess(CharacterModel $characterModel) : bool {
         $hasAccess = false;
 
@@ -1058,6 +1060,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @throws Exception\ConfigException
      * @throws \Exception
      */
+    #[\Override]
     public function newLog(string $action = '') : Logging\LogInterface{
         $logChannelData = $this->getLogChannelData();
         $logObjectData = $this->getLogObjectData();
@@ -1326,6 +1329,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param int $limit
      * @return array
      */
+    #[\Override]
     public function getLogData(int $offset = FileHandler::LOG_FILE_OFFSET, int $limit = FileHandler::LOG_FILE_LIMIT) : array {
         $streamConf = $this->getStreamConfig();
 
@@ -1481,6 +1485,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel|null $characterModel
      * @return false|ConnectionModel|MapModel
      */
+    #[\Override]
     public function save(?CharacterModel $characterModel = null){
         /**
          * @var MapModel $mapModel

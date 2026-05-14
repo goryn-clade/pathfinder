@@ -18,7 +18,7 @@ class MapController extends AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function init(\Base $f3) {
+    public function init(\Base $f3): void {
         $resource = Resource::instance();
         $resource->register('script', 'app/mappage');
 

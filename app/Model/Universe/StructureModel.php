@@ -112,6 +112,7 @@ class StructureModel extends AbstractUniverseModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             //change `id` column to BigInt

@@ -37,6 +37,7 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
      * @param array $record
      * @return bool
      */
+    #[\Override]
     public function handle(array $record) : bool {
         if (!$this->isHandling($record)) {
             return false;
@@ -56,7 +57,7 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
 
         try {
             $this->write($record);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             // Mark socket as unavailable so subsequent writes in this request
             // (and for the remainder of the cache TTL) skip the socket handler.
             \Base::instance()->set(Config::CACHE_KEY_SOCKET_VALID, false, Config::CACHE_TTL_SOCKET_VALID);

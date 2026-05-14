@@ -15,6 +15,7 @@ class DiscordRallyWebhookHandler extends AbstractRallyWebhookHandler {
     /**
      * Build a native Discord embed payload for rally point notifications.
      */
+    #[\Override]
     protected function getPostData(array $record): array {
         $tag     = (string)$record['context']['tag'];
         $content = '';

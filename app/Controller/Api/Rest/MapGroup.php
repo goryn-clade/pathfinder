@@ -46,7 +46,7 @@ class MapGroup extends AbstractRestController {
                 $group->width   = (int)($requestData['width'] ?? 300);
                 $group->height  = (int)($requestData['height'] ?? 200);
                 $group->constrain = (bool)($requestData['constrain'] ?? false);
-                if($group->save($activeCharacter)){
+                if($group->save()){
                     $groupData = $group->getData();
                 }
             }
@@ -77,7 +77,7 @@ class MapGroup extends AbstractRestController {
                 if(isset($requestData['height']))      $group->height      = (int)$requestData['height'];
                 if(isset($requestData['isCollapsed'])) $group->isCollapsed = (bool)$requestData['isCollapsed'];
                 if(isset($requestData['constrain']))   $group->constrain   = (bool)$requestData['constrain'];
-                if($group->save($activeCharacter)){
+                if($group->save()){
                     $groupData = $group->getData();
                 }
             }

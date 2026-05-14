@@ -104,7 +104,7 @@ class SystemStatusModel extends AbstractPathfinderModel {
      * @param int $statusId
      * @return self|null
      */
-    public static function getStatusById(int $statusId = 1){
+    public static function getStatusById(int $statusId = 1): ?\Exodus4D\Pathfinder\Model\Pathfinder\SystemStatusModel{
         $status = new self();
         $status->getById($statusId);
         return $status->dry() ? null : $status;

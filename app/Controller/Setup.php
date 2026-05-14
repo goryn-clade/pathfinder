@@ -141,6 +141,7 @@ class Setup extends Controller {
      * @param array $params
      * @return bool
      */
+    #[\Override]
     function beforeroute(\Base $f3, $params): bool {
         $f3->set('tplResource', $this->initResource($f3));
 
@@ -162,7 +163,8 @@ class Setup extends Controller {
     /**
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3) {
+    #[\Override]
+    public function afterroute(\Base $f3): void {
         // js view (file)
         $f3->set('tplJsView', 'setup');
         $f3->set('setupToken', getenv('APP_PASSWORD'));
@@ -184,7 +186,7 @@ class Setup extends Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function init(\Base $f3){
+    public function init(\Base $f3): void{
         if(!$f3->get('ENVIRONMENT.SETUP_ENABLED')){
             $f3->error(404);
             return;

@@ -59,7 +59,7 @@ class MapHistory extends AbstractCron {
      * >> php index.php "/cron/truncateMapHistoryLogFiles"
      * @param \Base $f3
      */
-    function truncateMapHistoryLogFiles(\Base $f3){
+    function truncateMapHistoryLogFiles(\Base $f3): void{
         $this->logStart(__FUNCTION__);
 
         $largeFiles = 0;

@@ -22,7 +22,7 @@ abstract class AbstractEveScoutController extends AbstractRestController {
     /**
      * @param \Base $f3
      */
-    public function get(\Base $f3){
+    public function get(\Base $f3): void{
         $ttl = 60 * 3;
         if(!$exists = $f3->exists(static::CACHE_KEY, $connectionsData)){
             $connectionsData = $this->getEveScoutConnections();

@@ -142,6 +142,7 @@ class StargateModel extends AbstractUniverseModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['systemId', 'destinationSystemId'], true);

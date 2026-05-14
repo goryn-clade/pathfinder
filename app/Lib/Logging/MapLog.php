@@ -67,6 +67,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getChannelName() : string {
         return $this->getChannelType() . '_' . $this->getChannelId();
     }
@@ -74,6 +75,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getMessage() : string {
         return $this->getActionParts()[0] . " '{objName}'";
     }
@@ -81,6 +83,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * @return array
      */
+    #[\Override]
     public function getData() : array {
         $data = parent::getData();
 
@@ -156,11 +159,12 @@ class MapLog extends AbstractCharacterLog {
     /**
      * @param bool $logActivity
      */
-    public function logActivity(bool $logActivity){
+    public function logActivity(bool $logActivity): void{
         $this->logActivity = $logActivity;
     }
 
-    public function buffer(){
+    #[\Override]
+    public function buffer(): void{
         parent::buffer();
 
         if($this->logActivity){

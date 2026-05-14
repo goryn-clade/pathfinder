@@ -172,7 +172,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticDateFieldConfig(){
+    private function addStaticDateFieldConfig(): void{
         if(is_array($this->fieldConf)){
             $staticFieldConfig = [
                 'year' => [
@@ -212,6 +212,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['year', 'week', 'characterId', 'mapId'], true);
