@@ -33,6 +33,7 @@
     "ext-mbstring": "*",
     "ext-ctype": "*",
     "ext-gd": "*",
+    "ext-sodium": "*",
     "bcosca/fatfree-core": "3.9.*",
     "ikkez/f3-cortex": "dev-master#47d2596914776877ef4d87706d1faa812d1398f2",
     "ikkez/f3-sheet": "0.4.*",
