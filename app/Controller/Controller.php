@@ -526,10 +526,16 @@ class Controller {
                 if($characterData['ID'] === $activeCharacterId && $activeCharacter){
                     $characterIds[] = $activeCharacter->_id;
                     $activeCharacter->logout($deleteSession, $deleteLog, $deleteCookie);
+                    if($deleteCookie){
+                        $f3->clear('COOKIE.' . self::COOKIE_PREFIX_CHARACTER . '_' . $activeCharacter->getCookieName());
+                    }
                 }elseif($all){
                     $character->getById($characterData['ID']);
                     $characterIds[] = $character->_id;
                     $character->logout($deleteSession, $deleteLog, $deleteCookie);
+                    if($deleteCookie){
+                        $f3->clear('COOKIE.' . self::COOKIE_PREFIX_CHARACTER . '_' . $character->getCookieName());
+                    }
                 }
                 $character->reset();
             }

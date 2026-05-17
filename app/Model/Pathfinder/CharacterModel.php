@@ -1504,9 +1504,9 @@ class CharacterModel extends AbstractPathfinderModel {
             $sessionCharacterData = array_filter($sessionCharacterData, fn($data) => $data['ID'] != $this->_id);
 
             if(empty($sessionCharacterData)){
-                // no active characters logged in -> log user out
-                $this->getF3()->clear(User::SESSION_KEY_USER);
-                $this->getF3()->clear(User::SESSION_KEY_CHARACTERS);
+                // no active characters logged in -> destroy session entirely
+                // (session_unset + session_destroy + clear PHPSESSID cookie)
+                $this->getF3()->clear('SESSION');
             }else{
                 // update remaining active characters
                 $this->getF3()->set(User::SESSION_KEY_CHARACTERS, $sessionCharacterData);
