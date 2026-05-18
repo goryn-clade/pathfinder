@@ -60,7 +60,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      */
     static function recursiveIterator(AbstractIterator $iterator){
 
-        $keyWhitelist = array_keys(static::$map);
+        $keyAllowlist = array_keys(static::$map);
 
         while($iterator->valid()){
 
@@ -88,7 +88,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
                         $iterator->offsetSet($parentKey, $currentValue);
                     }else{
                         $iterator->offsetSet($parentKey, [$entryKey => $iterator->current()]);
-                        $keyWhitelist[] = $parentKey;
+                        $keyAllowlist[] = $parentKey;
                     }
 
                     $iterator->offsetUnset($iterator->key());
@@ -103,7 +103,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
                     // a -> b mapping (key changed)
                     $iterator->offsetSet($mapValue, $iterator->current());
                     $iterator->offsetUnset($iterator->key());
-                    $keyWhitelist[] = $mapValue;
+                    $keyAllowlist[] = $mapValue;
                 }else{
                     // a -> a (no changes)
                     $iterator->next();
@@ -111,7 +111,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
 
             }elseif(
                 static::$removeUnmapped &&
-                !in_array($iterator->key(), $keyWhitelist)
+                !in_array($iterator->key(), $keyAllowlist)
             ){
                 $iterator->offsetUnset($iterator->key());
             }else{

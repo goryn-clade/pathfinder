@@ -123,14 +123,14 @@ class Route extends AbstractRestController {
     }
 
     /**
-     * filter an array of connection-type values against the model whitelist
+     * filter an array of connection-type values against the model allowlist
      * @param array<string, mixed> $values
      * @return string[] safe values, in original order, deduplicated, ready to inline into SQL
      */
     private function filterConnectionTypes(array $values) : array {
         return array_values(array_intersect(
             array_unique(array_map(strval(...), $values)),
-            Pathfinder\ConnectionModel::getConnectionTypeWhitelist()
+            Pathfinder\ConnectionModel::getConnectionTypeAllowlist()
         ));
     }
 
@@ -198,7 +198,7 @@ class Route extends AbstractRestController {
                 if(!empty($filterData['excludeTypes'])){
                     $excludeTypes = array_values(array_intersect(
                         array_map(strval(...), (array)$filterData['excludeTypes']),
-                        Pathfinder\ConnectionModel::getConnectionTypeWhitelist()
+                        Pathfinder\ConnectionModel::getConnectionTypeAllowlist()
                     ));
                 }
             }
@@ -209,7 +209,7 @@ class Route extends AbstractRestController {
 
             // search connections -------------------------------------------------------------------------------------
 
-            // run every type/scope list through the whitelist helper before inlining into SQL
+            // run every type/scope list through the allowlist helper before inlining into SQL
             $includeScopes        = $this->filterConnectionTypes($includeScopes);
             $includeTypes         = $this->filterConnectionTypes($includeTypes);
             $excludeTypes         = $this->filterConnectionTypes($excludeTypes);

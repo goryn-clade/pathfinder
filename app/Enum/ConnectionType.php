@@ -47,11 +47,11 @@ enum ConnectionType: string
     // ── Utility ───────────────────────────────────────────────────────────────
 
     /**
-     * All valid type strings — use instead of the old $connectionTypeWhitelist array.
+     * All valid type strings — use instead of the old $connectionTypeAllowlist array.
      *
      * @return string[]
      */
-    public static function whitelist(): array
+    public static function allowlist(): array
     {
         return array_column(self::cases(), 'value');
     }

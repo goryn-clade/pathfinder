@@ -19,11 +19,11 @@ class Universe extends Controller\Controller {
 
     /*  currently not used
     protected function setupRegions(\Base $f3){
-        $regionsWhitelist = [
+        $regionsAllowlist = [
             10000002 // The Forge (13 constellations -> 93 systems)
         ];
         $regionIds = $f3->ccpClient()->send('getUniverseRegions');
-        $regionIds = array_intersect($regionsWhitelist, $regionIds);
+        $regionIds = array_intersect($regionsAllowlist, $regionIds);
 
         $region = Model\Universe\AbstractUniverseModel::getNew('RegionModel');
         foreach($regionIds as $regionId){
@@ -40,11 +40,11 @@ class Universe extends Controller\Controller {
 
     /* currently not used
     protected function setupConstellations(\Base $f3){
-        $constellationsWhitelist = [
+        $constellationsAllowlist = [
             20000014 // Mal (11 systems)
         ];
         $constellationIds = $f3->ccpClient()->send('getUniverseConstellations');
-        $constellationIds = array_intersect($constellationsWhitelist, $constellationIds);
+        $constellationIds = array_intersect($constellationsAllowlist, $constellationIds);
         $constellation = Model\Universe\AbstractUniverseModel::getNew('ConstellationModel');
         foreach($constellationIds as $constellationId){
             $constellation->loadById($constellationId);
@@ -58,14 +58,14 @@ class Universe extends Controller\Controller {
      * id 2 -> Celestial (>100 groups -> >1000 types)
      * id 6 -> Ship (46 groups -> 4xx types)
      * id 65 -> Structure (10 groups -> 33 types)
-     * @param array<string, mixed> $categoriesWhitelist
+     * @param array<string, mixed> $categoriesAllowlist
      * @return array<string, mixed>
      * @throws \Exception
      */
-    protected function setupCategories( $categoriesWhitelist = []) : array {
+    protected function setupCategories( $categoriesAllowlist = []) : array {
         $info = [];
         $categoryIds = Model\Universe\CategoryModel::getUniverseCategories();
-        $categoryIds = array_intersect($categoriesWhitelist, $categoryIds);
+        $categoryIds = array_intersect($categoriesAllowlist, $categoryIds);
         foreach($categoryIds as $categoryId){
             $info[$categoryId] = $this->setupCategory($categoryId);
         }
@@ -102,14 +102,14 @@ class Universe extends Controller\Controller {
      * id 7 -> Planet (9 types)
      * id 10 -> Stargate (17 types)
      * id 988 -> Wormhole (89 types)
-     * @param array<string, mixed> $groupsWhitelist
+     * @param array<string, mixed> $groupsAllowlist
      * @return array<string, mixed>
      * @throws \Exception
      */
-    protected function setupGroups( $groupsWhitelist = []) : array {
+    protected function setupGroups( $groupsAllowlist = []) : array {
         $info = [];
         $groupIds = Model\Universe\GroupModel::getUniverseGroups();
-        $groupIds = array_intersect($groupsWhitelist, $groupIds);
+        $groupIds = array_intersect($groupsAllowlist, $groupIds);
         foreach($groupIds as $groupId){
             $info[$groupId] = $this->setupGroup($groupId);
         }

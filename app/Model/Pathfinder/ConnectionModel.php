@@ -120,8 +120,8 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * @return string[]
      */
-    public static function getConnectionTypeWhitelist() : array {
-        return ConnectionType::whitelist();
+    public static function getConnectionTypeAllowlist() : array {
+        return ConnectionType::allowlist();
     }
 
     /**

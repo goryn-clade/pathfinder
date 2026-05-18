@@ -55,9 +55,9 @@ class CharacterModel extends AbstractPathfinderModel {
     const AUTHORIZATION_STATUS = [
         'OK'            => true,                                        // success
         'UNKNOWN'       => 'error',                                     // general authorization error
-        'CHARACTER'     => 'failed to match character whitelist',
-        'CORPORATION'   => 'failed to match corporation whitelist',
-        'ALLIANCE'      => 'failed to match alliance whitelist',
+        'CHARACTER'     => 'failed to match character allowlist',
+        'CORPORATION'   => 'failed to match corporation allowlist',
+        'ALLIANCE'      => 'failed to match alliance allowlist',
         'KICKED'        => 'character is kicked',
         'BANNED'        => 'character is banned'
     ];
@@ -666,7 +666,7 @@ class CharacterModel extends AbstractPathfinderModel {
 
     /**
      * checks whether this character is authorized to log in
-     * -> check corp/ally whitelist config (pathfinder.ini)
+     * -> check corp/ally allowlist config (pathfinder.ini)
      * @return string
      */
     public function isAuthorized() : string {
@@ -675,14 +675,14 @@ class CharacterModel extends AbstractPathfinderModel {
         // check whether character is banned or temp kicked
         if(is_null($this->banned)){
             if( !$this->isKicked() ){
-                $whitelistCharacter = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.character') ) );
-                $whitelistCorporations = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.corporation') ) );
-                $whitelistAlliance = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.alliance') ) );
+                $allowlistCharacter = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.character') ) );
+                $allowlistCorporations = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.corporation') ) );
+                $allowlistAlliance = array_filter( array_map(trim(...), (array)Config::getPathfinderData('login.alliance') ) );
 
                 if(
-                    empty($whitelistCharacter) &&
-                    empty($whitelistCorporations) &&
-                    empty($whitelistAlliance)
+                    empty($allowlistCharacter) &&
+                    empty($allowlistCorporations) &&
+                    empty($allowlistAlliance)
                 ){
                     // no corp/ally restrictions set -> any character is allowed to login
                     $authStatus = 'OK';
@@ -694,36 +694,36 @@ class CharacterModel extends AbstractPathfinderModel {
                     // authorized character is already logged in -> any subsequent character is allowed to login
                     $authStatus = 'OK';
                 }else{
-                    // check if character is set in whitelist
+                    // check if character is set in allowlist
                     if(
-                        !empty($whitelistCharacter) &&
-                        in_array((int)$this->_id, $whitelistCharacter)
+                        !empty($allowlistCharacter) &&
+                        in_array((int)$this->_id, $allowlistCharacter)
                     ){
                         $authStatus =  'OK';
                     }else{
                         $authStatus = 'CHARACTER';
                     }
 
-                    // check if character corporation is set in whitelist
+                    // check if character corporation is set in allowlist
                     if(
                         $authStatus != 'OK' &&
-                        !empty($whitelistCorporations) &&
+                        !empty($allowlistCorporations) &&
                         $this->hasCorporation()
                     ){
-                        if( in_array((int)$this->get('corporationId', true), $whitelistCorporations) ){
+                        if( in_array((int)$this->get('corporationId', true), $allowlistCorporations) ){
                             $authStatus = 'OK';
                         }else{
                             $authStatus = 'CORPORATION';
                         }
                     }
 
-                    // check if character alliance is set in whitelist
+                    // check if character alliance is set in allowlist
                     if(
                         $authStatus != 'OK' &&
-                        !empty($whitelistAlliance) &&
+                        !empty($allowlistAlliance) &&
                         $this->hasAlliance()
                     ){
-                        if( in_array((int)$this->get('allianceId', true), $whitelistAlliance) ){
+                        if( in_array((int)$this->get('allianceId', true), $allowlistAlliance) ){
                             $authStatus =  'OK';
                         }else{
                             $authStatus = 'ALLIANCE';
