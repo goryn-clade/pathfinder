@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c6d45f2322e811d3bb182b7ebf732a8",
+    "content-hash": "42fdc0043ee53029fbd4d85100ffaff1",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -841,16 +841,16 @@
         },
         {
             "name": "goryn-clade/pathfinder_esi",
-            "version": "v3.0.15",
+            "version": "v3.0.0-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goryn-clade/pathfinder_esi.git",
-                "reference": "8e2575fc1791fdd149226dabb5d93b8eb8cb43ec"
+                "reference": "0e2a7a858d851b80ba7ca0160733b6d94dae1ff1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/8e2575fc1791fdd149226dabb5d93b8eb8cb43ec",
-                "reference": "8e2575fc1791fdd149226dabb5d93b8eb8cb43ec",
+                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/0e2a7a858d851b80ba7ca0160733b6d94dae1ff1",
+                "reference": "0e2a7a858d851b80ba7ca0160733b6d94dae1ff1",
                 "shasum": ""
             },
             "require": {
@@ -861,6 +861,7 @@
                 "php-64bit": ">=8.2"
             },
             "require-dev": {
+                "phpstan/phpstan": "^2.1",
                 "rector/rector": "^2.4"
             },
             "type": "library",
@@ -883,9 +884,9 @@
             "homepage": "https://github.com/goryn-clade/pathfinder_esi",
             "support": {
                 "issues": "https://github.com/goryn-clade/pathfinder_esi/issues",
-                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.15"
+                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.0-beta.1"
             },
-            "time": "2026-05-03T09:02:45+00:00"
+            "time": "2026-05-18T07:29:29+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3030,11 +3031,12 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "stability-flags": {
+        "goryn-clade/pathfinder_esi": 10,
         "ikkez/f3-cortex": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php-64bit": ">=8.2",
