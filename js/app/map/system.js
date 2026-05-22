@@ -166,6 +166,8 @@ define([
 
         let currentMapData = Util.getCurrentMapData(mapId);
         let allowUnknownSystems = currentMapData ? Boolean(currentMapData.config.allowUnknownSystems) : false;
+        let initialUnknown = Boolean(options.unknownSystem) && allowUnknownSystems;
+        let initialSecurityClass = options.securityClass || null;
 
         // dialog data ------------------------------------------------------------------------------------------------
         let data = {
@@ -334,20 +336,32 @@ define([
                 dialogElement.initTooltips();
 
                 // init system select live search  - some delay until modal transition has finished
+                // -> when opening pre-checked in "unknown" mode we skip the init entirely so the
+                //    Select2 dropdown (which auto-opens for an empty value in form_element.js)
+                //    doesn't spawn alongside the hidden system-search row
                 let selectElement = dialogElement.find('.' + config.dialogSystemSelectClass);
-                selectElement.delay(240).initSystemSelect({
-                    key: 'id',
-                    disabledOptions: mapSystemIds,
-                    onChange: systemId => {
-                        // on system select -> update dialog with persistent system data
-                        if(systemId){
-                            requestSystemData(dialogElement, mapId, systemId);
-                        }else{
-                            // no system selected
-                            updateDialog(dialogElement, false);
+                let systemSelectInitialized = false;
+                let initSystemSelectIfNeeded = () => {
+                    if(systemSelectInitialized) return;
+                    systemSelectInitialized = true;
+                    selectElement.delay(240).initSystemSelect({
+                        key: 'id',
+                        disabledOptions: mapSystemIds,
+                        onChange: systemId => {
+                            // on system select -> update dialog with persistent system data
+                            if(systemId){
+                                requestSystemData(dialogElement, mapId, systemId);
+                            }else{
+                                // no system selected
+                                updateDialog(dialogElement, false);
+                            }
                         }
-                    }
-                });
+                    });
+                };
+
+                if(!initialUnknown){
+                    initSystemSelectIfNeeded();
+                }
 
                 // wire Unknown toggle (only present when allowUnknownSystems is enabled)
                 if(allowUnknownSystems){
@@ -369,7 +383,21 @@ define([
 
                     unknownToggle.on('change', function(){
                         setUnknownMode(this.checked);
+                        if(!this.checked){
+                            // user flipped off Unknown -> init the system-search lazily if it
+                            // wasn't initialized at modal open
+                            initSystemSelectIfNeeded();
+                        }
                     });
+
+                    if(initialUnknown){
+                        unknownToggle.prop('checked', true);
+                        setUnknownMode(true);
+                    }
+                    if(initialSecurityClass){
+                        dialogElement.find('#' + config.dialogSystemSecurityClassSelectId)
+                            .val(initialSecurityClass);
+                    }
                 }
             });
 

@@ -11,8 +11,9 @@ define([
     'app/counter',
     'app/map/map',
     'app/map/util',
+    'app/map/system',
     'app/ui/form_element'
-], ($, Init, Util, BaseModule, bootbox, Counter, Map, MapUtil, FormElement) => {
+], ($, Init, Util, BaseModule, bootbox, Counter, Map, MapUtil, System, FormElement) => {
     'use strict';
 
     let SystemSignatureModule = class SystemSignatureModule extends BaseModule {
@@ -1819,6 +1820,137 @@ define([
         }
 
         /**
+         * map a wormhole signature typeId to the security class string used by
+         * the add-system dialog dropdown ('C1'..'C6','C12','C13','C17','H','L','0.0','T').
+         * returns null when the type's target class is ambiguous (generic K162, frigate bundles)
+         * or when no type is set.
+         * @param typeId
+         * @returns {string|null}
+         */
+        securityClassForTypeId(typeId){
+            if(!typeId) return null;
+            let entry = Object.values(Init.wormholes).find(wh => wh.typeId === typeId);
+            if(!entry || !entry.security) return null;
+            const valid = ['C1','C2','C3','C4','C5','C6','C12','C13','C17','H','L','0.0','T'];
+            return valid.includes(entry.security) ? entry.security : null;
+        }
+
+        /**
+         * launch the add-system dialog pre-filled for an "unknown" system, then auto-link
+         * the resulting connection back to the originating signature row.
+         * @param tableApi
+         * @param cell
+         * @param rowData
+         */
+        triggerCreateUnknownSystem(tableApi, cell, rowData){
+            let metaData = this.getTableMetaData(tableApi);
+            if(!metaData) return;
+
+            let mapData = Util.getCurrentMapData(metaData.mapId);
+            if(!mapData || !mapData.config || !mapData.config.allowUnknownSystems){
+                Util.showNotify({
+                    title: 'Unknown systems disabled',
+                    text: 'Enable "Allow unknown systems" in map settings to use this shortcut.',
+                    type: 'warning'
+                });
+                return;
+            }
+
+            let map      = MapUtil.getMapInstance(metaData.mapId);
+            let systemEl = $('#' + MapUtil.getSystemId(metaData.mapId, metaData.systemId));
+            let secClass = this.securityClassForTypeId(rowData.typeId);
+
+            // close the open xEditable popover before opening the modal
+            $(cell).editable('hide');
+
+            System.showNewSystemDialog(map, {
+                sourceSystem:  systemEl,
+                unknownSystem: true,
+                securityClass: secClass
+            }, (map, newSystemData, sourceSystem, connectionData) => {
+                return Map.saveSystemCallback(map, newSystemData, sourceSystem, connectionData)
+                    .then(payload => {
+                        let newConn = payload && payload.data && payload.data.connection;
+                        if(!newConn || typeof newConn.getParameter !== 'function') return;
+                        let newConnId = newConn.getParameter('connectionId');
+                        if(newConnId && rowData.id){
+                            this.linkSignatureToConnection(tableApi, cell, rowData.id, newConnId);
+                        }
+                    });
+            });
+        }
+
+        /**
+         * PATCH the signature with a new connectionId and refresh the cell so
+         * the "Leads to" column displays the link without further user action.
+         * @param tableApi
+         * @param cell
+         * @param signatureId
+         * @param connectionId
+         */
+        linkSignatureToConnection(tableApi, cell, signatureId, connectionId){
+            if(!signatureId || !connectionId) return;
+
+            Util.request('PATCH', 'Signature', signatureId, {connectionId: connectionId})
+                .then(payload => {
+                    tableApi.cell(cell).data(connectionId);
+                    $(cell).pulseBackgroundColor('changed');
+
+                    let response = payload && payload.data;
+                    if(response){
+                        let rowIndex   = tableApi.row($(cell).closest('tr')).index();
+                        let newRowData = Array.isArray(response) ? response[0] : response;
+                        if(newRowData && !newRowData.typeId){
+                            let currentRowData = tableApi.row(rowIndex).data();
+                            if(currentRowData && currentRowData.typeId){
+                                newRowData = Object.assign({}, newRowData, {typeId: currentRowData.typeId});
+                            }
+                        }
+                        if(newRowData && newRowData.updated){
+                            this.updateSignatureCell(tableApi, rowIndex, 'status:name',  newRowData.updated);
+                            this.updateSignatureCell(tableApi, rowIndex, 'updated:name', newRowData.updated.updated);
+                        }
+                        if(newRowData){
+                            this.syncConnectionMassType(newRowData);
+                        }
+                    }
+                    tableApi.draw();
+
+                    // xEditable's display() doesn't run for this code path (we never opened the
+                    // popover for this new value, so the editable's cached source is stale and
+                    // tableApi.draw() leaves the cell showing the raw connection id). Render the
+                    // formatted label directly using the same FormElement helper the column's
+                    // display() callback uses, and keep the editable's internal value in sync so
+                    // a subsequent popover-open highlights the right system.
+                    this.renderConnectionCell(cell, connectionId);
+                    try { $(cell).editable('option', 'value', connectionId); } catch(e){ /* noop */ }
+                })
+                .catch(payload => Util.handleAjaxErrorResponse(payload));
+        }
+
+        /**
+         * write the formatted "Leads to" cell HTML for a given connectionId.
+         * Mirrors the xEditable display() callback in the column config so manual
+         * link paths (e.g. the "+ create unknown system" shortcut) render identically
+         * to a user-driven popover save.
+         * @param cell
+         * @param connectionId
+         */
+        renderConnectionCell(cell, connectionId){
+            if(!this._systemData || !connectionId) return;
+            let sourceData = SystemSignatureModule.getSignatureConnectionOptions(
+                this._systemData.mapId, this._systemData);
+            let selected = $.fn.editableutils.itemsByValue(connectionId, sourceData);
+            if(selected.length && selected[0].value > 0){
+                let errorIcon = '<i class="fas fa-exclamation-triangle txt-color txt-color-danger hide"></i>&nbsp;';
+                $(cell).html(FormElement.formatSignatureConnectionSelectionData({
+                    text: selected[0].text,
+                    metaData: selected[0].metaData
+                })).prepend(errorIcon);
+            }
+        }
+
+        /**
          * helper function - set 'shown' observer for xEditable connection cell
          * -> enable Select2 for xEditable form
          * @param tableApi
@@ -1827,6 +1959,9 @@ define([
         editableConnectionOnShown(tableApi, cell){
             $(cell).on('shown', (e, editable) => {
                 let inputField = editable.input.$input;
+                // preserve a reference to the cell's owning tableApi before any reassignment;
+                // needed below for the "+ create unknown system" trigger row-data lookup
+                let cellTableApi = tableApi;
 
                 if(!$(tableApi.table().node()).hasClass(this._config.sigTablePrimaryClass)){
                     // we need the primary table API to get selected connections
@@ -1887,6 +2022,22 @@ define([
                 };
 
                 inputField.addClass('pf-select2').initSignatureConnectionSelect(options);
+
+                // inject "+ create unknown system" trigger in the popover title bar
+                let popover = inputField.closest('.popover');
+                let title   = popover.find('.popover-title');
+                if(title.length && !title.find('.pf-add-unknown-trigger').length){
+                    let btn = $('<i class="fas fa-plus pf-add-unknown-trigger pull-right"' +
+                                ' style="cursor:pointer; margin-left:8px; line-height:inherit;"' +
+                                ' title="Create unknown system &amp; link"></i>');
+                    title.append(btn);
+                    btn.on('click', ev => {
+                        ev.stopPropagation();
+                        ev.preventDefault();
+                        let rowData = cellTableApi.row($(cell).closest('tr')).data();
+                        this.triggerCreateUnknownSystem(cellTableApi, cell, rowData);
+                    });
+                }
             });
         }
 
