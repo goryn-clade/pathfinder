@@ -3149,7 +3149,7 @@ define([
                         }
                     }
 
-                    if(newSelectOptionsCount > 0){
+                    if(fixSelectOptions.length > 0){
                         if(groupId === 5){
                             // "wormhole" selected => multiple <optgroup> available
                             newSelectOptions.push({text: 'Wandering', children: fixSelectOptions});
