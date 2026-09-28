@@ -482,6 +482,10 @@ class Map extends Controller\AccessController {
         $nonce = bin2hex(random_bytes(16));
         $sessionId = session_id();
         $secret = (string)getenv('WS_TOKEN_SECRET');
+        // fail closed: never issue tokens signed with an empty/short (forgeable) secret. Same rule as websocket/cmd.php
+        if(strlen($secret) < 32 || !ctype_xdigit($secret)){
+            throw new \Exception('WS_TOKEN_SECRET must be at least 32 hex characters. Generate with: openssl rand -hex 32');
+        }
         $token = $nonce . '.' . hash_hmac('sha256', $nonce . ':' . $activeCharacter->_id . ':' . $sessionId, $secret);
 
         $return->data = [
