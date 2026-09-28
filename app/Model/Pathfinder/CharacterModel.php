@@ -551,8 +551,13 @@ class CharacterModel extends AbstractPathfinderModel {
         $refreshToken = true;
 
         // decrypt at-rest tokens once (F5). Empty/legacy/corrupt all surface as ''.
-        $accessPlain  = TokenCipher::decrypt((string)$this->esiAccessToken);
-        $refreshPlain = TokenCipher::decrypt((string)$this->esiRefreshToken);
+        // missing/malformed TOKEN_ENCRYPTION_KEY throws -> fail closed, character must re-authenticate
+        try{
+            $accessPlain  = TokenCipher::decrypt((string)$this->esiAccessToken);
+            $refreshPlain = TokenCipher::decrypt((string)$this->esiRefreshToken);
+        }catch(\RuntimeException $e){
+            return false;
+        }
 
         try{
             $timezone = self::getF3()->get('getTimeZone')();
