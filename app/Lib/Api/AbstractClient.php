@@ -8,12 +8,9 @@
 
 namespace Exodus4D\Pathfinder\Lib\Api;
 
-use Cache\Adapter\Filesystem\FilesystemCachePool;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use Cache\Adapter\Redis\RedisCachePool;
 use Cache\Namespaced\NamespacedCachePool;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Lib\Util;
 use Exodus4D\Pathfinder\Lib\Logging;
@@ -59,7 +56,7 @@ abstract class AbstractClient extends \Prefab {
 
     /**
      * PSR-6 compatible CachePool instance
-     * -> can be Redis, Filesystem or Array cachePool
+     * -> can be Redis or Array cachePool
      * -> used by e.g. GuzzleCacheMiddleware
      * @var CacheItemPoolInterface|null
      */
@@ -158,20 +155,9 @@ abstract class AbstractClient extends \Prefab {
                 }
             }
 
-            // Filesystem is second option and fallback for failed Redis pool -----------------------------------------
-            if(
-                is_null($this->cachePool) &&
-                in_array($poolConfig['type'], ['redis', 'folder']) &&
-                class_exists(FilesystemCachePool::class)
-            ){
-                $filesystemAdapter  = new Local(\Base::instance()->get('ROOT'));
-                $filesystem         = new Filesystem($filesystemAdapter);
-                $poolFilesystem     = new FilesystemCachePool($filesystem, $poolConfig['folder']);
-
-                $this->cachePool = $poolFilesystem;
-            }
-
             // Array cache pool fallback (not persistent) -------------------------------------------------------------
+            // -> the Filesystem pool (cache/filesystem-adapter) was removed: its league/flysystem 1.x dependency
+            //    is blocked by security advisories. Re-add on php-cache 3.x + flysystem 3 (see TODO backlog)
             if(
                 is_null($this->cachePool) &&
                 in_array($poolConfig['type'], ['redis', 'folder', 'array']) &&
