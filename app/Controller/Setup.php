@@ -23,6 +23,37 @@ use Exodus4D\Pathfinder\Data\Filesystem\Search;
 
 class Setup extends Controller {
 
+    // session key for the per-session setup action token
+    const SESSION_KEY_SETUP_TOKEN                   = 'SESSION.SETUP_TOKEN';
+
+    /**
+     * get the setup action token for the current session (create one if missing)
+     * -> rendered into the /setup page and sent back with every setup action
+     * -> replaces APP_PASSWORD, which must never appear in a page or URL
+     * @param \Base $f3
+     * @return string
+     */
+    public static function getSetupToken(\Base $f3) : string {
+        $token = (string)$f3->get(self::SESSION_KEY_SETUP_TOKEN);
+        if($token === ''){
+            $token = bin2hex(random_bytes(32));
+            $f3->set(self::SESSION_KEY_SETUP_TOKEN, $token);
+        }
+        return $token;
+    }
+
+    /**
+     * check a setup action token against the one stored in this session
+     * -> no session token (the /setup page was never loaded) -> always invalid
+     * @param \Base $f3
+     * @param string $provided
+     * @return bool
+     */
+    public static function isValidSetupToken(\Base $f3, string $provided) : bool {
+        $expected = (string)$f3->get(self::SESSION_KEY_SETUP_TOKEN);
+        return $expected !== '' && hash_equals($expected, $provided);
+    }
+
     /**
      * required environment variables
      * @var array<string, mixed>
@@ -143,6 +174,14 @@ class Setup extends Controller {
      */
     #[\Override]
     function beforeroute(\Base $f3, $params): bool {
+        // only serve /setup when nginx has checked Basic Auth for this request.
+        // nginx sets PF_SETUP_AUTH as a FastCGI param in its /setup location only;
+        // clients cannot set FastCGI params (their headers arrive as HTTP_*)
+        if(($_SERVER['PF_SETUP_AUTH'] ?? '') !== '1'){
+            $f3->error(404);
+            return false;
+        }
+
         $f3->set('tplResource', $this->initResource($f3));
 
         // page title
@@ -167,7 +206,7 @@ class Setup extends Controller {
     public function afterroute(\Base $f3): void {
         // js view (file)
         $f3->set('tplJsView', 'setup');
-        $f3->set('setupToken', getenv('APP_PASSWORD'));
+        $f3->set('setupToken', self::getSetupToken($f3));
 
         if(!$f3->exists('tplCharacterId')) $f3->set('tplCharacterId', null);
 
@@ -194,11 +233,13 @@ class Setup extends Controller {
 
         $params = $f3->get('GET');
 
-        // Defense-in-depth behind nginx Basic Auth: require APP_PASSWORD token for any mutating action
+        // create the session token before any output (session cookie must go out with the headers)
+        self::getSetupToken($f3);
+
+        // Defense-in-depth behind nginx Basic Auth: require the session's setup token for any mutating action
         if(isset($params['action'])){
-            $expected = getenv('APP_PASSWORD');
             $provided = (string)($params['token'] ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
-            if(!$expected || !hash_equals($expected, $provided)){
+            if(!self::isValidSetupToken($f3, $provided)){
                 $f3->error(401, 'Setup requires a valid token');
                 return;
             }
@@ -863,7 +904,7 @@ class Setup extends Controller {
              * @param string $tag
              * @return array
              */
-            $getDatabaseStatus = function(\Redis $client, string $tag) use ($getDbLabel) : array {
+            $getDatabaseStatus = function(\Redis $client, string $tag) use ($getDbLabel, $f3) : array {
                 $redisDatabases = [];
                 if($client->isConnected() && !$client->getLastError()){
                     $dbNum = $client->getDbNum();
@@ -881,7 +922,7 @@ class Setup extends Controller {
                                         'host' => $client->getHost(),
                                         'port' => $client->getPort(),
                                         'db' => $dbNum,
-                                        'token' => getenv('APP_PASSWORD')
+                                        'token' => self::getSetupToken($f3)
                                     ]) . '#pf-setup-cache',
                                     'label' => 'Flush',
                                     'icon' => 'fa-trash',
@@ -2003,7 +2044,7 @@ class Setup extends Controller {
                     'action' => http_build_query([
                         'action' => 'clearFiles',
                         'path' => $dirData['path'],
-                        'token' => getenv('APP_PASSWORD')
+                        'token' => self::getSetupToken($f3)
                     ]),
                     'label' => 'Delete files',
                     'icon' => 'fa-trash',

@@ -18,9 +18,10 @@ class Setup extends Controller\Controller {
 
     #[\Override]
     public function beforeroute(\Base $f3, array $params): bool {
-        $expected = getenv('APP_PASSWORD');
+        // same per-session token as the /setup page (Controller\Setup::getSetupToken()),
+        // so only a browser that passed nginx Basic Auth on /setup can call this API
         $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
-        if(!$expected || !hash_equals($expected, $provided)){
+        if(!Controller\Setup::isValidSetupToken($f3, $provided)){
             http_response_code(401);
             echo json_encode(['error' => [['type' => 401, 'message' => 'Setup requires a valid token']]]);
             return false;
