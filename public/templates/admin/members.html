@@ -76,11 +76,11 @@
                                             <div class="btn-group btn-group-sm" role="group">
                                                 <check if="{{ @member->kicked }}">
                                                     <true>
-                                                        <a class="btn btn-primary pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" href="/admin/{{ @tplPage}}/kick/{{ @member->_id }}">revoke</a>
+                                                        <a class="btn btn-primary pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/kick/{{ @member->_id }}">revoke</a>
                                                     </true>
                                                     <false>
                                                         <repeat group="{{ @tplKickOptions }}" key="{{ @key }}" value="{{ @label }}">
-                                                            <a class="btn btn-default pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" href="/admin/{{ @tplPage}}/kick/{{ @member->_id }}/{{ @key }}">{{ @label }}</a>
+                                                            <a class="btn btn-default pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/kick/{{ @member->_id }}/{{ @key }}">{{ @label }}</a>
                                                         </repeat>
                                                     </false>
                                                 </check>
@@ -90,10 +90,10 @@
                                         <td class="text-right pf-table-button-sm-cell">
                                             <check if="{{ @member->banned }}">
                                                 <true>
-                                                    <a class="btn btn-sm btn-primary pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" href="/admin/{{ @tplPage}}/ban/{{ @member->_id }}">revoke</a>
+                                                    <a class="btn btn-sm btn-primary pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/ban/{{ @member->_id }}">revoke</a>
                                                 </true>
                                                 <false>
-                                                    <a class="btn btn-sm btn-danger pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" href="/admin/{{ @tplPage}}/ban/{{ @member->_id }}/1">ban</a>
+                                                    <a class="btn btn-sm btn-danger pf-overlay-trigger {{ @disableRow ? 'disabled' : '' }}" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/ban/{{ @member->_id }}/1">ban</a>
                                                 </false>
                                             </check>
                                         </td>

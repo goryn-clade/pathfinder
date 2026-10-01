@@ -30,6 +30,36 @@ class Map extends AbstractRestController {
     const SHARE_KEYS = ['mapCharacters', 'mapCorporations', 'mapAlliances'];
 
     /**
+     * get map settings that are not part of the map data (webhook URLs)
+     * -> map settings dialog, map_update right only
+     * @param \Base $f3
+     * @param       $params
+     * @throws \Exception
+     */
+    public function get(\Base $f3,  array $params) : void {
+        $webhookData = [];
+
+        if($mapId = (int)($params['id'] ?? 0)){
+            $activeCharacter = $this->getCharacter();
+
+            /**
+             * @var Pathfinder\MapModel $map
+             */
+            $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
+            $map->getById($mapId);
+            if($map->hasAccess($activeCharacter)){
+                if(!$activeCharacter->hasMapRight((int)$map->get('typeId', true), 'map_update')){
+                    $this->errorRight($f3, 'map_update');
+                    return;
+                }
+                $webhookData = $map->getWebhookData();
+            }
+        }
+
+        $this->out($webhookData);
+    }
+
+    /**
      * @param \Base $f3
      * @param       $test
      * @throws \Exception

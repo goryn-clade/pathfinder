@@ -98,7 +98,12 @@ define([
         let mapInfoDialogElement = $('#' + config.newMapDialogId);
         if(!mapInfoDialogElement.is(':visible')){
 
-            requirejs([
+            // webhook URLs are not part of mapData (secrets) -> load them for users who can edit them
+            let webhookPromise = (mapData && MapUtil.checkRight('map_update', mapData.config)) ?
+                Util.request('GET', 'Map', mapData.config.id).then(payload => payload.data || {}) :
+                Promise.resolve({});
+
+            webhookPromise.then(webhookData => requirejs([
                 'text!templates/dialog/map.html',
                 'text!templates/form/map.html',
                 'mustache'
@@ -250,7 +255,7 @@ define([
                         logActivity: mapData.config.logging.activity,
                         logHistory: mapData.config.logging.history,
 
-                        slackWebHookURL: mapData.config.logging.slackWebHookURL,
+                        slackWebHookURL: webhookData.slackWebHookURL || '',
                         slackUsername: mapData.config.logging.slackUsername,
                         slackIcon: mapData.config.logging.slackIcon,
                         slackChannelHistory: mapData.config.logging.slackChannelHistory,
@@ -258,8 +263,8 @@ define([
                         slackEnabled: Boolean(Util.getObjVal(Init, 'slack.status')),
 
                         discordUsername: Util.getObjVal(mapData, 'config.logging.discordUsername'),
-                        discordWebHookURLRally: Util.getObjVal(mapData, 'config.logging.discordWebHookURLRally'),
-                        discordWebHookURLHistory: Util.getObjVal(mapData, 'config.logging.discordWebHookURLHistory'),
+                        discordWebHookURLRally: webhookData.discordWebHookURLRally || '',
+                        discordWebHookURLHistory: webhookData.discordWebHookURLHistory || '',
                         discordEnabled: Boolean(Util.getObjVal(Init, 'discord.status')),
 
                         accessCharacter: mapData.config.access.character,
@@ -648,7 +653,7 @@ define([
                         mapInfoDialog.find('button.btn-success').show();
                     }
                 });
-            });
+            })).catch(Util.handleAjaxErrorResponse); // no dialog without webhook data -> save would clear them
         }
     };
 

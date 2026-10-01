@@ -47,15 +47,15 @@
                                         <td class="text-right pf-table-button-sm-cell">
                                             <check if="{{ @map->active }}">
                                                 <true>
-                                                    <a class="btn btn-sm btn-warning pf-overlay-trigger" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/0">deactivate</a>
+                                                    <a class="btn btn-sm btn-warning pf-overlay-trigger" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/0">deactivate</a>
                                                 </true>
                                                 <false>
-                                                    <a class="btn btn-sm btn-success pf-overlay-trigger" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/1">activate</a>
+                                                    <a class="btn btn-sm btn-success pf-overlay-trigger" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/1">activate</a>
                                                 </false>
                                             </check>
                                         </td>
                                         <td class="text-right pf-table-button-sm-cell">
-                                            <a class="btn btn-sm btn-danger pf-overlay-trigger {{ @map->active ? 'disabled' : '' }}" href="/admin/{{ @tplPage}}/delete/{{ @map->_id }}">delete</a>
+                                            <a class="btn btn-sm btn-danger pf-overlay-trigger {{ @map->active ? 'disabled' : '' }}" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/delete/{{ @map->_id }}">delete</a>
                                         </td>
                                     </tr>
                                 </repeat>
@@ -111,15 +111,15 @@
                                             <td class="text-right pf-table-button-sm-cell">
                                                 <check if="{{ @map->active }}">
                                                     <true>
-                                                        <a class="btn btn-sm btn-warning pf-overlay-trigger" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/0">deactivate</a>
+                                                        <a class="btn btn-sm btn-warning pf-overlay-trigger" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/0">deactivate</a>
                                                     </true>
                                                     <false>
-                                                        <a class="btn btn-sm btn-success pf-overlay-trigger" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/1">activate</a>
+                                                        <a class="btn btn-sm btn-success pf-overlay-trigger" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/active/{{ @map->_id }}/1">activate</a>
                                                     </false>
                                                 </check>
                                             </td>
                                             <td class="text-right pf-table-button-sm-cell">
-                                                <a class="btn btn-sm btn-danger pf-overlay-trigger {{ @map->active ? 'disabled' : '' }}" href="/admin/{{ @tplPage}}/delete/{{ @map->_id }}">delete</a>
+                                                <a class="btn btn-sm btn-danger pf-overlay-trigger {{ @map->active ? 'disabled' : '' }}" data-method="post" data-token="{{ @tplAdminToken }}" href="/admin/{{ @tplPage}}/delete/{{ @map->_id }}">delete</a>
                                             </td>
                                         </tr>
                                     </repeat>

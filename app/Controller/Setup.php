@@ -265,11 +265,11 @@ class Setup extends Controller {
                 if(isset($params['model'])) $this->exportTable($params['model']);
                 break;
             case 'clearFiles':
-                if(isset($params['path'])) $this->clearFiles((string)$params['path']);
+                if(isset($params['dir'])) $this->clearFiles($f3, (string)$params['dir']);
                 break;
             case 'flushRedisDb':
                 if(isset($params['host'], $params['port'], $params['db'])) {
-                    $this->flushRedisDb((string)$params['host'], (int)$params['port'], (int)$params['db']);
+                    $this->flushRedisDb($f3, (string)$params['host'], (int)$params['port'], (int)$params['db']);
                 }
                 break;
             case 'invalidateCookies':
@@ -2005,22 +2005,7 @@ class Setup extends Controller {
     protected function checkDirSize(\Base $f3) : array {
         // limit shown cache size. Reduce page load on big cache. In Bytes
         $maxBytes   = 10 * 1024 * 1024; // 10MB
-        $dirTemp    = (string)$f3->get('TEMP');
-        $cacheDsn   = (string)$f3->get('CACHE');
-        Config::parseDSN($cacheDsn, $conf);
-        // if 'CACHE' is e.g. redis=... -> show default dir for cache
-        $dirCache   = ($conf['type'] ?? null) == 'folder' ? ($conf['folder'] ?? '') : $dirTemp . 'cache/';
-
-        $dirAll = [
-          'TEMP' => [
-              'label' => 'Temp dir',
-              'path' => $dirTemp
-          ],
-          'CACHE' => [
-              'label' => 'Cache dir',
-              'path' => $dirCache
-          ]
-        ];
+        $dirAll     = $this->getClearableDirs($f3);
 
         $maxHitAll = false;
         $bytesAll = 0;
@@ -2043,7 +2028,7 @@ class Setup extends Controller {
                 [
                     'action' => http_build_query([
                         'action' => 'clearFiles',
-                        'path' => $dirData['path'],
+                        'dir' => $key,
                         'token' => self::getSetupToken($f3)
                     ]),
                     'label' => 'Delete files',
@@ -2060,11 +2045,40 @@ class Setup extends Controller {
     }
 
     /**
-     * clear directory
-     * @param string $path
+     * directories that can be cleared from /setup
+     * @param \Base $f3
+     * @return array<string, array<string, string>>
      */
-    protected function clearFiles(string $path): void {
-        $files = Search::getFilesByMTime($path);
+    protected function getClearableDirs(\Base $f3) : array {
+        $dirTemp    = (string)$f3->get('TEMP');
+        $cacheDsn   = (string)$f3->get('CACHE');
+        Config::parseDSN($cacheDsn, $conf);
+        // if 'CACHE' is e.g. redis=... -> show default dir for cache
+        $dirCache   = ($conf['type'] ?? null) == 'folder' ? ($conf['folder'] ?? '') : $dirTemp . 'cache/';
+
+        return [
+          'TEMP' => [
+              'label' => 'Temp dir',
+              'path' => $dirTemp
+          ],
+          'CACHE' => [
+              'label' => 'Cache dir',
+              'path' => $dirCache
+          ]
+        ];
+    }
+
+    /**
+     * clear directory
+     * @param \Base $f3
+     * @param string $dirKey key from getClearableDirs() (e.g. 'TEMP'), never a path from the request
+     */
+    protected function clearFiles(\Base $f3, string $dirKey): void {
+        $dirAll = $this->getClearableDirs($f3);
+        if(empty($dirAll[$dirKey]['path'])){
+            return;
+        }
+        $files = Search::getFilesByMTime($dirAll[$dirKey]['path']);
         foreach($files as $file){
             /**
              * @var \SplFileInfo $file
@@ -2078,12 +2092,42 @@ class Setup extends Controller {
     }
 
     /**
+     * Redis hosts ('host:port') from the app config (CACHE, API_CACHE, session handler)
+     * @param \Base $f3
+     * @return string[]
+     */
+    protected function getRedisHosts(\Base $f3) : array {
+        $hosts = [];
+        foreach([$f3->get('CACHE'), $f3->get('API_CACHE')] as $dsn){
+            if(Config::parseDSN((string)$dsn, $conf) && ($conf['type'] ?? null) == 'redis'){
+                $hosts[] = ($conf['host'] ?? 'localhost') . ':' . (int)($conf['port'] ?? 6379);
+            }
+        }
+
+        $sessionSavePath = session_save_path();
+        if(
+            strtolower(session_module_name()) == 'redis' &&
+            is_string($sessionSavePath) &&
+            ($parts = parse_url($sessionSavePath))
+        ){
+            $hosts[] = ($parts['host'] ?? '') . ':' . (int)($parts['port'] ?? 6379);
+        }
+
+        return array_unique($hosts);
+    }
+
+    /**
      * clear all key in a specific Redis database
+     * -> only for Redis hosts from the app config (the Redis password is sent to that host)
+     * @param \Base $f3
      * @param string $host
      * @param int $port
      * @param int $db
      */
-    protected function flushRedisDb(string $host, int $port, int $db = 0): void {
+    protected function flushRedisDb(\Base $f3, string $host, int $port, int $db = 0): void {
+        if(!in_array($host . ':' . $port, $this->getRedisHosts($f3), true)){
+            return;
+        }
         $client = new \Redis();
         $client->pconnect($host, $port, 0.3);
         if($password = getenv('REDIS_PASSWORD')) $client->auth($password);

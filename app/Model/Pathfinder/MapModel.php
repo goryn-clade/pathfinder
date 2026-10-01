@@ -286,7 +286,6 @@ class MapModel extends AbstractMapTrackingModel {
             // map Slack logging
             $mapData->logging->slackHistory                 = $this->isSlackChannelEnabled('slackChannelHistory');
             $mapData->logging->slackRally                   = $this->isSlackChannelEnabled('slackChannelRally');
-            $mapData->logging->slackWebHookURL              = $this->slackWebHookURL;
             $mapData->logging->slackUsername                = $this->slackUsername;
             $mapData->logging->slackIcon                    = $this->slackIcon;
             $mapData->logging->slackChannelHistory          = $this->slackChannelHistory;
@@ -295,8 +294,6 @@ class MapModel extends AbstractMapTrackingModel {
             // map Discord logging
             $mapData->logging->discordRally                 = $this->isDiscordChannelEnabled('discordWebHookURLRally');
             $mapData->logging->discordUsername              = $this->discordUsername;
-            $mapData->logging->discordWebHookURLRally       = $this->discordWebHookURLRally;
-            $mapData->logging->discordWebHookURLHistory     = $this->discordWebHookURLHistory;
 
             // map access
             $mapData->access                                = (object) [];
@@ -438,6 +435,19 @@ class MapModel extends AbstractMapTrackingModel {
             }
         }
         return $valid;
+    }
+
+    /**
+     * webhook URLs are secrets -> not part of getData() (sent to every client with map access)
+     * -> only for the map settings dialog (map_update right), see Rest\Map::get()
+     * @return \stdClass
+     */
+    public function getWebhookData() : \stdClass {
+        $webhookData                            = (object) [];
+        $webhookData->slackWebHookURL           = $this->slackWebHookURL;
+        $webhookData->discordWebHookURLRally    = $this->discordWebHookURLRally;
+        $webhookData->discordWebHookURLHistory  = $this->discordWebHookURLHistory;
+        return $webhookData;
     }
 
     /**

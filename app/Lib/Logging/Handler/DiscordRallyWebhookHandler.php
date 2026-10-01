@@ -110,7 +110,8 @@ class DiscordRallyWebhookHandler extends AbstractRallyWebhookHandler {
             }
         }
 
-        $payload = ['embeds' => $embeds];
+        // never ping: map names and messages are user input (e.g. '@everyone')
+        $payload = ['embeds' => $embeds, 'allowed_mentions' => ['parse' => []]];
         if ($content) {
             $payload['content'] = $content;
         }

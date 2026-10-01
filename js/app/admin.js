@@ -25,6 +25,14 @@ define([
             $('.' + config.splashOverlayClass).showSplashOverlay();
         });
 
+        // action links (kick, ban, map delete, …) -> send as POST with token (server refuses GET)
+        $('a[data-method="post"]').on('click', function(e){
+            e.preventDefault();
+            let form = $('<form>', {method: 'post', action: this.getAttribute('href')})
+                .append($('<input>', {type: 'hidden', name: 'token', value: this.dataset.token}));
+            form.appendTo('body')[0].submit();
+        });
+
         $('body').initTooltips();
 
         // set fieldset toggled by checkbox ---------------------------------------------------------------------------

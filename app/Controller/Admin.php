@@ -25,6 +25,11 @@ class Admin extends Controller{
 
     const LOG_TEXT_KICK_BAN                         = '%s "%s" from corporation "%s", by "%s"';
 
+    /**
+     * session key for the admin action token (CSRF)
+     */
+    const SESSION_KEY_ADMIN_TOKEN                   = 'SESSION.ADMIN.TOKEN';
+
     const KICK_OPTIONS = [
         5 => '5m',
         60 => '1h',
@@ -49,6 +54,7 @@ class Admin extends Controller{
         if($character = $this->getAdminCharacter($f3)){
             $f3->set('tplLogged', true);
             $f3->set('character', $character);
+            $f3->set('tplAdminToken', self::getAdminToken($f3));
             $this->dispatch($f3, $params, $character);
         }
 
@@ -137,12 +143,18 @@ class Admin extends Controller{
             $parts = array_values(array_filter(array_map(strtolower(...), explode('/', (string) $params['*']))));
             $f3->set('tplPage', $parts[0] ?? 'settings');
 
+            // actions (e.g. /admin/members/ban/…) change state -> POST with session token only (CSRF)
+            if(isset($parts[1]) && !self::isValidAdminPost($f3)){
+                $f3->reroute('@admin(@*=/' . $parts[0] . ')');
+                return;
+            }
+
             switch($parts[0] ?? 'settings'){
                 case 'settings':
                     switch($parts[1] ?? null){
                         case 'save':
                             $objectId = (int)($parts[2] ?? 0);
-                            $values  = (array)$f3->get('GET');
+                            $values  = (array)$f3->get('POST');
                             $this->saveSettings($character, $objectId, $values);
 
                             $f3->reroute('@admin(@*=/' . $parts[0] . ')');
@@ -165,6 +177,8 @@ class Admin extends Controller{
                             $objectId = (int)($parts[2] ?? 0);
                             $value  = (int)($parts[3] ?? 0);
                             $this->banCharacter($character, $objectId, $value);
+
+                            $f3->reroute('@admin(@*=/' . $parts[0] . ')');
                             break;
                     }
                     $f3->set('tplKickOptions', self::KICK_OPTIONS);
@@ -193,6 +207,29 @@ class Admin extends Controller{
                     break;
             }
         }
+    }
+
+    /**
+     * get (or create) the admin action token for this session
+     * @param \Base $f3
+     * @return string
+     */
+    protected static function getAdminToken(\Base $f3) : string {
+        if(!$f3->exists(self::SESSION_KEY_ADMIN_TOKEN)){
+            $f3->set(self::SESSION_KEY_ADMIN_TOKEN, bin2hex(random_bytes(32)));
+        }
+        return (string)$f3->get(self::SESSION_KEY_ADMIN_TOKEN);
+    }
+
+    /**
+     * check: request is a POST with a valid admin token
+     * @param \Base $f3
+     * @return bool
+     */
+    protected static function isValidAdminPost(\Base $f3) : bool {
+        return $f3->get('VERB') === 'POST' &&
+            $f3->exists(self::SESSION_KEY_ADMIN_TOKEN) &&
+            hash_equals((string)$f3->get(self::SESSION_KEY_ADMIN_TOKEN), (string)$f3->get('POST.token'));
     }
 
     /**

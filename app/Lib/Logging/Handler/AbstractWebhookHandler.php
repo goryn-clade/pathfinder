@@ -100,7 +100,24 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @return array<string, mixed>
      */
     protected function getPostData(array $record): array {
-        return $this->getSlackData($record);
+        return $this->escapeSlackText($this->getSlackData($record));
+    }
+
+    /**
+     * escape &, <, > in Slack text fields -> user input (e.g. map name '<!channel>') must not ping or link
+     * -> https://api.slack.com/reference/surfaces/formatting#escaping
+     * @param array<string|int, mixed> $data
+     * @return array<string|int, mixed>
+     */
+    protected function escapeSlackText(array $data): array {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = $this->escapeSlackText($value);
+            } elseif (is_string($value) && in_array($key, ['text', 'fallback', 'title', 'pretext', 'value', 'author_name', 'footer'], true)) {
+                $data[$key] = str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $value);
+            }
+        }
+        return $data;
     }
 
     /**
