@@ -301,15 +301,21 @@ class TypeModel extends AbstractUniverseModel {
             }
 
             // add new dogmaTypes
+            // -> new model per row: rel() returns a shared (Registry) instance that still holds the last saved row,
+            //    so save() on it would UPDATE (move) that row instead of inserting a new one
             foreach($dogmaAttributesData as $dogmaAttributeData){
                 /**
-                 * @var TypeAttributeModel $typeAttribute
                  * @var DogmaAttributeModel $dogmaAttribute
                  */
-                $typeAttribute = $this->rel('attributes');
-                $dogmaAttribute = $typeAttribute->rel('attributeId');
-                $dogmaAttribute->loadById($dogmaAttributeData['attributeId']);
+                $dogmaAttribute = self::getNew('DogmaAttributeModel');
+                $dogmaAttribute->loadById((int)$dogmaAttributeData['attributeId']);
                 if($dogmaAttribute->valid()){
+                    /**
+                     * @var TypeAttributeModel $typeAttribute
+                     */
+                    $typeAttribute = self::getNew('TypeAttributeModel');
+                    // row may exist but was not in $this->attributes -> update instead of a duplicate insert
+                    $typeAttribute->load(['typeId = ? AND attributeId = ?', $this->_id, $dogmaAttribute->_id]);
                     $typeAttribute->typeId      = $this;
                     $typeAttribute->attributeId = $dogmaAttribute;
                     $typeAttribute->value       = $dogmaAttributeData['value'];

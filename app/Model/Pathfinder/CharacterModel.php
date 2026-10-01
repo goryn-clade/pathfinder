@@ -927,7 +927,8 @@ class CharacterModel extends AbstractPathfinderModel {
                         // get current $characterLog or get new -------------------------------------------------------
                         if(!$characterLog = $this->getLog()){
                             // create new log
-                            $characterLog = $this->rel('characterLog');
+                            // -> new model: rel() is a shared (Registry) instance that may still hold another character's log (cron)
+                            $characterLog = self::getNew('CharacterLogModel');
                         }
 
                         // get current log data and modify on change
@@ -1395,7 +1396,7 @@ class CharacterModel extends AbstractPathfinderModel {
                 /**
                  * @var CharacterLogModel $characterLog
                  */
-                $characterLog = $this->rel('characterLog');
+                $characterLog = self::getNew('CharacterLogModel');
                 $characterLog->setData($historyEntry['log']);
 
                 // mark $historyEntry data as "checked" for $mapId

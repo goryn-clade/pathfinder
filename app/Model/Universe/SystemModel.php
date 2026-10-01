@@ -254,7 +254,8 @@ class SystemModel extends AbstractUniverseModel {
                      */
                     if(!$sovereignty = $this->sovereignty){
                         // insert new sovereignty data
-                        $sovereignty = $this->rel('sovereignty');
+                        // -> new model: rel() is a shared (Registry) instance that may still hold another system's row
+                        $sovereignty = self::getNew('SovereigntyMapModel');
                     }
 
                     $sovData['systemId'] = $this;
@@ -333,7 +334,8 @@ class SystemModel extends AbstractUniverseModel {
                  */
                 if(!$factionWar = $this->factionWar){
                     // insert new faction war data
-                    $factionWar = $this->rel('factionWar');
+                    // -> new model: rel() is a shared (Registry) instance that may still hold another system's row
+                    $factionWar = self::getNew('FactionWarSystemModel');
                 }
 
                 $fwData['systemId'] = $this;
