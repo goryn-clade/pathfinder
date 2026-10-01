@@ -67,16 +67,9 @@ class CorporationRightModel extends AbstractPathfinderModel {
      * @param array<string, mixed> $data
      */
     public function setData( $data): void {
-        unset($data['id']);
-        unset($data['created']);
-        unset($data['updated']);
-
-        foreach((array)$data as $key => $value){
-            if(!is_array($value)){
-                if($this->exists($key)){
-                    $this->$key = $value;
-                }
-            }
+        // only the role is editable -> corporationId/rightId must not be moved
+        if(isset($data['roleId']) && !is_array($data['roleId'])){
+            $this->roleId = (int)$data['roleId'];
         }
     }
 

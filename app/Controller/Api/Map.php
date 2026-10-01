@@ -305,7 +305,12 @@ class Map extends Controller\AccessController {
             $mapType = Pathfinder\AbstractPathfinderModel::getNew('MapTypeModel');
             $mapType->getById((int)$importData['typeId']);
 
-            if( !$mapType->dry() ){
+            if( !$mapType->dry() && !$activeCharacter->hasMapRight($mapType->_id, 'map_import') ){
+                $missingRightError = (object) [];
+                $missingRightError->type = 'error';
+                $missingRightError->text = 'You do not have the right to import maps of this type';
+                $return->error[] = $missingRightError;
+            }elseif( !$mapType->dry() ){
                 $defaultConfig = Config::getMapsDefaultConfig($mapType->name);
 
                 foreach($importData['mapData'] as $mapData){

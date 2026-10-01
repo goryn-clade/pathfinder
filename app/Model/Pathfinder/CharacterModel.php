@@ -535,6 +535,36 @@ class CharacterModel extends AbstractPathfinderModel {
     }
 
     /**
+     * check if character has a map right (e.g. 'map_update') for a map type
+     * -> same rules as Util.hasRight() and MapUtil.checkRight() in JS
+     * @param int    $mapTypeId
+     * @param string $right
+     * @return bool
+     * @throws \Exception
+     */
+    public function hasMapRight(int $mapTypeId, string $right) : bool {
+        $isSuper = $this->get('roleId', true) && $this->roleId->name === 'SUPER';
+        switch($mapTypeId){
+            case 2: // private
+                return true;
+            case 3: // corporation
+                if(!$corporation = $this->getCorporation()){
+                    return false;
+                }
+                if(!$corporationRight = $corporation->getRights([$right])[0] ?? null){
+                    return false;
+                }
+                return $isSuper ||
+                    $corporationRight->roleId->name === 'MEMBER' ||
+                    (int)$corporationRight->get('roleId', true) === (int)$this->get('roleId', true);
+            case 4: // alliance -> only SUPER admins can delete
+                return $right !== 'map_delete' || $isSuper;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * get the alliance from character
      * @return AllianceModel|null
      */

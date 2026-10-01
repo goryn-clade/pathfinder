@@ -102,14 +102,16 @@ class Log extends AbstractRestController {
             $log = Pathfinder\AbstractPathfinderModel::getNew('ConnectionLogModel');
             $log->getById($logId, 0, false);
 
-            if($log->hasAccess($activeCharacter)){
-                $log->setData($logData);
-
-                if(isset($logData['active'])){
-                    $log->setActive((bool)$logData['active']);
-                }
-                $log->save();
+            if(!$log->hasAccess($activeCharacter)){
+                return false;
             }
+
+            $log->setData($logData);
+
+            if(isset($logData['active'])){
+                $log->setActive((bool)$logData['active']);
+            }
+            $log->save();
         }
         return $log;
     }

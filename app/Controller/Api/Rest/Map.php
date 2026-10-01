@@ -20,18 +20,34 @@ class Map extends AbstractRestController {
     const ERROR_MAP_DELETE = 'Character %s does not have sufficient rights for map delete';
 
     /**
+     * error message missing character right (e.g. map_update)
+     */
+    const ERROR_MAP_RIGHT = 'Character %s does not have sufficient rights for %s';
+
+    /**
+     * request keys for map sharing (map_share right)
+     */
+    const SHARE_KEYS = ['mapCharacters', 'mapCorporations', 'mapAlliances'];
+
+    /**
      * @param \Base $f3
      * @param       $test
      * @throws \Exception
      */
     public function put(\Base $f3,  array $test) : void {
         $requestData = $this->getRequestData($f3);
+        $activeCharacter = $this->getCharacter();
+
+        if(!$activeCharacter->hasMapRight(self::getRequestTypeId($requestData), 'map_create')){
+            $this->errorRight($f3, 'map_create');
+            return;
+        }
 
         /**
          * @var Pathfinder\MapModel $map
          */
         $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
-        $mapData = $this->update($map, $requestData)->getData();
+        $mapData = $this->update($map, $requestData, true)->getData();
 
         $this->out($mapData);
     }
@@ -54,7 +70,34 @@ class Map extends AbstractRestController {
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
             if($map->hasAccess($activeCharacter)){
-                $mapData = $this->update($map, $requestData)->getData(true);
+                $typeId = (int)$map->get('typeId', true);
+                $canUpdate = $activeCharacter->hasMapRight($typeId, 'map_update');
+                $canShare = $activeCharacter->hasMapRight($typeId, 'map_share');
+
+                if(!$canUpdate && !$canShare){
+                    $this->errorRight($f3, 'map_update');
+                    return;
+                }
+
+                if(!$canUpdate){
+                    // share right only -> drop map settings
+                    $requestData = array_intersect_key($requestData, array_flip(self::SHARE_KEYS));
+                }
+
+                // type change removes the old corp/alliance access -> needs delete right
+                $newTypeId = self::getRequestTypeId($requestData);
+                if(
+                    $newTypeId && $newTypeId !== $typeId &&
+                    (
+                        !$activeCharacter->hasMapRight($typeId, 'map_delete') ||
+                        !$activeCharacter->hasMapRight($newTypeId, 'map_update')
+                    )
+                ){
+                    $this->errorRight($f3, 'map type change');
+                    return;
+                }
+
+                $mapData = $this->update($map, $requestData, $canShare)->getData(true);
             }
         }
 
@@ -80,23 +123,7 @@ class Map extends AbstractRestController {
 
             if($map->hasAccess($activeCharacter)){
                 // check if character has delete right for map type
-                $hasRight = true;
-                if($map->isCorporation()){
-                    if($corporation = $activeCharacter->getCorporation()){
-                        if($corpRight = $corporation->getRights(['map_delete'])){
-                            if(isset($corpRight[0]) && $corpRight[0]->get('roleId', true) !== $activeCharacter->get('roleId', true)){
-                                $hasRight = false;
-                            }
-                        }
-                    }
-                }elseif($map->isAlliance()){
-                    // alliance maps can only be deleted by SUPER admins
-                    if($activeCharacter->roleId->name !== 'SUPER'){
-                        $hasRight = false;
-                    }
-                }
-
-                if($hasRight){
+                if($activeCharacter->hasMapRight((int)$map->get('typeId', true), 'map_delete')){
                     $map->setActive(false);
                     $map->save($activeCharacter);
                     $deletedMapIds[] = $mapId;
@@ -118,12 +145,22 @@ class Map extends AbstractRestController {
      * @return Pathfinder\MapModel
      * @throws \Exception
      */
-    private function update(Pathfinder\MapModel $map,  $mapData) : Pathfinder\MapModel {
+    private function update(Pathfinder\MapModel $map,  $mapData, bool $canShare) : Pathfinder\MapModel {
         $activeCharacter = $this->getCharacter();
 
+        $isNew = $map->dry();
         $map->setData($mapData);
         $typeChange = $map->changed('typeId');
         $map->save($activeCharacter);
+
+        // access ids for $setMapAccess(): new map or type change -> owner only,
+        // no share right or no share data sent -> null (access unchanged)
+        $getAccessIds = function(Pathfinder\AbstractPathfinderModel $primaryModel, string $key) use ($isNew, $typeChange, $canShare, $mapData) : ?array {
+            if($isNew || $typeChange){
+                return [$primaryModel->_id];
+            }
+            return $canShare ? ($mapData[$key] ?? null) : null;
+        };
 
         // save global map access. Depends on map "type" --------------------------------------------------------------
         /**
@@ -179,14 +216,14 @@ class Map extends AbstractRestController {
         if($map->isPrivate()){
             $accessChangeCount = $setMapAccess(
                 $activeCharacter,
-                $typeChange ? [$activeCharacter->_id] : ($mapData['mapCharacters'] ?? []),
+                $getAccessIds($activeCharacter, 'mapCharacters'),
                 (int)$mapDefaultConf['private']['max_shared']
             );
         }elseif($map->isCorporation()){
             if($corporation = $activeCharacter->getCorporation()){
                 $accessChangeCount = $setMapAccess(
                     $corporation,
-                    $typeChange ? [$corporation->_id] : ($mapData['mapCorporations'] ?? []),
+                    $getAccessIds($corporation, 'mapCorporations'),
                     (int)$mapDefaultConf['corporation']['max_shared']
                 );
             }
@@ -194,7 +231,7 @@ class Map extends AbstractRestController {
             if($alliance = $activeCharacter->getAlliance()){
                 $accessChangeCount = $setMapAccess(
                     $alliance,
-                    $typeChange ? [$alliance->_id] : ($mapData['mapAlliances'] ?? []),
+                    $getAccessIds($alliance, 'mapAlliances'),
                     (int)$mapDefaultConf['alliance']['max_shared']
                 );
             }
@@ -240,5 +277,27 @@ class Map extends AbstractRestController {
      */
     private function broadcastMapDeleted(int $mapId): void{
         $this->getF3()->webSocket()->write('mapDeleted', $mapId);
+    }
+
+    /**
+     * send 401 for a missing map right
+     * @param \Base  $f3
+     * @param string $right
+     */
+    protected function errorRight(\Base $f3, string $right) : void {
+        $f3->set('HALT', true);
+        $f3->error(401, sprintf(self::ERROR_MAP_RIGHT, $this->getCharacter()->name, $right));
+    }
+
+    /**
+     * get map type id from request data ('typeId' from form, or 'type' => ['id' => …])
+     * @param array<string, mixed> $requestData
+     * @return int
+     */
+    protected static function getRequestTypeId(array $requestData) : int {
+        if(isset($requestData['type']['id'])){
+            return (int)$requestData['type']['id'];
+        }
+        return is_array($requestData['typeId'] ?? null) ? 0 : (int)($requestData['typeId'] ?? 0);
     }
 }

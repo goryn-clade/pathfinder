@@ -33,6 +33,18 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * @var array<string, mixed>
      */
+    /**
+     * fields that can be changed by setData() (map settings dialog)
+     * -> 'active' is left out: deactivate a map with DELETE
+     */
+    const EDITABLE_FIELDS = [
+        'scopeId', 'typeId', 'name', 'icon',
+        'deleteExpiredConnections', 'deleteEolConnections', 'persistentAliases', 'persistentSignatures',
+        'trackAbyssalJumps', 'allowUnknownSystems', 'granularK162', 'allowGroups', 'logActivity', 'logHistory',
+        'slackWebHookURL', 'slackUsername', 'slackIcon', 'slackChannelHistory', 'slackChannelRally',
+        'discordUsername', 'discordWebHookURLRally', 'discordWebHookURLHistory'
+    ];
+
     protected $fieldConf = [
         'active' => [
             'type' => Schema::DT_BOOL,
@@ -213,15 +225,9 @@ class MapModel extends AbstractMapTrackingModel {
      * @param  $data
      */
     public function setData( array $data): void{
-        unset($data['id']);
-        unset($data['created']);
-        unset($data['updated']);
-        unset($data['createdCharacterId']);
-        unset($data['updatedCharacterId']);
-
         foreach((array)$data as $key => $value){
             if(!is_array($value)){
-                if($this->exists($key)){
+                if(in_array($key, self::EDITABLE_FIELDS, true)){
                     $this->$key = $value;
                 }
             }else{
