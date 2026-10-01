@@ -296,7 +296,10 @@ define([
                         data: 'alias',
                         render: {
                             _: (cellData, type, rowData, meta) => {
-                                return (cellData === rowData.name) ? '' : cellData;
+                                if(cellData === rowData.name){
+                                    return '';
+                                }
+                                return (type === 'display') ? Util.htmlEncode(cellData) : cellData;
                             }
                         }
                     },{

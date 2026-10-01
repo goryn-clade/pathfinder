@@ -1037,7 +1037,10 @@ define([
         // change "map" icon
         let mapIconEl = tabLinkEl.querySelector(`.${config.mapTabIconClass}`);
         mapIconEl.classList.remove(...mapIconEl.classList);
-        mapIconEl.classList.add(config.mapTabIconClass, 'fas', 'fa-fw', options.icon);
+        mapIconEl.classList.add(config.mapTabIconClass, 'fas', 'fa-fw');
+        if(/^fa-[a-z0-9-]+$/.test(options.icon)){
+            mapIconEl.classList.add(options.icon);
+        }
 
         // change "shared" icon
         let mapSharedIconEl = tabLinkEl.querySelector(`.${config.mapTabSharedIconClass}`);

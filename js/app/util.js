@@ -13,6 +13,7 @@ define([
     'conf/signature_type',
     'lazyload',
     'bootbox',
+    'purify',
     'velocity',
     'velocityUI',
     'customScrollbar',
@@ -33,7 +34,8 @@ define([
     SystemEffect,
     SignatureType,
     LazyLoad,
-    bootbox
+    bootbox,
+    DOMPurify
 ) => {
 
     'use strict';
@@ -3528,6 +3530,14 @@ define([
     let htmlDecode = value => $('<div>').html(value).text();
 
     /**
+     * sanitize user HTML (e.g. Summernote system description) before it is rendered
+     * -> removes scripts, event handlers, javascript: URLs, ...
+     * @param html
+     * @returns {string}
+     */
+    let sanitizeHtml = html => DOMPurify.sanitize(html, {USE_PROFILES: {html: true}});
+
+    /**
      * checks if html is valid
      * -> see https://stackoverflow.com/a/15458968/4329969
      * @param html
@@ -3804,6 +3814,7 @@ define([
         htmlEncode: htmlEncode,
         htmlDecode: htmlDecode,
         isValidHtml: isValidHtml,
+        sanitizeHtml: sanitizeHtml,
         isDomElement: isDomElement,
         arrayToObject: arrayToObject,
         filterObjByKeys: filterObjByKeys,

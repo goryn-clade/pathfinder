@@ -441,6 +441,16 @@ class MapModel extends AbstractMapTrackingModel {
     }
 
     /**
+     * icon is a Font Awesome class (e.g. 'fa-desktop') -> used as CSS class in JS
+     * @param mixed $icon
+     * @return string
+     */
+    protected function set_icon($icon){
+        $icon = is_string($icon) ? trim($icon) : '';
+        return preg_match('/^fa-[a-z0-9-]{1,60}$/', $icon) ? $icon : 'fa-desktop';
+    }
+
+    /**
      * @param string|int $channel
      * @return string
      */

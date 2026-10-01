@@ -749,8 +749,8 @@ define([
 
                             let html = '<div><table>';
                             html += '<tr><td>' + connection.id + '</td><td class="text-right">' + data.id + '</td></tr>';
-                            html += '<tr><td>Scope:</td><td class="text-right">' + data.scope + '</td></tr>';
-                            html += '<tr><td>Type:</td><td class="text-right">' + data.type.toString() + '</td></tr>';
+                            html += '<tr><td>Scope:</td><td class="text-right">' + Util.htmlEncode(data.scope) + '</td></tr>';
+                            html += '<tr><td>Type:</td><td class="text-right">' + Util.htmlEncode(data.type.toString()) + '</td></tr>';
                             html += '</table></div>';
 
                             return $(html).on('click', function(){
@@ -774,8 +774,8 @@ define([
 
                             let html = '<div><table>';
                             html += '<tr><td>' + endpoint.id + '</td><td class="text-right"></td></tr>';
-                            html += '<tr><td>Scope:</td><td class="text-right">' + endpoint.scope + '</td></tr>';
-                            html += '<tr><td>Type:</td><td class="text-right">' + types.toString() + '</td></tr>';
+                            html += '<tr><td>Scope:</td><td class="text-right">' + Util.htmlEncode(endpoint.scope) + '</td></tr>';
+                            html += '<tr><td>Type:</td><td class="text-right">' + Util.htmlEncode(types.toString()) + '</td></tr>';
                             html += '</table></div>';
 
                             return $(html).on('click', function(){
