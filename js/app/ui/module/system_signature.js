@@ -838,6 +838,9 @@ define([
                         type: 'html',
                         data: 'description',
                         defaultContent: '',
+                        render: {
+                            display: data => Util.htmlEncode(data)
+                        },
                         createdCell: function(cell, cellData, rowData, rowIndex, colIndex){
                             let tableApi = this.api();
 

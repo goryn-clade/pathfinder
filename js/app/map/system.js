@@ -118,7 +118,7 @@ define([
             }
             dialogElement.find('#' + config.dialogSystemAliasId).html(alias);
             dialogElement.find('#' + config.dialogSystemSignaturesId).toggleClass('txt-color-green', signaturesCount > 0).html(signaturesCount);
-            dialogElement.find('#' + config.dialogSystemDescriptionId).html(description);
+            dialogElement.find('#' + config.dialogSystemDescriptionId).html(Util.sanitizeHtml(description));
             dialogElement.find('#' + config.dialogSystemCreatedId).html('<i class="fas fa-fw fa-plus"></i>&nbsp' + createdTime);
             dialogElement.find('#' + config.dialogSystemUpdatedId).html('<i class="fas fa-fw fa-pen"></i>&nbsp' + updatedTime);
             dialogElement.find('[data-target="#' + config.dialogSystemSectionInfoId + '"]').velocity('stop').velocity(showInfoHeadline, {duration: 120});

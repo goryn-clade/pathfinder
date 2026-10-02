@@ -153,7 +153,7 @@ define([
                                     newDescription = '<p>' + newDescription + '</p>';
                                 }
 
-                                descriptionTextareaElement.html(newDescription);
+                                descriptionTextareaElement.html(Util.sanitizeHtml(newDescription));
                             }
                         }
                     }
