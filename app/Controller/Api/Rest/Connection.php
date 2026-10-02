@@ -84,12 +84,18 @@ class Connection extends AbstractRestController {
                     !is_null($source) &&
                     !is_null($target)
                 ){
-                    /**
-                     * @var $connection Pathfinder\ConnectionModel
-                     */
-                    $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
-                    $connection->getById((int)$requestData['id']);
+                    // existing connection must belong to this map
+                    if($connectionId = (int)($requestData['id'] ?? 0)){
+                        $connection = $map->getConnectionById($connectionId);
+                    }else{
+                        /**
+                         * @var $connection Pathfinder\ConnectionModel
+                         */
+                        $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
+                    }
+                }
 
+                if(isset($connection)){
                     $connection->mapId = $map;
                     $connection->source = $source;
                     $connection->target = $target;
