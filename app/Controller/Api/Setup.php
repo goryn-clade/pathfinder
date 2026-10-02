@@ -17,6 +17,22 @@ use Exodus4D\Pathfinder\Model;
 class Setup extends Controller\Controller {
 
     /**
+     * only allow requests that passed nginx Basic Auth (same check as Controller\Setup)
+     * @param \Base $f3
+     * @param $params
+     * @return bool
+     */
+    function beforeroute(\Base $f3, $params) : bool {
+        if(($_SERVER['PF_SETUP_AUTH'] ?? '') !== '1'){
+            http_response_code(401);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => [['type' => 401, 'message' => 'Setup requires authentication']]]);
+            return false;
+        }
+        return parent::beforeroute($f3, $params);
+    }
+
+    /**
      * get HTML table <tr>´s for all cronjobs
      * @param \Base $f3
      */

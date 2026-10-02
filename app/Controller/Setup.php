@@ -148,6 +148,14 @@ class Setup extends Controller {
      * @return bool
      */
     function beforeroute(\Base $f3, $params): bool {
+        // only serve /setup when nginx has checked Basic Auth for this request.
+        // nginx sets PF_SETUP_AUTH as a FastCGI param in its /setup location only;
+        // clients cannot set FastCGI params (their headers arrive as HTTP_*)
+        if(($_SERVER['PF_SETUP_AUTH'] ?? '') !== '1'){
+            $f3->error(404);
+            return false;
+        }
+
         $f3->set('tplResource', $this->initResource($f3));
 
         // page title
