@@ -858,7 +858,7 @@ class CharacterModel extends AbstractPathfinderModel {
         if($accessToken = $this->getAccessToken()){
             $clonesData = self::getF3()->ccpClient()->send('getCharacterClones', $this->_id, $accessToken);
             if(!isset($clonesData['error'])){
-                if(!empty($homeLocationData = $clonesData['home']['location'])){
+                if(!empty($homeLocationData = $clonesData['home']['location'] ?? null)){
                     // clone home location data
                     $this->cloneLocationId = (int)$homeLocationData['id'];
                     $this->cloneLocationType = (string)$homeLocationData['type'];

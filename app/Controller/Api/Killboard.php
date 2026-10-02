@@ -10,8 +10,9 @@ use GuzzleHttp\Exception\GuzzleException;
 /**
  * Proxy controller for the zKillboard R2Z2 killstream API.
  * Browser fetch() is blocked by CORS on r2z2.zkillboard.com, so we proxy through our own domain.
+ * -> logged-in characters only (AccessController): each request can hold a PHP worker for the outbound call
  */
-class Killboard extends Controller\Controller {
+class Killboard extends Controller\AccessController {
 
     /**
      * Proxy GET https://r2z2.zkillboard.com/ephemeral/sequence.json
@@ -65,7 +66,7 @@ class Killboard extends Controller\Controller {
         }
 
         $r2z2Base = Config::getPathfinderData('api.zkillboard_r2z2');
-        $client = new Client(['timeout' => 15, 'connect_timeout' => 3]);
+        $client = new Client(['timeout' => 8, 'connect_timeout' => 3]);
 
         try {
             $response = $client->get($r2z2Base . '/' . $sequenceId . '.json', ['http_errors' => false]);

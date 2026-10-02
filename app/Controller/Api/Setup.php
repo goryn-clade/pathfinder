@@ -411,7 +411,7 @@ class Setup extends Controller\Controller {
                 }
 
                 $columns = array_keys($row);
-                $columnsQuoted = array_map($universeDB->quotekey, $columns);
+                $columnsQuoted = array_map([$universeDB, 'quotekey'], $columns);
                 $placeholder = array_map($placeholderStr, $columns);
                 $args = array_combine($placeholder, $row);
 

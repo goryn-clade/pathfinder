@@ -1572,7 +1572,11 @@ class Setup extends Controller {
 
         $getValue = function(string $param) use ($results) : string {
             $match = array_filter($results, fn($k): bool => strtolower((string) $k['Variable_name']) == $param);
-            return !empty($match) ? end(reset($match)) : 'unknown';
+            if(empty($match)){
+                return 'unknown';
+            }
+            $row = reset($match);
+            return (string)end($row);
         };
 
         $checkValue = function($requiredValue, $value) : bool {
