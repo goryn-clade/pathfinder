@@ -101,8 +101,10 @@ class Map extends AbstractRestController {
             $map->getById($mapId);
             if($map->hasAccess($activeCharacter)){
                 $typeId = (int)$map->get('typeId', true);
+                // shared map -> only the owner (creator, or creator's corp/alliance) may change sharing or type
+                $isOwner = $map->isOwnedBy($activeCharacter);
                 $canUpdate = $activeCharacter->hasMapRight($typeId, 'map_update');
-                $canShare = $activeCharacter->hasMapRight($typeId, 'map_share');
+                $canShare = $isOwner && $activeCharacter->hasMapRight($typeId, 'map_share');
 
                 if(!$canUpdate && !$canShare){
                     $this->errorRight($f3, 'map_update');
@@ -119,6 +121,7 @@ class Map extends AbstractRestController {
                 if(
                     $newTypeId && $newTypeId !== $typeId &&
                     (
+                        !$isOwner ||
                         !$activeCharacter->hasMapRight($typeId, 'map_delete') ||
                         !$activeCharacter->hasMapRight($newTypeId, 'map_update')
                     )

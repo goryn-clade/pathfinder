@@ -927,6 +927,42 @@ class MapModel extends AbstractMapTrackingModel {
     }
 
     /**
+     * checks whether a character belongs to the map owner
+     * -> owner is the map creator (private map), or the creator's current corporation/alliance
+     * -> no creator, or the owner no longer has access -> no owner, every character with access counts as owner
+     * @param CharacterModel $characterModel
+     * @return bool
+     */
+    public function isOwnedBy(CharacterModel $characterModel) : bool {
+        $creator = $this->createdCharacterId;
+        if(!$this->valid() || !is_object($creator)){
+            return true;
+        }
+
+        if($this->isPrivate()){
+            $owner = $creator;
+            $own = $characterModel;
+            $accessIds = array_map(fn(CharacterModel $character) => $character->_id, $this->getCharacters());
+        }elseif($this->isCorporation()){
+            $owner = $creator->getCorporation();
+            $own = $characterModel->getCorporation();
+            $accessIds = array_keys($this->getCorporations());
+        }elseif($this->isAlliance()){
+            $owner = $creator->getAlliance();
+            $own = $characterModel->getAlliance();
+            $accessIds = array_map(fn(AllianceModel $alliance) => $alliance->_id, $this->getAlliances());
+        }else{
+            return false;
+        }
+
+        if(!$owner || !in_array((int)$owner->_id, array_map(intval(...), $accessIds), true)){
+            return true;
+        }
+
+        return $own && (int)$own->_id === (int)$owner->_id;
+    }
+
+    /**
      * get all (private) characters for this map
      * @return CharacterModel[]
      */

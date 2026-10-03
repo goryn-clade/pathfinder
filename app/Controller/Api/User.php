@@ -291,14 +291,26 @@ class User extends Controller\Controller{
                         $corporation = $activeCharacter->getCorporation();
                         $alliance = $activeCharacter->getAlliance();
 
-                        if(is_object($corporation)){
-                            $corporation->shared = $corporationSharing;
-                            $corporation->save();
+                        // corp/alliance flags apply to every member -> need a right/role to change them
+                        if(is_object($corporation) && (int)$corporation->shared !== $corporationSharing){
+                            if($activeCharacter->hasMapRight(3, 'map_share')){
+                                $corporation->shared = $corporationSharing;
+                                $corporation->save();
+                            }else{
+                                $return->error[] = (new Exception\ValidationException('Changing corporation sharing needs the "map_share" right', 'corporationSharing'))->getError();
+                            }
                         }
 
-                        if(is_object($alliance)){
-                            $alliance->shared = $allianceSharing;
-                            $alliance->save();
+                        if(is_object($alliance) && (int)$alliance->shared !== $allianceSharing){
+                            if(
+                                $activeCharacter->get('roleId', true) &&
+                                in_array($activeCharacter->roleId->name, ['SUPER', 'CORPORATION'], true)
+                            ){
+                                $alliance->shared = $allianceSharing;
+                                $alliance->save();
+                            }else{
+                                $return->error[] = (new Exception\ValidationException('Changing alliance sharing needs a corporation admin role', 'allianceSharing'))->getError();
+                            }
                         }
 
                         $activeCharacter->shared = $privateSharing;
