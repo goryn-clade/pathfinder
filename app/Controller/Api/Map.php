@@ -8,6 +8,7 @@
 
 namespace Exodus4D\Pathfinder\Controller\Api;
 
+use Exodus4D\Pathfinder\Lib\Api\AbstractClient;
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Controller;
 use Exodus4D\Pathfinder\Data\File\FileHandler;
@@ -26,6 +27,9 @@ class Map extends Controller\AccessController {
     const CACHE_KEY_INIT                            = 'CACHED_INIT';
     const CACHE_KEY_USER_DATA                       = 'CACHED.USER_DATA.%s';
     const CACHE_KEY_HISTORY                         = 'CACHED_MAP_HISTORY_%s';
+
+    // updateUserData() requests slower than this (seconds) are written to the slow request log (T7)
+    const SLOW_REQUEST_THRESHOLD                    = 10;
 
     /**
      * get user data cache key
@@ -676,6 +680,16 @@ class Map extends Controller\AccessController {
      * @throws \Exception
      */
     public function updateUserData(\Base $f3): void{
+        // step durations (ms) for the slow request log; "beforeroute" includes session and access checks
+        $phases = [];
+        $lapStart = (float)($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true));
+        $lap = function(string $phase) use (&$phases, &$lapStart) : void {
+            $now = microtime(true);
+            $phases[$phase] = (int)round(($now - $lapStart) * 1000);
+            $lapStart = $now;
+        };
+        $lap('beforeroute');
+
         $postData = (array)$f3->get('POST');
         $mapIds = (array)($postData['mapIds'] ?? []);
         $getMapUserData = (bool)($postData['getMapUserData'] ?? false);
@@ -683,6 +697,7 @@ class Map extends Controller\AccessController {
         $systemData = (array)($postData['systemData'] ?? []);
         $newSystemPositions = (array)($postData['newSystemPositions'] ?? []);
         $activeCharacter = $this->getCharacter();
+        $lap('getCharacter');
 
         if(!$activeCharacter){
             echo json_encode(['error' => 'No active character']);
@@ -694,15 +709,20 @@ class Map extends Controller\AccessController {
         // update current location
         // -> suppress temporary timeout errors
         $activeCharacter = $activeCharacter->updateLog();
+        $lap('updateLog');
 
+        $mapId = 0;
         if( !empty($mapIds) ){
             // IMPORTANT for now -> just update a single map (save performance)
             $mapId = (int)reset($mapIds);
             // get map and check map access
-            if( !is_null($map = $activeCharacter->getMap($mapId)) ){
+            $map = $activeCharacter->getMap($mapId);
+            $lap('getMap');
+            if( !is_null($map) ){
                 // check character log (current system) and manipulate map (e.g. add new system)
                 if($mapTracking){
                     $map = $this->updateMapByCharacter($map, $activeCharacter, $newSystemPositions);
+                    $lap('updateMapByCharacter');
                 }
 
                 // mapUserData ----------------------------------------------------------------------------------------
@@ -717,6 +737,7 @@ class Map extends Controller\AccessController {
                         $f3->set($cacheKey, $mapUserData, $responseTTL);
                     }
                     $return->mapUserData[] = $mapUserData;
+                    $lap('mapUserData');
                 }
 
                 // systemData -----------------------------------------------------------------------------------------
@@ -729,6 +750,7 @@ class Map extends Controller\AccessController {
                     $return->system->signatures = $system->getSignaturesData();
                     $return->system->sigHistory = $system->getSignaturesHistory();
                     $return->system->structures = $system->getStructuresData();
+                    $lap('systemData');
                 }
             }
         }
@@ -738,11 +760,40 @@ class Map extends Controller\AccessController {
         if($user = $activeCharacter->getUser()){
             $return->userData = $user->getData();
         }
+        $lap('userData');
 
         // add error (if exists)
         $return->error = [];
 
         echo json_encode($return);
+
+        $this->logSlowRequest($f3, $phases, $activeCharacter->_id, $mapId);
+    }
+
+    /**
+     * write one line to the slow request log if updateUserData() took longer than SLOW_REQUEST_THRESHOLD
+     * -> nginx gives up after 40s (504), but PHP finishes the request and still logs it
+     * @param \Base $f3
+     * @param array<string, int> $phases step durations (ms)
+     * @param int $characterId
+     * @param int $mapId
+     */
+    protected function logSlowRequest(\Base $f3, array $phases, int $characterId, int $mapId) : void {
+        $total = microtime(true) - (float)($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true));
+        if($total >= self::SLOW_REQUEST_THRESHOLD){
+            $steps = [];
+            foreach($phases as $phase => $ms){
+                $steps[] = $phase . '=' . $ms;
+            }
+            self::getLogger('SLOW_REQUEST')->write(sprintf(
+                'updateUserData %.1fs characterId=%d mapId=%d steps(ms): %s | api calls(ms): %s',
+                $total,
+                $characterId,
+                $mapId,
+                implode(' ', $steps),
+                implode(' ', (array)$f3->get(AbstractClient::TIMINGS_KEY))
+            ));
+        }
     }
 
     /**
