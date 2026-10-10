@@ -658,11 +658,15 @@ class Map extends Controller\AccessController {
         if(!empty($mapsData = (string)($postData['mapData'] ?? ''))){
             $mapsData = (array)json_decode($mapsData, true);
             if(($jsonError = json_last_error()) === JSON_ERROR_NONE){
-                $activeCharacter = $this->getCharacter();
-
-                $this->updateMapsData($activeCharacter, $mapsData);
+                if($activeCharacter = $this->getCharacter()){
+                    $this->updateMapsData($activeCharacter, $mapsData);
+                }
             }
         }
+
+        // sent by navigator.sendBeacon() -> no "X-Requested-With" header, so F3 treats it as a page request
+        // -> do not render the index view
+        $this->setTemplate('');
     }
 
     /**

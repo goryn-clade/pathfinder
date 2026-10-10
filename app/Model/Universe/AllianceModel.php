@@ -87,6 +87,9 @@ class AllianceModel extends AbstractUniverseModel {
     protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getAlliance', $id);
         if(!empty($data) && !isset($data['error'])){
+            // ESI omits this key if the alliance has no faction
+            $data['factionId'] ??= null;
+
             if($data['factionId']){
                 /**
                  * @var FactionModel $faction

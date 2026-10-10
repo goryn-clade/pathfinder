@@ -110,6 +110,10 @@ class CorporationModel extends AbstractUniverseModel {
             // check for NPC corporation
             $data['isNPC'] = in_array($id, self::getF3()->ccpClient()->send('getNpcCorporations'));
 
+            // ESI omits these keys if the corporation has no faction/alliance
+            $data['factionId'] ??= null;
+            $data['allianceId'] ??= null;
+
             if($data['factionId']){
                 /**
                  * @var FactionModel $faction
