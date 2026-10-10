@@ -157,7 +157,7 @@ class User extends Controller\Controller{
             }else{
                 $characterError = (object) [];
                 $characterError->type = 'warning';
-                $characterError->text = 'This can happen through "invalid cookies(SSO)", "login restrictions", "ESI problems".';
+                $characterError->message = 'This can happen through "invalid cookies(SSO)", "login restrictions", "ESI problems".';
                 $return->error[] = $characterError;
             }
         }

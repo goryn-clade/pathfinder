@@ -456,7 +456,7 @@ class Sso extends Api\User{
                     $accessTokenExpires->add(new \DateInterval('PT' . (int)$authCodeRequestData['expiresIn'] . 'S'));
 
                     $accessData->esiAccessTokenExpires = $accessTokenExpires->format('Y-m-d H:i:s');
-                }catch(\Exception $e){
+                }catch(\Throwable $e){
                     $this->getF3()->error(500, $e->getMessage(), $e->getTrace());
                 }
             }
@@ -502,7 +502,7 @@ class Sso extends Api\User{
             $characterData = $this->verifyJwtAccessToken($accessToken);
             $characterData->characterId = (int)explode(':', $characterData->sub)[2];
             return $characterData;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, $e->getMessage()));
             return null;
         }

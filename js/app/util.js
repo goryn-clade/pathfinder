@@ -3689,7 +3689,8 @@ define([
         d.setTime(time + timeExpire);
         let expires = 'expires=' + d.toUTCString();
         let path = 'path=' + getDocumentPath();
-        document.cookie = name + '=' + value + '; ' + expires + '; ' + path;
+        let secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = name + '=' + value + '; ' + expires + '; ' + path + '; SameSite=Lax' + secure;
     };
 
     /**

@@ -105,16 +105,21 @@ abstract class AbstractEveScoutController extends AbstractRestController {
             }
 
             $connectionsData['type'] = $type;
-            $connectionsData['estimatedEol'] = $wormholeData['estimatedEol'];
+            $connectionsData['estimatedEol'] = $estimatedEol;
         };
 
         $eveScoutResponse = $this->getF3()->eveScoutClient()->send('getTheraConnections');
         if(!empty($eveScoutResponse) && !isset($eveScoutResponse['error'])){
-            foreach((array)$eveScoutResponse['connections'] as $eveScoutConnection){
+            // EVE-Scout response keys are not guaranteed -> skip entries with missing required keys
+            // (F3 turns an undefined key warning into a 500)
+            foreach((array)($eveScoutResponse['connections'] ?? []) as $eveScoutConnection){
+                $eveScoutConnection = (array)$eveScoutConnection;
                 if(
-                    $eveScoutConnection['type'] === 'wormhole' &&
-                    isset($eveScoutConnection['source']) && isset($eveScoutConnection['target']) &&
-                    $eveScoutConnection['source']['id'] === static::SOURCE_SYSTEM_ID
+                    ($eveScoutConnection['type'] ?? null) === 'wormhole' &&
+                    isset($eveScoutConnection['id'], $eveScoutConnection['created'], $eveScoutConnection['updated']) &&
+                    isset(((array)($eveScoutConnection['source'] ?? []))['id']) &&
+                    isset(((array)($eveScoutConnection['target'] ?? []))['id']) &&
+                    ((array)$eveScoutConnection['source'])['id'] === static::SOURCE_SYSTEM_ID
                 ){
                     try{
                         $data = [
@@ -122,11 +127,11 @@ abstract class AbstractEveScoutController extends AbstractRestController {
                             'scope' => ConnectionType::Wh->value,
                             'created' => [
                                 'created' => (new \DateTime($eveScoutConnection['created']))->getTimestamp(),
-                                'character' => (array)$eveScoutConnection['character']
+                                'character' => (array)($eveScoutConnection['character'] ?? [])
                             ],
                             'updated' => (new \DateTime($eveScoutConnection['updated']))->getTimestamp()
                         ];
-                        $enrichWithWormholeData((array)$eveScoutConnection['wormhole'], $data);
+                        $enrichWithWormholeData((array)($eveScoutConnection['wormhole'] ?? []), $data);
                         $enrichWithSystemData('source', $eveScoutConnection, $data);
                         $enrichWithSystemData('target', $eveScoutConnection, $data);
                         $enrichWithSignatureData('sourceSignature', $eveScoutConnection, $data);

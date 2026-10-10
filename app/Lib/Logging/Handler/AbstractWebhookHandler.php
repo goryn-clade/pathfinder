@@ -148,11 +148,12 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
         curl_close($ch);
 
         if ($curlErr || ($httpCode && ($httpCode < 200 || $httpCode >= 300))) {
+            // log the host only, the full webhook URL is a secret
             error_log(sprintf(
                 'Webhook POST failed [HTTP %d%s]: %s',
                 $httpCode,
-                $curlErr ? " — $curlErr" : '',
-                $this->webhookUrl
+                $curlErr ? " — " . str_replace((string)$this->webhookUrl, '[webhook URL]', $curlErr) : '',
+                parse_url((string)$this->webhookUrl, PHP_URL_HOST) ?: 'invalid URL'
             ));
         }
     }

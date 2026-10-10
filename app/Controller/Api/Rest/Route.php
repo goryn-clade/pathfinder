@@ -316,15 +316,15 @@ class Route extends AbstractRestController {
             if(!empty($connectionsData) && !isset($connectionsData['error'])){
                 $enrichJumpData = function(array &$row, string $systemSourceKey, string $systemTargetKey) use (&$jumpData): void {
                     if(
-                        is_array($systemSource = $row[$systemSourceKey]) && !empty($systemSource) &&
-                        is_array($systemTarget = $row[$systemTargetKey]) && !empty($systemTarget)
+                        is_array($systemSource = $row[$systemSourceKey] ?? null) && isset($systemSource['id']) &&
+                        is_array($systemTarget = $row[$systemTargetKey] ?? null) && isset($systemTarget['id'])
                     ){
                         $srcId = $systemSource['id'];
                         $targetId = $systemTarget['id'];
                         if(!array_key_exists($srcId, $jumpData)){
                             $jumpData[$srcId] = [
                                 'systemId'   => $srcId,
-                                'systemName' => $systemSource['name'],
+                                'systemName' => $systemSource['name'] ?? '',
                                 'jumpNodes'  => [],
                             ];
                         }
@@ -334,7 +334,10 @@ class Route extends AbstractRestController {
                     }
                 };
 
-                foreach((array)$connectionsData['connections'] as $connectionData){
+                foreach((array)($connectionsData['connections'] ?? []) as $connectionData){
+                    if(!is_array($connectionData)){
+                        continue;
+                    }
                     // only include connections involving the specified hub system
                     $sourceId = (int)(is_array($connectionData['source'] ?? null) ? $connectionData['source']['id'] ?? 0 : 0);
                     $targetId = (int)(is_array($connectionData['target'] ?? null) ? $connectionData['target']['id'] ?? 0 : 0);
