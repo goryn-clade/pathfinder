@@ -765,14 +765,16 @@ class Map extends Controller\AccessController {
         // add error (if exists)
         $return->error = [];
 
-        echo json_encode($return);
-
+        // log before output: after a 504 nginx has closed the connection, and a flush (> output_buffering)
+        // aborts the script (ignore_user_abort = Off) -> anything after the echo would not run
         $this->logSlowRequest($f3, $phases, $activeCharacter->_id, $mapId);
+
+        echo json_encode($return);
     }
 
     /**
      * write one line to the slow request log if updateUserData() took longer than SLOW_REQUEST_THRESHOLD
-     * -> nginx gives up after 40s (504), but PHP finishes the request and still logs it
+     * -> nginx gives up after 40s (504); PHP still finishes the handler, so this must run before any output
      * @param \Base $f3
      * @param array<string, int> $phases step durations (ms)
      * @param int $characterId
