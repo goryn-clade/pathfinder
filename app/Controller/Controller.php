@@ -393,6 +393,9 @@ class Controller {
                         }else{
                             // token mismatch on a non-expired row: stale or tampered cookie.
                             // Do NOT erase — preserves the legit user's row against stale-cookie DoS after rotation.
+                            // Trade-off: a mismatch can also mean a stolen cookie whose validator was already
+                            // rotated by the thief (or the victim). We do not revoke the row on that signal, so a
+                            // thief who holds the current validator keeps access until expiry or logout.
                             $invalidCookie = true;
                         }
                     }else{

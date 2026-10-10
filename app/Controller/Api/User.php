@@ -71,6 +71,10 @@ class User extends Controller\Controller{
             // check if character belongs to current user
             // -> If there is already a logged in user! (e.g. multi character use)
             $currentUser = $this->getUser();
+
+            // new session id before any SESSION.* write (getUser() above has started the session)
+            session_regenerate_id(true);
+
             $timezone = $this->getF3()->get('getTimeZone')();
 
             $sessionCharacters = [
@@ -119,7 +123,6 @@ class User extends Controller\Controller{
             // -> pass character data over for next http request (reroute())
             $this->setTempCharacterData($character->_id);
 
-            session_regenerate_id(true);
             $login = true;
         }
 
