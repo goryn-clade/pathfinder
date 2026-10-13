@@ -148,16 +148,20 @@ abstract class AbstractUniverseModel extends AbstractModel {
     /**
      * load object by $id
      * -> if $id not exists in DB -> query API
+     * -> $additionalOptions['forceRefresh'] queries the API even if the row is not outdated
      * @param int $id
      * @param string $accessToken
      * @param array<string, mixed> $additionalOptions
      */
     public function loadById(int $id, string $accessToken = '',  $additionalOptions = []): void{
+        // only for this row, not for related rows loaded by loadData()
+        $forceRefresh = !empty($additionalOptions['forceRefresh']);
+        unset($additionalOptions['forceRefresh']);
         /**
          * @var self $model
          */
         $this->getById($id, 0);
-        if($this->isOutdated()){
+        if($forceRefresh || $this->isOutdated()){
             $this->loadData($id, $accessToken, $additionalOptions);
         }
     }

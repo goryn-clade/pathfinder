@@ -153,6 +153,9 @@ class TypeModel extends AbstractUniverseModel {
      */
     public function reset($mapper = true, $essentials = true){
         $this->clearVirtual('dogmaAttributes');
+        // also clears the relation cache: without it a reused instance kept the previous type's
+        // 'attributes', and syncDogmaAttributes() wrote this type's values onto them
+        parent::reset($mapper, $essentials);
     }
 
     /**

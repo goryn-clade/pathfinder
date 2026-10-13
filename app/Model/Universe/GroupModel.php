@@ -139,9 +139,10 @@ class GroupModel extends AbstractUniverseModel {
      * load types data for this group
      * @param int $offset
      * @param int $length   0 -> all types
+     * @param bool $forceRefresh query ESI for every type, even if its row is not outdated
      * @return array<string, int>
      */
-    public function loadTypesData(int $offset = 0, int $length = 0) : array {
+    public function loadTypesData(int $offset = 0, int $length = 0, bool $forceRefresh = false) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
 
         if(
@@ -162,7 +163,7 @@ class GroupModel extends AbstractUniverseModel {
                  */
                 $type = $this->rel('types');
                 $type->storeDogmaAttributes = $this->storeDogmaAttributes;
-                $type->loadById($typeId);
+                $type->loadById($typeId, '', ['forceRefresh' => $forceRefresh]);
                 $type->reset();
 
                 $info['count']++;

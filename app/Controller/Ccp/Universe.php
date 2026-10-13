@@ -122,10 +122,11 @@ class Universe extends Controller\Controller {
      * @param int $offset
      * @param int $length
      * @param bool $storeDogmaAttributes
+     * @param bool $forceRefresh query ESI for every type, even if its row is not outdated
      * @return array<string, mixed>
      * @throws \Exception
      */
-    public function setupGroup(int $groupId, int $offset = 0, int $length = 0, bool $storeDogmaAttributes = false) : array {
+    public function setupGroup(int $groupId, int $offset = 0, int $length = 0, bool $storeDogmaAttributes = false, bool $forceRefresh = false) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
 
         if($groupId){
@@ -135,7 +136,7 @@ class Universe extends Controller\Controller {
             $group = Model\Universe\AbstractUniverseModel::getNew('GroupModel');
             $group->storeDogmaAttributes = $storeDogmaAttributes;
             $group->loadById($groupId);
-            $info = $group->loadTypesData($offset, $length);
+            $info = $group->loadTypesData($offset, $length, $forceRefresh);
         }
 
         return $info;

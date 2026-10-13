@@ -166,7 +166,8 @@ class Setup extends Controller\Controller {
             case 'Wormholes':
                 $groupId = Config::ESI_GROUP_WORMHOLE_ID;
                 $length = 10;
-                $buildInfo = $controller->setupGroup($groupId, $offset, $length, true);
+                // always refresh from ESI: this button is how admins pull CCP's current wormhole data
+                $buildInfo = $controller->setupGroup($groupId, $offset, $length, true, true);
 
                 $return->offset = $buildInfo['offset'];
                 $return->countAll = $buildInfo['countAll'];
