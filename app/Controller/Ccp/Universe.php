@@ -78,10 +78,11 @@ class Universe extends Controller\Controller {
      * @param int $categoryId
      * @param int $offset
      * @param int $length
+     * @param bool $forceRefresh query ESI for the category, its groups and types, even if their rows are not outdated
      * @return array<string, mixed>
      * @throws \Exception
      */
-    public function setupCategory(int $categoryId, int $offset = 0, int $length = 0) : array {
+    public function setupCategory(int $categoryId, int $offset = 0, int $length = 0, bool $forceRefresh = false) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset, 'groupTypes' => []];
 
         if($categoryId){
@@ -89,8 +90,8 @@ class Universe extends Controller\Controller {
              * @var Model\Universe\CategoryModel $category
              */
             $category = Model\Universe\AbstractUniverseModel::getNew('CategoryModel');
-            $category->loadById($categoryId);
-            $info = $category->loadGroupsData($offset, $length);
+            $category->loadById($categoryId, '', ['forceRefresh' => $forceRefresh]);
+            $info = $category->loadGroupsData($offset, $length, $forceRefresh);
         }
 
         return $info;
@@ -122,7 +123,7 @@ class Universe extends Controller\Controller {
      * @param int $offset
      * @param int $length
      * @param bool $storeDogmaAttributes
-     * @param bool $forceRefresh query ESI for every type, even if its row is not outdated
+     * @param bool $forceRefresh query ESI for the group and its types, even if their rows are not outdated
      * @return array<string, mixed>
      * @throws \Exception
      */
@@ -135,7 +136,7 @@ class Universe extends Controller\Controller {
              */
             $group = Model\Universe\AbstractUniverseModel::getNew('GroupModel');
             $group->storeDogmaAttributes = $storeDogmaAttributes;
-            $group->loadById($groupId);
+            $group->loadById($groupId, '', ['forceRefresh' => $forceRefresh]);
             $info = $group->loadTypesData($offset, $length, $forceRefresh);
         }
 

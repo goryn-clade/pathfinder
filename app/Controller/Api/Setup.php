@@ -177,7 +177,8 @@ class Setup extends Controller\Controller {
             case 'Structures':
                 $categoryId = Config::ESI_CATEGORY_STRUCTURE_ID;
                 $length = 1;
-                $buildInfo = $controller->setupCategory($categoryId, $offset, $length);
+                // always refresh from ESI, like 'Wormholes'
+                $buildInfo = $controller->setupCategory($categoryId, $offset, $length, true);
                 $categoryUniverseModel =  Model\Universe\AbstractUniverseModel::getNew('CategoryModel');
                 $categoryUniverseModel->getById($categoryId, 0);
 
@@ -190,8 +191,11 @@ class Setup extends Controller\Controller {
                 break;
             case 'Ships':
                 $categoryId = Config::ESI_CATEGORY_SHIP_ID;
-                $length = 2;
-                $buildInfo = $controller->setupCategory($categoryId, $offset, $length);
+                // 1 group per request: with every type refreshed, the largest group (85 types) takes ~35 s
+                // of the 120 s /api/Setup/ timeout
+                $length = 1;
+                // always refresh from ESI, like 'Wormholes'
+                $buildInfo = $controller->setupCategory($categoryId, $offset, $length, true);
                 $categoryUniverseModel =  Model\Universe\AbstractUniverseModel::getNew('CategoryModel');
                 $categoryUniverseModel->getById($categoryId, 0);
 

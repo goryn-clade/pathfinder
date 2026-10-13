@@ -137,9 +137,10 @@ class CategoryModel extends AbstractUniverseModel {
      * load groups data for this category
      * @param int $offset
      * @param int $length   0 -> all groups
+     * @param bool $forceRefresh query ESI for every group and type, even if its row is not outdated
      * @return array<string, mixed>
      */
-    public function loadGroupsData(int $offset = 0, int $length = 0) : array {
+    public function loadGroupsData(int $offset = 0, int $length = 0, bool $forceRefresh = false) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset, 'groupTypes' => []];
 
         if(
@@ -159,9 +160,9 @@ class CategoryModel extends AbstractUniverseModel {
                  * @var GroupModel $group
                  */
                 $group = $this->rel('groups');
-                $group->loadById($groupId);
+                $group->loadById($groupId, '', ['forceRefresh' => $forceRefresh]);
 
-                $info['groupTypes'][$groupId] = $group->loadTypesData();
+                $info['groupTypes'][$groupId] = $group->loadTypesData(0, 0, $forceRefresh);
 
                 $group->reset();
 
