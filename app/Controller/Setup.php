@@ -1921,8 +1921,8 @@ class Setup extends Controller {
                     ],
                     'label' => 'Wormhole statics data',
                     'countBuild' => $systemStaticModel->getRowCount(),
-                    'countAll' => 3772,
-                    'tooltip' => 'import all static wormholes for systems. Runtime: ~25s'
+                    'countAll' => count($systemStaticModel::getCSVData($systemStaticModel->getTable())),
+                    'tooltip' => 'import all static wormholes for systems from export/csv/system_static.csv (from Tripwire). Removes statics that are no longer in the file. Rebuild the systems index afterwards. Runtime: ~25s'
                 ],
                 [
                     'label' => 'Build search index',

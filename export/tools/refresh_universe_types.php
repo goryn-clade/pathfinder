@@ -25,6 +25,8 @@
 
 declare(strict_types=1);
 
+require __DIR__ . '/seed_sql.php';
+
 const ESI_BASE = 'https://esi.evetech.net/latest';
 const CATEGORY_IDS = [6, 65];           // Ships, Structures
 const WORMHOLE_GROUP_ID = 988;
@@ -44,11 +46,6 @@ foreach([$sqlFile, $csvFile] as $file){
 }
 
 // ---- ESI ------------------------------------------------------------------------------------
-
-function fail(string $message) : never {
-    fwrite(STDERR, "ERROR: $message\n");
-    exit(1);
-}
 
 function esiGet(string $path) : array {
     $context = stream_context_create(['http' => [
@@ -121,108 +118,7 @@ function esiGetMany(array $paths, string $label, int $parallel = 10) : array {
     return $results;
 }
 
-// ---- SQL helpers ----------------------------------------------------------------------------
-
-function sqlString(?string $value) : string {
-    if($value === null){
-        return 'NULL';
-    }
-    // same escaping as mysqldump
-    $value = strtr($value, ["\\" => "\\\\", "'" => "\\'", '"' => '\\"', "\0" => "\\0", "\n" => "\\n", "\r" => "\\r", "\x1a" => "\\Z"]);
-    return "'" . $value . "'";
-}
-
-function sqlNumber(int|float|string|null $value) : string {
-    if($value === null){
-        return 'NULL';
-    }
-    if(is_string($value)){
-        return $value;
-    }
-    if(is_float($value) && floor($value) == $value && abs($value) < 1e18){
-        return sprintf('%.0f', $value);
-    }
-    return (string)$value;
-}
-
-function sqlBool(?bool $value) : string {
-    return $value === null ? 'NULL' : ($value ? '1' : '0');
-}
-
-/**
- * Find the data block of a table, as written by mysqldump:
- *   ALTER TABLE `x` DISABLE KEYS; INSERT INTO `x` VALUES <rows...>;
- * @return array{0:int, 1:int} index of the first and last row line
- */
-function findInsertBlock(array $lines, string $table) : array {
-    foreach($lines as $i => $line){
-        if(
-            $line === "INSERT INTO `$table` VALUES" &&
-            ($lines[$i - 1] ?? '') === "/*!40000 ALTER TABLE `$table` DISABLE KEYS */;"
-        ){
-            for($j = $i + 1; $j < count($lines); $j++){
-                if(!str_starts_with($lines[$j], '(')){
-                    fail("Unexpected line in `$table` data block at line " . ($j + 1));
-                }
-                if(str_ends_with($lines[$j], ');')){
-                    return [$i + 1, $j];
-                }
-            }
-        }
-    }
-    fail("Data block for table `$table` not found");
-}
-
-/**
- * @return array<int, string> row id => row text without the trailing , or ;
- */
-function readRows(array $lines, array $block) : array {
-    $rows = [];
-    for($i = $block[0]; $i <= $block[1]; $i++){
-        if(!preg_match('/^\((-?\d+),/', $lines[$i], $m)){
-            fail('Cannot read row id at line ' . ($i + 1));
-        }
-        $rows[(int)$m[1]] = substr($lines[$i], 0, -1);
-    }
-    return $rows;
-}
-
-/**
- * @param array<int, string> $rows
- * @return string[]
- */
-function writeRows(array $rows) : array {
-    ksort($rows);
-    $out = array_values($rows);
-    $last = count($out) - 1;
-    foreach($out as $i => &$row){
-        $row .= $i === $last ? ';' : ',';
-    }
-    return $out;
-}
-
-function replaceBlock(array &$lines, string $table, array $rows) : void {
-    $block = findInsertBlock($lines, $table);
-    array_splice($lines, $block[0], $block[1] - $block[0] + 1, writeRows($rows));
-}
-
-/**
- * set AUTO_INCREMENT of a table; with $onlyRaise it is never lowered
- */
-function setAutoIncrement(array &$lines, string $table, int $value, bool $onlyRaise = false) : void {
-    $inTable = false;
-    foreach($lines as $i => $line){
-        if($line === "CREATE TABLE `$table` ("){
-            $inTable = true;
-        }elseif($inTable && preg_match('/^\) ENGINE=.* AUTO_INCREMENT=(\d+)/', $line, $m)){
-            if($onlyRaise ? $value > (int)$m[1] : $value !== (int)$m[1]){
-                $lines[$i] = preg_replace('/AUTO_INCREMENT=\d+/', "AUTO_INCREMENT=$value", $line);
-            }
-            return;
-        }
-    }
-    fail("CREATE TABLE `$table` not found");
-}
+// ---- helpers ------------------------------------------------------------------------------
 
 /**
  * Add or update rows of a table that start with (id, created, updated, ...).
@@ -301,7 +197,7 @@ foreach(['categoriesAdded', 'categoriesChanged', 'groupsAdded', 'groupsChanged',
 
 // ---- category -------------------------------------------------------------------------------
 
-$categoryRows = readRows($lines, findInsertBlock($lines, 'category'));
+$categoryRows = readRows($lines, 'category');
 $builders = [];
 foreach($esiCategories as $id => $c){
     $builders[$id] = fn(string $created, string $updated) => '(' . implode(',', [
@@ -315,7 +211,7 @@ setAutoIncrement($lines, 'category', max(array_keys($categoryRows)) + 1, true);
 
 // ---- group ----------------------------------------------------------------------------------
 
-$groupRows = readRows($lines, findInsertBlock($lines, 'group'));
+$groupRows = readRows($lines, 'group');
 $builders = [];
 foreach($esiGroups as $id => $g){
     $builders[$id] = fn(string $created, string $updated) => '(' . implode(',', [
@@ -338,7 +234,7 @@ setAutoIncrement($lines, 'group', max(array_keys($groupRows)) + 1, true);
 
 // ---- type -----------------------------------------------------------------------------------
 
-$typeRows = readRows($lines, findInsertBlock($lines, 'type'));
+$typeRows = readRows($lines, 'type');
 $builders = [];
 foreach($esiTypes as $id => $t){
     $builders[$id] = fn(string $created, string $updated) => '(' . implode(',', [
@@ -374,7 +270,7 @@ setAutoIncrement($lines, 'type', max(array_keys($typeRows)) + 1, true);
 
 // ---- dogma_attribute ------------------------------------------------------------------------
 
-$dogmaRows = readRows($lines, findInsertBlock($lines, 'dogma_attribute'));
+$dogmaRows = readRows($lines, 'dogma_attribute');
 $usedAttributeIds = [SCAN_STRENGTH_ATTRIBUTE_ID];
 foreach($wormholeTypeIds as $typeId){
     foreach($esiTypes[$typeId]['dogma_attributes'] ?? [] as $a){
@@ -408,7 +304,7 @@ setAutoIncrement($lines, 'dogma_attribute', max(array_keys($dogmaRows)) + 1, tru
 // ---- type_attribute (wormholes) -------------------------------------------------------------
 
 $oldAttributes = [];   // typeId => [attributeId => value]
-foreach(readRows($lines, findInsertBlock($lines, 'type_attribute')) as $row){
+foreach(readRows($lines, 'type_attribute') as $row){
     if(!preg_match('/^\(\d+,(\d+),(\d+),([^)]+)\)$/', $row, $m)){
         fail("Cannot read type_attribute row: $row");
     }

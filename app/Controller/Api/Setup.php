@@ -286,6 +286,9 @@ class Setup extends Controller\Controller {
         $systemStaticModel = Model\Universe\AbstractUniverseModel::getNew('SystemStaticModel');
         if(!empty($csvData = $systemStaticModel::getCSVData($systemStaticModel->getTable()))){
             $info['countAll'] = count($csvData);
+            if($offset === 0){
+                $this->deleteSystemStaticsNotInCSV($csvData);
+            }
             if($length){
                 $csvData = array_slice($csvData, $offset, $length);
             }
@@ -325,6 +328,32 @@ class Setup extends Controller\Controller {
         }
 
         return $info;
+    }
+
+    /**
+     * delete 'system_static' rows that are not in the *.csv
+     * -> setupSystemStaticTable() only inserts/updates by id, so removed statics would stay forever
+     * -> also deletes rows whose id now holds another system/type pair: updating them by id could hit
+     *    the unique (systemId, typeId) key
+     * @param array<int, array<string, mixed>> $csvData all *.csv rows
+     */
+    protected function deleteSystemStaticsNotInCSV(array $csvData) : void {
+        if(!($universeDB = $this->getDB('UNIVERSE'))){
+            return;
+        }
+        $csvPairs = [];
+        foreach($csvData as $data){
+            $csvPairs[(int)$data['id']] = (int)$data['systemId'] . ':' . (int)$data['typeId'];
+        }
+        $deleteIds = [];
+        foreach($universeDB->exec('SELECT `id`, `systemId`, `typeId` FROM `system_static`') as $row){
+            if(($csvPairs[(int)$row['id']] ?? null) !== (int)$row['systemId'] . ':' . (int)$row['typeId']){
+                $deleteIds[] = (int)$row['id'];
+            }
+        }
+        foreach(array_chunk($deleteIds, 500) as $ids){
+            $universeDB->exec('DELETE FROM `system_static` WHERE `id` IN (' . implode(',', $ids) . ')');
+        }
     }
 
     /**
