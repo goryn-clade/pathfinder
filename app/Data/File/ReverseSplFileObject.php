@@ -198,7 +198,7 @@ class ReverseSplFileObject extends \SplFileObject{
         $currentPointer = $this->ftell();
 
         // Prepare count by resetting flags as READ_CSV for example make the tricks very slow
-        $this->setFlags(null);
+        $this->setFlags(0);
 
         // Go to the larger INT we can as seek will not throw exception, errors, notice if we go beyond the bottom line
         //$this->seek(PHP_INT_MAX);
