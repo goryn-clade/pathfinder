@@ -45,13 +45,6 @@ abstract class AbstractClient extends \Prefab {
     const CLIENT_NAME = null;
 
     /**
-     * F3 hive key: duration of each send()/sendBatch() call in a web request
-     * -> read by Api\Map::updateUserData() for its slow request log
-     * @var string
-     */
-    const TIMINGS_KEY = 'API_TIMINGS';
-
-    /**
      * paths where failed requests are not retried
      * -> updateUserData is polled every few seconds; the next poll is the retry.
      *    Retries pushed it past nginx´ 40s timeout (T7)
@@ -294,20 +287,6 @@ abstract class AbstractClient extends \Prefab {
     }
 
     /**
-     * record the duration of a request (web requests only, cron jobs make too many)
-     * @param string $name
-     * @param array<int, mixed> $arguments
-     * @param float $start
-     */
-    protected function addTiming(string $name, array $arguments, float $start) : void {
-        $f3 = \Base::instance();
-        if(!$f3->get('CLI')){
-            $request = is_string($arguments[0] ?? null) ? $arguments[0] : $name;
-            $f3->push(self::TIMINGS_KEY, static::CLIENT_NAME . '.' . $request . '=' . (int)round((microtime(true) - $start) * 1000));
-        }
-    }
-
-    /**
      * call request API data
      * @param string $name
      * @param array<string, mixed> $arguments
@@ -317,11 +296,7 @@ abstract class AbstractClient extends \Prefab {
         $return = [];
         if(is_object($this->client)){
             if(method_exists($this->client, $name)){
-                $start = microtime(true);
                 $return = call_user_func_array([$this->client, $name], $arguments);
-                if(in_array($name, ['send', 'sendBatch'])){
-                    $this->addTiming($name, $arguments, $start);
-                }
             }else{
                 $errorMsg = $this->getMissingMethodError($this->client::class, $name);
                 $this->getLogger('ERROR')->write($errorMsg);
