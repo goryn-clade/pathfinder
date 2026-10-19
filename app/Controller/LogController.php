@@ -67,8 +67,8 @@ class LogController extends \Prefab  {
             if($mapId = $log->getChannelId()){
                 $logData = $log->getData();
                 if($characterId = (int)$logData['character']['id']){
-                    if($index = $this->getBufferedActivityIndex($characterId, $mapId)){
-                        $this->activityLogBuffer[$index][$action]++;
+                    if(!is_null($index = $this->getBufferedActivityIndex($characterId, $mapId))){
+                        $this->activityLogBuffer[$index][$action] = ($this->activityLogBuffer[$index][$action] ?? 0) + 1;
                     }else{
                         $this->activityLogBuffer[] = [
                             'characterId' => $characterId,
@@ -137,10 +137,10 @@ class LogController extends \Prefab  {
      * get array key/index from "buffered activity log" array
      * @param int $characterId
      * @param int $mapId
-     * @return int
+     * @return int|null
      */
-    private function getBufferedActivityIndex(int $characterId, int $mapId): int {
-        $activityKey = 0;
+    private function getBufferedActivityIndex(int $characterId, int $mapId): ?int {
+        $activityKey = null;
         if($characterId > 0 && $mapId > 0 ){
             foreach($this->activityLogBuffer as $key => $activityData){
                 if(
