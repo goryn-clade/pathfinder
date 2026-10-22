@@ -38,7 +38,7 @@ v3.0 is a major release. The full upgrade guide (backups, schema migration, env 
 
 ## Community
 
-Join the discussion on Discord: [https://discord.gg/PLACEHOLDER](https://discord.gg/PLACEHOLDER)
+For help and discussion, join the Discord server: <https://discord.gg/zG733etVbj>
 
 > **Note:** The Pathfinder Slack workspace is no longer active. Slack's commercial model change reduced free workspace history to 90 days, making it unsuitable for a small open-source community. Discord is now the primary community channel.
 
