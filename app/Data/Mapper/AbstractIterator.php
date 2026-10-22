@@ -31,6 +31,10 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * @param $data
      */
     function __construct(mixed $data){
+        // PHP 8.5 deprecates an object as backing array (ESI responses are \stdClass)
+        if(is_object($data)){
+            $data = get_object_vars($data);
+        }
         parent::__construct($data, \RecursiveIteratorIterator::SELF_FIRST);
     }
 

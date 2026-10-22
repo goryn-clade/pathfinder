@@ -862,12 +862,12 @@ abstract class AbstractModel extends Cortex implements \Stringable {
             $filePath = self::getF3()->get('EXPORT') . 'csv/' . $fileName . '.csv';
             if(is_file($filePath)){
                 $handle = @fopen($filePath, 'r');
-                $keys = array_map(lcfirst(...), fgetcsv($handle, 0, ';'));
+                $keys = array_map(lcfirst(...), fgetcsv($handle, 0, ';', '"', '\\'));
                 $keys = $rtrim($keys);
 
                 if(count($keys) > 0){
                     while (!feof($handle)) {
-                        $tableData[] = array_combine($keys, $rtrim(fgetcsv($handle, 0, ';'), count($keys)));
+                        $tableData[] = array_combine($keys, $rtrim(fgetcsv($handle, 0, ';', '"', '\\'), count($keys)));
                     }
                 }else{
                     self::getF3()->error(500, 'File could not be read');

@@ -145,7 +145,6 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
         curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlErr  = curl_error($ch);
-        curl_close($ch);
 
         if ($curlErr || ($httpCode && ($httpCode < 200 || $httpCode >= 300))) {
             // log the host only, the full webhook URL is a secret

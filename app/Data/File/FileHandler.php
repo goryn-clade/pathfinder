@@ -32,7 +32,7 @@ class FileHandler extends \Prefab {
         string $sourceFile,
         int $offset = self::LOG_FILE_OFFSET,
         int $limit = self::LOG_FILE_LIMIT,
-        \Closure $rowParser = null
+        ?\Closure $rowParser = null
     ) : array {
         $data = [];
 

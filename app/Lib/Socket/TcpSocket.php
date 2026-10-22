@@ -22,7 +22,7 @@ class TcpSocket extends AbstractSocket {
      * @return Socket\ConnectorInterface
      */
     protected function getConnector(): Socket\ConnectorInterface {
-        return new Socket\Connector($this->getLoop(), $this->options);
+        return new Socket\Connector($this->options, $this->getLoop());
     }
 
 }

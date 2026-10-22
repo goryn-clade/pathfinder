@@ -518,7 +518,9 @@ class Map extends Controller\AccessController {
             ->write('mapConnectionAccess', $return->data)
             ->then(
                 function($payload) use (&$status): void {
-                    $status = (string)$payload['load'];
+                    if(($payload['task'] ?? null) != 'error'){
+                        $status = (string)$payload['load'];
+                    }
                 });
 
         $return->status = $status;

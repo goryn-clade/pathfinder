@@ -342,8 +342,10 @@ class Config extends \Prefab {
         ];
 
         if($config['SCHEME'] == 'mysql'){
-            $options[\PDO::MYSQL_ATTR_COMPRESS]     = true;
-            $options[\PDO::MYSQL_ATTR_INIT_COMMAND] = implode(',', [
+            // PHP 8.5 deprecates the \PDO::MYSQL_ATTR_* constants. \Pdo\Mysql exists since 8.4
+            $pdoMysql = \PHP_VERSION_ID >= 80400 ? \Pdo\Mysql::class : null;
+            $options[$pdoMysql ? $pdoMysql::ATTR_COMPRESS : \PDO::MYSQL_ATTR_COMPRESS] = true;
+            $options[$pdoMysql ? $pdoMysql::ATTR_INIT_COMMAND : \PDO::MYSQL_ATTR_INIT_COMMAND] = implode(',', [
                 "SET NAMES " . self::getRequiredDbVars($f3, $config['SCHEME'])['CHARACTER_SET_CONNECTION'] . " COLLATE " . self::getRequiredDbVars($f3, $config['SCHEME'])['COLLATION_CONNECTION'],
                 "@@session.time_zone = '+00:00'",
                 "@@session.default_storage_engine = " . self::getRequiredDbVars($f3, $config['SCHEME'])['DEFAULT_STORAGE_ENGINE']

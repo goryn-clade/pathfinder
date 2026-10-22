@@ -71,7 +71,7 @@ abstract class AbstractCron {
      * @param int $timeThreshold
      * @return bool
      */
-    protected function isExecutionTimeLeft(float $timeTotalStart, float $timeCheck = null, int $timeThreshold = self::DEFAULT_EXECUTION_TIME_THRESHOLD) : bool {
+    protected function isExecutionTimeLeft(float $timeTotalStart, ?float $timeCheck = null, int $timeThreshold = self::DEFAULT_EXECUTION_TIME_THRESHOLD) : bool {
         $timeLeft = true;
         if($timeTotalMax = $this->getMaxExecutionTime()){
             $timeTotalMaxThreshold = $timeTotalStart + $timeTotalMax - $timeThreshold;

@@ -25,6 +25,12 @@
     }
   },
   "readme": "README.md",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/goryn-clade/pathfinder_esi"
+    }
+  ],
   "require": {
     "php-64bit": ">=8.2",
     "ext-pdo": "*",
@@ -39,17 +45,18 @@
     "ikkez/f3-cortex": "dev-master#47d2596914776877ef4d87706d1faa812d1398f2",
     "ikkez/f3-sheet": "0.4.*",
     "xfra35/f3-cron": "1.2.*",
-    "monolog/monolog": "2.9.2",
+    "monolog/monolog": "^2.10",
     "league/html-to-markdown": "5.0.*",
     "cache/redis-adapter": "^1.2",
     "cache/array-adapter": "1.1.*",
     "cache/void-adapter": "^1.1",
     "cache/namespaced-cache": "1.1.*",
-    "react/socket": "1.9.*",
-    "react/promise-stream": "1.3.*",
-    "clue/ndjson-react": "1.2.*",
+    "react/promise": "^3.2",
+    "react/socket": "^1.16",
+    "react/promise-stream": "^1.7",
+    "clue/ndjson-react": "^1.3",
     "firebase/php-jwt": "^7",
-    "goryn-clade/pathfinder_esi": "3.0.1-beta.1"
+    "goryn-clade/pathfinder_esi": "3.0.1"
   },
   "suggest": {
     "ext-redis": "Redis can be used as cache backend."

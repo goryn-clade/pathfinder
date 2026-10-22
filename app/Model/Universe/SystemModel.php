@@ -182,7 +182,7 @@ class SystemModel extends AbstractUniverseModel {
      * @return double
      */
     public function set_securityStatus(string|int|float $secStatus){
-        $secStatus = (double)$secStatus;
+        $secStatus = (float)$secStatus;
         // round for trueSec
         $positive = ($secStatus > 0);
         $trueSec = round($secStatus, 1, PHP_ROUND_HALF_DOWN);

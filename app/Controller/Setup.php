@@ -1699,7 +1699,10 @@ class Setup extends Controller {
             ->write($task, $healthCheckToken)
             ->then(
                 function($payload) use ($task, $healthCheckToken, &$statusTcp, $setStats): void {
-                    if(
+                    if(($payload['task'] ?? null) == 'error'){
+                        // socket not reachable
+                        $statusTcp['label'] = $payload['load'] ?? '';
+                    }elseif(
                         ($payload['task'] ?? null) == $task &&
                         ($payload['load'] ?? null) == $healthCheckToken
                     ){
@@ -1711,12 +1714,6 @@ class Setup extends Controller {
                         $statusTcp['label'] = is_string($payload['load'] ?? null) ? $payload['load'] : 'INVALID RESPONSE';
                         $statusTcp['class'] = 'txt-color-warning';
                     }
-
-                    // statistics (e.g. current connection count)
-                    $setStats((array)($payload['stats'] ?? []));
-                },
-                function($payload) use (&$statusTcp, $setStats): void {
-                    $statusTcp['label'] = $payload['load'] ?? '';
 
                     // statistics (e.g. current connection count)
                     $setStats((array)($payload['stats'] ?? []));

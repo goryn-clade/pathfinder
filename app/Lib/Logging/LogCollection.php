@@ -64,7 +64,7 @@ class LogCollection extends AbstractLog {
      * @throws \Exception
      */
     public function addLog(AbstractLog $log): void{
-        if(!$this->collection->contains($log)){
+        if(!$this->collection->offsetExists($log)){
             if(!$this->collection->count()){
                 // first log sets the default for this collection
                 $this->channelType = $log->getChannelType();
@@ -93,7 +93,7 @@ class LogCollection extends AbstractLog {
             $this->setMessage($log->getMessage());
             $this->setTag($log->getTag());
 
-            $this->collection->attach($log);
+            $this->collection->offsetSet($log);
         }
     }
 
