@@ -18,7 +18,7 @@ class MapScopeModel extends AbstractPathfinderModel{
     protected $table = 'map_scope';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -40,7 +40,7 @@ class MapScopeModel extends AbstractPathfinderModel{
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

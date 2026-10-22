@@ -13,7 +13,7 @@ class AllianceModel extends AbstractUniverseModel {
     protected $table = 'alliance';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -33,7 +33,7 @@ class AllianceModel extends AbstractUniverseModel {
         'factionId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\FactionModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\FactionModel::class,
             'constraint' => [
                 [
                     'table' => 'faction',
@@ -42,10 +42,10 @@ class AllianceModel extends AbstractUniverseModel {
             ]
         ],
         'corporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\CorporationModel', 'allianceId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\CorporationModel::class, 'allianceId']
         ],
         'sovereigntySystems' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel', 'allianceId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel::class, 'allianceId']
         ]
     ];
 
@@ -66,12 +66,12 @@ class AllianceModel extends AbstractUniverseModel {
      * @param $date
      * @return string|null
      */
-    public function set_dateFounded($date){
+    public function set_dateFounded(mixed $date){
         if(is_string($date) && !empty($date)){
             try{
                 $dateTime  = new \DateTime($date);
                 $date = $dateTime->format('Y-m-d H:i:s');
-            }catch(\Exception $e){
+            }catch(\Exception){
                 $date = null;
             }
         }
@@ -82,14 +82,17 @@ class AllianceModel extends AbstractUniverseModel {
      * load alliance by Id either from DB or load data from API
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getAlliance', $id);
         if(!empty($data) && !isset($data['error'])){
+            // ESI omits this key if the alliance has no faction
+            $data['factionId'] ??= null;
+
             if($data['factionId']){
                 /**
-                 * @var $faction FactionModel
+                 * @var FactionModel $faction
                  */
                 $faction = $this->rel('factionId');
                 $faction->loadById($data['factionId'], $accessToken, $additionalOptions);

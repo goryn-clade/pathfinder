@@ -19,11 +19,11 @@ class Universe extends Controller\Controller {
 
     /*  currently not used
     protected function setupRegions(\Base $f3){
-        $regionsWhitelist = [
+        $regionsAllowlist = [
             10000002 // The Forge (13 constellations -> 93 systems)
         ];
         $regionIds = $f3->ccpClient()->send('getUniverseRegions');
-        $regionIds = array_intersect($regionsWhitelist, $regionIds);
+        $regionIds = array_intersect($regionsAllowlist, $regionIds);
 
         $region = Model\Universe\AbstractUniverseModel::getNew('RegionModel');
         foreach($regionIds as $regionId){
@@ -40,11 +40,11 @@ class Universe extends Controller\Controller {
 
     /* currently not used
     protected function setupConstellations(\Base $f3){
-        $constellationsWhitelist = [
+        $constellationsAllowlist = [
             20000014 // Mal (11 systems)
         ];
         $constellationIds = $f3->ccpClient()->send('getUniverseConstellations');
-        $constellationIds = array_intersect($constellationsWhitelist, $constellationIds);
+        $constellationIds = array_intersect($constellationsAllowlist, $constellationIds);
         $constellation = Model\Universe\AbstractUniverseModel::getNew('ConstellationModel');
         foreach($constellationIds as $constellationId){
             $constellation->loadById($constellationId);
@@ -58,14 +58,14 @@ class Universe extends Controller\Controller {
      * id 2 -> Celestial (>100 groups -> >1000 types)
      * id 6 -> Ship (46 groups -> 4xx types)
      * id 65 -> Structure (10 groups -> 33 types)
-     * @param array $categoriesWhitelist
-     * @return array
+     * @param array<string, mixed> $categoriesAllowlist
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    protected function setupCategories(array $categoriesWhitelist = []) : array {
+    protected function setupCategories( $categoriesAllowlist = []) : array {
         $info = [];
         $categoryIds = Model\Universe\CategoryModel::getUniverseCategories();
-        $categoryIds = array_intersect($categoriesWhitelist, $categoryIds);
+        $categoryIds = array_intersect($categoriesAllowlist, $categoryIds);
         foreach($categoryIds as $categoryId){
             $info[$categoryId] = $this->setupCategory($categoryId);
         }
@@ -78,19 +78,20 @@ class Universe extends Controller\Controller {
      * @param int $categoryId
      * @param int $offset
      * @param int $length
-     * @return array
+     * @param bool $forceRefresh query ESI for the category, its groups and types, even if their rows are not outdated
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    public function setupCategory(int $categoryId, int $offset = 0, int $length = 0) : array {
+    public function setupCategory(int $categoryId, int $offset = 0, int $length = 0, bool $forceRefresh = false) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset, 'groupTypes' => []];
 
         if($categoryId){
             /**
-             * @var $category Model\Universe\CategoryModel
+             * @var Model\Universe\CategoryModel $category
              */
             $category = Model\Universe\AbstractUniverseModel::getNew('CategoryModel');
-            $category->loadById($categoryId);
-            $info = $category->loadGroupsData($offset, $length);
+            $category->loadById($categoryId, '', ['forceRefresh' => $forceRefresh]);
+            $info = $category->loadGroupsData($offset, $length, $forceRefresh);
         }
 
         return $info;
@@ -102,14 +103,14 @@ class Universe extends Controller\Controller {
      * id 7 -> Planet (9 types)
      * id 10 -> Stargate (17 types)
      * id 988 -> Wormhole (89 types)
-     * @param array $groupsWhitelist
-     * @return array
+     * @param array<string, mixed> $groupsAllowlist
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    protected function setupGroups(array $groupsWhitelist = []) : array {
+    protected function setupGroups( $groupsAllowlist = []) : array {
         $info = [];
         $groupIds = Model\Universe\GroupModel::getUniverseGroups();
-        $groupIds = array_intersect($groupsWhitelist, $groupIds);
+        $groupIds = array_intersect($groupsAllowlist, $groupIds);
         foreach($groupIds as $groupId){
             $info[$groupId] = $this->setupGroup($groupId);
         }
@@ -122,32 +123,32 @@ class Universe extends Controller\Controller {
      * @param int $offset
      * @param int $length
      * @param bool $storeDogmaAttributes
-     * @return array
+     * @param bool $forceRefresh query ESI for the group and its types, even if their rows are not outdated
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    public function setupGroup(int $groupId, int $offset = 0, int $length = 0, bool $storeDogmaAttributes = false) : array {
+    public function setupGroup(int $groupId, int $offset = 0, int $length = 0, bool $storeDogmaAttributes = false, bool $forceRefresh = false) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
 
         if($groupId){
             /**
-             * @var $group Model\Universe\GroupModel
+             * @var Model\Universe\GroupModel $group
              */
             $group = Model\Universe\AbstractUniverseModel::getNew('GroupModel');
             $group->storeDogmaAttributes = $storeDogmaAttributes;
-            $group->loadById($groupId);
-            $info = $group->loadTypesData($offset, $length);
+            $group->loadById($groupId, '', ['forceRefresh' => $forceRefresh]);
+            $info = $group->loadTypesData($offset, $length, $forceRefresh);
         }
 
         return $info;
     }
 
     // system search index methods ====================================================================================
-
     /**
      * build search index from all systems data
      * @param int $offset
      * @param int $length
-     * @return array
+     * @return array<string, int>
      * @throws \Exception
      */
     public function buildSystemsIndex(int $offset = 0, int $length = 10) : array {
@@ -156,7 +157,7 @@ class Universe extends Controller\Controller {
         $systemIds = array_slice($systemIds, $offset, $length);
 
         /**
-         * @var $system Model\Universe\SystemModel
+         * @var Model\Universe\SystemModel $system
          */
         $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
         $indexData = [];
@@ -182,7 +183,7 @@ class Universe extends Controller\Controller {
     /**
      * get systemIds for all systems
      * @param bool $ignoreCache
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getSystemIds(bool $ignoreCache = false) : array {
@@ -190,7 +191,7 @@ class Universe extends Controller\Controller {
         $systemIds = [];
         if($ignoreCache || !$f3->exists(self::SESSION_KEY_SYSTEM_IDS, $systemIds)){
             /**
-             * @var $system Model\Universe\SystemModel
+             * @var Model\Universe\SystemModel $system
              */
             $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
             if($systems = $system->find()){
@@ -208,7 +209,7 @@ class Universe extends Controller\Controller {
     /**
      * get complete system index (all systems)
      * @param bool $all
-     * @return array
+     * @return array<string, mixed>
      */
     public function getSystemsIndex(bool $all = false) : array {
         $index = [];
@@ -226,7 +227,7 @@ class Universe extends Controller\Controller {
     /**
      * clear complete systems search index for all systems
      */
-    public function clearSystemsIndex(){
+    public function clearSystemsIndex(): void{
         $cacheKeyTable = Model\Universe\AbstractUniverseModel::generateHashKeyTable('system');
         if($this->getF3()->exists($cacheKeyTable,$cacheKeys)){
             foreach((array)$cacheKeys as $cacheKeyRow) {
@@ -251,7 +252,7 @@ class Universe extends Controller\Controller {
             if(!$data = $this->get($cacheKeyRow)){
                 // .. try to build index
                 /**
-                 * @var $system Model\Universe\SystemModel
+                 * @var Model\Universe\SystemModel $system
                  */
                 $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
                 if($system->getById($systemId)){
@@ -270,7 +271,7 @@ class Universe extends Controller\Controller {
     private function get(string $cacheKey) : ?\stdClass {
         $data = null;
         if($this->getF3()->exists($cacheKey,$value)) {
-            if(is_string($value) && strpos($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX) === 0) {
+            if(is_string($value) && str_starts_with($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX)) {
                 // value references an other cacheKey that holds data
                 return $this->get($value);
             }elseif( !empty((array)$value) ){
@@ -285,9 +286,9 @@ class Universe extends Controller\Controller {
      * clear cacheKey
      * @param string $cacheKey
      */
-    private function clear(string $cacheKey){
+    private function clear(string $cacheKey): void{
         if($this->getF3()->exists($cacheKey,$value)) {
-            if(is_string($value) && strpos($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX) === 0) {
+            if(is_string($value) && str_starts_with($value, Model\Universe\AbstractUniverseModel::CACHE_KEY_PREFIX)) {
                 // value references another cacheKey -> clear that one as well
                 $this->clear($value);
             }
@@ -297,14 +298,14 @@ class Universe extends Controller\Controller {
 
     /**
      * search universeName data by search term
-     * @param array $categories
+     * @param array<string, mixed> $categories
      * @param string $search
      * @param int $characterId
      * @param string $accessToken
      * @param bool $strict
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function searchUniverseNameData(array $categories, string $search, int $characterId, string $accessToken, bool $strict = false) : array {
+    public static function searchUniverseNameData( $categories, string $search, int $characterId, string $accessToken, bool $strict = false) : array {
         $f3 = \Base::instance();
         $universeNameData = [];
         if( !empty($categories) && !empty($search)){

@@ -18,7 +18,7 @@ class RoleModel extends AbstractPathfinderModel {
     protected $table = 'role';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -47,12 +47,12 @@ class RoleModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'corporationRights' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel', 'roleId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel::class, 'roleId']
         ]
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [
@@ -121,7 +121,7 @@ class RoleModel extends AbstractPathfinderModel {
      * @param int $roleId
      * @return self|null
      */
-    public static function getRoleById(int $roleId = 1){
+    public static function getRoleById(int $roleId = 1): ?\Exodus4D\Pathfinder\Model\Pathfinder\RoleModel{
         $role = new self();
         $role->getById($roleId);
         return $role->dry() ? null : $role;

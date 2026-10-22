@@ -65,7 +65,7 @@ class Pool extends \Prefab {
      * @param bool $silent
      * @param bool $clearErrors
      */
-    public function setSilent(bool $silent, bool $clearErrors = false){
+    public function setSilent(bool $silent, bool $clearErrors = false): void{
         $this->silent = $silent;
         if($clearErrors){
             $this->errors = [];
@@ -162,7 +162,7 @@ class Pool extends \Prefab {
     /**
      * build PDO DNS connect string from DB config array
      * -> Hint: dbName is not part of the DNS we need -> passed as extra parameter
-     * @param array $config
+     * @param array<string, mixed> $config
      * @return string
      */
     protected function buildDnsFromConfig(array $config) : string {
@@ -174,7 +174,7 @@ class Pool extends \Prefab {
     }
 
     /**
-     * @param array $config
+     * @param array<string, mixed> $config
      * @return Sql|null
      */
     protected function newDB(array $config) : ?Sql {
@@ -205,15 +205,15 @@ class Pool extends \Prefab {
      * @param string $alias
      * @param \Exception $e
      */
-    protected function pushError(string $alias, \Exception $e){
-        if(!is_array($this->errors[$alias])){
+    protected function pushError(string $alias, \Exception $e): void {
+        if(!isset($this->errors[$alias]) || !is_array($this->errors[$alias])){
             $this->errors[$alias] = [];
         }
 
         // prevent adding same errors twice
         if(!empty($this->errors[$alias])){
             /**
-             * @var $lastError \Exception
+             * @var \Exception $lastError
              */
             $lastError = array_values($this->errors[$alias])[0];
             if($lastError->getMessage() === $e->getMessage()){

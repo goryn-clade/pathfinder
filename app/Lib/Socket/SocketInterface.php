@@ -23,7 +23,7 @@ interface SocketInterface {
     /**
      * @param string $class
      * @param string $uri
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return SocketInterface
      */
     public static function factory(string $class, string $uri, array $options = []) : SocketInterface;

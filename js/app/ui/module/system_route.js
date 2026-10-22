@@ -506,8 +506,11 @@ define([
                 wormholes:          (rowData.hasOwnProperty('wormholes'))           ? rowData.wormholes         | 0 : routeSettings.wormholes,
                 wormholesReduced:   (rowData.hasOwnProperty('wormholesReduced'))    ? rowData.wormholesReduced  | 0 : routeSettings.wormholesReduced,
                 wormholesCritical:  (rowData.hasOwnProperty('wormholesCritical'))   ? rowData.wormholesCritical | 0 : routeSettings.wormholesCritical,
-                wormholesEOL:       (rowData.hasOwnProperty('wormholesEOL'))        ? rowData.wormholesEOL      | 0 : routeSettings.wormholesEOL,
+                wormholesEOL1:      (rowData.hasOwnProperty('wormholesEOL1'))       ? rowData.wormholesEOL1     | 0 : (routeSettings.wormholesEOL1 !== undefined ? routeSettings.wormholesEOL1 : 1),
+                wormholesEOL2:      (rowData.hasOwnProperty('wormholesEOL2'))       ? rowData.wormholesEOL2     | 0 : (routeSettings.wormholesEOL2 !== undefined ? routeSettings.wormholesEOL2 : 1),
+                wormholesEOL3:      (rowData.hasOwnProperty('wormholesEOL3'))       ? rowData.wormholesEOL3     | 0 : (routeSettings.wormholesEOL3 !== undefined ? routeSettings.wormholesEOL3 : 1),
                 wormholesThera:     (rowData.hasOwnProperty('wormholesThera'))      ? rowData.wormholesThera    | 0 : routeSettings.wormholesThera,
+                wormholesTurnur:    (rowData.hasOwnProperty('wormholesTurnur'))     ? rowData.wormholesTurnur   | 0 : routeSettings.wormholesTurnur,
                 wormholesSizeMin:   (rowData.hasOwnProperty('wormholesSizeMin'))    ? rowData.wormholesSizeMin      : routeSettings.wormholesSizeMin,
                 excludeTypes:       (rowData.hasOwnProperty('excludeTypes'))        ? rowData.excludeTypes          : routeSettings.excludeTypes,
                 endpointsBubble:    (rowData.hasOwnProperty('endpointsBubble'))     ? rowData.endpointsBubble   | 0 : routeSettings.endpointsBubble,
@@ -527,11 +530,15 @@ define([
             this.request('POST', 'Route', [], requestData, this, context => {
                 $(this.moduleElement).hideLoadingAnimation();
             })
-                .then(payload => payload.context[callback](payload.data.routesData))
+                .then(payload => {
+                    if(Array.isArray(payload.data.routesData)){
+                        payload.context[callback](payload.data.routesData);
+                    }
+                })
                 .catch(payload => {
                     let reason = payload.data.status + ' ' + payload.data.error;
                     this.showNotify({
-                        title: payload.data.jqXHR.status + ': System route data',
+                        title: (payload.data.jqXHR ? payload.data.jqXHR.status : '') + ': System route data',
                         text: reason,
                         type: 'warning'
                     });
@@ -683,8 +690,11 @@ define([
                 wormholes: routeData.wormholes,
                 wormholesReduced: routeData.wormholesReduced,
                 wormholesCritical: routeData.wormholesCritical,
-                wormholesEOL: routeData.wormholesEOL,
+                wormholesEOL1: routeData.wormholesEOL1 !== undefined ? routeData.wormholesEOL1 : 1,
+                wormholesEOL2: routeData.wormholesEOL2 !== undefined ? routeData.wormholesEOL2 : 1,
+                wormholesEOL3: routeData.wormholesEOL3 !== undefined ? routeData.wormholesEOL3 : 1,
                 wormholesThera: routeData.wormholesThera,
+                wormholesTurnur: routeData.wormholesTurnur,
                 wormholesSizeMin: routeData.wormholesSizeMin,
                 excludeTypes: routeData.excludeTypes,
                 endpointsBubble: routeData.endpointsBubble,
@@ -911,8 +921,9 @@ define([
                     selectClass: this._config.systemDialogSelectClass,
                     systemSelectOptions: systemSelectOptions,
                     maxSelectionLength: maxSelectionLength,
-                    // new options
-                    routeSettings: routeSettingsOptions,
+                    // new options — ensure EOL phase keys are always defined so Mustache
+                    // renders a numeric value, not "" (which == 0 and would uncheck the box)
+                    routeSettings: Object.assign({wormholesEOL1: 1, wormholesEOL2: 1, wormholesEOL3: 1}, routeSettingsOptions),
                     select2Class: Util.config.select2Class,
                     routeDialogSizeSelectId: this._config.routeDialogSizeSelectId,
                     select2Class: Util.config.select2Class,
@@ -963,8 +974,11 @@ define([
                                             wormholes: routeSettingsData.hasOwnProperty('wormholes') ? parseInt(routeSettingsData.wormholes) : 0,
                                             wormholesReduced: routeSettingsData.hasOwnProperty('wormholesReduced') ? parseInt(routeSettingsData.wormholesReduced) : 0,
                                             wormholesCritical: routeSettingsData.hasOwnProperty('wormholesCritical') ? parseInt(routeSettingsData.wormholesCritical) : 0,
-                                            wormholesEOL: routeSettingsData.hasOwnProperty('wormholesEOL') ? parseInt(routeSettingsData.wormholesEOL) : 0,
+                                            wormholesEOL1: routeSettingsData.hasOwnProperty('wormholesEOL1') ? parseInt(routeSettingsData.wormholesEOL1) : 0,
+                                            wormholesEOL2: routeSettingsData.hasOwnProperty('wormholesEOL2') ? parseInt(routeSettingsData.wormholesEOL2) : 0,
+                                            wormholesEOL3: routeSettingsData.hasOwnProperty('wormholesEOL3') ? parseInt(routeSettingsData.wormholesEOL3) : 0,
                                             wormholesThera: routeSettingsData.hasOwnProperty('wormholesThera') ? parseInt(routeSettingsData.wormholesThera) : 0,
+                                            wormholesTurnur: routeSettingsData.hasOwnProperty('wormholesTurnur') ? parseInt(routeSettingsData.wormholesTurnur) : 0,
                                             wormholesSizeMin: routeSettingsData.wormholesSizeMin || '',
                                             excludeTypes: SystemRouteModule.getLowerSizeConnectionTypes(routeSettingsData.wormholesSizeMin),
                                             endpointsBubble: routeSettingsData.hasOwnProperty('endpointsBubble') ? parseInt(routeSettingsData.endpointsBubble) : 0,
@@ -1085,8 +1099,11 @@ define([
                                             wormholes: routeDialogData.hasOwnProperty('wormholes') ? parseInt(routeDialogData.wormholes) : 0,
                                             wormholesReduced: routeDialogData.hasOwnProperty('wormholesReduced') ? parseInt(routeDialogData.wormholesReduced) : 0,
                                             wormholesCritical: routeDialogData.hasOwnProperty('wormholesCritical') ? parseInt(routeDialogData.wormholesCritical) : 0,
-                                            wormholesEOL: routeDialogData.hasOwnProperty('wormholesEOL') ? parseInt(routeDialogData.wormholesEOL) : 0,
+                                            wormholesEOL1: routeDialogData.hasOwnProperty('wormholesEOL1') ? parseInt(routeDialogData.wormholesEOL1) : 0,
+                                            wormholesEOL2: routeDialogData.hasOwnProperty('wormholesEOL2') ? parseInt(routeDialogData.wormholesEOL2) : 0,
+                                            wormholesEOL3: routeDialogData.hasOwnProperty('wormholesEOL3') ? parseInt(routeDialogData.wormholesEOL3) : 0,
                                             wormholesThera: routeDialogData.hasOwnProperty('wormholesThera') ? parseInt(routeDialogData.wormholesThera) : 0,
+                                            wormholesTurnur: routeDialogData.hasOwnProperty('wormholesTurnur') ? parseInt(routeDialogData.wormholesTurnur) : 0,
                                             wormholesSizeMin: routeDialogData.wormholesSizeMin || '',
                                             excludeTypes: SystemRouteModule.getLowerSizeConnectionTypes(routeDialogData.wormholesSizeMin),
                                             endpointsBubble: routeDialogData.hasOwnProperty('endpointsBubble') ? parseInt(routeDialogData.endpointsBubble) : 0,
@@ -1135,32 +1152,44 @@ define([
             let wormholeCheckbox            = routeDialog.find('input[type="checkbox"][name="wormholes"]');
             let wormholeReducedCheckbox     = routeDialog.find('input[type="checkbox"][name="wormholesReduced"]');
             let wormholeCriticalCheckbox    = routeDialog.find('input[type="checkbox"][name="wormholesCritical"]');
-            let wormholeEolCheckbox         = routeDialog.find('input[type="checkbox"][name="wormholesEOL"]');
+            let wormholeEol1Checkbox        = routeDialog.find('input[type="checkbox"][name="wormholesEOL1"]');
+            let wormholeEol2Checkbox        = routeDialog.find('input[type="checkbox"][name="wormholesEOL2"]');
+            let wormholeEol3Checkbox        = routeDialog.find('input[type="checkbox"][name="wormholesEOL3"]');
             let wormholeTheraCheckbox       = routeDialog.find('input[type="checkbox"][name="wormholesThera"]');
+            let wormholeTurnurCheckbox      = routeDialog.find('input[type="checkbox"][name="wormholesTurnur"]');
             let wormholeSizeSelect          = routeDialog.find('#' + this._config.routeDialogSizeSelectId);
 
             // store current "checked" state for each box ---------------------------------------------
             let storeCheckboxStatus = () => {
                 wormholeReducedCheckbox.data('selectState', wormholeReducedCheckbox.prop('checked'));
                 wormholeCriticalCheckbox.data('selectState', wormholeCriticalCheckbox.prop('checked'));
-                wormholeEolCheckbox.data('selectState', wormholeEolCheckbox.prop('checked'));
+                wormholeEol1Checkbox.data('selectState', wormholeEol1Checkbox.prop('checked'));
+                wormholeEol2Checkbox.data('selectState', wormholeEol2Checkbox.prop('checked'));
+                wormholeEol3Checkbox.data('selectState', wormholeEol3Checkbox.prop('checked'));
                 wormholeTheraCheckbox.data('selectState', wormholeTheraCheckbox.prop('checked'));
+                wormholeTurnurCheckbox.data('selectState', wormholeTurnurCheckbox.prop('checked'));
             };
 
-            // on wormhole checkbox change ------------------------------------------------------------
+            // on wormhole checkbox change — cascades to all sub-checkboxes -------------------------
             let onWormholeCheckboxChange = e => {
                 if($(e.target).is(':checked')){
                     wormholeSizeSelect.prop('disabled', false);
 
                     wormholeReducedCheckbox.prop('disabled', false);
                     wormholeCriticalCheckbox.prop('disabled', false);
-                    wormholeEolCheckbox.prop('disabled', false);
+                    wormholeEol1Checkbox.prop('disabled', false);
+                    wormholeEol2Checkbox.prop('disabled', false);
+                    wormholeEol3Checkbox.prop('disabled', false);
                     wormholeTheraCheckbox.prop('disabled', false);
+                    wormholeTurnurCheckbox.prop('disabled', false);
 
                     wormholeReducedCheckbox.prop('checked', wormholeReducedCheckbox.data('selectState'));
                     wormholeCriticalCheckbox.prop('checked', wormholeCriticalCheckbox.data('selectState'));
-                    wormholeEolCheckbox.prop('checked', wormholeEolCheckbox.data('selectState'));
+                    wormholeEol1Checkbox.prop('checked', wormholeEol1Checkbox.data('selectState'));
+                    wormholeEol2Checkbox.prop('checked', wormholeEol2Checkbox.data('selectState'));
+                    wormholeEol3Checkbox.prop('checked', wormholeEol3Checkbox.data('selectState'));
                     wormholeTheraCheckbox.prop('checked', wormholeTheraCheckbox.data('selectState'));
+                    wormholeTurnurCheckbox.prop('checked', wormholeTurnurCheckbox.data('selectState'));
                 }else{
                     wormholeSizeSelect.prop('disabled', true);
 
@@ -1170,10 +1199,16 @@ define([
                     wormholeReducedCheckbox.prop('disabled', true);
                     wormholeCriticalCheckbox.prop('checked', false);
                     wormholeCriticalCheckbox.prop('disabled', true);
-                    wormholeEolCheckbox.prop('checked', false);
-                    wormholeEolCheckbox.prop('disabled', true);
+                    wormholeEol1Checkbox.prop('checked', false);
+                    wormholeEol1Checkbox.prop('disabled', true);
+                    wormholeEol2Checkbox.prop('checked', false);
+                    wormholeEol2Checkbox.prop('disabled', true);
+                    wormholeEol3Checkbox.prop('checked', false);
+                    wormholeEol3Checkbox.prop('disabled', true);
                     wormholeTheraCheckbox.prop('checked', false);
                     wormholeTheraCheckbox.prop('disabled', true);
+                    wormholeTurnurCheckbox.prop('checked', false);
+                    wormholeTurnurCheckbox.prop('disabled', true);
                 }
             };
 

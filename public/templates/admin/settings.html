@@ -9,7 +9,8 @@
 
                 <set fieldsetId = "{{ 'settings-map-' . @corporation->_id }}" />
 
-                <form role="form" class="form-horizontal" action="/admin/{{ @tplPage}}/save/{{ @corporation->_id }}">
+                <form role="form" class="form-horizontal" method="post" action="/admin/{{ @tplPage}}/save/{{ @corporation->_id }}">
+                    <input type="hidden" name="token" value="{{ @tplAdminToken }}">
                     <div class="col-sm-12 col-md-6 col-lg-4 pf-landing-pricing-panel">
                         <div class="panel panel-default pricing-big">
                             <div class="panel-heading text-left">

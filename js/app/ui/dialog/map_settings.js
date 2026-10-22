@@ -40,6 +40,9 @@ define([
         persistentAliasesId: 'pf-map-dialog-persistent-aliases',                        // id for "persistentAliases" checkbox
         persistentSignaturesId: 'pf-map-dialog-persistent-signatures',                  // id for "persistentSignatures" checkbox
         trackAbyssalJumpsId: 'pf-map-dialog-track-abyss-jumps',                         // id for "trackAbyssalJumps" checkbox
+        allowUnknownSystemsId: 'pf-map-dialog-allow-unknown',                           // id for "allowUnknownSystems" checkbox
+        granularK162Id: 'pf-map-dialog-granular-k162',                                   // id for "granularK162" checkbox
+        allowGroupsId: 'pf-map-dialog-allow-groups',                                    // id for "allowGroups" checkbox
 
         logHistoryId: 'pf-map-dialog-history',                                          // id for "history logging" checkbox
         logActivityId: 'pf-map-dialog-activity',                                        // id for "activity" checkbox
@@ -95,7 +98,12 @@ define([
         let mapInfoDialogElement = $('#' + config.newMapDialogId);
         if(!mapInfoDialogElement.is(':visible')){
 
-            requirejs([
+            // webhook URLs are not part of mapData (secrets) -> load them for users who can edit them
+            let webhookPromise = (mapData && MapUtil.checkRight('map_update', mapData.config)) ?
+                Util.request('GET', 'Map', mapData.config.id).then(payload => payload.data || {}) :
+                Promise.resolve({});
+
+            webhookPromise.then(webhookData => requirejs([
                 'text!templates/dialog/map.html',
                 'text!templates/form/map.html',
                 'mustache'
@@ -163,6 +171,9 @@ define([
                     persistentAliasesId : config.persistentAliasesId,
                     persistentSignaturesId : config.persistentSignaturesId,
                     trackAbyssalJumpsId : config.trackAbyssalJumpsId,
+                    allowUnknownSystemsId : config.allowUnknownSystemsId,
+                    granularK162Id : config.granularK162Id,
+                    allowGroupsId : config.allowGroupsId,
                     logHistoryId: config.logHistoryId,
                     logActivityId: config.logActivityId,
 
@@ -171,6 +182,9 @@ define([
                     persistentAliases: true,
                     persistentSignatures: true,
                     trackAbyssalJumps: false,
+                    allowUnknownSystems: false,
+                    granularK162: false,
+                    allowGroups: true,
                     logActivity: true,
                     logHistory: true,
 
@@ -235,10 +249,13 @@ define([
                         persistentAliases: mapData.config.persistentAliases,
                         persistentSignatures: mapData.config.persistentSignatures,
                         trackAbyssalJumps: mapData.config.trackAbyssalJumps,
+                        allowUnknownSystems: mapData.config.allowUnknownSystems,
+                        granularK162: mapData.config.granularK162,
+                        allowGroups: mapData.config.allowGroups,
                         logActivity: mapData.config.logging.activity,
                         logHistory: mapData.config.logging.history,
 
-                        slackWebHookURL: mapData.config.logging.slackWebHookURL,
+                        slackWebHookURL: webhookData.slackWebHookURL || '',
                         slackUsername: mapData.config.logging.slackUsername,
                         slackIcon: mapData.config.logging.slackIcon,
                         slackChannelHistory: mapData.config.logging.slackChannelHistory,
@@ -246,8 +263,8 @@ define([
                         slackEnabled: Boolean(Util.getObjVal(Init, 'slack.status')),
 
                         discordUsername: Util.getObjVal(mapData, 'config.logging.discordUsername'),
-                        discordWebHookURLRally: Util.getObjVal(mapData, 'config.logging.discordWebHookURLRally'),
-                        discordWebHookURLHistory: Util.getObjVal(mapData, 'config.logging.discordWebHookURLHistory'),
+                        discordWebHookURLRally: webhookData.discordWebHookURLRally || '',
+                        discordWebHookURLHistory: webhookData.discordWebHookURLHistory || '',
                         discordEnabled: Boolean(Util.getObjVal(Init, 'discord.status')),
 
                         accessCharacter: mapData.config.access.character,
@@ -387,6 +404,10 @@ define([
                                             let tabLinkEls = Util.getMapTabLinkElements(Util.getMapModule()[0], Util.getObjVal(mapData, 'id'));
                                             if(tabLinkEls.length === 1){
                                                 ModuleMap.updateTabData(tabLinkEls[0], mapData);
+                                            }else if(tabLinkEls.length === 0){
+                                                // new map — tab doesn't exist yet; inject into cache and trigger render
+                                                Util.updateCurrentMapData({config: mapData, data: {systems: [], connections: []}});
+                                                ModuleMap.updateMapModule(Util.getMapModule()[0]);
                                             }
 
                                             $(mapInfoDialog).modal('hide');
@@ -632,7 +653,7 @@ define([
                         mapInfoDialog.find('button.btn-success').show();
                     }
                 });
-            });
+            })).catch(Util.handleAjaxErrorResponse); // no dialog without webhook data -> save would clear them
         }
     };
 
@@ -759,6 +780,8 @@ define([
                     Util.request('DELETE', 'Map', mapId, {}, {}).then(
                         payload => {
                             Util.showNotify({title: 'Map deleted', text: 'Map: ' + mapName, type: 'success'});
+                            Util.deleteCurrentMapData(mapId);
+                            ModuleMap.updateMapModule(Util.getMapModule()[0]);
                         },
                         Util.handleAjaxErrorResponse
                     ).finally(() => mapDeleteDialog.modal('hide'));

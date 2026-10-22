@@ -20,14 +20,14 @@ class SignatureHistory extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function get(\Base $f3, $params){
+    public function get(\Base $f3,  array $params): void{
         $historyData = [];
 
         if($systemId = (int)$params['id']){
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
@@ -58,18 +58,18 @@ class SignatureHistory extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function put(\Base $f3){
+    public function put(\Base $f3): void{
         $requestData = $this->getRequestData($f3);
         $signaturesData = [];
 
         if(
             ($systemId = (int)$requestData['systemId']) &&
-            ($stamp = (string)$requestData['stamp'])
+            ($stamp = (string)($requestData['stamp'] ?? ''))
         ){
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId, 0);

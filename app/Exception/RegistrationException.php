@@ -12,32 +12,29 @@ namespace Exodus4D\Pathfinder\Exception;
 class RegistrationException extends PathfinderException{
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $codes = [
         2000 => 403
     ];
 
     /**
-     * form field name that causes this exception
-     * @var string
-     */
-    private $field;
-
-    /**
      * RegistrationException constructor.
      * @param string $message
      * @param string $field
      */
-    public function __construct(string $message, string $field = ''){
+    public function __construct(string $message, /**
+     * form field name that causes this exception
+     */
+    private readonly string $field = ''){
         parent::__construct($message, 2000);
-        $this->field = $field;
     }
 
     /**
      * get error object
      * @return \stdClass
      */
+    #[\Override]
     public function getError() : \stdClass {
         $error = parent::getError();
         $error->field = $this->field;

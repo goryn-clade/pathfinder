@@ -20,7 +20,7 @@ class CcpSystemsUpdate extends AbstractCron {
 
     /**
      * table names for all system log tables
-     * @var array
+     * @var array<string, mixed>
      */
     protected $logTables = [
         'jumps'         => 'system_jumps',
@@ -64,7 +64,7 @@ class CcpSystemsUpdate extends AbstractCron {
                 [':ns' => '0.0', ':ls' => 'L', ':hs' => 'H']
             );
 
-            $systemIds = array_map('intval', array_column($systemsData, 'id'));
+            $systemIds = array_map(intval(...), array_column($systemsData, 'id'));
             sort($systemIds, SORT_NUMERIC);
 
             $pfDB = $f3->DB->getDB('PF');
@@ -73,7 +73,7 @@ class CcpSystemsUpdate extends AbstractCron {
             foreach($this->logTables as $tableName){
                 $pfDB->begin();
                 // insert systems into jump log table
-                $sqlInsertSystem = "INSERT IGNORE INTO " . $tableName . " (`systemId`) VALUES (:systemId)";
+                $sqlInsertSystem = "INSERT IGNORE INTO " . $pfDB->quotekey($tableName) . " (`systemId`) VALUES (:systemId)";
 
                 foreach($systemIds as $systemId){
                     $pfDB->exec($sqlInsertSystem, [
@@ -94,7 +94,7 @@ class CcpSystemsUpdate extends AbstractCron {
      * >> php index.php "/cron/importSystemData"
      * @param \Base $f3
      */
-    function importSystemData(\Base $f3){
+    function importSystemData(\Base $f3): void{
         $this->logStart(__FUNCTION__);
         $params = $this->getParams(__FUNCTION__);
 
@@ -106,14 +106,14 @@ class CcpSystemsUpdate extends AbstractCron {
         $execTimePrepareSystemLogTables = $time_end - $time_start;
 
         $total = count($systemIds);
-        $offset = ($params['offset'] > 0 && $params['offset'] < $total) ? $params['offset'] : 0;
-        $systemIds = array_slice($systemIds, $offset, $params['length']);
+        $offset = (($params['offset'] ?? 0) > 0 && ($params['offset'] ?? 0) < $total) ? $params['offset'] : 0;
+        $systemIds = array_slice($systemIds, $offset, $params['length'] ?? 0);
         $importCount = count($systemIds);
         $count = 0;
 
         // switch DB for data import..
         /**
-         * @var $pfDB Sql
+         * @var Sql $pfDB
          */
         $pfDB = $f3->DB->getDB('PF');
 

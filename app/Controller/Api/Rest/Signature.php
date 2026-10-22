@@ -18,7 +18,7 @@ class Signature extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function post(\Base $f3){
+    public function post(\Base $f3): void{
         $requestData = $this->getRequestData($f3);
         $signaturesData = [];
 
@@ -26,7 +26,7 @@ class Signature extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId, 0);
@@ -78,9 +78,9 @@ class Signature extends AbstractRestController {
                 }
 
                 // delete "old" signatures ----------------------------------------------------------------------------
-                if((bool)$requestData['deleteOld']){
+                if((bool)($requestData['deleteOld'] ?? false)){
                     // if linked ConnectionModels should be deleted as well
-                    $deleteConnectionId = (bool)$requestData['deleteConnection'];
+                    $deleteConnectionId = (bool)($requestData['deleteConnection'] ?? false);
 
                     $updatedSignatureIds = array_column($signaturesData, 'id');
                     $signatures = $system->getSignatures();
@@ -113,7 +113,7 @@ class Signature extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function put(\Base $f3){
+    public function put(\Base $f3): void{
         $requestData = $this->getRequestData($f3);
         $signaturesData = [];
 
@@ -121,7 +121,7 @@ class Signature extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
@@ -144,7 +144,7 @@ class Signature extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, $params){
+    public function patch(\Base $f3,  array $params): void{
         $requestData = $this->getRequestData($f3);
         $signaturesData = [];
 
@@ -152,7 +152,7 @@ class Signature extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $signature Pathfinder\SystemSignatureModel
+             * @var Pathfinder\SystemSignatureModel $signature
              */
             $signature = Pathfinder\AbstractPathfinderModel::getNew('SystemSignatureModel');
             $signature->getById($signatureId);
@@ -183,30 +183,30 @@ class Signature extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, $params){
+    public function delete(\Base $f3,  array $params): void{
         $requestData = $this->getRequestData($f3);
-        $signatureIds = array_map('intval', explode(',', (string)$params['id']));
+        $signatureIds = array_map(intval(...), explode(',', (string)$params['id']));
         $deletedSignatureIds = [];
 
         if($systemId = (int)$requestData['systemId']){
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
 
             if($system->hasAccess($activeCharacter)){
                 // if linked ConnectionModels should be deleted as well
-                $deleteConnectionId = (bool)$requestData['deleteConnection'];
+                $deleteConnectionId = (bool)($requestData['deleteConnection'] ?? false);
 
                 // if there is any changed/deleted/updated signature
                 // -> we need to update signature history data for the system
                 $updateSignaturesHistory = false;
 
                 /**
-                 * @var $signature Pathfinder\SystemSignatureModel
+                 * @var Pathfinder\SystemSignatureModel $signature
                  */
                 $signature = $system->rel('signatures');
                 foreach($signatureIds as $signatureId){

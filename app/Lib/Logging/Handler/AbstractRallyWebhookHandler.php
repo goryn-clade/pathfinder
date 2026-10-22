@@ -14,9 +14,10 @@ use Exodus4D\Pathfinder\Lib\Util;
 abstract class AbstractRallyWebhookHandler extends AbstractWebhookHandler {
 
     /**
-     * @param array $record
-     * @return array
+     * @param array<string, mixed> $record
+     * @return array<string, mixed>
      */
+    #[\Override]
     protected function getSlackData(array $record) : array {
         $postData = parent::getSlackData($record);
 
@@ -147,7 +148,7 @@ abstract class AbstractRallyWebhookHandler extends AbstractWebhookHandler {
      * @param $html
      * @return string
      */
-    protected function htmlToMarkdown($html){
+    protected function htmlToMarkdown(string $html){
         $converter = new HtmlConverter();
         $converter->getConfig()->setOption('strip_tags', true);
         return $converter->convert($html);

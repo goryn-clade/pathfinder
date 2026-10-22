@@ -116,7 +116,7 @@ define([
                     // get kills within the last 24h
                     let timeFrameInSeconds = 60 * 60 * 24;
 
-                    let url = `${Init.url.zKillboard}/npc/0/solarSystemID/${this._systemData.systemId}/pastSeconds/${timeFrameInSeconds}/`;
+                    let url = `${Init.url.zKillboard}/solarSystemID/${this._systemData.systemId}/pastSeconds/${timeFrameInSeconds}/`;
 
                     this.request(url).then(result => {
                         if(result.error){
@@ -157,8 +157,8 @@ define([
 
             this.setModuleObserver();
 
-            // init webSocket connection
-            SystemKillboardModule.initWebSocket();
+            // init R2Z2 polling connection
+            SystemKillboardModule.initPoller();
 
             return this.moduleElement;
         }
@@ -233,6 +233,10 @@ define([
                     // next killmail to load -> reduce "local" index array
                     let nextZkb = result[this._tempZkbKillmailIndexes.shift()];
                     if(nextZkb){
+                        if(nextZkb.zkb.npc && !(this._filterStreams || []).includes('npc')){
+                            this.showKills(chunkSize);
+                            return;
+                        }
                         this.loadKillmailData({
                             killId: parseInt(nextZkb.killmail_id) || 0,
                             hash: nextZkb.zkb.hash
@@ -433,11 +437,13 @@ define([
          * @returns {string}
          */
         getImageUrl(resourceType, resourceId, size = 32){
-            let url = '#';
             if(resourceId){
-                url = BaseModule.Util.eveImageUrl(resourceType, resourceId, size);
+                return BaseModule.Util.eveImageUrl(resourceType, resourceId, size);
             }
-            return url;
+            if(resourceType === 'characters'){
+                return `https://images.evetech.net/characters/1/portrait?size=${size}`;
+            }
+            return '#';
         }
 
         /**
@@ -496,7 +502,7 @@ define([
             this.getLocalStore().getItem(cacheKey).then(streams => {
                 if(!streams){
                     // not saved yet -> default streams
-                    streams = ['system', 'map'];
+                    streams = ['system', 'map', 'npc'];
                     this.getLocalStore().setItem(cacheKey, streams);
                 }
                 this._filterStreams = streams;
@@ -510,6 +516,9 @@ define([
                 },{
                     value: 'all',
                     text: `All (New Eden)`
+                },{
+                    value: 'npc',
+                    text: 'NPC kills'
                 }];
 
                 $(this._iconFilterEl).editable({
@@ -546,7 +555,51 @@ define([
                 $(this._iconFilterEl).on('save', (e, params) => {
                     this.getLocalStore().setItem(cacheKey, params.newValue).then(streams => this._filterStreams = streams);
                 });
+
+                $(this._iconFilterEl).on('shown', (e, editable) => {
+                    this.renderExcludeListInPopover(editable);
+                });
             });
+        }
+
+        renderExcludeListInPopover(editable){
+            let formEl = editable.container.$form[0];
+            let existing = formEl.querySelector('.pf-kb-exclude-list');
+            if(existing) existing.remove();
+
+            let excluded = SystemKillboardModule.getExcludedSystems(this._mapId);
+            if(!excluded.length) return;
+
+            let wrapperEl = Object.assign(document.createElement('div'), {
+                className: 'pf-kb-exclude-list'
+            });
+
+            let labelEl = Object.assign(document.createElement('div'), {
+                className: 'pf-kb-exclude-label',
+                textContent: 'Excluded systems'
+            });
+            wrapperEl.append(labelEl);
+
+            excluded.forEach(sys => {
+                let tagEl = Object.assign(document.createElement('div'), {
+                    className: 'pf-kb-exclude-tag'
+                });
+
+                let removeEl = Object.assign(document.createElement('span'), {
+                    className: 'pf-kb-exclude-remove',
+                    innerHTML: '&times;'
+                });
+                removeEl.addEventListener('click', () => {
+                    SystemKillboardModule.toggleExcludedSystem(this._mapId, sys.systemId, sys.name);
+                    this.renderExcludeListInPopover(editable);
+                });
+
+                let nameEl = document.createTextNode(sys.name || sys.systemId);
+                tagEl.append(removeEl, nameEl);
+                wrapperEl.append(tagEl);
+            });
+
+            formEl.append(wrapperEl);
         }
 
         /**
@@ -559,16 +612,21 @@ define([
         }
 
         /**
-         * check if killmailData matches any killStream
+         * check if killmailData matches any killStream (live R2Z2 stream only)
          * @param killmailData
+         * @param zkbData
          * @returns {boolean}
          */
-        filterKillmailByStreams(killmailData){
+        filterKillmailByStreams(killmailData, zkbData){
             let streams = this._filterStreams || [];
-            return !!(streams.includes('all') ||
+            let locationMatch = !!(streams.includes('all') ||
                 (streams.includes('system') && this._systemData.systemId === killmailData.solar_system_id) ||
                 (streams.includes('map') && MapUtil.getSystemData(this._mapId, killmailData.solar_system_id, 'systemId')));
-
+            if(!locationMatch) return false;
+            if(zkbData && zkbData.npc && !streams.includes('npc')) return false;
+            let excluded = SystemKillboardModule.getExcludedSystems(this._mapId);
+            if(excluded.some(s => s.systemId === killmailData.solar_system_id)) return false;
+            return true;
         }
 
         /**
@@ -576,9 +634,9 @@ define([
          * @param zkbData
          * @param killmailData
          */
-        onWsMessage(zkbData, killmailData){
+        async onWsMessage(zkbData, killmailData){
             // check if killmail belongs to current filtered "streams"
-            if(this.filterKillmailByStreams(killmailData)){
+            if(this.filterKillmailByStreams(killmailData, zkbData)){
                 
                 if(!this._killboardEl){
                     // Remove label which indicates that there are no kills
@@ -615,6 +673,12 @@ define([
                 // get systemData for killmailData
                 // -> systemData should exist if KM belongs to any system on any map
                 let systemData = MapUtil.getSystemData(this._mapId, killmailData.solar_system_id, 'systemId') || null;
+
+                // for kills from systems not on any map (e.g. 'all' stream), look up the name via ESI
+                if(!systemData){
+                    let name = await SystemKillboardModule.getSystemName(killmailData.solar_system_id);
+                    if(name) systemData = {name};
+                }
 
                 this.renderKillmail(zkbData, killmailData, systemData, 0, 'top')
                     .catch(e => console.warn(e));
@@ -728,6 +792,10 @@ define([
          */
         static unsubscribeFromWS(module){
             SystemKillboardModule.wsSubscribtions = SystemKillboardModule.wsSubscribtions.filter(subscriber => subscriber !== module);
+            // stop polling when last subscriber leaves
+            if(!SystemKillboardModule.wsSubscribtions.length && SystemKillboardModule.pollActive){
+                SystemKillboardModule.stopPoller();
+            }
         }
 
         /**
@@ -744,43 +812,238 @@ define([
         }
 
         /**
-         * init/connect to WebSocket if not already done
+         * look up EVE system name by CCP systemId via ESI
+         * results are cached permanently (system names never change)
+         * @param systemId
+         * @returns {Promise<string|null>}
          */
-        static initWebSocket(){
-            if(!SystemKillboardModule.ws){
-                SystemKillboardModule.ws = new WebSocket('wss://zkillboard.com/websocket/');
-                SystemKillboardModule.wsStatus = 1;
+        static async getSystemName(systemId){
+            if(SystemKillboardModule.systemNameCache.has(systemId)){
+                return SystemKillboardModule.systemNameCache.get(systemId);
+            }
+            try {
+                let resp = await fetch(`https://esi.evetech.net/latest/universe/systems/${systemId}/`);
+                if(resp.ok){
+                    let data = await resp.json();
+                    let name = data.name || null;
+                    SystemKillboardModule.systemNameCache.set(systemId, name);
+                    return name;
+                }
+            } catch(e) { /* ignore — system ID fallback used in template */ }
+            return null;
+        }
+
+        static getExcludedSystems(mapId){
+            try {
+                return JSON.parse(localStorage.getItem(`pf_kb_exclude_${mapId}`) || '[]');
+            } catch(e) { return []; }
+        }
+
+        static setExcludedSystems(mapId, systems){
+            localStorage.setItem(`pf_kb_exclude_${mapId}`, JSON.stringify(systems));
+        }
+
+        static toggleExcludedSystem(mapId, systemId, name){
+            let excluded = SystemKillboardModule.getExcludedSystems(mapId);
+            let idx = excluded.findIndex(s => s.systemId === systemId);
+            if(idx >= 0){
+                excluded.splice(idx, 1);
+            } else {
+                excluded.push({systemId, name});
+            }
+            SystemKillboardModule.setExcludedSystems(mapId, excluded);
+        }
+
+        /**
+         * adapt R2Z2 response to the flat format expected by cacheWsResponse/onWsMessage
+         * R2Z2 wraps killmail fields inside 'esi'; old WS sent them at root level
+         * @param r2z2Data
+         * @returns {Object}
+         */
+        static adaptR2z2Response(r2z2Data){
+            return Object.assign({}, r2z2Data.esi, {zkb: r2z2Data.zkb});
+        }
+
+        /**
+         * stop the R2Z2 polling loop
+         */
+        static stopPoller(){
+            SystemKillboardModule.pollActive = false;
+            if(SystemKillboardModule.pollTimer){
+                clearTimeout(SystemKillboardModule.pollTimer);
+                SystemKillboardModule.pollTimer = null;
+            }
+            SystemKillboardModule.wsStatus = 4;
+            SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+        }
+
+        /**
+         * single iteration of the R2Z2 poll loop
+         */
+        static async pollNext(){
+            if(!SystemKillboardModule.pollActive || !SystemKillboardModule.wsSubscribtions.length){
+                SystemKillboardModule.stopPoller();
+                return;
             }
 
-            let sendMessage = req => {
-                SystemKillboardModule.ws.send(JSON.stringify(req));
-            };
+            // prevent concurrent executions (e.g. from accumulated visibilitychange listeners)
+            if(SystemKillboardModule.pollInFlight){
+                return;
+            }
 
-            SystemKillboardModule.ws.onopen = e => {
-                SystemKillboardModule.wsStatus = 2;
-                SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.updateWsStatus());
+            // pause when tab is hidden; resume via visibilitychange (register at most one listener)
+            if(document.hidden){
+                if(!SystemKillboardModule.pollVisibilityListening){
+                    SystemKillboardModule.pollVisibilityListening = true;
+                    let resume = async () => {
+                        document.removeEventListener('visibilitychange', resume);
+                        SystemKillboardModule.pollVisibilityListening = false;
+                        if(SystemKillboardModule.pollActive){
+                            try {
+                                const sc = new AbortController();
+                                const stid = setTimeout(() => sc.abort(), 10000);
+                                let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                                clearTimeout(stid);
+                                if(seqResp.ok){
+                                    let seqData = await seqResp.json();
+                                    SystemKillboardModule.pollSequenceId = seqData.sequence;
+                                }
+                            } catch(e) { /* fall through with old sequence */ }
+                            SystemKillboardModule.pollNext();
+                        }
+                    };
+                    document.addEventListener('visibilitychange', resume);
+                }
+                return;
+            }
 
-                sendMessage({action:'sub', channel:'killstream'});
-            };
+            SystemKillboardModule.pollInFlight = true;
+            let seqId = SystemKillboardModule.pollSequenceId;
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-            SystemKillboardModule.ws.onmessage = e => {
-                let response = JSON.parse(e.data);
+            try {
+                let resp = await fetch(`/api/Killboard/r2z2/${seqId}`, {
+                    headers: {'X-Requested-With': 'XMLHttpRequest'},
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
 
-                let [zkbData, killmailData] = this.cacheWsResponse(response);
+                if(resp.status === 204){
+                    // caught up — check if sequence is stale (gap in stream)
+                    SystemKillboardModule.pollConsecutive404s = (SystemKillboardModule.pollConsecutive404s || 0) + 1;
+                    if(SystemKillboardModule.pollConsecutive404s >= 5){
+                        // resync to current head in case of a sequence gap
+                        SystemKillboardModule.pollConsecutive404s = 0;
+                        const sc = new AbortController();
+                        const stid = setTimeout(() => sc.abort(), 10000);
+                        try {
+                            let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                            if(seqResp.ok){
+                                let seqData = await seqResp.json();
+                                if(seqData.sequence > SystemKillboardModule.pollSequenceId){
+                                    SystemKillboardModule.pollSequenceId = seqData.sequence;
+                                }
+                            }
+                        } finally { clearTimeout(stid); }
+                    }
+                    SystemKillboardModule.pollInFlight = false;
+                    SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 10000);
+                    return;
+                }
+
+                if(!resp.ok){
+                    throw new Error(`R2Z2 ${resp.status}`);
+                }
+
+                SystemKillboardModule.pollConsecutive404s = 0;
+                SystemKillboardModule.pollConsecutiveErrors = 0;
+                let r2z2Data = await resp.json();
+                let adapted = SystemKillboardModule.adaptR2z2Response(r2z2Data);
+                let [zkbData, killmailData] = SystemKillboardModule.cacheWsResponse(adapted);
                 SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.onWsMessage(zkbData, killmailData));
-            };
 
-            SystemKillboardModule.ws.onerror = e => {
+                SystemKillboardModule.pollSequenceId = seqId + 1;
+
+                // small delay to stay well within 20 req/s rate limit
+                SystemKillboardModule.pollInFlight = false;
+                SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 100);
+
+            } catch(e) {
+                clearTimeout(timeoutId);
+                // suppress expected aborts from page unload or stopPoller()
+                if(e.name === 'AbortError' && !SystemKillboardModule.pollActive){
+                    SystemKillboardModule.pollInFlight = false;
+                    return;
+                }
+                console.error(`R2Z2 poll error seq=${seqId} type=${e.name}`, e);
+                SystemKillboardModule.pollInFlight = false;
                 SystemKillboardModule.wsStatus = 3;
-                SystemKillboardModule.ws = null;
-                SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.updateWsStatus());
-            };
+                SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
 
-            SystemKillboardModule.ws.onclose = e => {
-                SystemKillboardModule.wsStatus = 4;
-                SystemKillboardModule.ws = null;
-                SystemKillboardModule.wsSubscribtions.forEach(subscriber => subscriber.updateWsStatus());
-            };
+                SystemKillboardModule.pollConsecutiveErrors = (SystemKillboardModule.pollConsecutiveErrors || 0) + 1;
+
+                // after 3 consecutive failures, resync sequence before retrying
+                if(SystemKillboardModule.pollConsecutiveErrors >= 3){
+                    SystemKillboardModule.pollConsecutiveErrors = 0;
+                    try {
+                        const sc = new AbortController();
+                        const stid = setTimeout(() => sc.abort(), 10000);
+                        let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                        clearTimeout(stid);
+                        if(seqResp.ok){
+                            let seqData = await seqResp.json();
+                            if(seqData.sequence > SystemKillboardModule.pollSequenceId){
+                                SystemKillboardModule.pollSequenceId = seqData.sequence;
+                            }
+                        }
+                    } catch(_) { /* will retry on next poll */ }
+                }
+
+                // exponential backoff: 10s → 20s → 40s → 60s max
+                let errCount = Math.min(SystemKillboardModule.pollConsecutiveErrors, 3);
+                let delay = Math.min(60000, 10000 * Math.pow(2, errCount));
+                SystemKillboardModule.pollTimer = setTimeout(() => {
+                    SystemKillboardModule.wsStatus = 2;
+                    SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+                    SystemKillboardModule.pollNext();
+                }, delay);
+            }
+        }
+
+        /**
+         * initialise R2Z2 polling — fetches current head sequence then starts poll loop
+         */
+        static async initPoller(){
+            if(SystemKillboardModule.pollActive){
+                return;
+            }
+
+            SystemKillboardModule.pollActive = true;
+            SystemKillboardModule.wsStatus = 1;
+            SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+
+            try {
+                const sc = new AbortController();
+                const stid = setTimeout(() => sc.abort(), 10000);
+                let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                clearTimeout(stid);
+                if(!seqResp.ok){
+                    throw new Error(`sequence.json: ${seqResp.status}`);
+                }
+                let seqData = await seqResp.json();
+                SystemKillboardModule.pollSequenceId = seqData.sequence;
+                SystemKillboardModule.wsStatus = 2;
+                SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+                SystemKillboardModule.pollNext();
+            } catch(e) {
+                console.error('R2Z2 init failed', e);
+                SystemKillboardModule.pollActive = false;
+                SystemKillboardModule.wsStatus = 3;
+                SystemKillboardModule.wsSubscribtions.forEach(s => s.updateWsStatus());
+                // retry after 30s
+                SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.initPoller(), 30000);
+            }
         }
 
         /**
@@ -808,6 +1071,16 @@ define([
     SystemKillboardModule.wsStatus = undefined;
     SystemKillboardModule.serverTime = BaseModule.Util.getServerTime();         // static Date() with current EVE server time
     SystemKillboardModule.wsSubscribtions = [];                                 // static container for all KB module instances (from multiple maps) for WS responses
+    SystemKillboardModule.pollActive = false;                                   // whether R2Z2 polling loop is running
+    SystemKillboardModule.pollTimer = null;                                     // setTimeout handle for polling loop
+    SystemKillboardModule.pollSequenceId = null;                                // current R2Z2 sequence cursor
+    SystemKillboardModule.pollConsecutive404s = 0;                              // consecutive 404 count for stale-sequence detection
+    SystemKillboardModule.systemNameCache = new Map();                             // permanent cache for EVE system names by systemId (names never change)
+    document.addEventListener('pf:toggleKillboardExclude', e => {
+        let {mapId, systemId, name} = e.detail;
+        SystemKillboardModule.toggleExcludedSystem(mapId, systemId, name);
+    });
+
     SystemKillboardModule.cacheConfig = {
         zkb: {                                                                  // cache for "zKillboard" responses -> short term cache
             ttl: 60 * 3,

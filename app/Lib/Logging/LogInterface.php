@@ -11,28 +11,49 @@ namespace Exodus4D\Pathfinder\Lib\Logging;
 
 interface LogInterface {
 
-    public function setMessage(string $message);
+    public function setMessage(string $message): void;
 
-    public function setLevel(string $level);
+    public function setLevel(string $level): void;
 
-    public function setTag(string $tag);
+    public function setTag(string $tag): void;
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function setData(array $data) : LogInterface;
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function setTempData(array $data) : LogInterface;
 
-    public function addHandler(string $handlerKey, string $formatterKey = null, \stdClass $handlerParams = null) : LogInterface;
+    public function addHandler(string $handlerKey, ?string $formatterKey = null, ?\stdClass $handlerParams = null) : LogInterface;
 
     public function addHandlerGroup(string $handlerKey) : LogInterface;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getHandlerConfig() : array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getHandlerParamsConfig() : array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getProcessorConfig() : array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getProcessorParams(string $processorKey) : array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getHandlerParams(string $handlerKey) : array;
 
     public function getMessage() : string;
@@ -45,10 +66,19 @@ interface LogInterface {
 
     public function getLevel() : string;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getData() : array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getContext() : array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getHandlerGroups() : array;
 
     public function getGroupHash() : string;
@@ -63,9 +93,9 @@ interface LogInterface {
 
     public function isGrouped() : bool;
 
-    public function removeHandlerGroups();
+    public function removeHandlerGroups(): void;
 
-    public function removeHandlerGroup(string $handlerKey);
+    public function removeHandlerGroup(string $handlerKey): void;
 
-    public function buffer();
+    public function buffer(): void;
 }

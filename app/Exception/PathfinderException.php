@@ -21,7 +21,7 @@ class PathfinderException extends \Exception {
 
     /**
      * lists all exception codes
-     * @var array
+     * @var array<string, mixed>
      */
     protected $codes = [
         0 => self::DEFAULT_RESPONSECODE

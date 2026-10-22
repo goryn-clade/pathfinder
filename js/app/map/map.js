@@ -18,8 +18,9 @@ define([
     'app/map/layout',
     'app/map/magnetizing',
     'app/map/scrollbar',
-    'app/map/local'
-], ($, Init, Util, Key, DragSelect, EventHandler, bootbox, MapUtil, MapContextMenu, MapOverlay, MapOverlayUtil, System, Layout, Magnetizer, Scrollbar) => {
+    'app/map/local',
+    'app/map/group'
+], ($, Init, Util, Key, DragSelect, EventHandler, bootbox, MapUtil, MapContextMenu, MapOverlay, MapOverlayUtil, System, Layout, Magnetizer, Scrollbar, Local, Group) => {
 
     'use strict';
 
@@ -419,8 +420,9 @@ define([
 
         if(!system){
             // set system name or alias
-            let systemName = data.name;
+            let systemName = data.isUnknown ? '???' : data.name;
             if(
+                !data.isUnknown &&
                 data.alias &&
                 data.alias !== ''
             ){
@@ -429,14 +431,15 @@ define([
 
             let systemHeadClasses = [config.systemHeadNameClass];
             // Abyssal system
-            if(data.type.id === 3){
+            if(!data.isUnknown && data.type.id === 3){
                 systemHeadClasses.push(Util.config.fontTriglivianClass);
             }
 
             // get system info classes
             let effectBasicClass = MapUtil.getEffectInfoForSystem('effect', 'class');
-            let effectClass = MapUtil.getEffectInfoForSystem(data.effect, 'class');
-            let secClass = Util.getSecurityClassForSystem(data.security);
+            let effectClass = data.isUnknown ? '' : MapUtil.getEffectInfoForSystem(data.effect, 'class');
+            let secClass = data.isUnknown ? Util.getSecurityClassForSystem(data.securityClass) : Util.getSecurityClassForSystem(data.security);
+            let secText = data.isUnknown ? (data.securityClass || '?') : data.security;
 
             system = $('<div>', {
                 id: systemId,
@@ -447,7 +450,7 @@ define([
                 }).append(
                     $('<span>', {
                         class: [config.systemSec, secClass].join(' '),
-                        text: data.security
+                        text: secText
                     }),
                     // System name is editable
                     $('<span>', {
@@ -538,7 +541,10 @@ define([
         // set system status
         system.setSystemStatus(data.status.name);
         system.data('id', parseInt(data.id));
-        system.data('systemId', parseInt(data.systemId));
+        system.data('systemId', data.systemId !== null ? parseInt(data.systemId) : null);
+        system.data('isUnknown', Boolean(data.isUnknown));
+        system.data('securityClass', data.securityClass || null);
+        system.toggleClass('pf-system-unknown', Boolean(data.isUnknown));
         system.data('name', data.name);
         system.data('typeId', parseInt(data.type.id));
         system.data('effect', data.effect);
@@ -642,12 +648,66 @@ define([
                 $.uniqueSort(selectedSystems);
                 $.fn.showDeleteSystemDialog(map, selectedSystems);
                 break;
+            case 'toggle_killboard_exclude':
+                systemData = system.getSystemData();
+                document.dispatchEvent(new CustomEvent('pf:toggleKillboardExclude', {
+                    detail: {
+                        mapId: parseInt(system.attr('data-mapid')),
+                        systemId: systemData.systemId,
+                        name: systemData.name
+                    }
+                }));
+                break;
             case 'set_destination':
             case 'add_first_waypoint':
             case 'add_last_waypoint':
                 systemData = system.getSystemData();
-                Util.setDestination(action, 'system', {id: systemData.systemId, name: systemData.name});
+                if(systemData.systemId !== null){
+                    Util.setDestination(action, 'system', {id: systemData.systemId, name: systemData.name});
+                }
                 break;
+            case 'join_group': {
+                // show a picker listing all groups on this map
+                let systemId = parseInt(system.data('id'));
+                let groupEls = mapContainer.find('.' + Group.config.groupClass);
+                if(!groupEls.length){
+                    Util.showNotify({title: 'No groups', text: 'Create a group first', type: 'warning'});
+                    break;
+                }
+                let groupOptions = {};
+                groupEls.each(function(){
+                    let el = $(this);
+                    groupOptions[el.data('id')] = el.find('.' + Group.config.groupLabelClass).text();
+                });
+                bootbox.prompt({
+                    title: 'Add system to group',
+                    inputType: 'select',
+                    inputOptions: Object.keys(groupOptions).map(id => ({text: groupOptions[id], value: id})),
+                    callback: result => {
+                        if(!result) return;
+                        let groupId = parseInt(result);
+                        Util.request('PATCH', 'System', systemId, {groupId: groupId}).then(() => {
+                            let groupDomId = Group.getGroupId(parseInt(mapContainer.data('id')), groupId);
+                            let group = map.getGroup(groupDomId);
+                            let systemDomEl = system[0];
+                            if(group && systemDomEl && !systemDomEl._jsPlumbGroup){
+                                group.add(systemDomEl);
+                            }
+                        }).catch(console.warn);
+                    }
+                });
+                break;
+            }
+            case 'leave_group': {
+                let systemId = parseInt(system.data('id'));
+                let systemDomEl = system[0];
+                let currentGroup = systemDomEl._jsPlumbGroup;
+                if(currentGroup){
+                    currentGroup.remove(systemDomEl);
+                }
+                Util.request('PATCH', 'System', systemId, {groupId: null}).catch(console.warn);
+                break;
+            }
         }
     };
 
@@ -724,6 +784,11 @@ define([
                 // open map info dialog tab
                 Util.triggerMenuAction(document, 'ShowMapInfo', {tab: 'information'});
                 break;
+            case 'add_group':
+                // open new-group dialog at the click position
+                let groupPosition = Layout.getEventCoordinates(e);
+                Group.showNewGroupDialog(map, mapElement, groupPosition);
+                break;
         }
     };
 
@@ -754,9 +819,15 @@ define([
                 });
                 break;
             case 'preserve_mass':   // set "preserve mass
-            case 'wh_eol':          // set "end of life"
                 MapOverlayUtil.getMapOverlay(mapElement, 'timer').startMapUpdateCounter();
                 MapUtil.toggleConnectionType(connection, action);
+                MapUtil.markAsChanged(connection);
+                break;
+            case 'status_eol1':
+            case 'status_eol2':
+            case 'status_eol3':
+                MapOverlayUtil.getMapOverlay(mapElement, 'timer').startMapUpdateCounter();
+                MapUtil.setConnectionEolStatusType(connection, 'wh_' + action.split('_').slice(1).join('_'));
                 MapUtil.markAsChanged(connection);
                 break;
             case 'status_fresh':
@@ -1043,8 +1114,19 @@ define([
             currentConnectionData = MapUtil.getDataByConnection(connection);
         }
 
+        // update connection 'EOL phase' type -------------------------------------------------------------------------
+        let allEolTypes         = MapUtil.allConnectionEolStatusTypes();
+        let newEolTypes         = allEolTypes.intersect(newConnectionData.type);
+        let currentEolTypes     = allEolTypes.intersect(currentConnectionData.type);
+
+        if(!newEolTypes.equalValues(currentEolTypes)){
+            // -> only ONE EOL phase type is allowed -> take the first one
+            MapUtil.setConnectionEolStatusType(connection, newEolTypes.length ? newEolTypes[0] : undefined);
+            currentConnectionData = MapUtil.getDataByConnection(connection);
+        }
+
         // check for unhandled connection type changes ----------------------------------------------------------------
-        let allToggleTypes = ['wh_eol', 'preserve_mass'];
+        let allToggleTypes = ['preserve_mass'];
         let newTypes = allToggleTypes.intersect(newConnectionData.type.diff(currentConnectionData.type));
         let oldTypes = allToggleTypes.intersect(currentConnectionData.type.diff(newConnectionData.type));
 
@@ -1231,6 +1313,34 @@ define([
      * @param mapConfig
      * @returns {Promise<any>}
      */
+    /**
+     * attach a newly drawn system to its group if groupId is set
+     * @param {object} map - jsPlumb instance
+     * @param {number} mapId
+     * @param {object} systemData
+     */
+    let attachSystemToGroup = (map, mapId, systemData) => {
+        if(!systemData.groupId){ return; }
+        let groupDomId = Group.getGroupId(mapId, systemData.groupId);
+        let group;
+        try{ group = map.getGroup(groupDomId); }catch(e){ return; }
+        let systemEl = document.getElementById(MapUtil.getSystemId(mapId, systemData.id));
+        if(!group || !systemEl || systemEl._jsPlumbGroup){ return; }
+
+        // addToGroup needs the system at its absolute canvas position so that
+        // the internal (elpos - cpos) calculation yields the stored group-relative coords.
+        // The system was drawn at group-relative posX/posY inside mapContainer, so
+        // we must first convert those to absolute canvas coords.
+        let groupEl = $(group.getEl());
+        let headerH = groupEl.find('.' + Group.config.groupHeaderClass).outerHeight() || 0;
+        let absX = parseInt(groupEl.css('left')) + (systemData.position ? systemData.position.x : 0);
+        let absY = parseInt(groupEl.css('top')) + headerH + (systemData.position ? systemData.position.y : 0);
+        $(systemEl).css({left: absX + 'px', top: absY + 'px'});
+
+        // doNotFireEvent=true prevents the group:addMember PATCH (system already has groupId in DB)
+        map.addToGroup(groupDomId, systemEl, true);
+    };
+
     let updateMap = mapConfig => {
 
         /**
@@ -1282,7 +1392,67 @@ define([
             let currentSystemData = mapData.data.systems;
             let currentConnectionData = mapData.data.connections;
 
+            // update groups ==========================================================================================
+            // groups must be rendered BEFORE systems so the DOM containers exist when systems attach
+            let incomingGroups = mapConfig.data.groups || [];
+            let currentGroupEls = mapContainer.find('.' + Group.config.groupClass);
+            let currentGroupIds = [];
+            currentGroupEls.each(function(){ currentGroupIds.push($(this).data('id')); });
+
+            for(let g = 0; g < incomingGroups.length; g++){
+                let gData = incomingGroups[g];
+                let existingGroupEl = mapContainer.find('#' + Group.getGroupId(mapId, gData.id));
+                if(existingGroupEl.length){
+                    if(existingGroupEl.data('updated') < gData.updated.updated){
+                        Group.updateGroup(mapConfig.map, existingGroupEl, gData);
+                    }
+                }else{
+                    Group.initGroup(mapConfig.map, mapContainer, gData);
+                }
+            }
+
+            // remove groups that no longer exist on the server
+            let incomingGroupIds = incomingGroups.map(g => g.id);
+            for(let cg = 0; cg < currentGroupIds.length; cg++){
+                if(incomingGroupIds.indexOf(currentGroupIds[cg]) === -1){
+                    let orphanEl = mapContainer.find('#' + Group.getGroupId(mapId, currentGroupIds[cg]));
+                    Group.removeGroup(mapConfig.map, orphanEl);
+                }
+            }
+
+            // bind jsPlumb group membership events once per map instance (idempotent via flag)
+            if(!mapConfig.map._groupEventsWired){
+                mapConfig.map._groupEventsWired = true;
+
+                mapConfig.map.bind('group:addMember', function(params){
+                    let systemEl = $(params.el);
+                    let groupEl = $(params.group.getEl());
+                    let systemId = systemEl.data('id');
+                    let groupId = groupEl.data('id');
+                    if(systemId && groupId){
+                        let pos = {x: Math.round(params.pos.left), y: Math.round(params.pos.top)};
+                        Util.request('PATCH', 'System', systemId, {
+                            groupId: groupId,
+                            position: pos
+                        }).catch(console.warn);
+                    }
+                });
+
+                mapConfig.map.bind('group:removeMember', function(params){
+                    let systemEl = $(params.el);
+                    let systemId = systemEl.data('id');
+                    if(systemId && !params.el.dataset.pfDeleting){
+                        let pos = MapUtil.getSystemPosition(systemEl);
+                        Util.request('PATCH', 'System', systemId, {
+                            groupId: null,
+                            position: {x: pos.x, y: pos.y}
+                        }).catch(console.warn);
+                    }
+                });
+            }
+
             // update systems =========================================================================================
+            let drawSystemPromises = [];
             for(let i = 0; i < mapConfig.data.systems.length; i++){
                 let systemData = mapConfig.data.systems[i];
 
@@ -1302,8 +1472,34 @@ define([
                 }
 
                 if(addNewSystem === true){
-                    drawSystem(mapConfig.map, systemData).catch(console.warn);
+                    drawSystemPromises.push(
+                        drawSystem(mapConfig.map, systemData).then(
+                            attachSystemToGroup.bind(null, mapConfig.map, mapId, systemData)
+                        ).catch(console.warn)
+                    );
                 }
+            }
+            if(drawSystemPromises.length > 0){
+                Promise.all(drawSystemPromises).then(() => {
+                    // When systems are added to a collapsed group one at a time, jsPlumb creates
+                    // cross-group proxies before knowing both endpoints will end up in the same
+                    // group ("double-proxy" problem). Hide those internal connections now.
+                    // setConnectionVisible() in util.js will guard against them being re-shown
+                    // by filterMapByScopes on every subsequent sync cycle.
+                    incomingGroups.filter(g => g.isCollapsed).forEach(gData => {
+                        let groupDomId = Group.getGroupId(mapId, gData.id);
+                        let group;
+                        try{ group = mapConfig.map.getGroup(groupDomId); }catch(e){ return; }
+                        let members = new Set(group.getMembers());
+                        mapConfig.map.getAllConnections().forEach(c => {
+                            let srcEl = (c.proxies && c.proxies[0]) ? c.proxies[0].originalEp.element : c.source;
+                            let tgtEl = (c.proxies && c.proxies[1]) ? c.proxies[1].originalEp.element : c.target;
+                            if(members.has(srcEl) && members.has(tgtEl)){
+                                c.setVisible(false);
+                            }
+                        });
+                    });
+                });
             }
 
             // check for systems that are gone -> delete system
@@ -1799,6 +1995,16 @@ define([
                 options.active.push('set_rally');
             }
 
+            // active: killboard exclude
+            let kbExcludeKey = `pf_kb_exclude_${parseInt(system.attr('data-mapid'))}`;
+            try {
+                let excluded = JSON.parse(localStorage.getItem(kbExcludeKey) || '[]');
+                let sysData = system.getSystemData();
+                if(excluded.some(s => s.systemId === sysData.systemId)){
+                    options.active.push('toggle_killboard_exclude');
+                }
+            } catch(e) { /* ignore */ }
+
             // disabled menu actions
             if(system.hasClass(MapUtil.config.systemActiveClass)){
                 options.disabled.push('find_route');
@@ -1822,6 +2028,10 @@ define([
             options.selectCallback = mapActions;
 
             let mapContainer = $(map.getContainer());
+            let mapData = Util.getCurrentMapData(mapContainer.data('id'));
+            if(!Util.getObjVal(mapData, 'config.allowGroups')){
+                options.hidden.push('add_group');
+            }
 
             // active menu actions
             Util.getLocalStore('map').getItem(mapContainer.data('id')).then(dataStore => {
@@ -1850,7 +2060,7 @@ define([
 
             // hidden menu actions
             if(scope === 'abyssal'){
-                options.hidden.push('wh_eol');
+                options.hidden.push('eol_status');
                 options.hidden.push('preserve_mass');
                 options.hidden.push('change_status');
                 options.hidden.push('wh_jump_mass_change');
@@ -1858,14 +2068,14 @@ define([
                 options.hidden.push('change_scope');
                 options.hidden.push('separator');
             }else if(scope === 'stargate'){
-                options.hidden.push('wh_eol');
+                options.hidden.push('eol_status');
                 options.hidden.push('preserve_mass');
                 options.hidden.push('change_status');
                 options.hidden.push('wh_jump_mass_change');
 
                 options.hidden.push('scope_stargate');
             }else if(scope === 'jumpbridge'){
-                options.hidden.push('wh_eol');
+                options.hidden.push('eol_status');
                 options.hidden.push('preserve_mass');
                 options.hidden.push('change_status');
                 options.hidden.push('wh_jump_mass_change');
@@ -1876,8 +2086,12 @@ define([
             }
 
             // active menu actions
-            if(connection.hasType('wh_eol') === true){
-                options.active.push('wh_eol');
+            if(connection.hasType('wh_eol1') === true){
+                options.active.push('status_eol1');
+            }else if(connection.hasType('wh_eol2') === true){
+                options.active.push('status_eol2');
+            }else if(connection.hasType('wh_eol3') === true){
+                options.active.push('status_eol3');
             }
             if(connection.hasType('preserve_mass') === true){
                 options.active.push('preserve_mass');
@@ -1947,8 +2161,11 @@ define([
 
         // make system draggable
         map.draggable(system, {
-            containment: 'parent',
+            containment: mapContainer[0],
             constrain: true,
+            getConstrainingRectangle: function() {
+                return [mapContainer[0].offsetWidth, mapContainer[0].offsetHeight];
+            },
             //scroll: true,                                             // not working because of customized scrollbar
             filter: filterSystemHeadEvent,
             snapThreshold: MapUtil.config.mapSnapToGridDimension,       // distance for grid snapping "magnet" effect (optional)
@@ -2228,13 +2445,11 @@ define([
 
                 // loop connection not allowed
                 if(sourceId === targetId){
-                    console.warn('Source/Target systems are identical');
                     return false;
                 }
 
                 // connection can not be dropped on an endpoint that already has other connections on it
                 if(dropEndpoint.connections.length > 0){
-                    console.warn('Endpoint already occupied');
                     return false;
                 }
 
@@ -3083,7 +3298,7 @@ define([
 
         if(!minimal){
             let systemDataComplete = {
-                systemId: parseInt(data.systemId),
+                systemId: data.systemId !== null ? parseInt(data.systemId) : null,
                 name: data.name,
                 alias: system.getSystemInfo(['alias']),
                 effect: data.effect,

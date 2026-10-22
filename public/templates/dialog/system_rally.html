@@ -23,13 +23,6 @@
                 </label>
             </div>
 
-            <div class="checkbox {{#mailRallyEnabled}}checkbox-primary{{/mailRallyEnabled}}">
-                <input id="{{dialogRallyPokeMailId}}" name="pokeMail" value="1" type="checkbox" {{#mailRallyEnabled}}checked=""{{/mailRallyEnabled}}{{^mailRallyEnabled}}disabled{{/mailRallyEnabled}}>
-                <label for="{{dialogRallyPokeMailId}}">Mail poke
-                    <i class="fas fa-fw fa-question-circle pf-help-light" title="Send E-Mail with rally point data"></i>
-                </label>
-            </div>
-
         </div>
         <div class="col-xs-8 col-sm-9">
             <div class="form-group" style="margin-bottom: 10px;">
@@ -77,15 +70,6 @@
             {{^discordRallyEnabled}}
             <kbd>disabled</kbd>
             {{/discordRallyEnabled}}
-        </div>
-        <div class="flex-col" title="Mail poke">
-            <i class="fas fa-fw fa-envelope"></i>&nbsp;
-            {{#mailRallyEnabled}}
-            <kbd class="txt-color txt-color-success">enabled</kbd>
-            {{/mailRallyEnabled}}
-            {{^mailRallyEnabled}}
-            <kbd>disabled</kbd>
-            {{/mailRallyEnabled}}
         </div>
     </div>
 

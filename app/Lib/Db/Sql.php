@@ -13,9 +13,9 @@ class Sql extends \DB\SQL {
      * @param $dsn
      * @param null $user
      * @param null $pw
-     * @param array|null $options
+     * @param array<string, mixed>|null $options
      */
-    public function __construct($dsn, $user = null, $pw = null, array $options = null){
+    public function __construct(string $dsn, string|null $user = null, string|null $pw = null, array|null $options = null){
         parent::__construct($dsn, $user, $pw, $options);
     }
 
@@ -29,7 +29,7 @@ class Sql extends \DB\SQL {
 
     /**
      * get all table names
-     * @return array|bool
+     * @return array<string, mixed>|bool
      */
     public function getTables(){
         $schema = new Schema($this);
@@ -64,7 +64,7 @@ class Sql extends \DB\SQL {
 
     /**
      * @param string|null $table
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function getTableStatus(?string $table) : ?array {
         $status = null;
@@ -93,7 +93,7 @@ class Sql extends \DB\SQL {
      * @param string $characterSetDatabase
      * @param string $collationDatabase
      */
-    public function prepareDatabase(string $characterSetDatabase, string $collationDatabase){
+    public function prepareDatabase(string $characterSetDatabase, string $collationDatabase): void{
         if($this->name() && $characterSetDatabase && $collationDatabase){
             // set/change default "character set" and "collation"
             $this->exec('ALTER DATABASE ' . $this->quotekey($this->name())
@@ -105,13 +105,14 @@ class Sql extends \DB\SQL {
 
     /**
      * @see https://fatfreeframework.com/3.6/sql#exec
-     * @param array|string $cmds
+     * @param array<string, mixed>|string $cmds
      * @param null $args
      * @param int $ttl
      * @param bool $log (we use false as default parameter)
      * @param bool $stamp
-     * @return array|FALSE|int
+     * @return array<string, mixed>|FALSE|int
      */
+    #[\Override]
     function exec($cmds, $args = null, $ttl = 0, $log = false, $stamp = false) {
         return parent::exec($cmds, $args, $ttl, $log, $stamp);
     }

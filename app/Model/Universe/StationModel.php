@@ -18,7 +18,7 @@ class StationModel extends AbstractUniverseModel {
     protected $table = 'station';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -29,7 +29,7 @@ class StationModel extends AbstractUniverseModel {
         'systemId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\SystemModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\SystemModel::class,
             'constraint' => [
                 [
                     'table' => 'system',
@@ -41,7 +41,7 @@ class StationModel extends AbstractUniverseModel {
         'typeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\TypeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\TypeModel::class,
             'constraint' => [
                 [
                     'table' => 'type',
@@ -53,7 +53,7 @@ class StationModel extends AbstractUniverseModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',
@@ -64,7 +64,7 @@ class StationModel extends AbstractUniverseModel {
         'raceId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\RaceModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\RaceModel::class,
             'constraint' => [
                 [
                     'table' => 'race',
@@ -120,20 +120,20 @@ class StationModel extends AbstractUniverseModel {
      * load data from API into $this and save $this
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '',  $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getUniverseStation', $id);
         if(!empty($data) && !isset($data['error'])){
             /**
-             * @var $system SystemModel
+             * @var SystemModel $system
              */
             $system = $this->rel('systemId');
             $system->loadById($data['systemId'], $accessToken, $additionalOptions);
             $data['systemId'] = $system;
 
             /**
-             * @var $type TypeModel
+             * @var TypeModel $type
              */
             $type = $this->rel('typeId');
             $type->loadById($data['typeId'], $accessToken, $additionalOptions);
@@ -141,7 +141,7 @@ class StationModel extends AbstractUniverseModel {
 
             if($data['corporationId']){
                 /**
-                 * @var $faction CorporationModel
+                 * @var CorporationModel $faction
                  */
                 $corporation = $this->rel('corporationId');
                 $corporation->loadById($data['corporationId'], $accessToken, $additionalOptions);
@@ -150,7 +150,7 @@ class StationModel extends AbstractUniverseModel {
 
             if($data['raceId']){
                 /**
-                 * @var $race RaceModel
+                 * @var RaceModel $race
                  */
                 $race = $this->rel('raceId');
                 $race->loadById($data['raceId'], $accessToken, $additionalOptions);

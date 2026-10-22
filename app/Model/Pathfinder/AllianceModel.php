@@ -19,7 +19,7 @@ class AllianceModel extends AbstractPathfinderModel {
     protected $table = 'alliance';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -44,10 +44,10 @@ class AllianceModel extends AbstractPathfinderModel {
             'default' => 0
         ],
         'allianceCharacters' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel', 'allianceId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class, 'allianceId']
         ],
         'mapAlliances' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\AllianceMapModel', 'allianceId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\AllianceMapModel::class, 'allianceId']
         ]
     ];
 
@@ -71,6 +71,10 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param self $self
      * @param $pkeys
      * @return bool
+     */
+    #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
      */
     public function beforeUpdateEvent($self, $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
@@ -106,11 +110,11 @@ class AllianceModel extends AbstractPathfinderModel {
 
     /**
      * get all characters in this alliance
-     * @param array $characterIds
-     * @param array $options
+     * @param array<string, mixed> $characterIds
+     * @param array<string, mixed> $options
      * @return CharacterModel[]
      */
-    public function getCharacters($characterIds = [], $options = []) : array {
+    public function getCharacters(array $characterIds = [],  $options = []) : array {
         $characters = [];
         $filter = ['active = ?', 1];
 
@@ -121,7 +125,7 @@ class AllianceModel extends AbstractPathfinderModel {
 
         $this->filter('allianceCharacters', $filter);
 
-        if($options['hasLog']){
+        if($options['hasLog'] ?? false){
             // just characters with active log data
             $this->has('allianceCharacters.characterLog', ['active = ?', 1]);
         }
@@ -143,6 +147,7 @@ class AllianceModel extends AbstractPathfinderModel {
      * @param bool $isActive
      * @return bool
      */
+    #[\Override]
     public function getById(int $id, int $ttl = self::DEFAULT_SQL_TTL, bool $isActive = true) : bool {
         /**
          * @var AllianceModel $alliance

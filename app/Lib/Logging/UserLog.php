@@ -14,7 +14,7 @@ class UserLog extends AbstractChannelLog {
     /**
      * List of possible handlers (tested)
      * -> final handler will be set dynamic for per instance
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [
         // 'mail' => 'html'
@@ -28,7 +28,7 @@ class UserLog extends AbstractChannelLog {
     /**
      * UserLog constructor.
      * @param string $action
-     * @param array $objectData
+     * @param array<string, mixed> $objectData
      * @throws \Exception
      */
     public function __construct(string $action, array $objectData){

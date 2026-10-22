@@ -23,7 +23,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
     /**
      * changed fields (columns) on update/insert
      * -> e.g. for character "activity logging"
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldChanges                 = [];
 
@@ -32,7 +32,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
      * -> enable/disable
      * @param $status
      */
-    public function setActivityLogging(bool $status){
+    public function setActivityLogging(bool $status): void{
         $this->enableActivityLogging = $status;
     }
 
@@ -41,7 +41,8 @@ abstract class AbstractPathfinderModel extends AbstractModel {
      * @param bool $essentials
      * @return NULL|void
      */
-    public function reset($mapper = true, $essentials = true){
+    #[\Override]
+    public function reset($mapper = true, $essentials = true): void{
         $this->fieldChanges = [];
         parent::reset($mapper, $essentials);
     }
@@ -57,22 +58,20 @@ abstract class AbstractPathfinderModel extends AbstractModel {
 
     /**
      * get old and new value from field, in case field is configured with 'activity-log'
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getFieldChanges() : array {
         $changes = [];
 
         if($this->enableActivityLogging){
             // filter fields, where "activity" (changes) should be logged
-            $fieldConf = array_filter($this->fieldConf, function($fieldConf, $key){
-                return isset($fieldConf['activity-log']) ? (bool)$fieldConf['activity-log'] : false;
-            }, ARRAY_FILTER_USE_BOTH);
+            $fieldConf = array_filter($this->fieldConf, fn($fieldConf, $key) => isset($fieldConf['activity-log']) ? (bool)$fieldConf['activity-log'] : false, ARRAY_FILTER_USE_BOTH);
 
             if($fieldKeys = array_keys($fieldConf)){
                 // model has fields where changes should be logged
                 $schema = $this->getMapper()->schema();
                 foreach($fieldKeys as $key){
-                    if($this->changed($key)){
+                    if(isset($schema[$key]) && $this->changed($key)){
                         $changes[$key] = [
                             'old' => $schema[$key]['initial'],
                             'new' => $schema[$key]['value']
@@ -88,6 +87,7 @@ abstract class AbstractPathfinderModel extends AbstractModel {
     /**
      * @return mixed|void
      */
+    #[\Override]
     public function save(){
         // save changed field value BEFORE ->save() it called!
         // parent::save() resets the schema and old values get replaced with new values

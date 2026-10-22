@@ -51,7 +51,7 @@ class Resource extends \Prefab {
 
     /**
      * absolute file path -> use setOption() for update
-     * @var array
+     * @var array<string, mixed>
      */
     private $filePath = [
         'style'         => '',
@@ -66,7 +66,7 @@ class Resource extends \Prefab {
     /**
      * default file extensions by $group
      * -> used if no fileExtension found in $file
-     * @var array
+     * @var array<string, mixed>
      */
     private $fileExt = [
         'style'         => 'css',
@@ -87,7 +87,7 @@ class Resource extends \Prefab {
 
     /**
      * resource file cache
-     * @var array
+     * @var array<string, mixed>
      */
     private $resources = [];
 
@@ -97,7 +97,7 @@ class Resource extends \Prefab {
      * @param $value
      * @param bool $extend
      */
-    public function setOption(string $option, $value, bool $extend = false){
+    public function setOption(string $option, mixed $value, bool $extend = false): void{
         $this->$option = ($extend && is_array($value) && is_array($this->$option)) ? array_merge($this->$option, $value) : $value;
     }
 
@@ -107,7 +107,7 @@ class Resource extends \Prefab {
      * @return mixed|null
      */
     public function getOption(string $option){
-        return isset($this->$option) ? $this->$option : null;
+        return $this->$option ?? null;
     }
 
     /**
@@ -116,7 +116,7 @@ class Resource extends \Prefab {
      * @param string $file
      * @param string $rel
      */
-    public function register(string $group, string $file, string $rel = self::ATTR_REL){
+    public function register(string $group, string $file, string $rel = self::ATTR_REL): void{
         $this->resources[$group][$file] = ['options' => ['rel' => $rel]];
     }
 
@@ -151,8 +151,8 @@ class Resource extends \Prefab {
     public function buildLinks(){
         $this->build();
         $links = [];
-        foreach($this->resources as $group => $resources){
-            foreach($resources as $file => $conf){
+        foreach($this->resources as $resources){
+            foreach($resources as $conf){
                 $resourceHeader = '<link';
                 foreach($conf['options'] as $attr => $value){
                     $resourceHeader .= ' ' . $attr . '="' . $value . '"';
@@ -176,8 +176,8 @@ class Resource extends \Prefab {
     public function buildHeader() : string {
         $this->build();
         $headers = [];
-        foreach($this->resources as $group => $resources){
-            foreach($resources as $file => $conf){
+        foreach($this->resources as $resources){
+            foreach($resources as $conf){
                 $resourceHeader = '<' . $conf['link'] . '>';
                 foreach($conf['options'] as $attr => $value){
                     $resourceHeader .= '; ' . $attr . '="' . $value . '"';
@@ -192,7 +192,7 @@ class Resource extends \Prefab {
      * build resource data
      * -> add missing attributes to resources
      */
-    protected function build(){
+    protected function build(): void {
         foreach($this->resources as $group => &$resources){
             foreach($resources as $file => &$conf){
                 if(empty($conf['link'])){
@@ -210,7 +210,7 @@ class Resource extends \Prefab {
                 }
 
                 if( !empty($additionalAttr = $this->getAdditionalAttrs($group)) ){
-                    $conf['options'] = $conf['options'] + $additionalAttr;
+                    $conf['options'] += $additionalAttr;
                 }
             }
         }
@@ -224,7 +224,7 @@ class Resource extends \Prefab {
      * @return string
      */
     protected function getLinkAttrAs(string $group) : string {
-        return isset(self::ATTR_AS[$group]) ? self::ATTR_AS[$group] : '';
+        return self::ATTR_AS[$group] ?? '';
     }
 
     /**
@@ -234,17 +234,17 @@ class Resource extends \Prefab {
      * @return string
      */
     protected function getLinkAttrType(string $group) : string {
-        return isset(self::ATTR_TYPE[$group]) ? self::ATTR_TYPE[$group] : '';
+        return self::ATTR_TYPE[$group] ?? '';
     }
 
     /**
      * get additional attributes by $group
      * -> e.g. or fonts
      * @param string $group
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getAdditionalAttrs(string $group) : array {
-        return isset(self::ATTR_ADD[$group]) ? self::ATTR_ADD[$group] : [];
+        return self::ATTR_ADD[$group] ?? [];
     }
 
     /**
@@ -254,6 +254,6 @@ class Resource extends \Prefab {
      * @return string
      */
     protected function getFileExtension(string $group) : string {
-        return isset($this->fileExt[$group]) ? $this->fileExt[$group] : '';
+        return $this->fileExt[$group] ?? '';
     }
 }

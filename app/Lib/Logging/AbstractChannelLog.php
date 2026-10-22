@@ -12,14 +12,14 @@ namespace Exodus4D\Pathfinder\Lib\Logging;
 abstract class AbstractChannelLog extends AbstractLog {
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $channelData          = [];
 
     /**
      * AbstractChannelLog constructor.
      * @param string $action
-     * @param array $channelData
+     * @param array<string, mixed> $channelData
      */
     public function __construct(string $action, array $channelData){
         parent::__construct($action);
@@ -36,14 +36,14 @@ abstract class AbstractChannelLog extends AbstractLog {
     }
 
     /**
-     * @param array $channelData
+     * @param array<string, mixed> $channelData
      */
-    protected function setChannelData(array $channelData){
+    protected function setChannelData(array $channelData): void {
         $this->channelData = $channelData;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getChannelData() : array{
         return $this->channelData;
@@ -59,13 +59,15 @@ abstract class AbstractChannelLog extends AbstractLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getChannelName() : string{
         return (string)$this->getChannelData()['channelName'];
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
+    #[\Override]
     public function getData() : array{
         $data['main'] = parent::getData();
 
@@ -78,8 +80,9 @@ abstract class AbstractChannelLog extends AbstractLog {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
+    #[\Override]
     public function getContext(): array{
         $context = parent::getContext();
 

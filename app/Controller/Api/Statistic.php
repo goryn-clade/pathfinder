@@ -31,13 +31,13 @@ class Statistic extends Controller\AccessController {
      * @param $year
      * @return int
      */
-    protected function getIsoWeeksInYear($year){
+    protected function getIsoWeeksInYear(int $year){
         $week = 0;
         try{
             $date = new \DateTime;
             $date->setISODate($year, 53);
             $week = ($date->format('W') === '53' ? 53 : 52);
-        }catch(\Exception $e){}
+        }catch(\Exception){}
         return $week;
     }
 
@@ -50,18 +50,11 @@ class Statistic extends Controller\AccessController {
     protected function getWeekCount($period, $year){
         $weeksInYear = $this->getIsoWeeksInYear($year);
 
-        switch($period){
-            case 'yearly':
-                $weekCount = $weeksInYear;
-                break;
-            case 'monthly':
-                $weekCount = 4;
-                break;
-            case 'weekly':
-            default:
-                $weekCount = 1;
-                break;
-        }
+        $weekCount = match ($period) {
+            'yearly' => $weeksInYear,
+            'monthly' => 4,
+            default => 1,
+        };
 
         return $weekCount;
     }
@@ -73,7 +66,7 @@ class Statistic extends Controller\AccessController {
      * @param int $week
      * @param int $weekCount
      * @param bool $backwards
-     * @return array
+     * @return array<string, int>
      */
     protected function calculateYearWeekOffset($year, $week, $weekCount, $backwards = false){
         $offset = [
@@ -126,7 +119,7 @@ class Statistic extends Controller\AccessController {
      * @param int $weekStart
      * @param int $yearEnd
      * @param int $weekEnd
-     * @return array
+     * @return array<string, mixed>
      */
     protected function queryStatistic(CharacterModel $character, $typeId, $yearStart, $weekStart, $yearEnd, $weekEnd){
         $data = [];
@@ -213,17 +206,21 @@ class Statistic extends Controller\AccessController {
                 ORDER BY
                     `log`.`year` DESC, `log`.`week` DESC";
 
-            $result = $this->getDB()->exec($sql, $queryData);
+            if(!($db = $this->getDB())){
+                return $data;
+            }
+
+            $result = $db->exec($sql, $queryData);
 
             if( !empty($result) ){
                 // group result by characterId
-                foreach ($result as $key => &$entry) {
+                foreach ($result as &$entry) {
                     $tmp = $entry;
                     unset($tmp['characterId']);
                     unset($tmp['name']);
                     unset($tmp['lastLogin']);
                     $data[$entry['characterId']]['name'] = $entry['name'];
-                    $data[$entry['characterId']]['lastLogin'] = strtotime($entry['lastLogin']);
+                    $data[$entry['characterId']]['lastLogin'] = strtotime((string) $entry['lastLogin']);
                     $data[$entry['characterId']]['weeks'][ $entry['year'] . $entry['week'] ] = $tmp;
                 }
             }
@@ -237,14 +234,14 @@ class Statistic extends Controller\AccessController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getData(\Base $f3){
+    public function getData(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $return = (object) [];
 
-        $period = $postData['period'];
-        $typeId = (int)$postData['typeId'];
-        $yearStart = (int)$postData['year'];
-        $weekStart = (int)$postData['week'];
+        $period = $postData['period'] ?? '';
+        $typeId = (int)($postData['typeId'] ?? 0);
+        $yearStart = (int)($postData['year'] ?? 0);
+        $weekStart = (int)($postData['week'] ?? 0);
 
         $currentYear = (int)date('o');
         $currentWeek = (int)date('W');

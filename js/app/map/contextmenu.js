@@ -75,6 +75,7 @@ define([
             id: config.mapContextMenuId,
             items: [
                 {icon: 'fa-plus', action: 'add_system', text: 'add system'},
+                {icon: 'fa-object-group', action: 'add_group', text: 'add group'},
                 {icon: 'fa-object-ungroup', action: 'select_all', text: 'select all'},
                 {icon: 'fa-filter', action: 'filter_scope', text: 'filter scope', subitems: [
                         {subIcon: '', subAction: 'filter_wh', subText: 'wormhole'},
@@ -102,8 +103,11 @@ define([
         let moduleData = {
             id: config.connectionContextMenuId,
             items: [
-                {icon: 'fa-hourglass-end', action: 'wh_eol', text: 'toggle EOL'},
-                {icon: 'fa-exclamation-triangle', action: 'preserve_mass', text: 'preserve mass'},
+                {icon: 'fa-hourglass-end', action: 'eol_status', text: 'EOL phase', subitems: [
+                        {subIcon: 'fa-hourglass-start', subAction: 'status_eol1', subText: 'Aging 1-4h'},
+                        {subIcon: 'fa-hourglass-half',  subAction: 'status_eol2', subText: 'Expiring 0-1h'},
+                        {subIcon: 'fa-hourglass-end',   subAction: 'status_eol3', subText: 'Zombie <0h'}
+                    ]},
                 {icon: 'fa-reply fa-rotate-180', action: 'change_status', text: 'mass status', subitems: [
                         {subIcon: 'fa-circle', subIconClass: 'txt-color txt-color-gray', subAction: 'status_fresh', subText: 'stage 1 (fresh)'},
                         {subIcon: 'fa-circle', subIconClass: 'txt-color txt-color-orange', subAction: 'status_reduced', subText: 'stage 2 (reduced)'},
@@ -123,6 +127,7 @@ define([
                         {subIcon: 'fa-minus-circle', subIconClass: 'txt-color txt-color-tealLighter', subAction: 'scope_jumpbridge', subText: 'jumpbridge'}
 
                     ]},
+                {icon: 'fa-exclamation-triangle', action: 'preserve_mass', text: 'preserve mass'},
                 {divider: true, action: 'separator'} ,
                 {icon: 'fa-unlink', action: 'delete_connection', text: 'detach'}
             ]
@@ -169,6 +174,7 @@ define([
                 {icon: 'fa-lock', action: 'lock_system', text: 'lock system'},
                 {icon: 'fa-volume-up', action: 'set_rally', text: 'set rally point'},
                 {icon: 'fa-tags', text: 'set status', subitems: statusData},
+                {icon: 'fa-eye-slash', action: 'toggle_killboard_exclude', text: 'exclude from killboard'},
                 {icon: 'fa-route', action: 'find_route', text: 'find route'},
                 {icon: 'fa-object-group', action: 'select_connections', text: 'select connections'},
                 {icon: 'fa-reply fa-rotate-180', text: 'waypoints', subitems: [
@@ -177,6 +183,8 @@ define([
                         {subIcon: 'fa-step-backward', subAction: 'add_first_waypoint', subText: 'add new [start]'},
                         {subIcon: 'fa-step-forward', subAction: 'add_last_waypoint', subText: 'add new [end]'}
                     ]},
+                {icon: 'fa-sign-in-alt',  action: 'join_group',  text: 'add to group'},
+                {icon: 'fa-sign-out-alt', action: 'leave_group', text: 'remove from group'},
                 {divider: true, action: 'delete_system'},
                 {icon: 'fa-trash', action: 'delete_system', text: 'delete system(s)'}
             ]

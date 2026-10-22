@@ -971,6 +971,16 @@ define([
      * @param visible
      */
     let setConnectionVisible = (connection, visible) => {
+        if(visible){
+            // Don't show connections internal to a collapsed group
+            let srcEl = (connection.proxies && connection.proxies[0]) ? connection.proxies[0].originalEp.element : connection.source;
+            let tgtEl = (connection.proxies && connection.proxies[1]) ? connection.proxies[1].originalEp.element : connection.target;
+            let sg = srcEl && srcEl._jsPlumbGroup;
+            let tg = tgtEl && tgtEl._jsPlumbGroup;
+            if(sg && sg === tg && sg.collapsed){
+                return;
+            }
+        }
         if(connection.isVisible() !== visible){
             connection.setVisible(visible, true);
             for(let endpoint of connection.endpoints){
@@ -1254,11 +1264,29 @@ define([
     };
 
     /**
+     * get all available connection types for "EOL phase"
+     * @returns {string[]}
+     */
+    let allConnectionEolStatusTypes = () => {
+        return ['wh_eol1', 'wh_eol2', 'wh_eol3'];
+    };
+
+    /**
      * get all available connection types for "jump mass size"
      * @returns {string[]}
      */
     let allConnectionJumpMassTypes = () => {
         return ['wh_jump_mass_s', 'wh_jump_mass_m', 'wh_jump_mass_l', 'wh_jump_mass_xl'];
+    };
+
+    /**
+     * set/change/remove connection EOL phase
+     * -> phaseType == undefined will remove (all) existing EOL phase types
+     * @param connection
+     * @param phaseType
+     */
+    let setConnectionEolStatusType = (connection, phaseType) => {
+        setUniqueConnectionType(connection, phaseType, allConnectionEolStatusTypes());
     };
 
     /**
@@ -2234,6 +2262,8 @@ define([
         getConnectionFakeClassesByTypes: getConnectionFakeClassesByTypes,
         checkForConnection: checkForConnection,
         getDefaultConnectionTypeByScope: getDefaultConnectionTypeByScope,
+        allConnectionEolStatusTypes: allConnectionEolStatusTypes,
+        setConnectionEolStatusType: setConnectionEolStatusType,
         allConnectionMassStatusTypes: allConnectionMassStatusTypes,
         allConnectionJumpMassTypes: allConnectionJumpMassTypes,
         setConnectionMassStatusType: setConnectionMassStatusType,

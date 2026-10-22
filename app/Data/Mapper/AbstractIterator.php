@@ -15,7 +15,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
     /**
      * iterator mapping
      * -> overwrite in child classes (late static binding)
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $map = [];
 
@@ -30,16 +30,20 @@ class AbstractIterator extends \RecursiveArrayIterator {
      * AbstractIterator constructor.
      * @param $data
      */
-    function __construct($data){
+    function __construct(mixed $data){
+        // PHP 8.5 deprecates an object as backing array (ESI responses are \stdClass)
+        if(is_object($data)){
+            $data = get_object_vars($data);
+        }
         parent::__construct($data, \RecursiveIteratorIterator::SELF_FIRST);
     }
 
     /**
      * map iterator
-     * @return array
+     * @return array<string, mixed>
      */
     public function getData(){
-        iterator_apply($this, 'self::recursiveIterator', [$this]);
+        iterator_apply($this, [static::class, 'recursiveIterator'], [$this]);
 
         return iterator_to_array($this, true);
     }
@@ -47,9 +51,9 @@ class AbstractIterator extends \RecursiveArrayIterator {
     /**
      * convert array keys to camelCase
      * @param $array
-     * @return array
+     * @return array<string, mixed>
      */
-    protected function camelCaseKeys($array){
+    protected function camelCaseKeys( array $array){
         return Util::arrayChangeKeys($array, [\Base::instance(), 'camelcase']);
     }
 
@@ -60,7 +64,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
      */
     static function recursiveIterator(AbstractIterator $iterator){
 
-        $keyWhitelist = array_keys(static::$map);
+        $keyAllowlist = array_keys(static::$map);
 
         while($iterator->valid()){
 
@@ -73,7 +77,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
                     Util::is_assoc($iterator->current())
                 ){
                     // recursive call for child elements
-                    $iterator->offsetSet($iterator->key(), forward_static_call(array('self', __METHOD__), $iterator->getChildren())->getArrayCopy());
+                    $iterator->offsetSet($iterator->key(), forward_static_call([static::class, __FUNCTION__], $iterator->getChildren())->getArrayCopy());
                     $iterator->next();
                 }elseif(is_array($mapValue)){
                     // a -> array mapping
@@ -88,7 +92,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
                         $iterator->offsetSet($parentKey, $currentValue);
                     }else{
                         $iterator->offsetSet($parentKey, [$entryKey => $iterator->current()]);
-                        $keyWhitelist[] = $parentKey;
+                        $keyAllowlist[] = $parentKey;
                     }
 
                     $iterator->offsetUnset($iterator->key());
@@ -103,7 +107,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
                     // a -> b mapping (key changed)
                     $iterator->offsetSet($mapValue, $iterator->current());
                     $iterator->offsetUnset($iterator->key());
-                    $keyWhitelist[] = $mapValue;
+                    $keyAllowlist[] = $mapValue;
                 }else{
                     // a -> a (no changes)
                     $iterator->next();
@@ -111,7 +115,7 @@ class AbstractIterator extends \RecursiveArrayIterator {
 
             }elseif(
                 static::$removeUnmapped &&
-                !in_array($iterator->key(), $keyWhitelist)
+                !in_array($iterator->key(), $keyAllowlist)
             ){
                 $iterator->offsetUnset($iterator->key());
             }else{

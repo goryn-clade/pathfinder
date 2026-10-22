@@ -19,7 +19,7 @@ class System extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function get(\Base $f3, $params){
+    public function get(\Base $f3,  array $params) : void {
         $requestData = $this->getRequestData($f3);
         $systemData = null;
 
@@ -28,7 +28,10 @@ class System extends AbstractRestController {
             ($mapId = (int)$requestData['mapId'])
         ){
             $activeCharacter = $this->getCharacter();
-            $isCcpId = (bool)$requestData['isCcpId'];
+            if(!$activeCharacter){
+                return;
+            }
+            $isCcpId = (bool)($requestData['isCcpId'] ?? false);
 
             if(
                 !is_null($map = $activeCharacter->getMap($mapId)) &&
@@ -50,7 +53,7 @@ class System extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function put(\Base $f3){
+    public function put(\Base $f3) : void {
         $requestData = $this->getRequestData($f3);
         $systemData = [];
 
@@ -58,12 +61,25 @@ class System extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
             if($map->hasAccess($activeCharacter)){
-                $system = $map->getNewSystem($requestData['systemId']);
+                $systemId = isset($requestData['systemId']) ? (int)$requestData['systemId'] : null;
+                if($systemId === 0){
+                    $systemId = null;
+                }
+                if($systemId === null){
+                    if(!$map->allowUnknownSystems){
+                        $this->out([]);
+                        return;
+                    }
+                    $securityClass = $requestData['securityClass'] ?? null;
+                    $system = $map->getNewSystem(null, $securityClass);
+                }else{
+                    $system = $map->getNewSystem($systemId);
+                }
                 $systemData = $this->update($system, $requestData)->getData();
             }
         }
@@ -77,7 +93,7 @@ class System extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, $params){
+    public function patch(\Base $f3,  array $params) : void {
         $requestData = $this->getRequestData($f3);
         $systemData = [];
 
@@ -85,7 +101,7 @@ class System extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $system Pathfinder\SystemModel
+             * @var Pathfinder\SystemModel $system
              */
             $system = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
             $system->getById($systemId);
@@ -103,16 +119,16 @@ class System extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, $params){
+    public function delete(\Base $f3,  array $params) : void {
         $requestData = $this->getRequestData($f3);
-        $systemIds = array_map('intval', explode(',', (string)$params['id']));
+        $systemIds = array_map(intval(...), explode(',', (string)$params['id']));
         $deletedSystemIds = [];
 
         if($mapId = (int)$requestData['mapId']){
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
@@ -158,16 +174,16 @@ class System extends AbstractRestController {
     /**
      * update system with new data
      * @param Pathfinder\SystemModel $system
-     * @param array $systemData
+     * @param array<string, mixed> $systemData
      * @return Pathfinder\SystemModel
      * @throws \Exception
      */
-    private function update(Pathfinder\SystemModel $system, array $systemData) : Pathfinder\SystemModel {
+    private function update(Pathfinder\SystemModel $system,  $systemData) : Pathfinder\SystemModel {
         $activeCharacter = $this->getCharacter();
 
         // statusId === 0  is 'auto' status -> keep current status
         // -> relevant systems that already have a status (inactive systems)
-        if( (int)$systemData['statusId'] <= 0 ){
+        if( (int)($systemData['statusId'] ?? 0) <= 0 ){
             unset($systemData['statusId']);
         }
 
@@ -181,10 +197,14 @@ class System extends AbstractRestController {
 
         // get data from "fresh" model (e.g. some relational data has changed: "statusId")
         /**
-         * @var $newSystem Pathfinder\SystemModel
+         * @var Pathfinder\SystemModel $newSystem
          */
         $newSystem = Pathfinder\AbstractPathfinderModel::getNew('SystemModel');
         $newSystem->getById($system->_id, 0);
+        if($newSystem->dry()){
+            // system was deleted between update and re-fetch (e.g. concurrent group delete)
+            return $system;
+        }
         $newSystem->clearCacheData();
 
         // broadcast map changes
@@ -200,6 +220,11 @@ class System extends AbstractRestController {
      * @return bool
      */
     private function checkDeleteMode(Pathfinder\MapModel $map, Pathfinder\SystemModel $system) : bool {
+        // unknown systems have no persistent data worth keeping
+        if($system->systemId === null){
+            return true;
+        }
+
         $delete = true;
 
         if(!empty($system->description)){

@@ -9,6 +9,7 @@
 namespace Exodus4D\Pathfinder\Cron;
 
 
+use Exodus4D\Pathfinder\Enum\ConnectionType;
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Model\Pathfinder;
 
@@ -29,7 +30,7 @@ class MapUpdate extends AbstractCron {
      * >> php index.php "/cron/deactivateMapData"
      * @param \Base $f3
      */
-    function deactivateMapData(\Base $f3){
+    function deactivateMapData(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
         $privateMapLifetime = (int)Config::getMapsDefaultConfig('private.lifetime');
 
@@ -55,7 +56,7 @@ class MapUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteMapData(\Base $f3){
+    function deleteMapData(\Base $f3): void{
         $this->logStart(__FUNCTION__);
         $total = 0;
 
@@ -95,50 +96,81 @@ class MapUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteEolConnections(\Base $f3){
+    function deleteEolConnections(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
-        $eolExpire = (int)$f3->get('PATHFINDER.CACHE.EXPIRE_CONNECTIONS_EOL');
+        $nominalDefault = (int)($f3->get('PATHFINDER.CACHE.EXPIRE_CONNECTIONS_NOMINAL_DEFAULT') ?: 86400);
+        $pfDB = $f3->DB->getDB('PF');
 
         $total = 0;
         $count = 0;
-        if($eolExpire > 0){
-            if($pfDB = $f3->DB->getDB('PF')){
-                $sql = "SELECT
-                    `con`.`id`
-                FROM
-                  `connection` `con` INNER JOIN
-                  `map` ON 
-                    `map`.`id` = `con`.`mapId`
-                WHERE
-                  `map`.`deleteEolConnections` = :deleteEolConnections AND
-                  TIMESTAMPDIFF(SECOND, `con`.`eolUpdated`, NOW() ) > :expire_time
-            ";
-
-                $connectionsData = $pfDB->exec($sql, [
-                    'deleteEolConnections' => 1,
-                    'expire_time' => $eolExpire
-                ]);
-
-                if($connectionsData){
-                    $total = count($connectionsData);
-                    /**
-                     * @var $connection Pathfinder\ConnectionModel
-                     */
-                    $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
-                    foreach($connectionsData as $data){
-                        $connection->getById( (int)$data['id'] );
-                        if($connection->valid()){
-                            $connection->erase();
-                            $count++;
-                        }
-                    }
-                }
-            }
+        if(!$pfDB){
+            $this->logEnd(__FUNCTION__, $total, $count, $total);
+            return;
         }
 
-        $importCount = $total;
+        $sql = "SELECT
+            `con`.`id`,
+            `con`.`type`,
+            TIMESTAMPDIFF(SECOND, `con`.`eolUpdated`, NOW()) AS eolAge,
+            COALESCE(`con`.`nominalLifespan`, :nominalDefault) AS nominalLifespan
+        FROM
+          `connection` `con` INNER JOIN
+          `map` ON
+            `map`.`id` = `con`.`mapId`
+        WHERE
+          `map`.`deleteEolConnections` = :deleteEolConnections AND
+          `con`.`eolUpdated` IS NOT NULL
+        ";
 
-        $this->logEnd(__FUNCTION__, $total, $count, $importCount);
+        $connectionsData = $pfDB->exec($sql, [
+            'deleteEolConnections' => 1,
+            'nominalDefault' => $nominalDefault
+        ]);
+
+        if($connectionsData){
+            $total = count($connectionsData);
+            /** @var Pathfinder\ConnectionModel $connection */
+            $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
+            $count = $this->eraseExpiredEolConnections($connection, $connectionsData);
+        }
+
+        $this->logEnd(__FUNCTION__, $total, $count, $total);
+    }
+
+    /**
+     * @param Pathfinder\ConnectionModel $connection reusable model instance
+     * @param array<string, mixed> $connectionsData rows from deleteEolConnections query
+     * @return int number of connections erased
+     */
+    private function eraseExpiredEolConnections($connection, array $connectionsData) : int {
+        $count = 0;
+        foreach($connectionsData as $data){
+            $expire = $this->getEolExpireSeconds($data);
+            if($expire === null || (int)$data['eolAge'] <= $expire){
+                continue;
+            }
+            $connection->getById((int)$data['id']);
+            if($connection->valid()){
+                $connection->erase();
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * @param array<string, mixed> $data row with keys: type (JSON), nominalLifespan (seconds)
+     * @return int|null expiry window in seconds for the connection's EOL phase, null if no EOL type
+     */
+    private function getEolExpireSeconds(array $data) : ?int {
+        $types = (array)json_decode($data['type'] ?? 'null');
+        $buffer = (int)((int)$data['nominalLifespan'] * 0.2);
+        foreach(ConnectionType::eolCases() as $eolCase){
+            if(in_array($eolCase->value, $types)){
+                return $eolCase->eolBaseSeconds() + $buffer;
+            }
+        }
+        return null;
     }
 
     /**
@@ -147,54 +179,54 @@ class MapUpdate extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function deleteExpiredConnections(\Base $f3){
+    function deleteExpiredConnections(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
+        $nominalDefault = (int)($f3->get('PATHFINDER.CACHE.EXPIRE_CONNECTIONS_NOMINAL_DEFAULT') ?: 86400);
+        $pfDB = $f3->DB->getDB('PF');
 
         $total = 0;
         $count = 0;
+        if(!$pfDB){
+            $this->logEnd(__FUNCTION__, $total, $count, $total);
+            return;
+        }
 
-        $whExpire = (int)$f3->get('PATHFINDER.CACHE.EXPIRE_CONNECTIONS_WH');
+        // Expire healthy WH connections at 120% of their nominal lifespan
+        $sql = "SELECT
+            `con`.`id`,
+            TIMESTAMPDIFF(SECOND, `con`.`created`, NOW()) AS age,
+            COALESCE(`con`.`nominalLifespan`, :nominalDefault) AS nominalLifespan
+        FROM
+          `connection` `con` INNER JOIN
+          `map` ON
+            `map`.`id` = `con`.`mapId`
+        WHERE
+          `map`.`deleteExpiredConnections` = :deleteExpiredConnections AND
+          `con`.`scope` = :scope
+        ";
 
-        if($whExpire > 0){
-            if($pfDB = $f3->DB->getDB('PF')){
-                $sql = "SELECT
-                    `con`.`id`
-                FROM
-                  `connection` `con` INNER JOIN
-                  `map` ON 
-                    `map`.`id` = `con`.`mapId`
-                WHERE
-                  `map`.`deleteExpiredConnections` = :deleteExpiredConnections AND
-                  `con`.`scope` = :scope AND
-                  TIMESTAMPDIFF(SECOND, `con`.`created`, NOW() ) > :expire_time
-            ";
+        $connectionsData = $pfDB->exec($sql, [
+            'deleteExpiredConnections' => 1,
+            'scope' => ConnectionType::Wh->value,
+            'nominalDefault' => $nominalDefault
+        ]);
 
-                $connectionsData = $pfDB->exec($sql, [
-                    'deleteExpiredConnections' => 1,
-                    'scope' => 'wh',
-                    'expire_time' => $whExpire
-                ]);
-
-                if($connectionsData){
-                    $total = count($connectionsData);
-                    /**
-                     * @var $connection Pathfinder\ConnectionModel
-                     */
-                    $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
-                    foreach($connectionsData as $data){
-                        $connection->getById( (int)$data['id'] );
-                        if($connection->valid()){
-                            $connection->erase();
-                            $count++;
-                        }
+        if($connectionsData){
+            $total = count($connectionsData);
+            /** @var Pathfinder\ConnectionModel $connection */
+            $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
+            foreach($connectionsData as $data){
+                if((int)$data['age'] > (int)$data['nominalLifespan'] * 1.2){
+                    $connection->getById((int)$data['id']);
+                    if($connection->valid()){
+                        $connection->erase();
+                        $count++;
                     }
                 }
             }
         }
 
-        $importCount = $total;
-
-        $this->logEnd(__FUNCTION__, $total, $count, $importCount);
+        $this->logEnd(__FUNCTION__, $total, $count, $total);
     }
 
     /**
@@ -202,7 +234,7 @@ class MapUpdate extends AbstractCron {
      * >> php index.php "/cron/deleteSignatures"
      * @param \Base $f3
      */
-    function deleteSignatures(\Base $f3){
+    function deleteSignatures(\Base $f3): void{
         $this->logStart(__FUNCTION__, false);
         $signatureExpire = (int)$f3->get('PATHFINDER.CACHE.EXPIRE_SIGNATURES');
 

@@ -12,7 +12,7 @@ namespace Exodus4D\Pathfinder\Exception;
 class ConfigException extends PathfinderException {
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $codes = [
         1000 => 500

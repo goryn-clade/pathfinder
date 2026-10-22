@@ -18,7 +18,7 @@ class CorporationStructureModel extends AbstractPathfinderModel {
     protected $table = 'corporation_structure';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -30,7 +30,7 @@ class CorporationStructureModel extends AbstractPathfinderModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',
@@ -41,7 +41,7 @@ class CorporationStructureModel extends AbstractPathfinderModel {
         'structureId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\StructureModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\StructureModel::class,
             'constraint' => [
                 [
                     'table' => 'structure',
@@ -59,6 +59,7 @@ class CorporationStructureModel extends AbstractPathfinderModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['corporationId', 'structureId'], true);

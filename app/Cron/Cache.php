@@ -36,7 +36,7 @@ class Cache extends AbstractCron {
      * >> php index.php "/cron/deleteExpiredCacheData"
      * @param \Base $f3
      */
-    function deleteExpiredCacheData(\Base $f3){
+    function deleteExpiredCacheData(\Base $f3): void{
         $this->logStart(__FUNCTION__);
 
         // cache dir (dir is recursively searched...)
@@ -50,9 +50,9 @@ class Cache extends AbstractCron {
         $deletedSize = 0;
         $notWritableFiles = 0;
         $deleteErrors = 0;
-        foreach($expiredFiles as $filename => $file) {
+        foreach($expiredFiles as $file) {
             /**
-             * @var $file \SplFileInfo
+             * @var \SplFileInfo $file
              */
             if($file->isFile()){
                 $totalFiles++;

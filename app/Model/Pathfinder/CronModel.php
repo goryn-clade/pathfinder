@@ -54,7 +54,7 @@ class CronModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -109,9 +109,9 @@ class CronModel extends AbstractPathfinderModel {
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
-    public function setData(array $data){
+    public function setData( $data): void {
         $this->copyfrom($data, ['handler', 'expr', 'lastExecStart', 'lastExecEnd', 'lastExecMemPeak', 'lastExecState']);
     }
 
@@ -153,7 +153,7 @@ class CronModel extends AbstractPathfinderModel {
     /**
      * log execution "state" for prev run in 'history' column
      */
-    protected function logState(){
+    protected function logState(): void {
         $this->history = $this->getHistory() ? : null;
         // reset data from last run
         $this->lastExecEnd = null;
@@ -162,7 +162,7 @@ class CronModel extends AbstractPathfinderModel {
 
     /**
      * @param bool $addLastIfFinished
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function getHistory(bool $addLastIfFinished = false) : array {
@@ -186,7 +186,7 @@ class CronModel extends AbstractPathfinderModel {
 
     /**
      * get current job status based on its current data
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function getStatus() : array {
@@ -237,20 +237,22 @@ class CronModel extends AbstractPathfinderModel {
                 $timezone
             );
 
-            $timeBuffer = 60 * 60;
-            $startTime->add(new \DateInterval('PT' . $timeBuffer . 'S'));
+            if($startTime){
+                $timeBuffer = 60 * 60;
+                $startTime->add(new \DateInterval('PT' . $timeBuffer . 'S'));
 
-            if($this->lastExecEnd){
-                $endTime = \DateTime::createFromFormat(
-                    'U.u',
-                    number_format($this->lastExecEnd, 6, '.', ''),
-                    $timezone
-                );
-            }else{
-                $endTime = new \DateTime('now', $timezone);
+                if($this->lastExecEnd){
+                    $endTime = \DateTime::createFromFormat(
+                        'U.u',
+                        number_format($this->lastExecEnd, 6, '.', ''),
+                        $timezone
+                    );
+                }else{
+                    $endTime = new \DateTime('now', $timezone);
+                }
+
+                $timedOut = $startTime < $endTime;
             }
-
-            $timedOut = $startTime < $endTime;
         }
 
         return $timedOut;

@@ -20,13 +20,13 @@ class SystemNeighbourModel extends AbstractUniverseModel {
     protected $allowTruncate        = true;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'regionId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\RegionModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\RegionModel::class,
             'constraint' => [
                 [
                     'table' => 'region',
@@ -38,7 +38,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
         'constellationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\ConstellationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\ConstellationModel::class,
             'constraint' => [
                 [
                     'table' => 'constellation',
@@ -51,7 +51,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
             'type' => Schema::DT_INT,
             'index' => true,
             'unique' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\SystemModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\SystemModel::class,
             'constraint' => [
                 [
                     'table' => 'system',
@@ -86,7 +86,7 @@ class SystemNeighbourModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {}
 }

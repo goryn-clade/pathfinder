@@ -21,19 +21,19 @@ class Search {
      * @param string $dir
      * @param null $mTime
      * @param int $limit
-     * @return \Traversable
+     * @return \Traversable<mixed, \SplFileInfo>
      */
-    static function getFilesByMTime(string $dir, $mTime = null, $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
+    static function getFilesByMTime(string $dir, ?int $mTime = null, int $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
         $mTime = is_null($mTime) ? time() : (int)$mTime;
 
-        $filterCallback = function($current, $key, $iterator) use ($mTime) {
+        $filterCallback = function(\SplFileInfo $current) use ($mTime) {
             /**
-             * @var $current \RecursiveDirectoryIterator
+             * @var \SplFileInfo $current
              */
             if (
                 !$current->isFile() || // allow recursion
                 (
-                    strpos($current->getFilename(), '.') !== 0 && // skip e.g. ".gitignore"
+                    !str_starts_with($current->getFilename(), '.') && // skip e.g. ".gitignore"
                     $current->getMTime() < $mTime // filter last modification date
                 )
             ){
@@ -50,18 +50,18 @@ class Search {
      * @param string $dir
      * @param int $size
      * @param int $limit
-     * @return \Traversable
+     * @return \Traversable<mixed, \SplFileInfo>
      */
     static function getFilesBySize(string $dir, int $size = 0, int $limit = self::DEFAULT_FILE_LIMIT)  : \Traversable {
 
-        $filterCallback = function($current, $key, $iterator) use ($size) {
+        $filterCallback = function(\SplFileInfo $current) use ($size) {
             /**
-             * @var $current \RecursiveDirectoryIterator
+             * @var \SplFileInfo $current
              */
             if (
                 !$current->isFile() || // allow recursion
                 (
-                    strpos($current->getFilename(), '.') !== 0 && // skip e.g. ".gitignore"
+                    !str_starts_with($current->getFilename(), '.') && // skip e.g. ".gitignore"
                     $current->getSize() > $size // filter file size
                 )
             ){
@@ -77,7 +77,7 @@ class Search {
      * @param string $dir
      * @param \Closure $filterCallback
      * @param int $limit
-     * @return \Traversable
+     * @return \Traversable<mixed, \SplFileInfo>
      */
     private static function getFilesByCallback(string $dir, \Closure $filterCallback, int $limit = self::DEFAULT_FILE_LIMIT) : \Traversable {
         $files = new \ArrayIterator();

@@ -9,35 +9,35 @@
 namespace Exodus4D\Pathfinder\Lib\Logging\Handler;
 
 
+use Exodus4D\Pathfinder\Lib\Config;
 use Monolog\Logger;
 
 class SocketHandler extends \Monolog\Handler\SocketHandler {
-
-    /**
-     * some meta data (additional processing information)
-     * @var array|string
-     */
-    protected $metaData                 = [];
 
     /**
      * SocketHandler constructor.
      * @param $connectionString
      * @param int $level
      * @param bool $bubble
-     * @param array $metaData
+     * @param array<string, mixed> $metaData
      */
-    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true, $metaData = []){
-        $this->metaData = $metaData;
-
+    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true, /**
+     * some meta data (additional processing information)
+     */
+    protected $metaData = []){
         parent::__construct($connectionString, $level, $bubble);
+
+        $this->setConnectionTimeout(2);
+        $this->setTimeout(2);
     }
 
     /**
      * overwrite default handle()
      * -> change data structure after processor() calls and before formatter() calls
-     * @param array $record
+     * @param array<string, mixed> $record
      * @return bool
      */
+    #[\Override]
     public function handle(array $record) : bool {
         if (!$this->isHandling($record)) {
             return false;
@@ -55,7 +55,14 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
 
         $record['formatted'] = $this->getFormatter()->format($record);
 
-        $this->write($record);
+        try {
+            $this->write($record);
+        } catch (\RuntimeException) {
+            // Mark socket as unavailable so subsequent writes in this request
+            // (and for the remainder of the cache TTL) skip the socket handler.
+            \Base::instance()->set(Config::CACHE_KEY_SOCKET_VALID, false, Config::CACHE_TTL_SOCKET_VALID);
+            return false;
+        }
 
         return false === $this->bubble;
     }

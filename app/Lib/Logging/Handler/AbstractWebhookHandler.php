@@ -15,51 +15,10 @@ use Monolog\Logger;
 abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler {
 
     /**
-     * @var string
-     */
-    private $webhookUrl;
-
-    /**
-     * Slack channel (encoded ID or name)
-     * @var string|null
-     */
-    private $channel;
-
-    /**
-     * Name of a bot
-     * @var string|null
-     */
-    private $username;
-
-    /**
      * User icon e.g. 'ghost', 'http://example.com/user.png'
      * @var string
      */
     private $userIcon;
-
-    /**
-     * Whether the message should be added to Slack as attachment (plain text otherwise)
-     * @var bool
-     */
-    protected $useAttachment;
-
-    /**
-     * Whether the attachment should include context
-     * @var bool
-     */
-    protected $includeContext;
-
-    /**
-     * Whether the attachment should include extra
-     * @var bool
-     */
-    protected $includeExtra;
-
-    /**
-     * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
-     * @var array
-     */
-    private $excludeFields;
 
     /**
      * Max attachment count per message (20 is max)
@@ -77,17 +36,29 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param  bool        $includeExtra           Whether the extra data added to Slack as attachments are in a short style
      * @param  int         $level                  The minimum logging level at which this handler will be triggered
      * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
-     * @param  array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param   $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param array<string, mixed> $excludeFields
      */
-    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $includeContext = true, $includeExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = []){
-        $this->webhookUrl = $webhookUrl;
-        $this->channel = $channel;
-        $this->username = $username;
-        $this->userIcon = trim($iconEmoji, ':');
-        $this->useAttachment = $useAttachment;
-        $this->includeContext = $includeContext;
-        $this->includeExtra = $includeExtra;
-        $this->excludeFields = $excludeFields;
+    public function __construct(private $webhookUrl, /**
+     * Slack channel (encoded ID or name)
+     */
+    private $channel = null, /**
+     * Name of a bot
+     */
+    private $username = null, /**
+     * Whether the message should be added to Slack as attachment (plain text otherwise)
+     */
+    protected $useAttachment = true, $iconEmoji = null, /**
+     * Whether the attachment should include context
+     */
+    protected $includeContext = true, /**
+     * Whether the attachment should include extra
+     */
+    protected $includeExtra = false, $level = Logger::CRITICAL, $bubble = true, /**
+     * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     */
+    private readonly array $excludeFields = []){
+        $this->userIcon = trim((string) $iconEmoji, ':');
 
         parent::__construct($level, $bubble);
 
@@ -95,8 +66,9 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
 
     /**
      * format
-     * @param array $record
-     * @return array
+     * @param  $record
+     * @return array<string, string>
+     * @param array<string, mixed> $record
      */
     protected function getSlackData(array $record): array {
         $postData = [];
@@ -123,39 +95,72 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $record
+     * Build the POST body. Subclasses can override to return a different format (e.g. Discord embeds).
+     * @param array<string, mixed> $record
+     * @return array<string, mixed>
      */
-    protected function write(array $record) : void {
-        $record = $this->excludeFields($record);
-
-        $postData = $this->getSlackData($record);
-
-        $postData = $this->cleanAttachments($postData);
-
-        $postString = json_encode($postData);
-
-        $ch = curl_init();
-        $options = [
-            CURLOPT_URL => $this->webhookUrl,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_POSTFIELDS => $postString
-        ];
-        if (defined('CURLOPT_SAFE_UPLOAD')) {
-            $options[CURLOPT_SAFE_UPLOAD] = true;
-        }
-
-        curl_setopt_array($ch, $options);
-
-        Handler\Curl\Util::execute($ch);
+    protected function getPostData(array $record): array {
+        return $this->escapeSlackText($this->getSlackData($record));
     }
 
     /**
-     * @param array $postData
-     * @return array
+     * escape &, <, > in Slack text fields -> user input (e.g. map name '<!channel>') must not ping or link
+     * -> https://api.slack.com/reference/surfaces/formatting#escaping
+     * @param array<string|int, mixed> $data
+     * @return array<string|int, mixed>
+     */
+    protected function escapeSlackText(array $data): array {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = $this->escapeSlackText($value);
+            } elseif (is_string($value) && in_array($key, ['text', 'fallback', 'title', 'pretext', 'value', 'author_name', 'footer'], true)) {
+                $data[$key] = str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $value);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record): void {
+        $record   = $this->excludeFields($record);
+        $postData = $this->getPostData($record);
+
+        // Slack-format attachment cap; skip for native Discord embed payloads
+        if (isset($postData['attachments'])) {
+            $postData = $this->cleanAttachments($postData);
+        }
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $this->webhookUrl,
+            CURLOPT_CUSTOMREQUEST  => 'POST',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+            CURLOPT_POSTFIELDS     => json_encode($postData),
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 3,
+        ]);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr  = curl_error($ch);
+
+        if ($curlErr || ($httpCode && ($httpCode < 200 || $httpCode >= 300))) {
+            // log the host only, the full webhook URL is a secret
+            error_log(sprintf(
+                'Webhook POST failed [HTTP %d%s]: %s',
+                $httpCode,
+                $curlErr ? " — " . str_replace((string)$this->webhookUrl, '[webhook URL]', $curlErr) : '',
+                parse_url((string)$this->webhookUrl, PHP_URL_HOST) ?: 'invalid URL'
+            ));
+        }
+    }
+
+    /**
+     * @param  $postData
+     * @return array<string, mixed>
+     * @param array<string, mixed> $postData
      */
     protected function cleanAttachments(array $postData): array{
         $attachmentCount = count($postData['attachments']);
@@ -176,9 +181,11 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * @param array $attachment
-     * @param array $characterData
-     * @return array
+     * @param  $attachment
+     * @param  $characterData
+     * @return array<string, mixed>
+     * @param array<string, mixed> $attachment
+     * @param array<string, mixed> $characterData
      */
     protected function setAuthor(array $attachment, array $characterData): array {
         if( !empty($characterData['id']) &&  !empty($characterData['name'])){
@@ -191,9 +198,11 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * @param array $attachment
-     * @param array $thumbData
-     * @return array
+     * @param  $attachment
+     * @param  $thumbData
+     * @return array<string, mixed>
+     * @param array<string, mixed> $attachment
+     * @param array<string, mixed> $thumbData
      */
     protected function setThumb(array $attachment, array $thumbData): array {
         if( !empty($thumbData['url'])) {
@@ -204,13 +213,13 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     }
 
     /**
-     * @param $title
-     * @param $value
+     * @param string|int $title
+     * @param mixed $value
      * @param bool $format
      * @param bool $short
-     * @return array
+     * @return array<string, mixed>
      */
-    protected function generateAttachmentField($title, $value, $format = false, $short = true){
+    protected function generateAttachmentField(string|int $title, mixed $value, bool $format = false, bool $short = true){
         return [
             'title' => $title,
             'value' => !empty($value) ? ( $format ? sprintf('`%s`', $value) : $value ) : '',
@@ -220,27 +229,36 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
 
     /**
      * @param string $tag
+     * @return int
+     */
+    protected function getAttachmentColorInt(string $tag): int {
+        return (int) hexdec(ltrim($this->getAttachmentColor($tag), '#'));
+    }
+
+    /**
+     * @param string $tag
      * @return string
      */
     protected function getAttachmentColor(string $tag): string {
-        switch($tag){
-            case 'information': $color = '#428bca'; break;
-            case 'success':     $color = '#4f9e4f'; break;
-            case 'warning':     $color = '#e28a0d'; break;
-            case 'danger':      $color = '#a52521'; break;
-            default: $color = '#313335'; break;
-        }
+        $color = match ($tag) {
+            'information' => '#428bca',
+            'success' => '#4f9e4f',
+            'warning' => '#e28a0d',
+            'danger' => '#a52521',
+            default => '#313335',
+        };
         return $color;
     }
 
     /**
      * Get a copy of record with fields excluded according to $this->excludeFields
-     * @param array $record
-     * @return array
+     * @param  $record
+     * @return array<string, mixed>
+     * @param array<string, mixed> $record
      */
     private function excludeFields(array $record){
         foreach($this->excludeFields as $field){
-            $keys = explode('.', $field);
+            $keys = explode('.', (string) $field);
             $node = &$record;
             $lastKey = end($keys);
             foreach($keys as $key){

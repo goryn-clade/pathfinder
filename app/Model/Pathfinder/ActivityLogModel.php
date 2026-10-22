@@ -18,7 +18,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
     protected $table = 'activity_log';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -30,7 +30,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
         'characterId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class,
             'constraint' => [
                 [
                     'table' => 'character',
@@ -41,7 +41,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
         'mapId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapModel::class,
             'constraint' => [
                 [
                     'table' => 'map',
@@ -133,6 +133,27 @@ class ActivityLogModel extends AbstractPathfinderModel {
             'default' => 0,
             'counter' => true
         ],
+
+        // group actions -----------------------------------------------------
+
+        'groupCreate' => [
+            'type' => Schema::DT_SMALLINT,
+            'nullable' => false,
+            'default' => 0,
+            'counter' => true
+        ],
+        'groupUpdate' => [
+            'type' => Schema::DT_SMALLINT,
+            'nullable' => false,
+            'default' => 0,
+            'counter' => true
+        ],
+        'groupDelete' => [
+            'type' => Schema::DT_SMALLINT,
+            'nullable' => false,
+            'default' => 0,
+            'counter' => true
+        ],
     ];
 
     /**
@@ -151,7 +172,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticDateFieldConfig(){
+    private function addStaticDateFieldConfig(): void{
         if(is_array($this->fieldConf)){
             $staticFieldConfig = [
                 'year' => [
@@ -173,14 +194,12 @@ class ActivityLogModel extends AbstractPathfinderModel {
 
     /**
      * get all table columns that are used as "counter" columns
-     * @return array
+     * @return array<string, mixed>
      */
     public function getCountableColumnNames(): array {
         $fieldConf = $this->getFieldConfiguration();
 
-        $filterCounterColumns = function($key, $value){
-            return isset($value['counter']) ? $key : false;
-        };
+        $filterCounterColumns = (fn($key, $value) => isset($value['counter']) ? $key : false);
 
         return array_values(array_filter(array_map($filterCounterColumns, array_keys($fieldConf), $fieldConf)));
     }
@@ -193,6 +212,7 @@ class ActivityLogModel extends AbstractPathfinderModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['year', 'week', 'characterId', 'mapId'], true);

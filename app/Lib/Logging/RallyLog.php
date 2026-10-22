@@ -16,7 +16,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * List of possible handlers (tested)
      * -> final handler will be set dynamic for per instance
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [
         // 'slackRally' => 'json',
@@ -31,7 +31,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * RallyLog constructor.
      * @param string $action
-     * @param array $objectData
+     * @param array<string, mixed> $objectData
      * @throws \Exception
      */
     public function __construct(string $action, array $objectData){
@@ -44,6 +44,7 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     protected function getThumbUrl() : string{
         $url = '';
         if(is_object($character = $this->getCharacter())){
@@ -61,13 +62,15 @@ class RallyLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getMessage() : string{
         return "*New RallyPoint system '{objName}'* _#{objId}_ *map '{channelName}'* _#{channelId}_ ";
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
+    #[\Override]
     public function getData() : array{
         $data = parent::getData();
 
@@ -84,7 +87,7 @@ class RallyLog extends AbstractCharacterLog {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return string
      */
     protected function formatData(array $data): string{

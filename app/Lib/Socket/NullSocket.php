@@ -23,16 +23,17 @@ class NullSocket extends AbstractSocket {
      * @return Socket\ConnectorInterface
      */
     protected function getConnector(): Socket\ConnectorInterface {
-        return new Socket\Connector($this->getLoop(), $this->options);
+        return new Socket\Connector($this->options, $this->getLoop());
     }
 
     /**
-     * write to NullSocket can not be performed
+     * write to NullSocket can not be performed -> resolve with an 'error' payload
      * @param string $task
      * @param null $load
      * @return Promise\PromiseInterface
      */
+    #[\Override]
     public function write(string $task, $load = null) : Promise\PromiseInterface {
-        return new Promise\RejectedPromise();
+        return Promise\resolve($this->newPayload('error'));
     }
 }

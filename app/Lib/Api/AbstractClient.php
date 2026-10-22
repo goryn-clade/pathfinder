@@ -8,12 +8,9 @@
 
 namespace Exodus4D\Pathfinder\Lib\Api;
 
-use Cache\Adapter\Filesystem\FilesystemCachePool;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use Cache\Adapter\Redis\RedisCachePool;
 use Cache\Namespaced\NamespacedCachePool;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Lib\Util;
 use Exodus4D\Pathfinder\Lib\Logging;
@@ -48,6 +45,14 @@ abstract class AbstractClient extends \Prefab {
     const CLIENT_NAME = null;
 
     /**
+     * paths where failed requests are not retried
+     * -> updateUserData is polled every few seconds; the next poll is the retry.
+     *    Retries pushed it past nginx´ 40s timeout (T7)
+     * @var string[]
+     */
+    const NO_RETRY_PATHS = ['/api/Map/updateUserData'];
+
+    /**
      * @var string|null
      */
     protected $clientName = null;
@@ -59,7 +64,7 @@ abstract class AbstractClient extends \Prefab {
 
     /**
      * PSR-6 compatible CachePool instance
-     * -> can be Redis, Filesystem or Array cachePool
+     * -> can be Redis or Array cachePool
      * -> used by e.g. GuzzleCacheMiddleware
      * @var CacheItemPoolInterface|null
      */
@@ -139,7 +144,7 @@ abstract class AbstractClient extends \Prefab {
                     }
 
                     if(isset($poolConfig['tag'])){
-                        $name = 'pathfinder|php|tag:' . strtolower($poolConfig['tag']) . '|pid:' . getmypid();
+                        $name = 'pathfinder|php|tag:' . strtolower((string) $poolConfig['tag']) . '|pid:' . getmypid();
                         $client->client('setname', $name);
                     }
 
@@ -158,20 +163,9 @@ abstract class AbstractClient extends \Prefab {
                 }
             }
 
-            // Filesystem is second option and fallback for failed Redis pool -----------------------------------------
-            if(
-                is_null($this->cachePool) &&
-                in_array($poolConfig['type'], ['redis', 'folder']) &&
-                class_exists(FilesystemCachePool::class)
-            ){
-                $filesystemAdapter  = new Local(\Base::instance()->get('ROOT'));
-                $filesystem         = new Filesystem($filesystemAdapter);
-                $poolFilesystem     = new FilesystemCachePool($filesystem, $poolConfig['folder']);
-
-                $this->cachePool = $poolFilesystem;
-            }
-
             // Array cache pool fallback (not persistent) -------------------------------------------------------------
+            // -> the Filesystem pool (cache/filesystem-adapter) was removed: its league/flysystem 1.x dependency
+            //    is blocked by security advisories. Re-add on php-cache 3.x + flysystem 3 (see TODO backlog)
             if(
                 is_null($this->cachePool) &&
                 in_array($poolConfig['type'], ['redis', 'folder', 'array']) &&
@@ -187,7 +181,7 @@ abstract class AbstractClient extends \Prefab {
     /**
      * get cachePool config from [D]ata [S]ource [N]ame string
      * @param \Base $f3
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getCachePoolConfig(\Base $f3) : array {
         $tag = 'API_CACHE';
@@ -286,7 +280,7 @@ abstract class AbstractClient extends \Prefab {
      * unload function
      * @param \Redis $client
      */
-    public function unloadCache(\Redis $client){
+    public function unloadCache(\Redis $client): void{
         if($client->isConnected()){
             $client->close();
         }
@@ -295,7 +289,7 @@ abstract class AbstractClient extends \Prefab {
     /**
      * call request API data
      * @param string $name
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @return array|mixed
      */
     public function __call(string $name, array $arguments = []){
@@ -304,7 +298,7 @@ abstract class AbstractClient extends \Prefab {
             if(method_exists($this->client, $name)){
                 $return = call_user_func_array([$this->client, $name], $arguments);
             }else{
-                $errorMsg = $this->getMissingMethodError(get_class($this->client), $name);
+                $errorMsg = $this->getMissingMethodError($this->client::class, $name);
                 $this->getLogger('ERROR')->write($errorMsg);
                 \Base::instance()->error(501, $errorMsg);
             }
@@ -347,6 +341,9 @@ abstract class AbstractClient extends \Prefab {
             $client->setLogFile('esi_requests');
 
             $client->setRetryLogFile('esi_retry_requests');
+            if(in_array($f3->get('PATH'), self::NO_RETRY_PATHS, true)){
+                $client->setRetryEnabled(false);
+            }
 
             $client->setCacheDebug(true);
             $client->setCachePool($this->getCachePool($f3));

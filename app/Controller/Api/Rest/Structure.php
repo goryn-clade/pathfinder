@@ -17,7 +17,7 @@ class Structure extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function post(\Base $f3){
+    public function post(\Base $f3): void{
         $requestData = $this->getRequestData($f3);
         $structuresData = $requestData ? $this->update($requestData) : [];
         $this->out($structuresData);
@@ -27,7 +27,7 @@ class Structure extends AbstractRestController {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function put(\Base $f3){
+    public function put(\Base $f3): void{
         $requestData = $this->getRequestData($f3);
         $structuresData = $requestData ? $this->update([$requestData]) : [];
         $this->out($structuresData);
@@ -38,9 +38,9 @@ class Structure extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, $params){
+    public function patch(\Base $f3,  array $params): void{
         $requestData = $this->getRequestData($f3);
-        $structuresData = (($structureId = (int)$params['id']) && ($structureId == (int)$requestData['id'])) ? $this->update([$requestData]) : [];
+        $structuresData = (($structureId = (int)$params['id']) && ($structureId == (int)($requestData['id'] ?? 0))) ? $this->update([$requestData]) : [];
         $this->out($structuresData);
     }
 
@@ -49,13 +49,13 @@ class Structure extends AbstractRestController {
      * @param $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, $params){
+    public function delete(\Base $f3,  array $params): void{
         $deletedStructureIds = [];
 
         if($structureId = (int)$params['id']){
             $activeCharacter = $this->getCharacter();
             /**
-             * @var $structure Pathfinder\StructureModel
+             * @var Pathfinder\StructureModel $structure
              */
             $structure = Pathfinder\AbstractPathfinderModel::getNew('StructureModel');
             $structure->getById($structureId);
@@ -67,55 +67,58 @@ class Structure extends AbstractRestController {
     }
 
     /**
-     * @param array $structuresData
-     * @return array
+     * @param array<string, mixed> $structuresData
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    private function update(array $structuresData) : array {
+    private function update( $structuresData) : array {
         $data = [];
 
         $activeCharacter = $this->getCharacter();
-        if($activeCharacter->hasCorporation()){
-            // structures always belong to a corporation
-            /**
-             * @var $structure Pathfinder\StructureModel
-             */
-            $structure = Pathfinder\AbstractPathfinderModel::getNew('StructureModel');
-            foreach($structuresData as $structureData){
-                // reset on loop start because of potential "continue"
-                $structure->reset();
+        if(!$activeCharacter || !($corporation = $activeCharacter->getCorporation())){
+            $this->out($data);
+            return $data;
+        }
 
-                if(!empty($structureData['id']) && $structureId = (int)$structureData['id']){
-                    // update specific structure
-                    $structure->getById($structureId);
-                    if(!$structure->hasAccess($activeCharacter)){
-                        continue;
-                    }
-                }elseif(!isset($structureData['id'])){
-                    // from clipboard -> search by structure by name
-                    $structure->getByName($activeCharacter->getCorporation(), (string)$structureData['name'], (int)$structureData['systemId']);
+        // structures always belong to a corporation
+        /**
+         * @var Pathfinder\StructureModel $structure
+         */
+        $structure = Pathfinder\AbstractPathfinderModel::getNew('StructureModel');
+        foreach($structuresData as $structureData){
+            // reset on loop start because of potential "continue"
+            $structure->reset();
+
+            if(!empty($structureData['id']) && $structureId = (int)$structureData['id']){
+                // update specific structure
+                $structure->getById($structureId);
+                if(!$structure->hasAccess($activeCharacter)){
+                    continue;
                 }
+            }elseif(!isset($structureData['id'])){
+                // from clipboard -> search by structure by name
+                $structure->getByName($corporation, (string)($structureData['name'] ?? ''), (int)($structureData['systemId'] ?? 0));
+            }
 
-                $isNew = $structure->dry();
+            $isNew = $structure->dry();
 
-                $structure->setData($structureData);
-                $structure->save();
+            $structure->setData($structureData);
+            $structure->save();
 
-                if($isNew){
-                    $activeCharacter->getCorporation()->saveStructure($structure);
-                }
+            if($isNew){
+                $corporation->saveStructure($structure);
+            }
 
-                // group all updated structures by corporation -> just for return
-                $corporationsStructureData = $structure->getDataByCorporations();
-                foreach($corporationsStructureData as $corporationId => $corporationStructureData){
-                    if(isset($data[$corporationId])){
-                        $data[$corporationId]['structures'] = array_merge(
-                            $data[$corporationId]['structures'],
-                            $corporationStructureData['structures']
-                        );
-                    }else{
-                        $data[$corporationId] = $corporationStructureData;
-                    }
+            // group all updated structures by corporation -> just for return
+            $corporationsStructureData = $structure->getDataByCorporations();
+            foreach($corporationsStructureData as $corporationId => $corporationStructureData){
+                if(isset($data[$corporationId])){
+                    $data[$corporationId]['structures'] = array_merge(
+                        $data[$corporationId]['structures'],
+                        $corporationStructureData['structures']
+                    );
+                }else{
+                    $data[$corporationId] = $corporationStructureData;
                 }
             }
         }

@@ -20,7 +20,8 @@ class AppController extends Controller {
      * @param $params
      * @return bool
      */
-    public function beforeroute(\Base $f3, $params) : bool {
+    #[\Override]
+    public function beforeroute(\Base $f3,  array $params) : bool {
         // page title
         $f3->set('tplPageTitle',  Config::getPathfinderData('name'));
 
@@ -33,15 +34,21 @@ class AppController extends Controller {
         // JS main file
         $f3->set('tplJsView', 'login');
 
+        // character id (set by MapController when authenticated; default null for unauthenticated pages)
+        $f3->set('tplCharacterId', null);
+
+        // PHP 8: ensure SESSION.SSO.ERROR is always defined so templates can safely access it
+        if (!$f3->exists('SESSION.SSO.ERROR')) {
+            $f3->set('SESSION.SSO.ERROR', null);
+        }
+
         if($return = parent::beforeroute($f3, $params)){
             // href for SSO Auth
             $f3->set('tplAuthType', $f3->get('BASE') . $f3->alias( 'sso', ['action' => 'requestAuthorization'] ));
 
             // characters  from cookies
             $f3->set('cookieCharacters', $this->getCookieByName(self::COOKIE_PREFIX_CHARACTER, true));
-            $f3->set('getCharacterGrid', function($characters){
-                return ( ((12 / count($characters)) <= 3) ? 3 : (12 / count($characters)) );
-            });
+            $f3->set('getCharacterGrid', fn($characters) => ((12 / count($characters)) <= 3) ? 3 : (12 / count($characters)));
         }
 
         return $return;
@@ -51,7 +58,8 @@ class AppController extends Controller {
      * event handler after routing
      * @param \Base $f3
      */
-    public function afterroute(\Base $f3){
+    #[\Override]
+    public function afterroute(\Base $f3): void{
         parent::afterroute($f3);
 
         // clear all SSO related temp data
@@ -64,7 +72,7 @@ class AppController extends Controller {
      * show main login (index) page
      * @param \Base $f3
      */
-    public function init(\Base $f3){
+    public function init(\Base $f3): void{
         $resource = Resource::instance();
         $resource->register('script', 'app/login');
         $resource->register('script', 'app/mappage', 'prefetch');

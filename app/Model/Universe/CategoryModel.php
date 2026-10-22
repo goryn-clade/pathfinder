@@ -18,7 +18,7 @@ class CategoryModel extends AbstractUniverseModel {
     protected $table = 'category';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -33,13 +33,13 @@ class CategoryModel extends AbstractUniverseModel {
             'index' => true
         ],
         'groups' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\GroupModel', 'categoryId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\GroupModel::class, 'categoryId']
         ]
     ];
 
     /**
      * get category data
-     * @param array $additionalData
+     * @param array<string, mixed> $additionalData
      * @return null|object
      */
     public function getData(array $additionalData = []){
@@ -76,15 +76,15 @@ class CategoryModel extends AbstractUniverseModel {
     }
 
     /**
-     * @param array $additionalData
-     * @return array
+     * @param array<string, mixed> $additionalData
+     * @return array<string, mixed>
      */
     protected function getGroupsData(array $additionalData = []) : array {
         $groupsData = [];
         $groups = $this->getGroups();
 
         /**
-         * @var $group GroupModel
+         * @var GroupModel $group
          */
         foreach($groups as $group){
             $groupsData[] = $group->getData($additionalData);
@@ -111,7 +111,7 @@ class CategoryModel extends AbstractUniverseModel {
         $count = 0;
         if($this->valid()){
             /**
-             * @var $group GroupModel
+             * @var GroupModel $group
              */
             foreach($groups = $this->getGroups($published) as $group){
                 $count += $group->getTypesCount($published);
@@ -124,9 +124,9 @@ class CategoryModel extends AbstractUniverseModel {
      * load data from API into $this and save $this
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {
         if(!empty($data = self::getUniverseCategoryData($id))){
             $this->copyfrom($data, ['id', 'name', 'published']);
             $this->save();
@@ -137,9 +137,10 @@ class CategoryModel extends AbstractUniverseModel {
      * load groups data for this category
      * @param int $offset
      * @param int $length   0 -> all groups
-     * @return array
+     * @param bool $forceRefresh query ESI for every group and type, even if its row is not outdated
+     * @return array<string, mixed>
      */
-    public function loadGroupsData(int $offset = 0, int $length = 0) : array {
+    public function loadGroupsData(int $offset = 0, int $length = 0, bool $forceRefresh = false) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset, 'groupTypes' => []];
 
         if(
@@ -156,12 +157,12 @@ class CategoryModel extends AbstractUniverseModel {
             $info['countChunk'] = count($data['groups']);
             foreach($data['groups'] as $groupId){
                 /**
-                 * @var $group GroupModel
+                 * @var GroupModel $group
                  */
                 $group = $this->rel('groups');
-                $group->loadById($groupId);
+                $group->loadById($groupId, '', ['forceRefresh' => $forceRefresh]);
 
-                $info['groupTypes'][$groupId] = $group->loadTypesData();
+                $info['groupTypes'][$groupId] = $group->loadTypesData(0, 0, $forceRefresh);
 
                 $group->reset();
 
@@ -175,14 +176,14 @@ class CategoryModel extends AbstractUniverseModel {
 
     /**
      * @param int $id
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getUniverseCategoryData(int $id) : array {
         return self::getF3()->ccpClient()->send('getUniverseCategory', $id);
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getUniverseCategories() : array {
         return self::getF3()->ccpClient()->send('getUniverseCategories');
@@ -190,7 +191,7 @@ class CategoryModel extends AbstractUniverseModel {
 
     /**
      * @param int $id
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getUniverseCategoryGroups(int $id) : array {
         return empty($data = self::getUniverseCategoryData($id)) ? [] : $data['groups'];
@@ -198,7 +199,7 @@ class CategoryModel extends AbstractUniverseModel {
 
     /**
      * @param int $id
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getUniverseCategoryTypes(int $id) : array {
         $types = [];

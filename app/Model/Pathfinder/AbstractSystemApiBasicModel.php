@@ -43,7 +43,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
         $data               = (object)[];
         $data->systemId     = $this->getRaw('systemId');
         $data->values       = $this->getValues();
-        $data->updated      = strtotime($this->updated);
+        $data->updated      = $this->updated ? strtotime((string) $this->updated) : null;
 
         return $data;
     }
@@ -51,11 +51,11 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
     /**
      * get all "valX" column data as array
      * -> "start" (most recent) value is stored in column name stored in "lastUpdatedValue" column
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getValues() : array {
         $valueColumnNames = range(1, static::DATA_COLUMN_COUNT);
-        $preFixer = function(&$value, $key, $prefix){
+        $preFixer = function(&$value, $key, $prefix): void{
             $value = $prefix . $value;
         };
         array_walk($valueColumnNames, $preFixer, static::DATA_COLUMN_PREFIX);
@@ -73,7 +73,7 @@ abstract class AbstractSystemApiBasicModel extends AbstractPathfinderModel {
     /**
      * extent the fieldConf Array with static fields for each table
      */
-    private function addStaticKillFieldConfig(){
+    private function addStaticKillFieldConfig(): void{
         if(is_array($this->fieldConf)){
             $staticFieldConfig = [];
 

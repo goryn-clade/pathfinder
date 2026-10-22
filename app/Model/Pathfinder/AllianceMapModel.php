@@ -18,7 +18,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
     protected $table = 'alliance_map';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -30,7 +30,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
         'allianceId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\AllianceModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\AllianceModel::class,
             'constraint' => [
                 [
                     'table' => 'alliance',
@@ -41,7 +41,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
         'mapId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapModel::class,
             'constraint' => [
                 [
                     'table' => 'map',
@@ -54,7 +54,8 @@ class AllianceMapModel extends AbstractPathfinderModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         // clear map cache
         $this->mapId->clearCacheData();
     }
@@ -67,6 +68,7 @@ class AllianceMapModel extends AbstractPathfinderModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['allianceId', 'mapId'], true);

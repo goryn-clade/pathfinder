@@ -54,36 +54,33 @@ abstract class AbstractLog implements LogInterface {
      */
     const TAG                       = ['danger', 'warning', 'information', 'success', 'primary', 'default'];
 
-    /**
-     * @var null|\Base
-     */
-    protected $f3                   = null;
+    protected \Base $f3;
 
     /**
      * log Handler type with Formatter type
      * -> check Monolog::HANDLER and Monolog::FORMATTER
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = ['stream' => 'line'];
 
     /**
      * log Processors, array with either callable functions or Processor class with __invoce() method
      * -> functions used to add "extra" data to a log
-     * @var array
+     * @var array<string, mixed>
      */
     protected $processorConfig      = ['psr' => null];
 
     /**
      * some handler need individual configuration parameters
      * -> see $handlerConfig end getHandlerParams()
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerParamsConfig  = [];
 
     /**
      * some processor need individual configuration parameters
      * -> see $processorConfig end getProcessorParams()
-     * @var array
+     * @var array<string, mixed>
      */
     protected $processorParamsConfig = [
         'psr' => ['Y-m-d\A\TH:i:s.uP', false]
@@ -92,7 +89,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * multiple Log() objects can be marked as "grouped"
      * -> Logs with Slack Handler should be grouped by map (send multiple log data in once
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerGroups        = [];
 
@@ -127,13 +124,13 @@ abstract class AbstractLog implements LogInterface {
 
     /**
      * log data (main log data)
-     * @var array
+     * @var array<string, mixed>
      */
     private $data                   = [];
 
     /**
      * (optional) temp data for logger (will not be stored with the log entry)
-     * @var array
+     * @var array<string, mixed>
      */
     private $tmpData                = [];
 
@@ -175,14 +172,14 @@ abstract class AbstractLog implements LogInterface {
     /**
      * set $f3 base object
      */
-    public function setF3(){
+    public function setF3(): void{
         $this->f3 = \Base::instance();
     }
 
     /**
      * @param $message
      */
-    public function setMessage(string $message){
+    public function setMessage(string $message): void{
         $this->message = $message;
     }
 
@@ -190,7 +187,7 @@ abstract class AbstractLog implements LogInterface {
      * @param string $level
      * @throws \Exception
      */
-    public function setLevel(string $level){
+    public function setLevel(string $level): void{
         if( in_array($level, self::LEVEL)){
             $this->level = $level;
         }else{
@@ -202,7 +199,7 @@ abstract class AbstractLog implements LogInterface {
      * @param string $tag
      * @throws \Exception
      */
-    public function setTag(string $tag){
+    public function setTag(string $tag): void{
         if( in_array($tag, self::TAG)){
             $this->tag = $tag;
         }else{
@@ -211,7 +208,7 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return LogInterface
      */
     public function setData(array $data) : LogInterface {
@@ -220,7 +217,7 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return LogInterface
      */
     public function setTempData(array $data) : LogInterface {
@@ -236,7 +233,7 @@ abstract class AbstractLog implements LogInterface {
      * @param \stdClass|null $handlerParams
      * @return LogInterface
      */
-    public function addHandler(string $handlerKey, string $formatterKey = null, \stdClass $handlerParams = null) : LogInterface {
+    public function addHandler(string $handlerKey, ?string $formatterKey = null, ?\stdClass $handlerParams = null) : LogInterface {
         if(!$this->hasHandlerKey($handlerKey)){
             $this->handlerConfig[$handlerKey] = $formatterKey;
             // add more configuration params for the new handler
@@ -263,7 +260,7 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getHandlerConfig() : array {
         return $this->handlerConfig;
@@ -272,27 +269,17 @@ abstract class AbstractLog implements LogInterface {
     /**
      * get __construct() parameters for a given $handlerKey
      * @param string $handlerKey
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getHandlerParams(string $handlerKey) : array {
         if($this->hasHandlerKey($handlerKey)){
-            switch($handlerKey){
-                case 'stream': $params = $this->getHandlerParamsStream();
-                    break;
-                case 'mail': $params = $this->getHandlerParamsMail();
-                    break;
-                case 'socket': $params = $this->getHandlerParamsSocket();
-                    break;
-                case 'slackMap':
-                case 'slackRally':
-                case 'discordMap':
-                case 'discordRally':
-                    $params = $this->getHandlerParamsSlack($handlerKey);
-                    break;
-                default:
-                    throw new \Exception(sprintf(self::ERROR_HANDLER_PARAMS, $handlerKey));
-            }
+            $params = match ($handlerKey) {
+                'stream' => $this->getHandlerParamsStream(),
+                'socket' => $this->getHandlerParamsSocket(),
+                'slackMap', 'slackRally', 'discordMap', 'discordRally' => $this->getHandlerParamsSlack($handlerKey),
+                default => throw new \Exception(sprintf(self::ERROR_HANDLER_PARAMS, $handlerKey)),
+            };
         }else{
             throw new \Exception(sprintf(self::ERROR_HANDLER_KEY, $handlerKey, implode(', ', array_flip($this->handlerConfig))));
         }
@@ -301,14 +288,14 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getHandlerParamsConfig() : array {
         return $this->handlerParamsConfig;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getProcessorConfig() : array {
         return $this->processorConfig;
@@ -317,17 +304,15 @@ abstract class AbstractLog implements LogInterface {
     /**
      * get __construct() parameters for a given $processorKey
      * @param string $processorKey
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getProcessorParams(string $processorKey) : array {
         if($this->hasProcessorKey($processorKey)){
-            switch($processorKey){
-                case 'psr': $params = $this->getProcessorParamsPsr();
-                    break;
-                default:
-                    throw new \Exception(sprintf(self::ERROR_PROCESSOR_PARAMS, $processorKey));
-            }
+            $params = match ($processorKey) {
+                'psr' => $this->getProcessorParamsPsr(),
+                default => throw new \Exception(sprintf(self::ERROR_PROCESSOR_PARAMS, $processorKey)),
+            };
         }else{
             throw new \Exception(sprintf(self::ERROR_PROCESSOR_KEY, $processorKey, implode(', ', array_flip($this->processorConfig))));
         }
@@ -378,13 +363,13 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getData() : array {
         return $this->data;
     }
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getContext() : array {
         $context = [
@@ -399,14 +384,14 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getTempData() : array {
         return $this->tmpData;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getHandlerGroups() : array {
         return $this->handlerGroups;
@@ -466,7 +451,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * remove all group handlers and their config params
      */
-    public function removeHandlerGroups(){
+    public function removeHandlerGroups(): void{
         foreach($this->getHandlerGroups() as $handlerKey){
             $this->removeHandlerGroup($handlerKey);
         }
@@ -475,20 +460,19 @@ abstract class AbstractLog implements LogInterface {
     /**
      * @param string $handlerKey
      */
-    public function removeHandlerGroup(string $handlerKey){
+    public function removeHandlerGroup(string $handlerKey): void{
         unset($this->handlerConfig[$handlerKey]);
         unset($this->handlerParamsConfig[$handlerKey]);
     }
 
     // Handler parameters for Monolog\Handler\* instances -------------------------------------------------------------
-
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     protected function getHandlerParamsStream() : array {
         $params = [];
         if( !empty($conf = $this->handlerParamsConfig['stream']) ){
-            $params[] = $conf->stream;
+            $params[] = $conf->stream ?? null;
             $params[] = Logger::toMonologLevel($this->getLevel());  // min level that is handled;
             $params[] = true;                                       // bubble
             $params[] = 0666;                                       // permissions (default 644)
@@ -498,71 +482,8 @@ abstract class AbstractLog implements LogInterface {
     }
 
     /**
-     * get __construct() parameters for SwiftMailerHandler() call
-     * @return array
-     */
-    protected function getHandlerParamsMail() : array {
-        $params = [];
-        if( !empty($conf = $this->handlerParamsConfig['mail']) ){
-            $transport = (new \Swift_SmtpTransport())
-                ->setHost($conf->host)
-                ->setPort($conf->port)
-                ->setEncryption($conf->scheme)
-                ->setUsername($conf->username)
-                ->setPassword($conf->password)
-                ->setStreamOptions([
-                    'ssl' => [
-                        'allow_self_signed' => true,
-                        'verify_peer' => false
-                    ]
-                ]);
-
-            $mailer = new \Swift_Mailer($transport);
-
-            // callback function used instead of Swift_Message() object
-            // -> we want the formatted/replaced message as subject
-            $messageCallback = function($content, $records) use ($conf){
-                $subject = 'No Subject';
-                if(!empty($records)){
-                    // build subject from first record -> remove "markdown"
-                    $subject = str_replace(['*', '_'], '', $records[0]['message']);
-                }
-
-                $jsonData = @json_encode($records, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
-
-                $message = (new \Swift_Message())
-                    ->setSubject($subject)
-                    ->addPart($jsonData)
-                    ->setFrom($conf->from)
-                    ->setTo($conf->to)
-                    ->setContentType('text/html')
-                    ->setCharset('utf-8')
-                    ->setMaxLineLength(1000);
-
-                if($conf->addJson){
-                    $jsonAttachment = (new \Swift_Attachment())
-                        ->setFilename('data.json')
-                        ->setContentType('application/json')
-                        ->setBody($jsonData);
-                    $message->attach($jsonAttachment);
-                }
-
-                return $message;
-            };
-
-            $params[] = $mailer;
-            $params[] = $messageCallback;
-            $params[] = Logger::toMonologLevel($this->getLevel());  // min level that is handled
-            $params[] = true;                                       // bubble
-        }
-
-        return $params;
-    }
-
-    /**
      * get __construct() parameters for SocketHandler() call
-     * @return array
+     * @return array<int, mixed>
      */
     protected function getHandlerParamsSocket() : array {
         $params = [];
@@ -570,10 +491,10 @@ abstract class AbstractLog implements LogInterface {
             // meta data (required by receiver socket)
             $meta = [
                 'logType' => 'mapLog',
-                'stream'=> $conf->streamConf->stream
+                'stream'=> $conf->streamConf->stream ?? null
             ];
 
-            $params[] = $conf->dsn;
+            $params[] = $conf->dsn ?? null;
             $params[] = Logger::toMonologLevel($this->getLevel());
             $params[] = true;
             $params[] = $meta;
@@ -585,16 +506,16 @@ abstract class AbstractLog implements LogInterface {
     /**
      * get __construct() params for SlackWebhookHandler() call
      * @param string $handlerKey
-     * @return array
+     * @return array<int, mixed>
      */
     protected function getHandlerParamsSlack(string $handlerKey) : array {
         $params = [];
         if( !empty($conf = $this->handlerParamsConfig[$handlerKey]) ){
-            $params[] = $conf->slackWebHookURL;
-            $params[] = $conf->slackChannel;
-            $params[] = $conf->slackUsername;
+            $params[] = $conf->slackWebHookURL ?? null;
+            $params[] = $conf->slackChannel ?? null;
+            $params[] = $conf->slackUsername ?? null;
             $params[] = true;                                       // $useAttachment
-            $params[] = $conf->slackIcon;
+            $params[] = $conf->slackIcon ?? null;
             $params[] = true;                                       // $includeContext
             $params[] = false;                                      // $includeExtra
             $params[] = Logger::toMonologLevel($this->getLevel());  // min level that is handled
@@ -610,7 +531,7 @@ abstract class AbstractLog implements LogInterface {
 
     /**
      * get __construct() params for PsrLogMessageProcessor() call
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getProcessorParamsPsr() : array {
         return !empty($conf = $this->processorParamsConfig['psr']) ? $conf : [];
@@ -619,7 +540,7 @@ abstract class AbstractLog implements LogInterface {
     /**
      * send this Log to global log buffer storage
      */
-    public function buffer(){
+    public function buffer(): void{
         if( !empty($this->handlerParamsConfig) ){
             Monolog::instance()->push($this);
         }  

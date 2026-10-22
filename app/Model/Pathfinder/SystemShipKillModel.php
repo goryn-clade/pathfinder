@@ -18,7 +18,7 @@ class SystemShipKillModel extends AbstractSystemApiBasicModel {
     protected $table = 'system_kills_ships';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [

@@ -323,6 +323,14 @@ $mapBubbleWidth:        30px;
       transform: translate3d(0, -1px, 0) !important;
     }
 
+    &.pf-system-unknown{
+      border-style: dashed;
+
+      .pf-system-head-name{
+        color: $gray-light;
+      }
+    }
+
     .pf-system-head{
       padding: 0 3px 0 4px;
       cursor: pointer;
@@ -568,8 +576,13 @@ $mapBubbleWidth:        30px;
   }
 
   // Endpoints ========================================================================================================
+  // proxy endpoints (collapsed group connections) — no source/target class, sit above connectors (z-index 8 > connector 6)
+  .jtk-endpoint:not(.pf-map-endpoint-source):not(.pf-map-endpoint-target) {
+    z-index: 8;
+  }
+
   .jtk-endpoint{
-    z-index: 90;
+    z-index: 8;
 
     svg {
       circle{
@@ -649,7 +662,7 @@ $mapBubbleWidth:        30px;
 
   // Connections ======================================================================================================
   .jtk-connector{
-    z-index: 40;        // min z-index for connections
+    z-index: 6;         // above group (5), below proxy endpoints (8)
     cursor: pointer;
     overflow: unset;    // fixes a strange 1px flicker issue when connection is hovered and "jumps" up+down
     @include transition(stroke 0.18s ease-out, opacity 0.18s ease-out);
@@ -661,7 +674,7 @@ $mapBubbleWidth:        30px;
     }
 
     &.jtk-hover{
-      z-index: 80;      // max z-index for connections
+      z-index: 9;       // hovered/dragging connector floats above endpoints (8)
       filter: drop-shadow(-3px 3px 4px rgba(0,0,0, 0.3));
 
       path:first-child{
@@ -670,13 +683,13 @@ $mapBubbleWidth:        30px;
     }
 
     &.jtk-dragging{
-      z-index: 80;      // max z-index for connections
+      z-index: 9;       // hovered/dragging connector floats above endpoints (8)
       opacity: 0.4;
     }
   }
 
   .pf-map-connection-abyssal {
-    z-index: 40;
+    z-index: 6;
 
     path:first-child{
       stroke: rgba(255,255,255,0);  // invisible border color
@@ -699,7 +712,7 @@ $mapBubbleWidth:        30px;
   }
 
   .pf-map-connection-jumpbridge {
-    z-index: 50;
+    z-index: 6;
 
     path:first-child{
       stroke: rgba(255,255,255,0);  // invisible border color
@@ -722,7 +735,7 @@ $mapBubbleWidth:        30px;
   }
 
   .pf-map-connection-stargate {
-    z-index: 60;
+    z-index: 6;
 
     path:first-child{
       stroke: $gray-light;
@@ -736,14 +749,27 @@ $mapBubbleWidth:        30px;
   .pf-map-connection-wh-fresh,
   .pf-map-connection-wh-reduced,
   .pf-map-connection-wh-critical,
-  .pf-map-connection-wh-eol{
-    z-index: 70;
+  .pf-map-connection-wh-eol1,
+  .pf-map-connection-wh-eol2,
+  .pf-map-connection-wh-eol3{
+    z-index: 6;
   }
 
-  .pf-map-connection-wh-eol {
+  .pf-map-connection-wh-eol1 {
+    path:first-child{
+      stroke: $pink-light;
+    }
+  }
 
+  .pf-map-connection-wh-eol2 {
     path:first-child{
       stroke: $pink-dark;
+    }
+  }
+
+  .pf-map-connection-wh-eol3 {
+    path:first-child{
+      stroke: $pink-darker;
     }
   }
 
@@ -1000,4 +1026,180 @@ $mapBubbleWidth:        30px;
   padding: 2px 4px;
   min-width: 25px; // make sure tooltip is not flickering on low numbers -> fix width
   @include transition( color 0.2s ease-out );
+}
+
+// map group container ============================================================================
+
+.pf-map-group {
+  position: absolute;
+  border: 1px dashed $gray-light;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.15);
+  // no z-index here — avoids creating a stacking context that would trap child systems below connectors/endpoints
+  box-sizing: border-box;
+  min-width: 120px;
+  min-height: 60px;
+
+  &.jtk-group-collapsed {
+    height: auto !important;
+    min-height: 0;
+    border-style: solid;
+
+    .pf-map-group-body {
+      display: none;
+    }
+
+    .pf-map-group-header {
+      border-radius: 3px;
+    }
+  }
+
+  // highlight when a system is being dragged over it
+  &.jtk-drag-hover {
+    border-color: $blue;
+    background: rgba(0, 80, 160, 0.15);
+  }
+
+}
+
+.pf-map-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 5px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px 3px 0 0;
+  cursor: default;
+  user-select: none;
+  // z-index above child system nodes so header drag handle is always reachable
+  z-index: 95;
+  position: relative;
+}
+
+.pf-map-group-handle {
+  color: $gray;
+  font-size: 10px;
+  cursor: grab;
+  padding: 2px 4px 2px 0;
+  flex-shrink: 0;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:hover {
+    color: $gray-light;
+  }
+}
+
+.pf-map-group-label {
+  color: $gray-lighter;
+  font-size: 11px;
+  font-family: $font-family-bold;
+  letter-spacing: 0.04em;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.pf-map-group-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 4px;
+
+  i {
+    color: $gray-light;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px;
+
+    &:hover {
+      color: $gray-lighter;
+    }
+  }
+
+  .pf-map-group-delete {
+    color: $red-dark;
+
+    &:hover {
+      color: lighten($red-dark, 10%);
+    }
+  }
+}
+
+.pf-map-group-cog-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pf-map-group-cog-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 200;
+  background: $gray-darker;
+  border: 1px solid $gray-dark;
+  border-radius: 3px;
+  min-width: 100px;
+  padding: 2px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+
+  .pf-map-group-cog-item {
+    display: block;
+    padding: 4px 10px;
+    color: $gray-lighter;
+    font-size: 11px;
+    white-space: nowrap;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      background: $gray-dark;
+      color: $white;
+    }
+  }
+}
+
+.pf-map-group-body {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 22px); // subtract header height
+}
+
+.pf-map-group-resize {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  z-index: 10; // above group header so it's always clickable
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid $gray;
+    border-bottom: 2px solid $gray;
+    border-radius: 0 0 2px 0;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+
+  .jtk-group-collapsed & {
+    display: none;
+  }
 }

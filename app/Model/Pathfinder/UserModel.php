@@ -23,7 +23,7 @@ class UserModel extends AbstractPathfinderModel {
     protected $table = 'user';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -39,21 +39,14 @@ class UserModel extends AbstractPathfinderModel {
             'index' => true,
             'validate' => true
         ],
-        'email' => [
-            'type' => Schema::DT_VARCHAR128,
-            'nullable' => false,
-            'default' => '',
-            'validate' => true
-        ],
         'userCharacters' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\UserCharacterModel', 'userId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\UserCharacterModel::class, 'userId']
         ]
     ];
 
     /**
      * get all data for this user
-     * -> ! caution ! this function returns sensitive data! (e.g. email,..)
-     * -> user getSimpleData() for faster performance and public user data
+     * -> use getSimpleData() for faster performance and public user data
      * @return \stdClass
      * @throws \Exception
      */
@@ -62,22 +55,21 @@ class UserModel extends AbstractPathfinderModel {
         // get public user data for this user
         $userData = $this->getSimpleData();
 
-        // add sensitive user data
-        $userData->email = $this->email;
-
         // all chars
         $userData->characters = [];
         $characters = $this->getCharacters();
         foreach($characters as $character){
             /**
-             * @var $character CharacterModel
+             * @var CharacterModel $character
              */
             $userData->characters[] = $character->getData();
         }
 
         // get active character with log data
         $activeCharacter = $this->getActiveCharacter();
-        $userData->character = $activeCharacter->getData(true, true);
+        if($activeCharacter){
+            $userData->character = $activeCharacter->getData(true, true);
+        }
 
         return $userData;
     }
@@ -102,59 +94,17 @@ class UserModel extends AbstractPathfinderModel {
      * @return bool
      * @throws Exception\RegistrationException
      */
-    public function beforeInsertEvent($self, $pkeys) : bool {
+    #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
+    public function beforeInsertEvent($self,  $pkeys) : bool {
         $registrationStatus = Controller\Controller::getRegistrationStatus();
-        switch($registrationStatus){
-            case 0:
-                throw new Exception\RegistrationException('User registration is currently not allowed');
-                break;
-            case 1:
-                return true;
-                break;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * @param self $self
-     * @param $pkeys
-     */
-    public function afterEraseEvent($self, $pkeys){
-        $this->sendDeleteMail();
-    }
-
-    /**
-     * send delete confirm mail to  this user
-     */
-    protected function sendDeleteMail(){
-        if($this->isMailSendEnabled()){
-            $log = new Logging\UserLog('userDelete', $this->getLogChannelData());
-            $log->addHandler('mail', 'mail', $this->getSMTPConfig());
-            $log->setMessage('Delete Account - {channelName}');
-            $log->setData([
-                'message' =>'Your account was successfully deleted.'
-            ]);
-            $log->buffer();
-        }
-    }
-
-    /**
-     * checks whether user has a valid email address and pathfinder has a valid SMTP config
-     * @return bool
-     */
-    protected function isMailSendEnabled() : bool {
-        return Config::isValidSMTPConfig($this->getSMTPConfig());
-    }
-
-    /**
-     * get SMTP config for this user
-     * @return \stdClass
-     */
-    protected function getSMTPConfig() : \stdClass {
-        $config = Config::getSMTPConfig();
-        $config->to = $this->email;
-        return $config;
+        return match ($registrationStatus) {
+            0 => throw new Exception\RegistrationException('User registration is currently not allowed'),
+            1 => true,
+            default => false,
+        };
     }
 
     /**
@@ -170,22 +120,6 @@ class UserModel extends AbstractPathfinderModel {
             mb_strlen($val) < 3 ||
             mb_strlen($val) > 80
         ){
-            $valid = false;
-            $this->throwValidationException($key);
-        }
-        return $valid;
-    }
-
-    /**
-     * validate email column
-     * @param string $key
-     * @param string $val
-     * @return bool
-     * @throws Exception\ValidationException
-     */
-    protected function validate_email(string $key, string $val) : bool {
-        $valid = true;
-        if ( !empty($val) && \Audit::instance()->email($val) == false ){
             $valid = false;
             $this->throwValidationException($key);
         }
@@ -213,7 +147,7 @@ class UserModel extends AbstractPathfinderModel {
         $data = [];
         $currentSessionUser = (array)$this->getF3()->get(User::SESSION_KEY_USER);
 
-        if($this->_id === $currentSessionUser['ID']){
+        if($this->_id === ($currentSessionUser['ID'] ?? null)){
             // user matches session data
             if($characterId > 0){
                 $data = $this->findSessionCharacterData($characterId);
@@ -223,15 +157,15 @@ class UserModel extends AbstractPathfinderModel {
             ){
                 // no character was requested ($requestedCharacterId = 0) AND session characters were found
                 // -> get first matched character (e.g. user open /login browser tab)
-                $data = $sessionCharacters[0];
+                $data = reset($sessionCharacters);
             }
         }
 
-        if($characterId = (int)$data['ID']){
+        if($characterId = (int)($data['ID'] ?? 0)){
             // check if character still exists on DB (e.g. was manually removed in the meantime)
             // -> This should NEVER happen just for security and "local development"
             /**
-             * @var $character CharacterModel
+             * @var CharacterModel $character
              */
             $character = AbstractPathfinderModel::getNew('CharacterModel');
             $character->getById($characterId, $ttl);
@@ -248,7 +182,7 @@ class UserModel extends AbstractPathfinderModel {
     /**
      * search in session data for $characterId
      * @param int $characterId
-     * @return array
+     * @return array<string, mixed>
      */
     public function findSessionCharacterData(int $characterId) : array {
         $data = [];
@@ -317,7 +251,7 @@ class UserModel extends AbstractPathfinderModel {
 
         foreach($userCharacters as $userCharacter){
             /**
-             * @var $userCharacter UserCharacterModel
+             * @var UserCharacterModel $userCharacter
              */
             if( $currentCharacter = $userCharacter->getCharacter() ){
                 // check if userCharacter has a valid character
@@ -339,7 +273,7 @@ class UserModel extends AbstractPathfinderModel {
 
         foreach($this->getUserCharacters() as $userCharacter){
             /**
-             * @var $userCharacter UserCharacterModel
+             * @var UserCharacterModel $userCharacter
              */
             $characterModel = $userCharacter->getCharacter();
             if($characterLog = $characterModel->getLog()){
@@ -352,7 +286,7 @@ class UserModel extends AbstractPathfinderModel {
 
     /**
      * get object relevant data for model log channel
-     * @return array
+     * @return array<string, int|string>
      */
     public function getLogChannelData() : array{
         return [

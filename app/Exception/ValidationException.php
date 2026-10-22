@@ -12,32 +12,29 @@ namespace Exodus4D\Pathfinder\Exception;
 class ValidationException extends PathfinderException {
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $codes = [
         2000 => 422
     ];
 
     /**
-     * table column that triggers the exception
-     * @var string
-     */
-    private $field;
-
-    /**
      * ValidationException constructor.
      * @param string $message
      * @param string $field
      */
-    public function __construct(string $message, string $field = ''){
+    public function __construct(string $message, /**
+     * table column that triggers the exception
+     */
+    private readonly string $field = ''){
         parent::__construct($message, 2000);
-        $this->field = $field;
     }
 
     /**
      * get error object
      * @return \stdClass
      */
+    #[\Override]
     public function getError() : \stdClass {
         $error = parent::getError();
         $error->field = $this->field;

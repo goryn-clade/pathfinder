@@ -108,13 +108,16 @@ define([
 
             this.moduleElement.append(this._bodyEl);
 
-            this._bodyEl.append(
-                this.newControlElement(
-                    'Thera not found on map. Click here to add',
-                    [this._config.moduleHeadlineIconClass, this._config.controlAreaTheraClass, 'hidden'],
-                    ['fa-plus']
-                )
+            let controlEl = this.newControlElement(
+                'Thera not found on map. Click here to add',
+                [this._config.moduleHeadlineIconClass, this._config.controlAreaTheraClass, 'hidden'],
+                ['fa-plus']
             );
+            controlEl.insertAdjacentHTML('beforeend', `<span class="${this._config.controlDismissClass}" title="Don\'t show again">&times;</span>`);
+            this._bodyEl.append(controlEl);
+
+            this._dismissed = false;
+            this.getLocalStore().getItem('addSystemDismissed').then(val => { this._dismissed = !!val; });
 
             $(this.moduleElement).showLoadingAnimation();
 
@@ -728,7 +731,7 @@ define([
                     }
                 }
 
-                this._bodyEl.querySelector(`.${this._config.controlAreaTheraClass}`).classList.toggle('hidden', systemTheraFound);
+                this._bodyEl.querySelector(`.${this._config.controlAreaTheraClass}`).classList.toggle('hidden', systemTheraFound || this._dismissed);
 
                 let dateNow = new Date();
 
@@ -952,6 +955,14 @@ define([
          */
         setModuleObserver(){
 
+            // dismiss "add Thera" button
+            this._bodyEl.querySelector(`.${this._config.controlDismissClass}`).addEventListener('click', e => {
+                e.stopPropagation();
+                this._dismissed = true;
+                this._bodyEl.querySelector(`.${this._config.controlAreaTheraClass}`).classList.add('hidden');
+                this.getLocalStore().setItem('addSystemDismissed', true);
+            }, false);
+
             // add Thera system
             this._bodyEl.querySelector(`.${this._config.controlAreaTheraClass}`).addEventListener('click', e => {
                 this.showNewSystemDialog({
@@ -1010,6 +1021,7 @@ define([
         theraTableRowIdPrefix: 'pf-thera-row-',                     // id prefix for table rows
         globalTheraTableClass: 'pf-global-thera-table',             // class for NPC owned stations table
         controlAreaTheraClass: 'pf-global-thera-control',           // class for "thera system exists" label
+        controlDismissClass: 'pf-control-dismiss-btn',              // class for dismiss "×" button
 
         // fonts
         fontUppercaseClass: 'pf-font-uppercase',                    // class for "uppercase" font

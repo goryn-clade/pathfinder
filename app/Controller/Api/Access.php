@@ -20,15 +20,17 @@ class Access extends Controller\AccessController {
      * @param $params
      * @throws \Exception
      */
-    public function search($f3, $params){
+    public function search(\Base $f3,  array $params): void{
         $accessData = [];
 
         if(
             array_key_exists('arg1', $params) &&
             array_key_exists('arg2', $params)
         ){
-            $searchType = strtolower($params['arg1']);
-            $searchToken = strtolower($params['arg2']);
+            $searchType = strtolower((string) $params['arg1']);
+            $searchToken = strtolower((string) $params['arg2']);
+            // strip LIKE wildcards so the user cannot widen the match arbitrarily
+            $searchToken = str_replace(['%', '_'], ['\\%', '\\_'], $searchToken);
 
             $accessModel = null;
             switch($searchType){

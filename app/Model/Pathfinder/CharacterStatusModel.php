@@ -18,7 +18,7 @@ class CharacterStatusModel extends AbstractPathfinderModel {
     protected $table = 'character_status';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -40,7 +40,7 @@ class CharacterStatusModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

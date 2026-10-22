@@ -41,7 +41,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $position
      * @return null
      */
-    public function set_position($position){
+    public function set_position( mixed $position){
         $position = (array)$position;
         if(count($position) === 3){
             $this->x = $position['x'];
@@ -58,7 +58,11 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $pkeys
      * @return bool
      */
-    public function beforeUpdateEvent($self, $pkeys) : bool {
+    #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
+    public function beforeUpdateEvent($self,  $pkeys) : bool {
         // if model changed, 'update' col needs to be updated as well
         // -> data no longer "outdated"
         $self->touch('updated');
@@ -144,16 +148,20 @@ abstract class AbstractUniverseModel extends AbstractModel {
     /**
      * load object by $id
      * -> if $id not exists in DB -> query API
+     * -> $additionalOptions['forceRefresh'] queries the API even if the row is not outdated
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    public function loadById(int $id, string $accessToken = '', array $additionalOptions = []){
+    public function loadById(int $id, string $accessToken = '',  $additionalOptions = []): void{
+        // only for this row, not for related rows loaded by loadData()
+        $forceRefresh = !empty($additionalOptions['forceRefresh']);
+        unset($additionalOptions['forceRefresh']);
         /**
-         * @var $model self
+         * @var self $model
          */
         $this->getById($id, 0);
-        if($this->isOutdated()){
+        if($forceRefresh || $this->isOutdated()){
             $this->loadData($id, $accessToken, $additionalOptions);
         }
     }
@@ -162,9 +170,9 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * load data from API into $this and save $this
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []);
+    abstract protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void;
 
     /**
      * convert CCPs ids for system security into Pathfinder security label
@@ -195,9 +203,9 @@ abstract class AbstractUniverseModel extends AbstractModel {
     /**
      * add $rowKeys (hashKeys) to a search index that holds all rowKeys of a table
      * @param AbstractUniverseModel $model
-     * @param array $rowKeys
+     * @param array<string, mixed> $rowKeys
      */
-    public static function buildTableIndex(AbstractUniverseModel $model, array $rowKeys = []){
+    public static function buildTableIndex(AbstractUniverseModel $model,  $rowKeys = []): void{
         $hashKeyTable = static::generateHashKeyTable($model->getTable());
         if( !self::getF3()->exists($hashKeyTable, $cachedData) ){
             $cachedData = [];
@@ -213,7 +221,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param $value
      * @return string
      */
-    public static function generateHashKeyRow(string $table, $value) : string {
+    public static function generateHashKeyRow(string $table, string|int $value) : string {
         return static::generateHashKeyTable($table) . '_' .  md5(strtolower((string)$value));
     }
 
@@ -224,6 +232,7 @@ abstract class AbstractUniverseModel extends AbstractModel {
      * @param string $prefix
      * @return string
      */
+    #[\Override]
     public static function generateHashKeyTable(string $table, string $prefix = self::CACHE_KEY_PREFIX) : string {
         return parent::generateHashKeyTable($table, $prefix);
     }

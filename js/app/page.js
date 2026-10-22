@@ -294,6 +294,16 @@ define([
                     action: 'Fullscreen'
                 } : null,{
                     type: 'button',
+                    label: (document.documentElement.getAttribute('data-theme') === 'light') ? 'Dark theme' : 'Light theme',
+                    icon: (document.documentElement.getAttribute('data-theme') === 'light') ? 'fa-moon' : 'fa-sun',
+                    action: 'ThemeLight'
+                },{
+                    type: 'button',
+                    label: (document.documentElement.getAttribute('data-theme') === 'high-contrast') ? 'Default contrast' : 'High contrast',
+                    icon: 'fa-adjust',
+                    action: 'ThemeContrast'
+                },{
+                    type: 'button',
                     label: 'Notification test',
                     icon: 'fa-volume-up',
                     action: 'NotificationTest'
@@ -741,6 +751,26 @@ define([
                         case 'Fullscreen':
                             toggleFullScreen(document.body);
                             break;
+                        case 'ThemeLight': {
+                            let current = localStorage.getItem('pf_theme');
+                            if(current === 'light'){
+                                localStorage.removeItem('pf_theme');
+                            }else{
+                                localStorage.setItem('pf_theme', 'light');
+                            }
+                            location.reload();
+                            break;
+                        }
+                        case 'ThemeContrast': {
+                            let current = localStorage.getItem('pf_theme');
+                            if(current === 'high-contrast'){
+                                localStorage.removeItem('pf_theme');
+                            }else{
+                                localStorage.setItem('pf_theme', 'high-contrast');
+                            }
+                            location.reload();
+                            break;
+                        }
                         case 'NotificationTest':
                             Util.showNotify({
                                 title: 'Test Notification',

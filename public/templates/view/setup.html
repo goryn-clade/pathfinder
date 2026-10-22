@@ -3,7 +3,7 @@
 
 {* counter for DB warnings (all databases) *}
 {{ @tplCounter('reset', 'database_warning_all') }}
-<section>
+<section data-setup-token="{{ @setupToken }}">
     <div class="container">
 
         <div class="row"></div>
@@ -18,7 +18,7 @@
         </div>
 
         {* Errors *}
-        <check if="{{ @errorData }}">
+        <set errorData="{{ @errorData ?? null }}" /><check if="{{ @errorData }}">
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="fas fa-times"></i></button>
                 <span class="txt-color txt-color-danger">({{ @errorData->code }}) {{ @errorData->status }}</span>
@@ -109,7 +109,7 @@
                                             </false>
                                         </check>
                                     </td>
-                                    <td class="text-right">{{@directoryData.chmod}}</td>
+                                    <td class="text-right">{{@directoryData.chmod ?? ''}}</td>
                                 </tr>
                             </repeat>
                             </tbody>
@@ -151,6 +151,16 @@
                         <div class="panel-heading text-left">
                             <h3 class="panel-title">Environment variables [optional]</h3>
                         </div>
+                        <check if="{{ @isDockerEnvironment }}">
+                            <true>
+                                <div class="panel-body text-left" style="padding: 10px 15px; border-bottom: 1px solid #2e3440;">
+                                    <p class="txt-color txt-color-success" style="margin:0;">
+                                        <i class="fab fa-fw fa-docker"></i>
+                                        <strong>Container environment detected.</strong>
+                                    </p>
+                                </div>
+                            </true>
+                        </check>
                         <div class="panel-body no-padding text-align-center">
                             <include href="templates/modules/requirements_table.html"/>
                         </div>
@@ -410,7 +420,7 @@
                 <set dbConnectionStatus="OK" />
                 <set dbStatusCheck="OK" />
 
-                <check if="{{ @dbInformation.info.dbCreate }}">
+                <check if="{{ @dbInformation.info.dbCreate ?? null }}">
                     <true>
                         <set dbConnectionStatus="Database not found" />
                         {{ @tplCounter('increment', 'database_danger') }}
@@ -504,14 +514,14 @@
                                     </td>
                                 </tr>
                                 {* Connection/PDOExceptions *}
-                                <repeat group="{{ @dbInformation.info.errors }}" value="{{ @connectionError }}">
+                                <repeat group="{{ @dbInformation.info.errors ?? [] }}" value="{{ @connectionError }}">
                                     <tr>
                                         <td colspan="3" class="text-center txt-color txt-color-danger">{{ @connectionError }}</td>
                                         <td class="text-right"></td>
                                     </tr>
                                 </repeat>
 
-                                <check if="{{ @dbInformation.info.dbConfig }}">
+                                <check if="{{ @dbInformation.info.dbConfig ?? null }}">
                                     <tr>
                                         <td data-target=".{{ @dbInformation.info.name }}_dbConfig_col" data-toggle="collapse">
                                             <i class="fas fa-fw fa-chevron-right pf-animate-rotate"></i>
@@ -520,7 +530,7 @@
                                         <td class="col-sm-3 col-md-3 text-right">installed</td>
                                         <td class="col-sm-1 col-md-1 text-right"></td>
                                     </tr>
-                                    <repeat group="{{ @dbInformation.info.dbConfig.data }}" value="{{ @setting }}">
+                                    <repeat group="{{ @dbInformation.info.dbConfig.data ?? [] }}" value="{{ @setting }}">
                                         <tr class="{{ @dbInformation.info.name }}_dbConfig_col {{ @dbInformation.info.dbConfig.meta.check ? 'collapse' : '' }}">
                                             <td class="bg-color bg-color-tealDarker">{{ @setting.label }}</td>
                                             <td class="text-right bg-color bg-color-tealDarker">
@@ -574,7 +584,7 @@
                                 </check>
                             </div>
 
-                            <check if="{{ @dbInformation.info.tableData }}">
+                            <check if="{{ @dbInformation.info.tableData ?? null }}">
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -597,7 +607,7 @@
                                     {* Show Tables *}
                                     <repeat group="{{ @dbInformation.info.tableData }}" key="{{ @tableName }}" value="{{ @tableData }}" counter="{{ @countTable }}">
                                         <tr>
-                                            <check if="{{ @tableData.fieldConf }}">
+                                            <check if="{{ @tableData.fieldConf ?? null }}">
                                                 <true>
                                                     <td class="text-center" data-target=".{{ @dbInformation.info.name }}_{{ @tableName }}_col" data-toggle="collapse" aria-expanded="false" aria-controls="{{ @dbInformation.info.name }}_{{ @tableName }}_col">
                                                         <i class="fas fa-fw fa-chevron-right pf-animate-rotate"></i>
@@ -610,7 +620,7 @@
 
                                             <td>{{ @tableName }}</td>
                                             <td class="text-center">
-                                                <check if="{{ @tableData.exists }}">
+                                                <check if="{{ @tableData.exists ?? false }}">
                                                     <true>
                                                         <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                     </true>
@@ -620,19 +630,19 @@
                                                 </check>
                                             </td>
                                             <td>
-                                                <check if="{{ @tableData.exists }}">
+                                                <check if="{{ @tableData.exists ?? false }}">
                                                     <true>
-                                                        <check if="{{ @tableData.currentCharset == @tableData.requiredCharset }}">
+                                                        <check if="{{ @tableData.currentCharset == (@tableData.requiredCharset ?? '') }}">
                                                             <true>
-                                                                <kbd class="txt-color txt-color-success" title="{{ @tableData.currentCollation }}">{{ @tableData.currentCharset }}</kbd>
+                                                                <kbd class="txt-color txt-color-success" title="{{ @tableData.currentCollation ?? '' }}">{{ @tableData.currentCharset }}</kbd>
                                                             </true>
                                                             <false>
-                                                                <kbd class="txt-color txt-color-warning" title="{{ @tableData.requiredCollation }}">{{ @tableData.requiredCharset }}</kbd>
+                                                                <kbd class="txt-color txt-color-warning" title="{{ @tableData.requiredCollation ?? '' }}">{{ @tableData.requiredCharset ?? '' }}</kbd>
                                                             </false>
                                                         </check>
                                                     </true>
                                                     <false>
-                                                        <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @tableData.requiredCharset }}"></i>
+                                                        <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @tableData.requiredCharset ?? '' }}"></i>
                                                     </false>
                                                 </check>
                                             </td>
@@ -661,7 +671,7 @@
                                         </tr>
 
                                         {* Show Columns *}
-                                        <check if="{{ @tableData.fieldConf }}">
+                                        <check if="{{ @tableData.fieldConf ?? null }}">
                                             <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                 <td class="text-right bg-color bg-color-tealDarkest">
                                                     <i class="fas fa-fw fa-hashtag"></i>
@@ -675,13 +685,13 @@
                                                 <td class="bg-color bg-color-tealDarkest text-center"></td>
                                             </tr>
                                             <repeat group="{{ @tableData.fieldConf }}" key="{{ @columnName }}" value="{{ @columnData }}" counter="{{ @countCol }}">
-                                                <check if="{{ @columnData.type }}">
+                                                <check if="{{ @columnData.type ?? null }}">
                                                     {* Required colums *}
                                                     <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                         <td class="text-right bg-color bg-color-tealDarker">{{@countCol}}.</td>
                                                         <td class="bg-color bg-color-tealDarker">{{ @columnName }}</td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
                                                                     <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                                 </true>
@@ -691,11 +701,11 @@
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedType }}">
+                                                                    <check if="{{ @columnData.changedType ?? false }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredType }}">{{ @columnData.currentType }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredType ?? '' }}">{{ @columnData.currentType }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentType }}</kbd>
@@ -703,16 +713,16 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredType }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredType ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedNullable }}">
+                                                                    <check if="{{ @columnData.changedNullable ?? false }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredNullable }}">{{ @columnData.currentNullable }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredNullable ?? '' }}">{{ @columnData.currentNullable }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentNullable }}</kbd>
@@ -720,16 +730,16 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredNullable }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredNullable ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedIndex }}">
+                                                                    <check if="{{ @columnData.changedIndex ?? false }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredIndex }}">{{ @columnData.currentIndex }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredIndex ?? '' }}">{{ @columnData.currentIndex }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentIndex }}</kbd>
@@ -737,16 +747,16 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredIndex }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredIndex ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-center">
-                                                            <check if="{{ @columnData.exists }}">
+                                                            <check if="{{ @columnData.exists ?? false }}">
                                                                 <true>
-                                                                    <check if="{{ @columnData.changedUnique }}">
+                                                                    <check if="{{ @columnData.changedUnique ?? false }}">
                                                                         <true>
-                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredUnique }}">{{ @columnData.currentUnique }}</kbd>
+                                                                            <kbd class="txt-color txt-color-warning" title="{{ @columnData.requiredUnique ?? '' }}">{{ @columnData.currentUnique }}</kbd>
                                                                         </true>
                                                                         <false>
                                                                             <kbd class="txt-color txt-color-success">{{ @columnData.currentUnique }}</kbd>
@@ -754,12 +764,12 @@
                                                                     </check>
                                                                 </true>
                                                                 <false>
-                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredUnique }}"></i>
+                                                                    <i class="fas fa-fw fa-ellipsis-h txt-color txt-color-danger" title="{{ @columnData.requiredUnique ?? '' }}"></i>
                                                                 </false>
                                                             </check>
                                                         </td>
                                                         <td class="bg-color bg-color-tealDarker text-right">
-                                                            <check if="{{ @columnData.statusCheck }}">
+                                                            <check if="{{ @columnData.statusCheck ?? false }}">
                                                                 <true>
                                                                     <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                                 </true>
@@ -770,7 +780,7 @@
                                                         </td>
                                                     </tr>
                                                 </check>
-                                                <check if="{{ @columnData.deprecated }}">
+                                                <check if="{{ @columnData.deprecated ?? false }}">
                                                     {* Deprecated colums *}
                                                     <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse txt-color txt-color-yellowDark">
                                                         <td class="bg-color bg-color-tealDarker"></td>
@@ -793,7 +803,7 @@
                                         </check>
 
                                         {* Show Foreign Keys *}
-                                        <check if="{{ @tableData.foreignKeys }}">
+                                        <check if="{{ @tableData.foreignKeys ?? null }}">
                                             <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                 <td class="text-right bg-color bg-color-tealDarkest">
                                                     <i class="fas fa-fw fa-hashtag"></i>
@@ -806,11 +816,11 @@
                                                 <td class="bg-color bg-color-tealDarkest"></td>
                                                 <td class="bg-color bg-color-tealDarkest"></td>
                                             </tr>
-                                            <repeat group="{{ @tableData.foreignKeys }}" value="{{ @keyData }}" counter="{{ @countForeignKey }}">
+                                            <repeat group="{{ @tableData.foreignKeys ?? [] }}" value="{{ @keyData }}" counter="{{ @countForeignKey }}">
                                                 <tr class="{{ @dbInformation.info.name }}_{{ @tableName }}_col collapse">
                                                     <td class="text-right bg-color bg-color-tealDarker">{{@countForeignKey}}.</td>
                                                     <td class="bg-color bg-color-tealDarker" colspan="6">
-                                                        <check if="{{ @keyData.exists }}">
+                                                        <check if="{{ @keyData.exists ?? false }}">
                                                             <true>
                                                                 <kbd class="txt-color txt-color-success">{{ @keyData.keyName }}</kbd>
                                                             </true>
@@ -820,7 +830,7 @@
                                                         </check>
                                                     </td>
                                                     <td class="bg-color bg-color-tealDarker text-right">
-                                                        <check if="{{ @keyData.exists }}">
+                                                        <check if="{{ @keyData.exists ?? false }}">
                                                             <true>
                                                                 <i class="fas fa-fw fa-check txt-color txt-color-success"></i>
                                                             </true>
@@ -868,7 +878,7 @@
                                     </thead>
                                     <tbody>
 
-                                    <repeat group="{{ @dbInformation.info.columnQueries }}" value="{{ @columnQuery }}" counter="{{ @countQuery }}">
+                                    <repeat group="{{ @dbInformation.info.columnQueries ?? [] }}" value="{{ @columnQuery }}" counter="{{ @countQuery }}">
                                         <tr>
                                             <td class="text-right col-sm-1 col-md-1">{{ @countQuery }}.</td>
                                             <td>{{ @columnQuery }}</td>
@@ -880,17 +890,17 @@
                         </check>
 
                         <div class="panel-footer btn-group btn-group-justified">
-                            <check if="{{ @dbInformation.info.dbCreate }}">
+                            <check if="{{ @dbInformation.info.dbCreate ?? null }}">
                                 <true>
-                                    <a href="?action=createDB&db={{ @dbKey }}#pf-setup-database" class="btn btn-success {{ true ?'':'disabled' }}" title="Try to create new '{{ @dbInformation.info.name }}' database." data-container="body">
+                                    <a href="?action=createDB&db={{ @dbKey }}&token={{ @setupToken }}#pf-setup-database" class="btn btn-success {{ true ?'':'disabled' }}" title="Try to create new '{{ @dbInformation.info.name }}' database." data-container="body">
                                         <i class="fas fa-fw fa-plus"></i> Create database
                                     </a>
                                 </true>
                                 <false>
-                                    <a href="?action=bootstrapDB&db={{ @dbKey }}#pf-setup-database" class="btn btn-primary {{ (@dbInformation.info.setupEnable && @dbConnectionStatus == 'OK') ?'':'disabled' }}">
+                                    <a href="?action=bootstrapDB&db={{ @dbKey }}&token={{ @setupToken }}#pf-setup-database" class="btn btn-primary {{ (@dbInformation.info.setupEnable && @dbConnectionStatus == 'OK') ?'':'disabled' }}">
                                         <i class="fas fa-fw fa-sync"></i> Setup tables
                                     </a>
-                                    <a href="?action=fixCols#pf-setup-database" class="btn btn-default {{ @dbInformation.info.columnQueries ?'':'disabled' }}">
+                                    <a href="?action=fixCols&token={{ @setupToken }}#pf-setup-database" class="btn btn-default {{ @dbInformation.info.columnQueries ?'':'disabled' }}">
                                         <i class="fas fa-fw fa-magic"></i> Fix columns/keys
                                     </a>
                                 </false>
@@ -961,7 +971,7 @@
                                                 </check>
                                             </td>
                                         </tr>
-                                        <repeat group="{{ @redisInformation.errors }}"  value="{{ @redisError }}">
+                                        <repeat group="{{ @redisInformation.errors ?? [] }}"  value="{{ @redisError }}">
                                             <tr>
                                                 <td colspan="2">{{ @redisError.label | raw}}: {{ @redisError.error }}</td>
                                                 <td class="text-right"><kbd class="txt-color txt-color-danger">error</kbd></td>
@@ -1056,7 +1066,7 @@
 
             <repeat group="{{ @socketInformation }}" key="{{ @socketType }}" value="{{ @socketData }}">
                 <div class="col-xs-12 col-md-6 pf-landing-pricing-panel">
-                    <div id="pf-setup-{{ @socketType }}" data-token="{{ @socketData.token }}" class="panel panel-default pricing-big" style="position: relative">
+                    <div id="pf-setup-{{ @socketType }}" data-token="{{ @socketData.token ?? '' }}" class="panel panel-default pricing-big" style="position: relative">
                         <div class="panel-heading text-left">
                             <h3 class="panel-title"><i class="fas {{ @socketData.icon }}"></i>&nbsp;&nbsp;{{ @socketData.label }}
                                 <check if="{{ @socketData.stats }}">
@@ -1071,7 +1081,7 @@
                         <div class="panel-body no-padding text-left">
                             <table class="table">
                                 <thead>
-                                    <repeat group="{{ @socketData.data }}" value="{{ @entry }}">
+                                    <repeat group="{{ @socketData.data ?? [] }}" value="{{ @entry }}">
                                         <tr>
                                             <td>{{ @entry.label }}</td>
                                             <td class="text-right col-md-8">
@@ -1102,14 +1112,14 @@
                         </div>
 
                         <div class="panel-footer text-align-center">
-                            <h3 class="panel-title txt-color {{ @socketData.status.class }}">{{ @socketData.status.label }}</h3>
-                            <check if="{{ @socketData.status.type == 'danger' }}">
+                            <h3 class="panel-title txt-color {{ @socketData.status.class ?? '' }}">{{ @socketData.status.label ?? '' }}</h3>
+                            <check if="{{ (@socketData.status.type ?? null) == 'danger' }}">
                                 {{ @tplCounter('increment', 'socket_danger') }}
                             </check>
                         </div>
 
                         {* show log data from "stats" array *}
-                        <check if="{{ @socketData.stats.logs }}">
+                        <check if="{{ @socketData.stats.logs ?? false }}">
                             <div class="panel-body no-padding text-left">
                                 <table class="table">
                                     <thead>
@@ -1126,12 +1136,12 @@
                                     <tbody>
 
                                     <set logsCheck = 'OK' />
-                                    <repeat group="{{ @socketData.stats.logs }}" value="{{ @logData }}">
+                                    <repeat group="{{ @socketData.stats.logs ?? [] }}" value="{{ @logData }}">
                                         <set logTypeClass = "" />
-                                        <check if="{{ in_array('info', @logData.logTypes) }}">
+                                        <check if="{{ in_array('info', @logData.logTypes ?? []) }}">
                                             <set logTypeClass = "txt-color-info" />
                                         </check>
-                                        <check if="{{ in_array('error', @logData.logTypes) }}">
+                                        <check if="{{ in_array('error', @logData.logTypes ?? []) }}">
                                             <set logTypeClass = "txt-color-warning" />
                                             <set logsCheck = 'ERROR' />
                                         </check>
@@ -1141,8 +1151,8 @@
                                                 {{ @logData.mTimeFormat2 }}
                                             </td>
                                             <td class="bg-color bg-color-tealDarker" title="{{ @logData.remoteAddress }}" data-container="body">
-                                                <set cellValue = "{{ parse_url(@logData.remoteAddress, PHP_URL_HOST) . parse_url(@logData.remoteAddress, PHP_URL_PATH) }}" />
-                                                <check if="{{ parse_url(@logData.remoteAddress, PHP_URL_PORT) }}">
+                                                <set cellValue = "{{ @logData.remoteAddress ? parse_url(@logData.remoteAddress, PHP_URL_HOST) . parse_url(@logData.remoteAddress, PHP_URL_PATH) : '' }}" />
+                                                <check if="{{ @logData.remoteAddress && parse_url(@logData.remoteAddress, PHP_URL_PORT) }}">
                                                     <set cellValue = "{{ @cellValue . ':' . parse_url(@logData.remoteAddress, PHP_URL_PORT) }}" />
                                                 </check>
 
@@ -1165,7 +1175,7 @@
                                                 <kbd>{{ mb_strimwidth(pathinfo(@logData.fileName, PATHINFO_FILENAME), 0, 15, '…') }}</kbd>
                                             </td>
                                             <td class="bg-color bg-color-tealDarker">{{ @logData.message }}</td>
-                                            <td class="text-right bg-color bg-color-tealDarker" title="{{ implode(', ', @logData.logTypes) }}" data-placement="right" data-container="body">
+                                            <td class="text-right bg-color bg-color-tealDarker" title="{{ implode(', ', @logData.logTypes ?? []) }}" data-placement="right" data-container="body">
                                                 <i class="fas fa-fw fa-tag txt-color {{ @logTypeClass }}"></i>
                                             </td>
                                         </tr>
@@ -1327,14 +1337,14 @@
                                     <true>
                                         </tbody>
                                             </table>
-                                            <div class="panel-footer txt-color {{ @indexData.class }}">
+                                            <div class="panel-footer txt-color {{ @indexData.class ?? '' }}">
                                                 <h3 class="panel-title">
-                                                    <check if="{{ @indexData.icon }}">
-                                                        <i class="fas {{ @indexData.icon }}"></i>&nbsp;&nbsp;
+                                                    <check if="{{ @indexData.icon ?? null }}">
+                                                        <i class="fas {{ @indexData.icon ?? '' }}"></i>&nbsp;&nbsp;
                                                     </check>
-                                                    {{@indexData.label}}
-                                                    <check if="{{ @indexData.tooltip }}">
-                                                        <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip }}" data-container="body"></i>
+                                                    {{@indexData.label ?? ''}}
+                                                    <check if="{{ @indexData.tooltip ?? null }}">
+                                                        <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip ?? '' }}" data-container="body"></i>
                                                     </check>
                                                 </h3>
                                             </div>
@@ -1343,39 +1353,39 @@
                                     </true>
                                     <false>
                                         <tr>
-                                            <td>{{ @indexData.label }}
-                                                <check if="{{ @indexData.tooltip }}">
-                                                    <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip }}" data-container="body"></i>
+                                            <td>{{ @indexData.label ?? '' }}
+                                                <check if="{{ @indexData.tooltip ?? null }}">
+                                                    <i class="fas fa-fw fa-sm fa-question-circle pf-help-light" title="{{ @indexData.tooltip ?? '' }}" data-container="body"></i>
                                                 </check>
                                             </td>
                                             <td class="col-xs-2 col-md-2 text-right">
                                                 <check if="{{ isset(@indexData.countAll) }}">
-                                                    <check if="{{ @indexData.countBuild > 0 && @indexData.countBuild  >= @indexData.countAll }}">
-                                                        <kbd class="txt-color txt-color-success">{{ @indexData.countBuild }}/{{ @indexData.countAll }}</kbd>
+                                                    <check if="{{ (@indexData.countBuild ?? 0) > 0 && (@indexData.countBuild ?? 0) >= @indexData.countAll }}">
+                                                        <kbd class="txt-color txt-color-success">{{ @indexData.countBuild ?? 0 }}/{{ @indexData.countAll }}</kbd>
                                                     </check>
-                                                    <check if="{{ @indexData.countBuild > 0 && @indexData.countBuild < @indexData.countAll}}">
-                                                        <kbd class="txt-color txt-color-warning">{{ @indexData.countBuild }}/{{ @indexData.countAll }}</kbd>
+                                                    <check if="{{ (@indexData.countBuild ?? 0) > 0 && (@indexData.countBuild ?? 0) < @indexData.countAll}}">
+                                                        <kbd class="txt-color txt-color-warning">{{ @indexData.countBuild ?? 0 }}/{{ @indexData.countAll }}</kbd>
                                                         {{ @tplCounter('increment', 'administration_warning') }}
                                                     </check>
-                                                    <check if="{{ @indexData.countBuild <= 0 }}">
-                                                        <kbd class="txt-color txt-color-danger">{{ @indexData.countBuild }}/{{ @indexData.countAll }}</kbd>
+                                                    <check if="{{ (@indexData.countBuild ?? 0) <= 0 }}">
+                                                        <kbd class="txt-color txt-color-danger">{{ @indexData.countBuild ?? 0 }}/{{ @indexData.countAll }}</kbd>
                                                         {{ @tplCounter('increment', 'administration_danger') }}
                                                     </check>
                                                 </check>
                                             </td>
                                             <td class="col-xs-2 col-md-2 text-right">
-                                                <check if="{{ @indexData.subCount }}">
-                                                    <kbd data-countAll="{{ @indexData.subCount.countAll }}">{{ @indexData.subCount.countBuild }}/{{ @indexData.subCount.countAll }}</kbd>
+                                                <check if="{{ @indexData.subCount ?? null }}">
+                                                    <kbd data-countAll="{{ @indexData.subCount.countAll ?? 0 }}">{{ @indexData.subCount.countBuild ?? 0 }}/{{ @indexData.subCount.countAll ?? 0 }}</kbd>
                                                 </check>
                                             </td>
                                             <td class="col-xs-4 col-md-4 no-padding">
                                                 <div class="btn-group btn-group-justified">
-                                                    <repeat group="{{ @indexData.task }}" key="{{ @taskKey }}" value="{{ @taskData }}">
+                                                    <repeat group="{{ @indexData.task ?? [] }}" key="{{ @taskKey }}" value="{{ @taskData }}">
                                                         <a
                                                             data-action="{{ @taskData.action }}" data-callback="updateIndexCount"
-                                                            data-payload="{{ htmlspecialchars(json_encode(['type' => @type, 'countAll' => @indexData.countAll, 'count' => 0, 'offset' => 0])) }}"
+                                                            data-payload="{{ htmlspecialchars(json_encode(['type' => @type, 'countAll' => @indexData.countAll ?? 0, 'count' => 0, 'offset' => 0])) }}"
                                                             data-loading-text="<i class='fas fa-sync fa-spin'></i>&nbsp;&nbsp;wait&hellip;<div class='btn-progress'></div>" autocomplete="off"
-                                                            class="btn {{ @taskData.btn }} {{ @taskData.btn=='btn-default' && !@indexData.countBuild ?'disabled':'' }} {{ @tplCounter('get', 'database_warning_all') ?'disabled':'' }}" role="button"
+                                                            class="btn {{ @taskData.btn }} {{ @taskData.btn=='btn-default' && !(@indexData.countBuild ?? 0) ?'disabled':'' }} {{ @tplCounter('get', 'database_warning_all') ?'disabled':'' }}" role="button"
                                                         >
                                                             <i class="fas fa-fw {{ @taskData.icon }}"></i>&nbsp;{{ @taskData.label }}
                                                         </a>
@@ -1463,7 +1473,7 @@
                                 <td>Invalidate all Cookie data</td>
                                 <td class="col-xs-6 no-padding">
                                     <div class="btn-group btn-group-justified">
-                                        <a class="btn btn-danger" href="?action=invalidateCookies#pf-setup-administration" role="button" >
+                                        <a class="btn btn-danger" href="?action=invalidateCookies&token={{ @setupToken }}#pf-setup-administration" role="button" >
                                             <i class="fas fa-fw fa-trash"></i>&nbsp;Clear authentication data
                                         </a>
                                     </div>

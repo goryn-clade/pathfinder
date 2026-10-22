@@ -13,11 +13,11 @@ class Util {
 
     /**
      * convert array keys to upper/lowercase -> recursive
-     * @param $arr
+     * @param array<string, mixed> $arr
      * @param int $case
-     * @return array
+     * @return array<string, mixed>
      */
-    static function arrayChangeKeyCaseRecursive($arr, $case = CASE_LOWER){
+    static function arrayChangeKeyCaseRecursive(array $arr, int $case = CASE_LOWER){
         if(is_array($arr)){
             $arr = array_map( function($item){
                 if( is_array($item) )
@@ -31,34 +31,37 @@ class Util {
 
     /**
      * flatten multidimensional array ignore keys
-     * @param array $array
-     * @return array
+     * @param  $array
+     * @param array<string, mixed> $array
+     * @return array<string, mixed>
      */
     static function arrayFlattenByValue(array $array) : array {
         $return = [];
-        array_walk_recursive($array, function($value) use (&$return) { $return[] = $value; });
+        array_walk_recursive($array, function($value) use (&$return): void { $return[] = $value; });
         return $return;
     }
 
     /**
      * flatten multidimensional array merge keys
      * -> overwrites duplicate keys!
-     * @param array $array
-     * @return array
+     * @param  $array
+     * @param array<string, mixed> $array
+     * @return array<string, mixed>
      */
     static function arrayFlattenByKey(array $array) : array {
         $return = [];
-        array_walk_recursive($array, function($value, $key) use (&$return) { $return[$key] = $value; });
+        array_walk_recursive($array, function($value, $key) use (&$return): void { $return[$key] = $value; });
         return $return;
     }
 
     /**
      * transforms array with assoc. arrays as values
      * into assoc. array where $key column data is used for its key
-     * @param array $array
+     * @param  $array
      * @param string $key
      * @param bool $unsetKey
-     * @return array
+     * @param array<string, mixed> $array
+     * @return mixed[][]
      */
     static function arrayGetBy(array $array, string $key, bool $unsetKey = true) : array {
         // we can remove $key from nested arrays
@@ -89,26 +92,24 @@ class Util {
 
     /**
      * convert array keys by a custom callback
-     * @param $arr
-     * @param $callback
-     * @return array
+     * @param array<string, mixed> $arr
+     * @param callable $callback
+     * @return array<string, mixed>
      */
-    static function arrayChangeKeys($arr, $callback){
+    static function arrayChangeKeys(array $arr, callable $callback){
         return array_combine(
-            array_map(function ($key) use ($callback){
-               return $callback($key);
-            }, array_keys($arr)), $arr
+            array_map(fn($key) => $callback($key), array_keys($arr)), $arr
         );
     }
 
     /**
      * convert a string with multiple scopes into an array
      * @param string $scopes
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     static function convertScopesString($scopes){
         $scopes = array_filter(
-            array_map('strtolower',
+            array_map(strtolower(...),
                 (array)explode(' ', $scopes)
             )
         );
@@ -141,10 +142,11 @@ class Util {
 
     /**
      * get hash from an array of ESI scopes
-     * @param array $scopes
+     * @param  $scopes
+     * @param array<string, mixed> $scopes
      * @return string
      */
-    static function getHashFromScopes($scopes) : string {
+    static function getHashFromScopes(array $scopes) : string {
         $scopes = (array)$scopes;
         sort($scopes);
         return md5(serialize($scopes));
@@ -153,7 +155,7 @@ class Util {
     /**
      * get some information about a $source file/dir
      * @param string|null $source
-     * @return array
+     * @return array<string, lowercase-string|bool>
      */
     static function filesystemInfo(?string $source) : array {
         $info = [];
@@ -175,12 +177,10 @@ class Util {
      * @param int $interval
      * @param string $round
      */
-    static function roundToInterval(\DateTime &$dateTime, string $type = 'sec', int $interval = 5, string $round = 'floor'){
+    static function roundToInterval(\DateTime &$dateTime, string $type = 'sec', int $interval = 5, string $round = 'floor'): void{
         $hours = $minutes = $seconds = 0;
 
-        $roundInterval = function(string $format, int $interval, string $round) : int {
-            return call_user_func($round, $format / $interval) * $interval;
-        };
+        $roundInterval = (fn(string $format, int $interval, string $round): int => call_user_func($round, $format / $interval) * $interval);
 
         switch($type){
             case 'hour':

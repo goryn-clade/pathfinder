@@ -3,6 +3,8 @@
 
 let util                = require('util');
 let fs                  = require('fs');
+let path                = require('path');
+let stream              = require('stream');
 let ini                 = require('ini');
 
 let gulp                = require('gulp');
@@ -22,8 +24,7 @@ let imageResize         = require('gulp-image-resize');
 let imagemin            = require('gulp-imagemin');
 let imageminWebp        = require('imagemin-webp');
 let rename              = require('gulp-rename');
-let bytediff            = require('gulp-bytediff');
-let debug               = require('gulp-debug');
+let debug              = require('gulp-debug');
 let notifier            = require('node-notifier');
 
 // -- Helper & NPM modules ----------------------------------------------------
@@ -40,6 +41,33 @@ let prettyBytes         = require('pretty-bytes');
 let del                 = require('promised-del');
 
 let minify = (options) => terser(options);
+
+// file size diff between two points in a pipe (replaces unmaintained gulp-bytediff)
+let bytediff = {
+    start: () => new stream.Transform({
+        objectMode: true,
+        transform(file, enc, cb){
+            file.bytediff = {startSize: file.contents ? file.contents.length : null};
+            cb(null, file);
+        }
+    }),
+    stop: formatFn => new stream.Transform({
+        objectMode: true,
+        transform(file, enc, cb){
+            if(file.bytediff && file.bytediff.startSize){
+                let endSize = file.contents.length;
+                log(formatFn({
+                    fileName: path.basename(file.path),
+                    startSize: file.bytediff.startSize,
+                    endSize: endSize,
+                    savings: file.bytediff.startSize - endSize,
+                    percent: endSize / file.bytediff.startSize
+                }));
+            }
+            cb(null, file);
+        }
+    })
+};
 
 // == Settings ========================================================================================================
 

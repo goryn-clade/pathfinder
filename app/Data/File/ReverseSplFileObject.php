@@ -49,11 +49,11 @@ class ReverseSplFileObject extends \SplFileObject{
 
     /**
      * control characters
-     * @var array
+     * @var array<string, mixed>
      */
     protected $eol = ["\r", "\n"];
 
-    public function __construct($sourceFile, $offset = 0){
+    public function __construct(string $sourceFile, int $offset = 0){
         parent::__construct($sourceFile);
 
         // set total line count of the file
@@ -73,7 +73,7 @@ class ReverseSplFileObject extends \SplFileObject{
     /**
      * reverse rewind file.
      */
-    public function rewind(){
+    public function rewind(): void {
         //Set the line position to 0 - First Line
         $this->position = 0;
 
@@ -110,7 +110,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * Return the current line after the file pointer
      * @return string
      */
-    public function current(){
+    public function current(): string {
         return trim($this->fgets());
     }
 
@@ -119,14 +119,14 @@ class ReverseSplFileObject extends \SplFileObject{
      * These go in reverse order
      * @return mixed
      */
-    public function key(){
+    public function key(): int {
         return $this->position;
     }
 
     /**
      * move one line up
      */
-    public function next(){
+    public function next(): void {
         //Step the file pointer back one step to the last letter of the previous line
         --$this->pointer;
         if($this->pointer < $this->begin){
@@ -146,7 +146,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * Check the current file pointer to make sure we  are not at the beginning of the file
      * @return bool
      */
-    public function valid(){
+    public function valid(): bool {
         return ($this->pointer >= $this->begin);
     }
 
@@ -154,7 +154,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * seek to previous lines
      * @param int $lineCount
      */
-    public function seek($lineCount){
+    public function seek(int $lineCount) : void {
         for($i = 0; $i < $lineCount; $i++){
             $this->next();
         }
@@ -164,7 +164,7 @@ class ReverseSplFileObject extends \SplFileObject{
      * move pointer to line begin
      * -> skip line breaks
      */
-    private function findLineBegin(){
+    private function findLineBegin(): void{
         //Check the character over and over till we hit another new line
         $c = $this->fgetc();
 
@@ -192,13 +192,13 @@ class ReverseSplFileObject extends \SplFileObject{
     /**
      * set total line count. No matter if there are empty lines in between
      */
-    private function setLineCount(){
+    private function setLineCount(): void{
         // Store flags and position
         $flags = $this->getFlags();
         $currentPointer = $this->ftell();
 
         // Prepare count by resetting flags as READ_CSV for example make the tricks very slow
-        $this->setFlags(null);
+        $this->setFlags(0);
 
         // Go to the larger INT we can as seek will not throw exception, errors, notice if we go beyond the bottom line
         //$this->seek(PHP_INT_MAX);

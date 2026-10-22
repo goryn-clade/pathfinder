@@ -21,7 +21,7 @@ class StatisticsUpdate extends AbstractCron {
      * >> php index.php "/cron/deleteStatisticsData"
      * @param \Base $f3
      */
-    function deleteStatisticsData(\Base $f3){
+    function deleteStatisticsData(\Base $f3): void{
         $this->logStart(__FUNCTION__);
 
         $currentYear = (int)date('o');

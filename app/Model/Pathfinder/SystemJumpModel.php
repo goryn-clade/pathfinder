@@ -18,7 +18,7 @@ class SystemJumpModel extends AbstractSystemApiBasicModel {
     protected $table = 'system_jumps';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [

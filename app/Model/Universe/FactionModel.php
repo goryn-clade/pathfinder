@@ -20,7 +20,7 @@ class FactionModel extends AbstractUniverseModel {
     protected $table = 'faction';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -47,22 +47,22 @@ class FactionModel extends AbstractUniverseModel {
             'default' => 0
         ],
         'race' => [ // faction API endpoint dont have "raceId" data, but race API endpoint has
-            'has-one' => ['Exodus4D\Pathfinder\Model\Universe\RaceModel', 'factionId']
+            'has-one' => [\Exodus4D\Pathfinder\Model\Universe\RaceModel::class, 'factionId']
         ],
         'alliances' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\AllianceModel', 'factionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\AllianceModel::class, 'factionId']
         ],
         'corporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\CorporationModel', 'factionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\CorporationModel::class, 'factionId']
         ],
         'sovereigntySystems' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel', 'factionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SovereigntyMapModel::class, 'factionId']
         ],
         'factionWarSystemOwners' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel', 'ownerFactionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel::class, 'ownerFactionId']
         ],
         'factionWarSystemOccupiers' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel', 'occupierFactionId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\FactionWarSystemModel::class, 'occupierFactionId']
         ]
     ];
 
@@ -81,9 +81,9 @@ class FactionModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getUniverseFaction', $id);
         if(!empty($data) && !isset($data['error'])){
             $this->copyfrom($data, ['id', 'name', 'description', 'sizeFactor', 'stationCount', 'stationSystemCount']);

@@ -18,7 +18,7 @@ class ConstellationModel extends AbstractUniverseModel {
     protected $table = 'constellation';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'name' => [
@@ -29,7 +29,7 @@ class ConstellationModel extends AbstractUniverseModel {
         'regionId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\RegionModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\RegionModel::class,
             'constraint' => [
                 [
                     'table' => 'region',
@@ -54,10 +54,10 @@ class ConstellationModel extends AbstractUniverseModel {
             'default' => 0
         ],
         'systems' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SystemModel', 'constellationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SystemModel::class, 'constellationId']
         ],
         'systemNeighbours' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel', 'constellationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Universe\SystemNeighbourModel::class, 'constellationId']
         ]
     ];
 
@@ -77,13 +77,13 @@ class ConstellationModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {
         $data = self::getF3()->ccpClient()->send('getUniverseConstellation', $id);
         if(!empty($data)){
             /**
-             * @var $region RegionModel
+             * @var RegionModel $region
              */
             $region = $this->rel('regionId');
             $region->loadById($data['regionId'], $accessToken, $additionalOptions);
@@ -97,13 +97,13 @@ class ConstellationModel extends AbstractUniverseModel {
     /**
      * load systems data for this constellation
      */
-    public function loadSystemsData(){
+    public function loadSystemsData(): void{
         if( !$this->dry() ){
             $data = self::getF3()->ccpClient()->send('getUniverseConstellation', $this->_id);
             if(!empty($data)){
                 foreach((array)$data['systems'] as $systemId){
                     /**
-                     * @var $system SystemModel
+                     * @var SystemModel $system
                      */
                     $system = $this->rel('systems');
                     $system->loadById($systemId);

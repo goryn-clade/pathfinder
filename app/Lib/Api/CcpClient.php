@@ -17,7 +17,7 @@ use Exodus4D\ESI\Client\Ccp\Esi\Esi as Client;
  * @package lib\api
  *
  * @method ApiInterface send(string $requestHandler, ...$handlerParams)
- * @method ApiInterface sendBatch(array $configs)
+ * @method ApiInterface sendBatch(array<string, mixed> $configs)
  */
 class CcpClient extends AbstractClient {
 

@@ -26,13 +26,13 @@ class FileHandler extends \Prefab {
      * @param int $offset
      * @param int $limit
      * @param \Closure|null $rowParser
-     * @return array
+     * @return array<string, mixed>
      */
     public function readFileReverse(
         string $sourceFile,
         int $offset = self::LOG_FILE_OFFSET,
         int $limit = self::LOG_FILE_LIMIT,
-        \Closure $rowParser = null
+        ?\Closure $rowParser = null
     ) : array {
         $data = [];
 
@@ -41,7 +41,7 @@ class FileHandler extends \Prefab {
                 $file = new ReverseSplFileObject($sourceFile, $offset);
                 $file->setFlags(\SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
-                foreach( new \LimitIterator($file, 0, $limit) as $i => $rowData){
+                foreach( new \LimitIterator($file, 0, $limit) as $rowData){
                     if(is_callable($rowParser)){
                         // custom parser for row data -> manipulate $data by ref
                         $rowParser($rowData, $data);

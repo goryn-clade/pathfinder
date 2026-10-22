@@ -15,6 +15,7 @@ define([
     'module/system_intel',
     'module/system_killboard',
     'module/global_thera',
+    'module/global_turnur',
     'module/connection_info',
     'app/counter'
 ], (
@@ -34,6 +35,7 @@ define([
     SystemIntelModule,
     SystemKillboardModule,
     TheraModule,
+    TurnurModule,
     ConnectionInfoModule
 ) => {
     'use strict';
@@ -99,6 +101,12 @@ define([
         });
 
         $(tabContentWrapperEl).on('pf:renderSystemModules', `.${Util.config.mapTabContentClass}`, function(e, data){
+            if(data && data.payload && data.payload.isUnknown){
+                getModules()
+                    .then(modules => filterModules(modules, 'system'))
+                    .then(modules => removeModules(modules, e.target));
+                return;
+            }
             getModules()
                 .then(modules => filterModules(modules, 'system'))
                 .then(modules => renderModules(modules, e.target, data));
@@ -129,6 +137,9 @@ define([
         });
 
         $(tabContentWrapperEl).on('pf:updateSystemModules', `.${Util.config.mapTabContentClass}`, (e, data) => {
+            if(data && data.payload && data.payload.isUnknown){
+                return;
+            }
             getModules()
                 .then(modules => filterModules(modules, true, 'fullDataUpdate'))
                 .then(modules => updateModules(modules, e.target, data));
@@ -156,6 +167,7 @@ define([
                 SystemIntelModule,
                 SystemKillboardModule,
                 TheraModule,
+                TurnurModule,
                 ConnectionInfoModule
             ];
 
@@ -1025,7 +1037,10 @@ define([
         // change "map" icon
         let mapIconEl = tabLinkEl.querySelector(`.${config.mapTabIconClass}`);
         mapIconEl.classList.remove(...mapIconEl.classList);
-        mapIconEl.classList.add(config.mapTabIconClass, 'fas', 'fa-fw', options.icon);
+        mapIconEl.classList.add(config.mapTabIconClass, 'fas', 'fa-fw');
+        if(/^fa-[a-z0-9-]+$/.test(options.icon)){
+            mapIconEl.classList.add(options.icon);
+        }
 
         // change "shared" icon
         let mapSharedIconEl = tabLinkEl.querySelector(`.${config.mapTabSharedIconClass}`);
@@ -1416,7 +1431,7 @@ define([
 
                         if(mapId > 0){
                             let tabMapData = Util.getCurrentMapData(mapId);
-                            if(tabMapData !== false){
+                            if(tabMapData){
                                 // map data available ->
                                 activeMapIds.push(mapId);
 

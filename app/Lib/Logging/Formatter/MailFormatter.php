@@ -14,14 +14,15 @@ use Monolog\Formatter;
 class MailFormatter implements Formatter\FormatterInterface {
 
     /**
-     * @param array $record
+     * @param array<string, mixed> $record
      * @return mixed|string
      */
     public function format(array $record){
 
         $tplDefaultData = [
             'tplPretext' => $record['message'],
-            'tplGreeting' => \Markdown::instance()->convert(str_replace('*', '', $record['message'])),
+            // escape HTML first: message holds free text (e.g. map name) and is printed with | raw
+            'tplGreeting' => \Markdown::instance()->convert(htmlspecialchars(str_replace('*', '', $record['message']), ENT_NOQUOTES)),
             'message' => false,
             'tplText2' => false,
             'tplClosing' => 'Fly save!',
@@ -35,16 +36,21 @@ class MailFormatter implements Formatter\FormatterInterface {
 
         $tplData = array_replace_recursive($tplDefaultData, (array)$record['context']['data']['main']);
 
+        // user message (e.g. rally poke) is printed with nl2br() | raw
+        if(is_string($tplData['message'])){
+            $tplData['message'] = htmlspecialchars($tplData['message'], ENT_QUOTES);
+        }
+
         return \Template::instance()->render('templates/mail/basic_inline.html', 'text/html', $tplData);
     }
 
     /**
-     * @param array $records
+     * @param array<string, mixed> $records
      * @return mixed|string
      */
     public function formatBatch(array $records){
         $message = '';
-        foreach ($records as $key => $record) {
+        foreach ($records as $record) {
             $message .= $this->format($record);
         }
 

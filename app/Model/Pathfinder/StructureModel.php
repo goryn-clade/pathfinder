@@ -20,7 +20,7 @@ class StructureModel extends AbstractPathfinderModel {
     protected $table = 'structure';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -36,7 +36,7 @@ class StructureModel extends AbstractPathfinderModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',
@@ -53,7 +53,7 @@ class StructureModel extends AbstractPathfinderModel {
             'type' => Schema::DT_INT,
             'default' => 1,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\StructureStatusModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\StructureStatusModel::class,
             'constraint' => [
                 [
                     'table' => 'structure_status',
@@ -72,15 +72,15 @@ class StructureModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'structureCorporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationStructureModel', 'structureId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationStructureModel::class, 'structureId']
         ]
     ];
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
-    public function setData(array $data){
+    public function setData( $data): void{
         $this->copyfrom($data, ['structureId', 'corporationId', 'systemId', 'statusId', 'name', 'description']);
     }
     /**
@@ -117,7 +117,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param $structureId
      * @return int|null
      */
-    public function set_structureId($structureId) : ?int {
+    public function set_structureId(int $structureId) : ?int {
         $structureId = (int)$structureId;
         return $structureId ? : null;
     }
@@ -165,6 +165,7 @@ class StructureModel extends AbstractPathfinderModel {
      * check whether this model is valid or not
      * @return bool
      */
+    #[\Override]
     public function isValid() : bool {
         if($valid = parent::isValid()){
             // structure always belongs to a systemId
@@ -184,6 +185,10 @@ class StructureModel extends AbstractPathfinderModel {
      * @param $pkeys
      * @return bool
      */
+    #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
+     */
     public function beforeInsertEvent($self, $pkeys) : bool {
         return $this->isValid() ? parent::beforeInsertEvent($self, $pkeys) : false;
     }
@@ -193,15 +198,20 @@ class StructureModel extends AbstractPathfinderModel {
      * @param CharacterModel $characterModel
      * @return bool
      */
+    #[\Override]
     public function hasAccess(CharacterModel $characterModel) : bool {
         $access = false;
         if($characterModel->hasCorporation()){
-            $this->filter('structureCorporations', ['active = ?', 1]);
-            $this->has('structureCorporations.corporationId', ['active = ?', 1]);
-            $this->has('structureCorporations.corporationId', ['id = ?', $characterModel->get('corporationId', true)]);
-
-            if($this->structureCorporations){
-                $access = true;
+            // structure must be linked to the character's corporation
+            $corporationId = (int)$characterModel->get('corporationId', true);
+            foreach((array)$this->structureCorporations as $structureCorporation){
+                if(
+                    $structureCorporation->isActive() &&
+                    (int)$structureCorporation->get('corporationId', true) === $corporationId
+                ){
+                    $access = true;
+                    break;
+                }
             }
         }
 
@@ -210,7 +220,7 @@ class StructureModel extends AbstractPathfinderModel {
 
     /**
      * get structure data grouped by corporations
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     public function getDataByCorporations() : array {
@@ -234,7 +244,7 @@ class StructureModel extends AbstractPathfinderModel {
      * @param string $name
      * @param int $systemId
      */
-    public function getByName(CorporationModel $corporation, string $name, int $systemId){
+    public function getByName(CorporationModel $corporation, string $name, int $systemId): void{
         if($corporation->valid() && $name){
             $this->has('structureCorporations', ['corporationId = :corporationId', ':corporationId' => $corporation->_id]);
             $this->load(['name = :name AND systemId = :systemId AND active = :active',
@@ -253,7 +263,7 @@ class StructureModel extends AbstractPathfinderModel {
      */
     protected function getUniverseTypeData(int $structureId) : \stdClass {
         /**
-         * @var $type Universe\TypeModel
+         * @var Universe\TypeModel $type
          */
         $type = Universe\AbstractUniverseModel::getNew('TypeModel');
         $type->getById($structureId);

@@ -11,26 +11,23 @@ namespace Exodus4D\Pathfinder\Lib\Logging;
 
 class LogCollection extends AbstractLog {
 
-    const ERROR_EMPTY               = __CLASS__ . ' is empty';
+    const ERROR_EMPTY               = self::class . ' is empty';
 
     /**
      * handlers for this collection
      * -> no default is set
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [];
 
     /**
      * processors for this collection
      * -> no default is set
-     * @var array
+     * @var array<string, mixed>
      */
     protected $processorConfig      = [];
 
-    /**
-     * @var null|\SplObjectStorage
-     */
-    private $collection             = null;
+    private readonly \SplObjectStorage $collection;
 
     /**
      * LogCollection constructor.
@@ -51,7 +48,7 @@ class LogCollection extends AbstractLog {
         $this->collection->rewind();
         if($this->collection->valid()){
             /**
-             * @var $log AbstractLog
+             * @var AbstractLog $log
              */
             $log = $this->collection->current();
         }else{
@@ -66,8 +63,8 @@ class LogCollection extends AbstractLog {
      * @param AbstractLog $log
      * @throws \Exception
      */
-    public function addLog(AbstractLog $log){
-        if(!$this->collection->contains($log)){
+    public function addLog(AbstractLog $log): void{
+        if(!$this->collection->offsetExists($log)){
             if(!$this->collection->count()){
                 // first log sets the default for this collection
                 $this->channelType = $log->getChannelType();
@@ -96,14 +93,15 @@ class LogCollection extends AbstractLog {
             $this->setMessage($log->getMessage());
             $this->setTag($log->getTag());
 
-            $this->collection->attach($log);
+            $this->collection->offsetSet($log);
         }
     }
 
     /**
      * @param string $message
      */
-    public function setMessage(string $message){
+    #[\Override]
+    public function setMessage(string $message): void{
         $currentMessage = parent::getMessage();
         if(empty($currentMessage)){
             $newMessage = $message;
@@ -120,27 +118,26 @@ class LogCollection extends AbstractLog {
      * @param string $tag
      * @throws \Exception
      */
-    public function setTag(string $tag){
+    #[\Override]
+    public function setTag(string $tag): void{
         $currentTag = parent::getTag();
-        switch($currentTag){
-            case 'default':
-                // no specific tag set so far... set new
-                $newTag = $tag; break;
-            case 'information':
-                // do not change "information" tag (mixed tag logs in this collection)
-                $newTag = $currentTag; break;
-            default:
-                // set mixed tag -> "information"
-                $newTag = ($tag !== $currentTag) ? 'information': $tag;
-        }
+        $newTag = match ($currentTag) {
+            // no specific tag set so far... set new
+            'default' => $tag,
+            // do not change "information" tag (mixed tag logs in this collection)
+            'information' => $currentTag,
+            // set mixed tag -> "information"
+            default => ($tag !== $currentTag) ? 'information': $tag,
+        };
 
         parent::setTag($newTag);
     }
 
     /**
      * get log data for all logs in this collection
-     * @return array
+     * @return array<string, mixed>
      */
+    #[\Override]
     public function getData() : array{
         $this->collection->rewind();
         $data = [];
@@ -155,6 +152,7 @@ class LogCollection extends AbstractLog {
      * @return string
      * @throws \Exception
      */
+    #[\Override]
     public function getChannelName() : string{
         return $this->getPrimaryLog()->getChannelName();
     }
@@ -163,6 +161,7 @@ class LogCollection extends AbstractLog {
      * @return string
      * @throws \Exception
      */
+    #[\Override]
     public function getLevel() : string{
         return $this->getPrimaryLog()->getLevel();
     }
@@ -171,14 +170,16 @@ class LogCollection extends AbstractLog {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public function hasBuffer() : bool{
         return $this->getPrimaryLog()->hasBuffer();
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
+    #[\Override]
     public function getTempData() : array{
         return $this->getPrimaryLog()->getTempData();
     }

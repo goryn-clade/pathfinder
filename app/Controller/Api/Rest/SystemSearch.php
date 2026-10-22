@@ -23,7 +23,7 @@ class SystemSearch extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function get(\Base $f3, $params){
+    public function get(\Base $f3,  array $params): void{
         $requestData = $this->getRequestData($f3);
         $morePages = false;
         $count = 0;
@@ -43,7 +43,9 @@ class SystemSearch extends AbstractRestController {
         //$searchToken = 'Naga'; // 0.033684 -> 0.1 (LS)
 
         if(strlen($search = (string)$params['id']) >= 3){
-            $page = max((int)$requestData['page'],1);
+            // strip LIKE wildcards so the user cannot widen the match arbitrarily
+            $search = str_replace(['%', '_'], ['\\%', '\\_'], $search);
+            $page = max((int)($requestData['page'] ?? 1), 1);
             $offset = ($page - 1) * self::PAGE_SIZE_SYSTEMS;
             $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
 

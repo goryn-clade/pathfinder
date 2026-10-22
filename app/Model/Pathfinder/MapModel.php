@@ -31,8 +31,20 @@ class MapModel extends AbstractMapTrackingModel {
     const ERROR_DISCORD_CHANNEL                     = 'Invalid #Discord channel column [%s]';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
+    /**
+     * fields that can be changed by setData() (map settings dialog)
+     * -> 'active' is left out: deactivate a map with DELETE
+     */
+    const EDITABLE_FIELDS = [
+        'scopeId', 'typeId', 'name', 'icon',
+        'deleteExpiredConnections', 'deleteEolConnections', 'persistentAliases', 'persistentSignatures',
+        'trackAbyssalJumps', 'allowUnknownSystems', 'granularK162', 'allowGroups', 'logActivity', 'logHistory',
+        'slackWebHookURL', 'slackUsername', 'slackIcon', 'slackChannelHistory', 'slackChannelRally',
+        'discordUsername', 'discordWebHookURLRally', 'discordWebHookURLHistory'
+    ];
+
     protected $fieldConf = [
         'active' => [
             'type' => Schema::DT_BOOL,
@@ -44,7 +56,7 @@ class MapModel extends AbstractMapTrackingModel {
         'scopeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapScopeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapScopeModel::class,
             'constraint' => [
                 [
                     'table' => 'map_scope',
@@ -57,7 +69,7 @@ class MapModel extends AbstractMapTrackingModel {
         'typeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\MapTypeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\MapTypeModel::class,
             'constraint' => [
                 [
                     'table' => 'map_type',
@@ -105,6 +117,24 @@ class MapModel extends AbstractMapTrackingModel {
             'activity-log' => true
         ],
         'trackAbyssalJumps' => [
+            'type' => Schema::DT_BOOL,
+            'nullable' => false,
+            'default' => 1,
+            'activity-log' => true
+        ],
+        'allowUnknownSystems' => [
+            'type' => Schema::DT_BOOL,
+            'nullable' => false,
+            'default' => 0,
+            'activity-log' => true
+        ],
+        'granularK162' => [
+            'type' => Schema::DT_BOOL,
+            'nullable' => false,
+            'default' => 0,
+            'activity-log' => true
+        ],
+        'allowGroups' => [
             'type' => Schema::DT_BOOL,
             'nullable' => false,
             'default' => 1,
@@ -171,36 +201,33 @@ class MapModel extends AbstractMapTrackingModel {
             'validate' => true
         ],
         'systems' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\SystemModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\SystemModel::class, 'mapId']
         ],
         'connections' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\ConnectionModel::class, 'mapId']
+        ],
+        'mapGroups' => [
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\MapGroupModel::class, 'mapId']
         ],
         'mapCharacters' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterMapModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterMapModel::class, 'mapId']
         ],
         'mapCorporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel::class, 'mapId']
         ],
         'mapAlliances' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\AllianceMapModel', 'mapId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\AllianceMapModel::class, 'mapId']
         ]
     ];
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param  $data
      */
-    public function setData($data){
-        unset($data['id']);
-        unset($data['created']);
-        unset($data['updated']);
-        unset($data['createdCharacterId']);
-        unset($data['updatedCharacterId']);
-
+    public function setData( array $data): void{
         foreach((array)$data as $key => $value){
             if(!is_array($value)){
-                if($this->exists($key)){
+                if(in_array($key, self::EDITABLE_FIELDS, true)){
                     $this->$key = $value;
                 }
             }else{
@@ -235,6 +262,9 @@ class MapModel extends AbstractMapTrackingModel {
             $mapData->persistentAliases                     = $this->persistentAliases;
             $mapData->persistentSignatures                  = $this->persistentSignatures;
             $mapData->trackAbyssalJumps                     = $this->trackAbyssalJumps;
+            $mapData->allowUnknownSystems                   = $this->allowUnknownSystems;
+            $mapData->granularK162                          = $this->granularK162;
+            $mapData->allowGroups                           = $this->allowGroups;
 
             // map scope
             $mapData->scope                                 = (object) [];
@@ -256,7 +286,6 @@ class MapModel extends AbstractMapTrackingModel {
             // map Slack logging
             $mapData->logging->slackHistory                 = $this->isSlackChannelEnabled('slackChannelHistory');
             $mapData->logging->slackRally                   = $this->isSlackChannelEnabled('slackChannelRally');
-            $mapData->logging->slackWebHookURL              = $this->slackWebHookURL;
             $mapData->logging->slackUsername                = $this->slackUsername;
             $mapData->logging->slackIcon                    = $this->slackIcon;
             $mapData->logging->slackChannelHistory          = $this->slackChannelHistory;
@@ -265,11 +294,6 @@ class MapModel extends AbstractMapTrackingModel {
             // map Discord logging
             $mapData->logging->discordRally                 = $this->isDiscordChannelEnabled('discordWebHookURLRally');
             $mapData->logging->discordUsername              = $this->discordUsername;
-            $mapData->logging->discordWebHookURLRally       = $this->discordWebHookURLRally;
-            $mapData->logging->discordWebHookURLHistory     = $this->discordWebHookURLHistory;
-
-            // map mail logging
-            $mapData->logging->mailRally                    = $this->isMailSendEnabled('RALLY_SET');
 
             // map access
             $mapData->access                                = (object) [];
@@ -318,6 +342,9 @@ class MapModel extends AbstractMapTrackingModel {
             // merge all data -----------------------------------------------------------------------------------------
             $mapDataAll = (object) [];
             $mapDataAll->mapData = $mapData;
+
+            // map group data -----------------------------------------------------------------------------------------
+            $mapDataAll->groups = $this->getGroupsData();
 
             // map system data ----------------------------------------------------------------------------------------
             $mapDataAll->systems = $this->getSystemsData();
@@ -411,27 +438,50 @@ class MapModel extends AbstractMapTrackingModel {
     }
 
     /**
-     * @param $channel
+     * webhook URLs are secrets -> not part of getData() (sent to every client with map access)
+     * -> only for the map settings dialog (map_update right), see Rest\Map::get()
+     * @return \stdClass
+     */
+    public function getWebhookData() : \stdClass {
+        $webhookData                            = (object) [];
+        $webhookData->slackWebHookURL           = $this->slackWebHookURL;
+        $webhookData->discordWebHookURLRally    = $this->discordWebHookURLRally;
+        $webhookData->discordWebHookURLHistory  = $this->discordWebHookURLHistory;
+        return $webhookData;
+    }
+
+    /**
+     * icon is a Font Awesome class (e.g. 'fa-desktop') -> used as CSS class in JS
+     * @param mixed $icon
      * @return string
      */
-    protected function set_slackChannelHistory($channel){
+    protected function set_icon($icon){
+        $icon = is_string($icon) ? trim($icon) : '';
+        return preg_match('/^fa-[a-z0-9-]{1,60}$/', $icon) ? $icon : 'fa-desktop';
+    }
+
+    /**
+     * @param string|int $channel
+     * @return string
+     */
+    protected function set_slackChannelHistory(string|int $channel){
         return $this->formatSlackChannelName($channel);
     }
 
     /**
-     * @param $channel
+     * @param string|int $channel
      * @return string
      */
-    protected function set_slackChannelRally($channel){
+    protected function set_slackChannelRally(string|int $channel){
         return $this->formatSlackChannelName($channel);
     }
 
     /**
      * convert a Slack channel name into correct format
-     * @param $channel
+     * @param string|int $channel
      * @return string
      */
-    private function formatSlackChannelName($channel){
+    private function formatSlackChannelName(string|int $channel){
         $channel = strtolower(str_replace(' ','', trim(trim((string)$channel), '#@')));
         if($channel){
             $channel = '#' . $channel;
@@ -442,9 +492,9 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
         $self->logActivity('mapCreate');
     }
@@ -452,9 +502,9 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void{
         $self->clearCacheData();
 
         $activity = ($self->isActive()) ? 'mapUpdate' : 'mapDelete';
@@ -464,9 +514,9 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * Event "Hook" function
      * @param self $self
-     * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         $self->clearCacheData();
         $self->deleteLogFile();
     }
@@ -474,7 +524,8 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         parent::clearCacheData();
 
         // clear character data with map access as well!
@@ -488,17 +539,20 @@ class MapModel extends AbstractMapTrackingModel {
      * @return SystemModel
      * @throws \Exception
      */
-    public function getNewSystem(int $systemId) : SystemModel {
-        // check for "inactive" system
-        $system = $this->getSystemByCCPId($systemId);
+    public function getNewSystem(?int $systemId, ?string $securityClass = null) : SystemModel {
+        // check for "inactive" system (only for known systems)
+        $system = ($systemId !== null) ? $this->getSystemByCCPId($systemId) : null;
         if(is_null($system)){
             /**
              * NO ->rel() here! we work with unsaved models
-             * @var $system SystemModel
+             * @var SystemModel $system
              */
             $system = self::getNew('SystemModel');
             $system->systemId = $systemId;
             $system->mapId = $this;
+            if($systemId === null && $securityClass !== null){
+                $system->securityClass = $securityClass;
+            }
             $system->setType();
         }
 
@@ -516,7 +570,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function getNewConnection(SystemModel $sourceSystem, SystemModel $targetSystem) : ConnectionModel {
         /**
-         * @var $connection ConnectionModel
+         * @var ConnectionModel $connection
          */
         $connection = self::getNew('ConnectionModel');
         $connection->mapId = $this;
@@ -532,7 +586,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function getSystemById(int $id) : ?SystemModel {
         /**
-         * @var $system SystemModel
+         * @var SystemModel $system
          */
         $system = $this->rel('systems');
         $system->filterRel();
@@ -551,12 +605,12 @@ class MapModel extends AbstractMapTrackingModel {
      * -> "active" column is NOT checked
      * -> removed systems become "active" = 0
      * @param int $systemId
-     * @param array $addFilters
+     * @param  $addFilters
      * @return SystemModel|null
      */
-    public function getSystemByCCPId(int $systemId, array $addFilters = []) : ?SystemModel {
+    public function getSystemByCCPId(int $systemId,  array $addFilters = []) : ?SystemModel {
         /**
-         * @var $system SystemModel
+         * @var SystemModel $system
          */
         $system = $this->rel('systems');
         $system->filterRel();
@@ -576,7 +630,7 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * get systems in this map
-     * @return CortexCollection|array
+     * @return CortexCollection|array<array-key, mixed>
      */
     protected function getSystems(){
         $filters = [
@@ -584,6 +638,26 @@ class MapModel extends AbstractMapTrackingModel {
         ];
 
         return $this->relFind('systems', $this->mergeFilter($filters)) ? : [];
+    }
+
+    /**
+     * get all group data for this map
+     * @return \stdClass[]
+     */
+    public function getGroupsData() : array {
+        $groupsData = [];
+        $filters = [self::getFilter('active', true)];
+
+        if($groups = $this->relFind('mapGroups', $this->mergeFilter($filters))){
+            foreach($groups as $group){
+                /**
+                 * @var MapGroupModel $group
+                 */
+                $groupsData[] = $group->getData();
+            }
+        }
+
+        return $groupsData;
     }
 
     /**
@@ -595,15 +669,13 @@ class MapModel extends AbstractMapTrackingModel {
 
         foreach($this->getSystems() as $system){
             /**
-             * @var $system SystemModel
+             * @var SystemModel $system
              */
             $systemsData[] = $system->getData();
         }
 
         // orderBy x-Coordinate for smoother frontend animation (left to right)
-        usort($systemsData, function($sysDataA, $sysDataB){
-            return $sysDataA->position->x <=> $sysDataB->position->x;
-        });
+        usort($systemsData, fn($sysDataA, $sysDataB) => $sysDataA->position->x <=> $sysDataB->position->x);
 
         return $systemsData;
     }
@@ -615,7 +687,7 @@ class MapModel extends AbstractMapTrackingModel {
      */
     public function getConnectionById(int $id) : ?ConnectionModel {
         /**
-         * @var $connection ConnectionModel
+         * @var ConnectionModel $connection
          */
         $connection = $this->rel('connections');
         $connection->filterRel();
@@ -634,7 +706,7 @@ class MapModel extends AbstractMapTrackingModel {
      * -> $connectionIds can be used for filter
      * @param null $connectionIds
      * @param string $scope
-     * @return CortexCollection|array
+     * @return CortexCollection|array<array-key, mixed>
      */
     public function getConnections($connectionIds = null, $scope = ''){
         $filters = [
@@ -662,7 +734,7 @@ class MapModel extends AbstractMapTrackingModel {
 
         foreach($this->getConnections() as $connection){
             /**
-             * @var $connection ConnectionModel
+             * @var ConnectionModel $connection
              */
             $connectionsData[] = $connection->getData(true);
         }
@@ -673,7 +745,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * get all structures data for this map
      * @param int $systemId
-     * @return array
+     * @return array<string, mixed>
      */
     public function getStructuresData(int $systemId) : array {
         $structuresData = [];
@@ -700,11 +772,11 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * set map access for an object (character, corporation or alliance)
-     * @param $obj
+     * @param CharacterModel|CorporationModel|AllianceModel $obj
      * @return bool
      * @throws \Exception
      */
-    public function setAccess($obj) : bool {
+    public function setAccess(CharacterModel|CorporationModel|AllianceModel $obj) : bool {
         $newAccessGranted = false;
 
         if($obj instanceof CharacterModel){
@@ -747,10 +819,10 @@ class MapModel extends AbstractMapTrackingModel {
     }
 
     /**
-     * @param $stack
-     * @return array
+     * @param array<string, mixed> $stack
+     * @return array<string, mixed>
      */
-    public function compareAccess($stack) : array {
+    public function compareAccess( $stack) : array {
         $result = [];
         if($this->valid()){
             if($this->isPrivate()){
@@ -807,10 +879,10 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * clear access for a given type of objects
-     * @param array $clearKeys
+     * @param  $clearKeys
      * @return int
      */
-    public function clearAccess($clearKeys = ['character', 'corporation', 'alliance']) : int {
+    public function clearAccess( array $clearKeys = ['character', 'corporation', 'alliance']) : int {
         $count = 0;
         foreach($clearKeys as $key){
             $field = null;
@@ -836,6 +908,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel $characterModel
      * @return bool
      */
+    #[\Override]
     public function hasAccess(CharacterModel $characterModel) : bool {
         $hasAccess = false;
 
@@ -851,6 +924,42 @@ class MapModel extends AbstractMapTrackingModel {
         }
 
         return $hasAccess;
+    }
+
+    /**
+     * checks whether a character belongs to the map owner
+     * -> owner is the map creator (private map), or the creator's current corporation/alliance
+     * -> no creator, or the owner no longer has access -> no owner, every character with access counts as owner
+     * @param CharacterModel $characterModel
+     * @return bool
+     */
+    public function isOwnedBy(CharacterModel $characterModel) : bool {
+        $creator = $this->createdCharacterId;
+        if(!$this->valid() || !is_object($creator)){
+            return true;
+        }
+
+        if($this->isPrivate()){
+            $owner = $creator;
+            $own = $characterModel;
+            $accessIds = array_map(fn(CharacterModel $character) => $character->_id, $this->getCharacters());
+        }elseif($this->isCorporation()){
+            $owner = $creator->getCorporation();
+            $own = $characterModel->getCorporation();
+            $accessIds = array_keys($this->getCorporations());
+        }elseif($this->isAlliance()){
+            $owner = $creator->getAlliance();
+            $own = $characterModel->getAlliance();
+            $accessIds = array_map(fn(AllianceModel $alliance) => $alliance->_id, $this->getAlliances());
+        }else{
+            return false;
+        }
+
+        if(!$owner || !in_array((int)$owner->_id, array_map(intval(...), $accessIds), true)){
+            return true;
+        }
+
+        return $own && (int)$own->_id === (int)$owner->_id;
     }
 
     /**
@@ -914,10 +1023,10 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * get all character models that are currently online "viewing" this map
-     * @param array $options filter options
+     * @param  $options filter options
      * @return CharacterModel[]
      */
-    private function getAllCharacters($options = []) : array {
+    private function getAllCharacters( array $options = []) : array {
         $characters = [];
 
         if($this->isPrivate()){
@@ -945,11 +1054,11 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * get data for ALL characters with map access
      * -> The result of this function is cached!
-     * @param array $options
-     * @return array|null|\stdClass
+     * @param  $options
+     * @return array<string, mixed>|null|\stdClass
      * @throws \Exception
      */
-    public function getCharactersData($options = []){
+    public function getCharactersData( array $options = []){
         // check if there is cached data
         $charactersData = $this->getCacheData(self::DATA_CACHE_KEY_CHARACTER);
 
@@ -1013,6 +1122,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @throws Exception\ConfigException
      * @throws \Exception
      */
+    #[\Override]
     public function newLog(string $action = '') : Logging\LogInterface{
         $logChannelData = $this->getLogChannelData();
         $logObjectData = $this->getLogObjectData();
@@ -1058,7 +1168,7 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * get object relevant data for model log channel
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogChannelData() : array {
         return [
@@ -1068,7 +1178,7 @@ class MapModel extends AbstractMapTrackingModel {
     }
     /**
      * get object relevant data for model log object
-     * @return array
+     * @return array<string, mixed>
      */
     public function getLogObjectData() : array {
         return [
@@ -1082,7 +1192,7 @@ class MapModel extends AbstractMapTrackingModel {
      * @return \Closure
      */
     protected function getLogFormatter(){
-        return function(&$rowDataObj){
+        return function(&$rowDataObj): void{
             unset($rowDataObj['extra']);
         };
     }
@@ -1114,15 +1224,15 @@ class MapModel extends AbstractMapTrackingModel {
         // check global Slack status
         if((bool)Config::getPathfinderData('slack.status')){
             // check global map default config for this channel
-            switch($channel){
-                case 'slackChannelHistory': $defaultMapConfigKey = 'send_history_slack_enabled'; break;
-                case 'slackChannelRally': $defaultMapConfigKey = 'send_rally_slack_enabled'; break;
-                default: throw new Exception\ConfigException(sprintf(self::ERROR_SLACK_CHANNEL, $channel));
-            }
+            $defaultMapConfigKey = match ($channel) {
+                'slackChannelHistory' => 'send_history_slack_enabled',
+                'slackChannelRally' => 'send_rally_slack_enabled',
+                default => throw new Exception\ConfigException(sprintf(self::ERROR_SLACK_CHANNEL, $channel)),
+            };
 
             if((bool) Config::getMapsDefaultConfig($this->typeId->name)[$defaultMapConfigKey]){
                 $config = $this->getSlackWebHookConfig($channel);
-                if($config->slackWebHookURL && $config->slackChannel){
+                if(($config->slackWebHookURL ?? null) && ($config->slackChannel ?? null)){
                     $enabled = true;
                 }
             }
@@ -1142,32 +1252,18 @@ class MapModel extends AbstractMapTrackingModel {
         // check global Slack status
         if((bool)Config::getPathfinderData('discord.status')){
             // check global map default config for this channel
-            switch($channel){
-                case 'discordWebHookURLHistory': $defaultMapConfigKey = 'send_history_discord_enabled'; break;
-                case 'discordWebHookURLRally': $defaultMapConfigKey = 'send_rally_discord_enabled'; break;
-                default: throw new Exception\ConfigException(sprintf(self::ERROR_DISCORD_CHANNEL, $channel));
-            }
+            $defaultMapConfigKey = match ($channel) {
+                'discordWebHookURLHistory' => 'send_history_discord_enabled',
+                'discordWebHookURLRally' => 'send_rally_discord_enabled',
+                default => throw new Exception\ConfigException(sprintf(self::ERROR_DISCORD_CHANNEL, $channel)),
+            };
 
             if((bool) Config::getMapsDefaultConfig($this->typeId->name)[$defaultMapConfigKey]){
                 $config = $this->getDiscordWebHookConfig($channel);
-                if($config->slackWebHookURL){
+                if($config->slackWebHookURL ?? null){
                     $enabled = true;
                 }
             }
-        }
-
-        return $enabled;
-    }
-
-    /**
-     * check if "E-Mail" Log is enabled for this map
-     * @param string $type
-     * @return bool
-     */
-    public function isMailSendEnabled(string $type) : bool{
-        $enabled = false;
-        if((bool) Config::getMapsDefaultConfig($this->typeId->name)['send_rally_mail_enabled']){
-            $enabled = Config::isValidSMTPConfig($this->getSMTPConfig($type));
         }
 
         return $enabled;
@@ -1226,7 +1322,7 @@ class MapModel extends AbstractMapTrackingModel {
         $config = (object) [];
         $config->slackUsername = $this->discordUsername;
         if($channel && $this->exists($channel) && !empty($this->$channel)){
-            $config->slackWebHookURL = $this->$channel . '/slack';
+            $config->slackWebHookURL = $this->$channel;
         }
         return $config;
     }
@@ -1237,13 +1333,6 @@ class MapModel extends AbstractMapTrackingModel {
      * @param bool $addJson
      * @return \stdClass
      */
-    public function getSMTPConfig(string $type, bool $addJson = true) : \stdClass {
-        $config = Config::getSMTPConfig();
-        $config->to = Config::getNotificationMail($type);
-        $config->addJson = $addJson;
-        return $config;
-    }
-
     /**
      * checks whether this map is private map
      * @return bool
@@ -1290,7 +1379,7 @@ class MapModel extends AbstractMapTrackingModel {
         $url = '';
         if( !$this->dry() ){
             $param =  rawurlencode(base64_encode($this->_id));
-            $param .=  $systemId ? '_' . rawurlencode(base64_encode($systemId)) : '';
+            $param .=  $systemId ? '_' . rawurlencode(base64_encode((string) $systemId)) : '';
             $url = $this->getF3()->get('SCHEME') . '://' . $this->getF3()->get('HOST') . $this->getF3()->alias('map', ['*' => '/' . $param]);
         }
         return $url;
@@ -1300,8 +1389,9 @@ class MapModel extends AbstractMapTrackingModel {
      * get log file data
      * @param int $offset
      * @param int $limit
-     * @return array
+     * @return array<string, mixed>
      */
+    #[\Override]
     public function getLogData(int $offset = FileHandler::LOG_FILE_OFFSET, int $limit = FileHandler::LOG_FILE_LIMIT) : array {
         $streamConf = $this->getStreamConfig();
 
@@ -1380,7 +1470,7 @@ class MapModel extends AbstractMapTrackingModel {
     /**
      * delete existing log file
      */
-    protected function deleteLogFile(){
+    protected function deleteLogFile(): void {
         $config = $this->getStreamConfig();
         if(is_file($config->stream)){
             // try to set write access
@@ -1429,7 +1519,7 @@ class MapModel extends AbstractMapTrackingModel {
             foreach($activeUserCharactersData as $key => $activeUserCharacterData){
                 if(isset($activeUserCharacterData->log)){
                     // user as log data
-                    if($activeUserCharacterData->log->system->id == $systemData->systemId){
+                    if($systemData->systemId !== null && $activeUserCharacterData->log->system->id == $systemData->systemId){
                         $systemUserData->user[] = $activeUserCharacterData;
 
                         // remove user from array -> speed up looping over characters.
@@ -1457,9 +1547,10 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel|null $characterModel
      * @return false|ConnectionModel|MapModel
      */
-    public function save(CharacterModel $characterModel = null){
+    #[\Override]
+    public function save(?CharacterModel $characterModel = null){
         /**
-         * @var $mapModel MapModel
+         * @var MapModel $mapModel
          */
         $mapModel = parent::save($characterModel);
 
@@ -1468,16 +1559,16 @@ class MapModel extends AbstractMapTrackingModel {
 
     /**
      * get all maps
-     * @param array $mapIds
-     * @param array $options
+     * @param  $mapIds
+     * @param  $options
      * @return CortexCollection
      */
-    public static function getAll($mapIds = [], $options = []){
+    public static function getAll( array $mapIds = [],  array $options = []){
         $query = [
             'id IN :mapIds',
             ':mapIds' => $mapIds
         ];
-        if( !$options['addInactive'] ){
+        if( !($options['addInactive'] ?? false) ){
             $query[0] .= ' AND active = :active';
             $query[':active'] = 1;
         }

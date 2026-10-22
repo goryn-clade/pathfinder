@@ -11,8 +11,9 @@ define([
     'app/counter',
     'app/map/map',
     'app/map/util',
+    'app/map/system',
     'app/ui/form_element'
-], ($, Init, Util, BaseModule, bootbox, Counter, Map, MapUtil, FormElement) => {
+], ($, Init, Util, BaseModule, bootbox, Counter, Map, MapUtil, System, FormElement) => {
     'use strict';
 
     let SystemSignatureModule = class SystemSignatureModule extends BaseModule {
@@ -795,7 +796,9 @@ define([
                                         systemData.type.id,
                                         Util.getAreaIdBySecurity(systemData.security),
                                         rowData.groupId,
-                                        systemData
+                                        Object.assign({}, systemData, {
+                                            granularK162: Util.getObjVal(Util.getCurrentMapData(systemData.mapId), 'config.granularK162')
+                                        })
                                     );
                                 },
                                 display: function(value, sourceData){
@@ -823,6 +826,7 @@ define([
                                         let newRowData = response[0];
                                         module.updateSignatureCell(tableApi, rowIndex, 'status:name', newRowData.updated);
                                         module.updateSignatureCell(tableApi, rowIndex, 'updated:name', newRowData.updated.updated);
+                                        module.syncConnectionMassType(newRowData);
                                     }
                                     tableApi.draw();
                                 }
@@ -942,6 +946,15 @@ define([
                                         let newRowData = response[0];
                                         module.updateSignatureCell(tableApi, rowIndex, 'status:name', newRowData.updated);
                                         module.updateSignatureCell(tableApi, rowIndex, 'updated:name', newRowData.updated.updated);
+                                        // server may return typeId=0 if the client cleared it when linking;
+                                        // fall back to the current row's typeId from the DataTables cache
+                                        if(!newRowData.typeId){
+                                            let currentRowData = tableApi.row($(cell).closest('tr')).data();
+                                            if(currentRowData && currentRowData.typeId){
+                                                newRowData = Object.assign({}, newRowData, {typeId: currentRowData.typeId});
+                                            }
+                                        }
+                                        module.syncConnectionMassType(newRowData);
                                     }
                                     tableApi.draw();
                                 }
@@ -1386,6 +1399,8 @@ define([
                     payload => {
                         // updates table with new/updated signature information
                         this.updateSignatureTable(payload.context.tableApi, payload.data, !!options.deleteOld);
+                        // immediately sync connection mass type for any wormhole sigs with a linked connection
+                        (payload.data || []).forEach(sig => this.syncConnectionMassType(sig));
                     },
                     Util.handleAjaxErrorResponse
                 );
@@ -1550,6 +1565,43 @@ define([
                     }
                 });
             }, 200);
+        }
+
+        /**
+         * if sigData is a wormhole sig with a typeId and a linked connection, immediately
+         * apply the matching jump-mass type to the connection on the client side.
+         * mirrors the context-menu path: setConnectionJumpMassType + markAsChanged.
+         * @param {object} sigData  — signature object from the server response
+         */
+        syncConnectionMassType(sigData){
+            if(!sigData || sigData.groupId !== 5 || !sigData.typeId){
+                return;
+            }
+            let connId = Util.getObjVal(sigData, 'connection.id');
+            if(!connId){
+                return;
+            }
+            let connection = $().getConnectionById(this._systemData.mapId, connId);
+            if(!connection){
+                return;
+            }
+            let whEntry = Object.values(Init.wormholes).find(wh => wh.typeId === sigData.typeId);
+            if(!whEntry || !whEntry.massIndividual){
+                return;
+            }
+            // thresholds in Init.wormholeSizes are ordered XL→L→M→S; first match wins
+            let massType = null;
+            for(let [type, sizeData] of Object.entries(Init.wormholeSizes)){
+                if(whEntry.massIndividual >= sizeData.jumpMassMin){
+                    massType = type;
+                    break;
+                }
+            }
+            if(!massType){
+                return;
+            }
+            MapUtil.setConnectionJumpMassType(connection, massType);
+            MapUtil.markAsChanged(connection);
         }
 
         /**
@@ -1771,6 +1823,137 @@ define([
         }
 
         /**
+         * map a wormhole signature typeId to the security class string used by
+         * the add-system dialog dropdown ('C1'..'C6','C12','C13','C17','H','L','0.0','T').
+         * returns null when the type's target class is ambiguous (generic K162, frigate bundles)
+         * or when no type is set.
+         * @param typeId
+         * @returns {string|null}
+         */
+        securityClassForTypeId(typeId){
+            if(!typeId) return null;
+            let entry = Object.values(Init.wormholes).find(wh => wh.typeId === typeId);
+            if(!entry || !entry.security) return null;
+            const valid = ['C1','C2','C3','C4','C5','C6','C12','C13','C17','H','L','0.0','T'];
+            return valid.includes(entry.security) ? entry.security : null;
+        }
+
+        /**
+         * launch the add-system dialog pre-filled for an "unknown" system, then auto-link
+         * the resulting connection back to the originating signature row.
+         * @param tableApi
+         * @param cell
+         * @param rowData
+         */
+        triggerCreateUnknownSystem(tableApi, cell, rowData){
+            let metaData = this.getTableMetaData(tableApi);
+            if(!metaData) return;
+
+            let mapData = Util.getCurrentMapData(metaData.mapId);
+            if(!mapData || !mapData.config || !mapData.config.allowUnknownSystems){
+                Util.showNotify({
+                    title: 'Unknown systems disabled',
+                    text: 'Enable "Allow unknown systems" in map settings to use this shortcut.',
+                    type: 'warning'
+                });
+                return;
+            }
+
+            let map      = MapUtil.getMapInstance(metaData.mapId);
+            let systemEl = $('#' + MapUtil.getSystemId(metaData.mapId, metaData.systemId));
+            let secClass = this.securityClassForTypeId(rowData.typeId);
+
+            // close the open xEditable popover before opening the modal
+            $(cell).editable('hide');
+
+            System.showNewSystemDialog(map, {
+                sourceSystem:  systemEl,
+                unknownSystem: true,
+                securityClass: secClass
+            }, (map, newSystemData, sourceSystem, connectionData) => {
+                return Map.saveSystemCallback(map, newSystemData, sourceSystem, connectionData)
+                    .then(payload => {
+                        let newConn = payload && payload.data && payload.data.connection;
+                        if(!newConn || typeof newConn.getParameter !== 'function') return;
+                        let newConnId = newConn.getParameter('connectionId');
+                        if(newConnId && rowData.id){
+                            this.linkSignatureToConnection(tableApi, cell, rowData.id, newConnId);
+                        }
+                    });
+            });
+        }
+
+        /**
+         * PATCH the signature with a new connectionId and refresh the cell so
+         * the "Leads to" column displays the link without further user action.
+         * @param tableApi
+         * @param cell
+         * @param signatureId
+         * @param connectionId
+         */
+        linkSignatureToConnection(tableApi, cell, signatureId, connectionId){
+            if(!signatureId || !connectionId) return;
+
+            Util.request('PATCH', 'Signature', signatureId, {connectionId: connectionId})
+                .then(payload => {
+                    tableApi.cell(cell).data(connectionId);
+                    $(cell).pulseBackgroundColor('changed');
+
+                    let response = payload && payload.data;
+                    if(response){
+                        let rowIndex   = tableApi.row($(cell).closest('tr')).index();
+                        let newRowData = Array.isArray(response) ? response[0] : response;
+                        if(newRowData && !newRowData.typeId){
+                            let currentRowData = tableApi.row(rowIndex).data();
+                            if(currentRowData && currentRowData.typeId){
+                                newRowData = Object.assign({}, newRowData, {typeId: currentRowData.typeId});
+                            }
+                        }
+                        if(newRowData && newRowData.updated){
+                            this.updateSignatureCell(tableApi, rowIndex, 'status:name',  newRowData.updated);
+                            this.updateSignatureCell(tableApi, rowIndex, 'updated:name', newRowData.updated.updated);
+                        }
+                        if(newRowData){
+                            this.syncConnectionMassType(newRowData);
+                        }
+                    }
+                    tableApi.draw();
+
+                    // xEditable's display() doesn't run for this code path (we never opened the
+                    // popover for this new value, so the editable's cached source is stale and
+                    // tableApi.draw() leaves the cell showing the raw connection id). Render the
+                    // formatted label directly using the same FormElement helper the column's
+                    // display() callback uses, and keep the editable's internal value in sync so
+                    // a subsequent popover-open highlights the right system.
+                    this.renderConnectionCell(cell, connectionId);
+                    try { $(cell).editable('option', 'value', connectionId); } catch(e){ /* noop */ }
+                })
+                .catch(payload => Util.handleAjaxErrorResponse(payload));
+        }
+
+        /**
+         * write the formatted "Leads to" cell HTML for a given connectionId.
+         * Mirrors the xEditable display() callback in the column config so manual
+         * link paths (e.g. the "+ create unknown system" shortcut) render identically
+         * to a user-driven popover save.
+         * @param cell
+         * @param connectionId
+         */
+        renderConnectionCell(cell, connectionId){
+            if(!this._systemData || !connectionId) return;
+            let sourceData = SystemSignatureModule.getSignatureConnectionOptions(
+                this._systemData.mapId, this._systemData);
+            let selected = $.fn.editableutils.itemsByValue(connectionId, sourceData);
+            if(selected.length && selected[0].value > 0){
+                let errorIcon = '<i class="fas fa-exclamation-triangle txt-color txt-color-danger hide"></i>&nbsp;';
+                $(cell).html(FormElement.formatSignatureConnectionSelectionData({
+                    text: selected[0].text,
+                    metaData: selected[0].metaData
+                })).prepend(errorIcon);
+            }
+        }
+
+        /**
          * helper function - set 'shown' observer for xEditable connection cell
          * -> enable Select2 for xEditable form
          * @param tableApi
@@ -1779,6 +1962,9 @@ define([
         editableConnectionOnShown(tableApi, cell){
             $(cell).on('shown', (e, editable) => {
                 let inputField = editable.input.$input;
+                // preserve a reference to the cell's owning tableApi before any reassignment;
+                // needed below for the "+ create unknown system" trigger row-data lookup
+                let cellTableApi = tableApi;
 
                 if(!$(tableApi.table().node()).hasClass(this._config.sigTablePrimaryClass)){
                     // we need the primary table API to get selected connections
@@ -1839,6 +2025,22 @@ define([
                 };
 
                 inputField.addClass('pf-select2').initSignatureConnectionSelect(options);
+
+                // inject "+ create unknown system" trigger in the popover title bar
+                let popover = inputField.closest('.popover');
+                let title   = popover.find('.popover-title');
+                if(title.length && !title.find('.pf-add-unknown-trigger').length){
+                    let btn = $('<i class="fas fa-plus pf-add-unknown-trigger pull-right"' +
+                                ' style="cursor:pointer; margin-left:8px; line-height:inherit;"' +
+                                ' title="Create unknown system &amp; link"></i>');
+                    title.append(btn);
+                    btn.on('click', ev => {
+                        ev.stopPropagation();
+                        ev.preventDefault();
+                        let rowData = cellTableApi.row($(cell).closest('tr')).data();
+                        this.triggerCreateUnknownSystem(cellTableApi, cell, rowData);
+                    });
+                }
             });
         }
 
@@ -1848,7 +2050,49 @@ define([
          * @param cell
          */
         editableConnectionOnSave(cell){
+            // capture the value before the popup opens — .value is already updated by save time
+            let prevConnectionId = 0;
+            $(cell).on('shown', (e, editable) => {
+                prevConnectionId = parseInt(editable.value) || 0;
+            });
+
             $(cell).on('save', (e, params) => {
+                let oldConnectionId = prevConnectionId;
+                let newConnectionId = parseInt(params.newValue) || 0;
+
+                if(oldConnectionId && oldConnectionId !== newConnectionId){
+                    let mapId = this._systemData.mapId;
+                    let oldConnection = $().getConnectionById(mapId, oldConnectionId);
+
+                    if(oldConnection){
+                        // find the far-side system endpoint
+                        let ep0 = $(oldConnection.endpoints[0].element);
+                        let ep1 = $(oldConnection.endpoints[1].element);
+                        let farSystem = ep0.data('id') !== this._systemData.id ? ep0 : ep1;
+
+                        if(farSystem.data('isUnknown')){
+                            bootbox.confirm({
+                                title: 'Unknown system orphaned',
+                                message: 'The previous connection led to an unknown placeholder system. Delete the unknown system and its connection?',
+                                buttons: {
+                                    cancel: {label: 'Keep', className: 'btn-default'},
+                                    confirm: {label: 'Delete', className: 'btn-danger'}
+                                },
+                                callback: result => {
+                                    if(result){
+                                        let map = MapUtil.getMapInstance(mapId);
+                                        let mapContainer = $(map.getContainer());
+                                        mapContainer.trigger('pf:deleteSystems', {
+                                            systems: [farSystem],
+                                            callback: () => {}
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+
                 this.checkConnectionConflicts();
             });
         }
@@ -2777,10 +3021,10 @@ define([
          * @param groupId
          * @returns {*[]|*}
          */
-        static getSignatureTypeOptionsBySystem(systemElement, groupId){
+        static getSignatureTypeOptionsBySystem(systemElement, groupId, granularK162 = false){
             let systemTypeId = systemElement.data('typeId');
             let areaId = Util.getAreaIdBySecurity(systemElement.data('security'));
-            let systemData = {statics: systemElement.data('statics')};
+            let systemData = {statics: systemElement.data('statics'), granularK162};
             return SystemSignatureModule.getSignatureTypeOptions(systemTypeId, areaId, groupId, systemData);
         }
 
@@ -2861,7 +3105,7 @@ define([
          * @param shattered
          * @returns {[]|*}
          */
-        static getSignatureTypeOptions(systemTypeId, areaId, groupId, {statics = null, shattered = false} = {}){
+        static getSignatureTypeOptions(systemTypeId, areaId, groupId, {statics = null, shattered = false, granularK162 = false} = {}){
             systemTypeId    = parseInt(systemTypeId || 0);
             areaId          = parseInt(areaId || 0);
             groupId         = parseInt(groupId || 0);
@@ -2899,12 +3143,16 @@ define([
                             key > 0 &&
                             tempSelectOptions.hasOwnProperty(key)
                         ){
-                            newSelectOptionsCount++;
-                            fixSelectOptions.push({value: newSelectOptionsCount, text: tempSelectOptions[key]});
+                            let text = tempSelectOptions[key];
+                            let whName = text.substring(0, 4);
+                            let optValue = (groupId === 5 && Init.wormholes[whName] && Init.wormholes[whName].typeId)
+                                ? Init.wormholes[whName].typeId
+                                : ++newSelectOptionsCount;
+                            fixSelectOptions.push({value: optValue, text: text});
                         }
                     }
 
-                    if(newSelectOptionsCount > 0){
+                    if(fixSelectOptions.length > 0){
                         if(groupId === 5){
                             // "wormhole" selected => multiple <optgroup> available
                             newSelectOptions.push({text: 'Wandering', children: fixSelectOptions});
@@ -2925,8 +3173,12 @@ define([
                             frigKey > 0 &&
                             frigateHoles.hasOwnProperty(frigKey)
                         ){
-                            newSelectOptionsCount++;
-                            frigateWHData.push({value: newSelectOptionsCount, text: frigateHoles[frigKey]});
+                            let text = frigateHoles[frigKey];
+                            let whName = text.substring(0, 4);
+                            let frigTypeId = (Init.wormholes[whName] && Init.wormholes[whName].typeId)
+                                ? Init.wormholes[whName].typeId
+                                : ++newSelectOptionsCount;
+                            frigateWHData.push({value: frigTypeId, text: text});
                         }
                     }
 
@@ -2942,8 +3194,12 @@ define([
                                 drifterKey > 0 &&
                                 Init.drifterWormholes.hasOwnProperty(drifterKey)
                             ){
-                                newSelectOptionsCount++;
-                                drifterWHData.push({value: newSelectOptionsCount, text: Init.drifterWormholes[drifterKey]});
+                                let text = Init.drifterWormholes[drifterKey];
+                                let whName = text.substring(0, 4);
+                                let drifterTypeId = (Init.wormholes[whName] && Init.wormholes[whName].typeId)
+                                    ? Init.wormholes[whName].typeId
+                                    : ++newSelectOptionsCount;
+                                drifterWHData.push({value: drifterTypeId, text: text});
                             }
                         }
 
@@ -2952,21 +3208,6 @@ define([
                         }
                     }
 
-                    // add potential incoming holes
-                    let incomingWHData = [];
-                    for(let incomingKey in Init.incomingWormholes){
-                        if(
-                            incomingKey > 0 &&
-                            Init.incomingWormholes.hasOwnProperty(incomingKey)
-                        ){
-                            newSelectOptionsCount++;
-                            incomingWHData.push({value: newSelectOptionsCount, text: Init.incomingWormholes[incomingKey]});
-                        }
-                    }
-
-                    if(incomingWHData.length > 0){
-                        newSelectOptions.push({text: 'Incoming', children: incomingWHData});
-                    }
                 }else{
                     // groups without "children" (optgroup) should be sorted by "value"
                     // this is completely optional and not necessary!
@@ -2977,7 +3218,7 @@ define([
                 SystemSignatureModule.getCache('sigTypeOptions').set(cacheKey, newSelectOptions.slice(0));
             }
 
-            // static wormholes (DO NOT CACHE) (not all C2 WHs have the same statics..)
+            // static + incoming wormholes (DO NOT CACHE)
             if(groupId === 5){
                 // add static WH(s) for this system
                 if(statics){
@@ -2991,13 +3232,26 @@ define([
                         // filter staticWHName from existing options -> prevent duplicates in <optgroup>
                         SystemSignatureModule.filterGroupedOptions(newSelectOptions, filterOptionCallback(staticWHName));
 
-                        newSelectOptionsCount++;
-                        staticWHData.push({value: newSelectOptionsCount, text: staticWHName});
+                        let staticTypeId = wormholeData.typeId ? wormholeData.typeId : ++newSelectOptionsCount;
+                        staticWHData.push({value: staticTypeId, text: staticWHName});
                     }
 
                     if(staticWHData.length > 0){
                         newSelectOptions.unshift({text: 'Static', children: staticWHData});
                     }
+                }
+
+                // add incoming K162 options (generic grouped or granular per-class)
+                let incomingSource = granularK162 ? Init.incomingWormholesSpecific : Init.incomingWormholesGeneric;
+                let incomingWHData = [];
+                for(let incomingKey in incomingSource){
+                    if(incomingKey > 0 && incomingSource.hasOwnProperty(incomingKey)){
+                        newSelectOptionsCount++;
+                        incomingWHData.push({value: newSelectOptionsCount, text: incomingSource[incomingKey]});
+                    }
+                }
+                if(incomingWHData.length > 0){
+                    newSelectOptions.push({text: 'Incoming', children: incomingWHData});
                 }
             }
 

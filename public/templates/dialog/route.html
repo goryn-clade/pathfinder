@@ -112,10 +112,28 @@
 
                     <i class="fas fa-tree-child col-sm-offset-4 hidden-xs"></i>
 
-                    <div class="col-xs-offset-9 col-xs-3 checkbox checkbox-danger">
-                        <input id="form_wormholes_eol" name="wormholesEOL" value="1" type="checkbox" checked>
-                        <label for="form_wormholes_eol">End of life (EOL)
-                            <i class="fas fa-fw fa-question-circle pf-help-light" title="include EOL connections"></i>
+                    <div class="col-xs-offset-9 col-xs-3 checkbox checkbox-danger checkbox-circle">
+                        <input id="form_wormholes_eol1" name="wormholesEOL1" value="1" type="checkbox" checked>
+                        <label for="form_wormholes_eol1">EOL: aging (1–4h)
+                            <i class="fas fa-fw fa-question-circle pf-help-light" title="include aging EOL connections (1–4h remaining)"></i>
+                        </label>
+                    </div>
+
+                    <i class="fas fa-tree-child col-sm-offset-4 hidden-xs"></i>
+
+                    <div class="col-xs-offset-9 col-xs-3 checkbox checkbox-danger checkbox-circle">
+                        <input id="form_wormholes_eol2" name="wormholesEOL2" value="1" type="checkbox" checked>
+                        <label for="form_wormholes_eol2">EOL: expiring (0–1h)
+                            <i class="fas fa-fw fa-question-circle pf-help-light" title="include expiring EOL connections (0–1h remaining)"></i>
+                        </label>
+                    </div>
+
+                    <i class="fas fa-tree-child col-sm-offset-4 hidden-xs"></i>
+
+                    <div class="col-xs-offset-9 col-xs-3 checkbox checkbox-danger checkbox-circle">
+                        <input id="form_wormholes_eol3" name="wormholesEOL3" value="1" type="checkbox" checked>
+                        <label for="form_wormholes_eol3">EOL: zombie (<0h)
+                            <i class="fas fa-fw fa-question-circle pf-help-light" title="include zombie EOL connections (past natural end)"></i>
                         </label>
                     </div>
 
@@ -156,6 +174,14 @@
                             <input id="form_connections_thera" name="wormholesThera" value="1" type="checkbox" checked>
                             <label for="form_connections_thera">Thera
                                 <i class="fas fa-fw fa-question-circle pf-help-light" title="include known Thera connections"></i>
+                                &nbsp;&nbsp;<a target="_blank" href="//www.eve-scout.com" rel="noopener"><em>eve-scout.com</em></a>
+                            </label>
+                        </div>
+
+                        <div class="col-xs-offset-1 checkbox checkbox-default">
+                            <input id="form_connections_turnur" name="wormholesTurnur" value="1" type="checkbox" checked>
+                            <label for="form_connections_turnur">Turnur
+                                <i class="fas fa-fw fa-question-circle pf-help-light" title="include known Turnur connections"></i>
                                 &nbsp;&nbsp;<a target="_blank" href="//www.eve-scout.com" rel="noopener"><em>eve-scout.com</em></a>
                             </label>
                         </div>

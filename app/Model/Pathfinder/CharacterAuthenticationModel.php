@@ -19,7 +19,7 @@ class CharacterAuthenticationModel extends AbstractPathfinderModel{
     protected $table = 'character_authentication';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -31,7 +31,7 @@ class CharacterAuthenticationModel extends AbstractPathfinderModel{
         'characterId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class,
             'constraint' => [
                 [
                     'table' => 'character',
@@ -66,6 +66,10 @@ class CharacterAuthenticationModel extends AbstractPathfinderModel{
      * @param CharacterAuthenticationModel $self
      * @param $pkeys
      * @return bool
+     */
+    #[\Override]
+    /**
+     * @param array<string, mixed> $pkeys
      */
     public function beforeEraseEvent($self, $pkeys) : bool {
         // clear existing client Cookies as well

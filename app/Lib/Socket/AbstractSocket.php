@@ -36,14 +36,14 @@ abstract class AbstractSocket implements SocketInterface {
 
     /**
      * Socket Options
-     * @var array
+     * @var array<string, mixed>
      */
     protected $options;
 
     /**
      * AbstractSocket constructor.
      * @param string $uri
-     * @param array $options
+     * @param array<string, mixed> $options
      */
     public function __construct(string $uri, array $options = []){
         $this->uri = $uri;
@@ -77,10 +77,10 @@ abstract class AbstractSocket implements SocketInterface {
             ->connect($this->uri)
             ->then($this->initConnection())
             ->then(
-                function(Socket\ConnectionInterface $connection) use ($deferred) {
+                function(Socket\ConnectionInterface $connection) use ($deferred): void {
                     $deferred->resolve($connection);
                 },
-                function(\Exception $e) use ($deferred) {
+                function(\Exception $e) use ($deferred): void {
                     $deferred->reject($e);
                 });
 
@@ -88,6 +88,8 @@ abstract class AbstractSocket implements SocketInterface {
     }
 
     /**
+     * write $task to socket and read the response
+     * -> the returned promise never rejects. Errors resolve with an 'error' payload
      * @param string $task
      * @param null $load
      * @return Promise\PromiseInterface
@@ -98,31 +100,24 @@ abstract class AbstractSocket implements SocketInterface {
 
         $this->connect()
             ->then(
-                function(Socket\ConnectionInterface $connection) use ($payload, $deferred) {
-                    return (new Promise\FulfilledPromise($connection))
-                        ->then($this->initWrite($payload))
-                        ->then($this->initRead())
-                        ->then($this->initClose($connection))
-                        ->then(
-                            function($payload) use ($deferred) {
-                                // we got valid data from socketServer -> check if $payload contains an error
-                                if(is_array($payload) && $payload['task'] == 'error'){
-                                    // ... wrap error payload in a rejectedPromise
-                                    $deferred->reject(
-                                        new Promise\RejectedPromise(
-                                            new \Exception($payload['load'])
-                                        )
-                                    );
-                                }else{
-                                    // good response
-                                    $deferred->resolve($payload);
-                                }
-                            },
-                            function(\Exception $e) use ($deferred) {
-                                $deferred->reject($e);
-                            });
-                },
-                function(\Exception $e) use ($deferred) {
+                fn(Socket\ConnectionInterface $connection) => Promise\resolve($connection)
+                    ->then($this->initWrite($payload))
+                    ->then($this->initRead())
+                    ->then($this->initClose($connection))
+                    ->then(
+                        function($payload) use ($deferred): void {
+                            // we got valid data from socketServer -> check if $payload contains an error
+                            if(is_array($payload) && $payload['task'] == 'error'){
+                                $deferred->reject(new \Exception((string)$payload['load']));
+                            }else{
+                                // good response
+                                $deferred->resolve($payload);
+                            }
+                        },
+                        function(\Throwable $e) use ($deferred): void {
+                            $deferred->reject($e);
+                        }),
+                function(\Throwable $e) use ($deferred): void {
                     // connection error
                     $deferred->reject($e);
                 });
@@ -130,14 +125,11 @@ abstract class AbstractSocket implements SocketInterface {
         $this->getLoop()->run();
 
         return $deferred->promise()
-            ->otherwise(
-                // final exception handler for rejected promises -> convert to payload array
-                // -> No socket related Exceptions should be thrown down the chain
-                function(\Exception $e){
-                    return new Promise\RejectedPromise(
-                        $this->newPayload('error', $e->getMessage())
-                    );
-                });
+            ->catch(
+                // final exception handler for rejected promises -> convert to 'error' payload
+                // -> No socket related Exceptions should be thrown down the chain.
+                //    react/promise 3 only rejects with \Throwable and logs unhandled rejections
+                fn(\Throwable $e) : array => $this->newPayload('error', $e->getMessage()));
     }
 
     /**
@@ -174,13 +166,13 @@ abstract class AbstractSocket implements SocketInterface {
      * @param $payload
      * @return callable
      */
-    protected function initWrite($payload) : callable {
+    protected function initWrite(array $payload) : callable {
         return function(Socket\ConnectionInterface $connection) use ($payload) : Promise\PromiseInterface {
             $deferred = new Promise\Deferred();
 
             $streamEncoded = new NDJson\Encoder($connection);
 
-            $streamEncoded->on('error', function(\Exception $e) use ($deferred) {
+            $streamEncoded->on('error', function(\Throwable $e) use ($deferred): void {
                 $deferred->reject($e);
             });
 
@@ -207,7 +199,7 @@ abstract class AbstractSocket implements SocketInterface {
             $promise = Promise\Stream\first($streamDecoded);
 
             // register on('data') for main input stream
-            $connection->once('data', function ($chunk) use ($stream) {
+            $connection->once('data', function ($chunk) use ($stream): void {
                 // send current data chunk to processing stream -> resolves promise
                 $stream->emit('data', [$chunk]);
             });
@@ -234,7 +226,7 @@ abstract class AbstractSocket implements SocketInterface {
      * get new payload
      * @param string $task
      * @param null $load
-     * @return array
+     * @return array<string, string|null>
      */
     protected function newPayload(string $task, $load = null) : array {
         return [
@@ -247,7 +239,7 @@ abstract class AbstractSocket implements SocketInterface {
      * use this function to create new Socket instances
      * @param string $class
      * @param string $uri
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return SocketInterface
      */
     public static function factory(string $class, string $uri, array $options = []) : SocketInterface {

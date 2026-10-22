@@ -40,30 +40,28 @@ class Monolog extends \Prefab {
      * available formatters
      */
     const FORMATTER = [
-        'line'          => 'Monolog\Formatter\LineFormatter',
-        'json'          => 'Monolog\Formatter\JsonFormatter',
-        'html'          => 'Monolog\Formatter\HtmlFormatter',
-        'mail'          => 'Exodus4D\Pathfinder\Lib\Logging\Formatter\MailFormatter'
+        'line'          => \Monolog\Formatter\LineFormatter::class,
+        'json'          => \Monolog\Formatter\JsonFormatter::class,
+        'html'          => \Monolog\Formatter\HtmlFormatter::class
     ];
 
     /**
      * available handlers
      */
     const HANDLER = [
-        'stream'        => 'Monolog\Handler\StreamHandler',
-        'mail'          => 'Monolog\Handler\SwiftMailerHandler',
-        'socket'        => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SocketHandler',
-        'slackMap'      => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SlackMapWebhookHandler',
-        'slackRally'    => 'Exodus4D\Pathfinder\Lib\Logging\Handler\SlackRallyWebhookHandler',
-        'discordMap'    => 'Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordMapWebhookHandler',
-        'discordRally'  => 'Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordRallyWebhookHandler'
+        'stream'        => \Monolog\Handler\StreamHandler::class,
+        'socket'        => \Exodus4D\Pathfinder\Lib\Logging\Handler\SocketHandler::class,
+        'slackMap'      => \Exodus4D\Pathfinder\Lib\Logging\Handler\SlackMapWebhookHandler::class,
+        'slackRally'    => \Exodus4D\Pathfinder\Lib\Logging\Handler\SlackRallyWebhookHandler::class,
+        'discordMap'    => \Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordMapWebhookHandler::class,
+        'discordRally'  => \Exodus4D\Pathfinder\Lib\Logging\Handler\DiscordRallyWebhookHandler::class
     ];
 
     /**
      * available processors
      */
     const PROCESSOR = [
-        'psr'           => 'Monolog\Processor\PsrLogMessageProcessor'
+        'psr'           => \Monolog\Processor\PsrLogMessageProcessor::class
     ];
 
     /**
@@ -87,7 +85,7 @@ class Monolog extends \Prefab {
      * @param Logging\AbstractLog $log
      * @throws \Exception
      */
-    public function push(Logging\AbstractLog $log){
+    public function push(Logging\AbstractLog $log): void{
         // check whether $log should be "grouped" by common handlers
         if($log->isGrouped()){
             $groupHash = $log->getGroupHash();
@@ -110,10 +108,10 @@ class Monolog extends \Prefab {
     /**
      * bulk process all stored logs -> send to Monolog lib
      */
-    public function log(){
+    public function log(): void{
 
-        foreach($this->logs as $logType => $logs){
-            foreach($logs as $logKey => $log){
+        foreach($this->logs as $logs){
+            foreach($logs as $log){
                 $groupHash      = $log->getGroupHash();
                 $level          = Logger::toMonologLevel($log->getLevel());
 
@@ -204,7 +202,7 @@ class Monolog extends \Prefab {
     /**
      * get Monolog Handler instance by key
      * @param string $handlerKey
-     * @param array $handlerParams
+     * @param array<string, mixed> $handlerParams
      * @return HandlerInterface
      * @throws \Exception
      */
@@ -222,7 +220,7 @@ class Monolog extends \Prefab {
     /**
      * get Monolog Processor instance by key
      * @param string $processorKey
-     * @param array $processorParams
+     * @param array<string, mixed> $processorParams
      * @return ProcessorInterface
      * @throws \Exception
      */

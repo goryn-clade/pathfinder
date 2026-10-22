@@ -18,7 +18,7 @@ class ConnectionScopeModel extends AbstractPathfinderModel {
     protected $table = 'connection_scope';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -45,7 +45,7 @@ class ConnectionScopeModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

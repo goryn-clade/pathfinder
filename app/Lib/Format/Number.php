@@ -17,7 +17,7 @@ class Number extends \Prefab {
         if($bytes){
             $base = log($bytes, 1024);
             $suffixes = ['', 'KB', 'M', 'GB', 'TB'];
-            $result = round(pow(1024, $base - floor($base)), $precision) .''. $suffixes[(int)floor($base)];
+            $result = round(1024 ** ($base - floor($base)), $precision) .''. $suffixes[(int)floor($base)];
         }
         return $result;
     }

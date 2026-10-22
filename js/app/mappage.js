@@ -425,7 +425,7 @@ define([
                     });
                 }
 
-            }).fail(handleAjaxErrorResponse);
+            }).fail((jqXHR, status, error) => handleAjaxErrorResponse(jqXHR, status, error, mapModule));
         }else{
             // skip this mapUpdate trigger and init next one
             initMapUpdatePing(mapModule, false);
@@ -500,7 +500,7 @@ define([
                     });
                 }
             }
-        }).fail(handleAjaxErrorResponse);
+        }).fail((jqXHR, status, error) => handleAjaxErrorResponse(jqXHR, status, error, mapModule));
     };
 
     /**
@@ -535,8 +535,21 @@ define([
      * @param jqXHR
      * @param status
      * @param error
+     * @param mapModule - when provided, transient errors restart pings instead of shutting down
      */
-    let handleAjaxErrorResponse = (jqXHR, status, error) => {
+    let handleAjaxErrorResponse = (jqXHR, status, error, mapModule) => {
+        // 504 Gateway Timeout or network abort (status 0) are transient — restart pings
+        if(mapModule && (jqXHR.status === 504 || jqXHR.status === 0)){
+            clearUpdateTimeouts();
+            console.warn(' ↪ Transient %s — restarting update pings in 10s', jqXHR.status || 'network error');
+            Util.showNotify({title: 'Connection timeout', text: 'Server did not respond — retrying…', type: 'warning'}, false);
+            $(document).setProgramStatus('offline');
+            // restart both pings after a short back-off
+            updateTimeouts.mapUpdate = setTimeout(() => initMapUpdatePing(mapModule, false), 10000);
+            updateTimeouts.userUpdate = setTimeout(() => initMapUserUpdatePing(mapModule), 10000);
+            return;
+        }
+
         // clear both main update request trigger timer
         clearUpdateTimeouts();
 

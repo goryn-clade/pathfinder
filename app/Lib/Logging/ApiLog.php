@@ -14,7 +14,7 @@ class ApiLog extends AbstractLog {
     /**
      * List of possible handlers (tested)
      * -> final handler will be set dynamic for per instance
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [
         //'stream' => 'json'
@@ -43,6 +43,7 @@ class ApiLog extends AbstractLog {
      * -> otherwise logs would be bundled into the first log file handler
      * @return string
      */
+    #[\Override]
     public function getChannelName(): string{
         return $this->getChannelType() . '_' . $this->getAction();
     }

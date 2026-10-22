@@ -40,7 +40,7 @@ abstract class AbstractCron {
     /**
      * disables log file write entry for some cronJobs
      * -> either job runs too frequently, or no relevant data available for logging
-     * @var array
+     * @var array<string, mixed>
      */
     protected $logDisabled = [];
 
@@ -50,7 +50,7 @@ abstract class AbstractCron {
      * php.ini settings are ignored! http://php.net/manual/en/info.configuration.php#ini.max-execution-time
      * @param int $time
      */
-    protected function setMaxExecutionTime(int $time = self::DEFAULT_MAX_EXECUTION_TIME){
+    protected function setMaxExecutionTime(int $time = self::DEFAULT_MAX_EXECUTION_TIME): void {
         ini_set('max_execution_time', $time);
     }
 
@@ -71,7 +71,7 @@ abstract class AbstractCron {
      * @param int $timeThreshold
      * @return bool
      */
-    protected function isExecutionTimeLeft(float $timeTotalStart, float $timeCheck = null, int $timeThreshold = self::DEFAULT_EXECUTION_TIME_THRESHOLD) : bool {
+    protected function isExecutionTimeLeft(float $timeTotalStart, ?float $timeCheck = null, int $timeThreshold = self::DEFAULT_EXECUTION_TIME_THRESHOLD) : bool {
         $timeLeft = true;
         if($timeTotalMax = $this->getMaxExecutionTime()){
             $timeTotalMaxThreshold = $timeTotalStart + $timeTotalMax - $timeThreshold;
@@ -88,7 +88,7 @@ abstract class AbstractCron {
      * @param string $job
      * @param bool $logging
      */
-    protected function logStart(string $job, bool $logging = true){
+    protected function logStart(string $job, bool $logging = true): void {
         $this->setMaxExecutionTime();
 
         $cron = \Exodus4D\Pathfinder\Lib\Cron::instance();
@@ -115,7 +115,7 @@ abstract class AbstractCron {
      * @param int $offset
      * @param string $logText
      */
-    protected function logEnd(string $job, int $total = 0, int $count = 0, int $importCount = 0, int $offset = 0, string $logText = ''){
+    protected function logEnd(string $job, int $total = 0, int $count = 0, int $importCount = 0, int $offset = 0, string $logText = ''): void {
         $execEnd = microtime(true);
         $memPeak = memory_get_peak_usage();
         $state = [
@@ -153,7 +153,7 @@ abstract class AbstractCron {
      * get either CLI GET params OR
      * check for params from last run -> incremental import
      * @param string $job
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getParams(string $job) : array {
         $params = [];
@@ -192,10 +192,10 @@ abstract class AbstractCron {
      * @param string $job
      * @param int $memPeak
      * @param float $execEnd
-     * @param array $state
+     * @param array<string, mixed> $state
      * @param string $logText for custom text
      */
-    private function writeLog(string $job, int $memPeak = 0, float $execEnd = 0, array $state = [], string $logText = ''){
+    private function writeLog(string $job, int $memPeak = 0, float $execEnd = 0, array $state = [], string $logText = ''): void{
         $percent = number_format($state['percent'], 1) . '%';
         $duration = number_format(round($execEnd - $_SERVER['REQUEST_TIME_FLOAT'], 3), 3) . 's';
         $log = new \Log('cron_' . $job . '.log');
@@ -205,7 +205,7 @@ abstract class AbstractCron {
             Number::instance()->bytesToString($memPeak), $duration
         );
 
-        $text .= $logText ? $logText: '';
+        $text .= $logText ?: '';
         $log->write($text);
     }
 }

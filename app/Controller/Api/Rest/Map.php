@@ -20,18 +20,64 @@ class Map extends AbstractRestController {
     const ERROR_MAP_DELETE = 'Character %s does not have sufficient rights for map delete';
 
     /**
+     * error message missing character right (e.g. map_update)
+     */
+    const ERROR_MAP_RIGHT = 'Character %s does not have sufficient rights for %s';
+
+    /**
+     * request keys for map sharing (map_share right)
+     */
+    const SHARE_KEYS = ['mapCharacters', 'mapCorporations', 'mapAlliances'];
+
+    /**
+     * get map settings that are not part of the map data (webhook URLs)
+     * -> map settings dialog, map_update right only
+     * @param \Base $f3
+     * @param       $params
+     * @throws \Exception
+     */
+    public function get(\Base $f3,  array $params) : void {
+        $webhookData = [];
+
+        if($mapId = (int)($params['id'] ?? 0)){
+            $activeCharacter = $this->getCharacter();
+
+            /**
+             * @var Pathfinder\MapModel $map
+             */
+            $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
+            $map->getById($mapId);
+            if($map->hasAccess($activeCharacter)){
+                if(!$activeCharacter->hasMapRight((int)$map->get('typeId', true), 'map_update')){
+                    $this->errorRight($f3, 'map_update');
+                    return;
+                }
+                $webhookData = $map->getWebhookData();
+            }
+        }
+
+        $this->out($webhookData);
+    }
+
+    /**
      * @param \Base $f3
      * @param       $test
      * @throws \Exception
      */
-    public function put(\Base $f3, $test){
+    public function put(\Base $f3,  array $test) : void {
         $requestData = $this->getRequestData($f3);
+        $activeCharacter = $this->getCharacter();
+
+        if(!$activeCharacter->hasMapRight(self::getRequestTypeId($requestData), 'map_create')){
+            $this->errorRight($f3, 'map_create');
+            return;
+        }
 
         /**
-         * @var $map Pathfinder\MapModel
+         * @var Pathfinder\MapModel $map
          */
         $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
-        $mapData = $this->update($map, $requestData)->getData();
+        $mapData = $this->update($map, $requestData, true)->getData();
 
         $this->out($mapData);
     }
@@ -41,7 +87,7 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function patch(\Base $f3, $params){
+    public function patch(\Base $f3,  array $params) : void {
         $requestData = $this->getRequestData($f3);
         $mapData = [];
 
@@ -49,12 +95,42 @@ class Map extends AbstractRestController {
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
             if($map->hasAccess($activeCharacter)){
-                $mapData = $this->update($map, $requestData)->getData(true);
+                $typeId = (int)$map->get('typeId', true);
+                // shared map -> only the owner (creator, or creator's corp/alliance) may change sharing or type
+                $isOwner = $map->isOwnedBy($activeCharacter);
+                $canUpdate = $activeCharacter->hasMapRight($typeId, 'map_update');
+                $canShare = $isOwner && $activeCharacter->hasMapRight($typeId, 'map_share');
+
+                if(!$canUpdate && !$canShare){
+                    $this->errorRight($f3, 'map_update');
+                    return;
+                }
+
+                if(!$canUpdate){
+                    // share right only -> drop map settings
+                    $requestData = array_intersect_key($requestData, array_flip(self::SHARE_KEYS));
+                }
+
+                // type change removes the old corp/alliance access -> needs delete right
+                $newTypeId = self::getRequestTypeId($requestData);
+                if(
+                    $newTypeId && $newTypeId !== $typeId &&
+                    (
+                        !$isOwner ||
+                        !$activeCharacter->hasMapRight($typeId, 'map_delete') ||
+                        !$activeCharacter->hasMapRight($newTypeId, 'map_update')
+                    )
+                ){
+                    $this->errorRight($f3, 'map type change');
+                    return;
+                }
+
+                $mapData = $this->update($map, $requestData, $canShare)->getData(true);
             }
         }
 
@@ -66,30 +142,21 @@ class Map extends AbstractRestController {
      * @param       $params
      * @throws \Exception
      */
-    public function delete(\Base $f3, $params){
+    public function delete(\Base $f3,  array $params) : void {
         $deletedMapIds = [];
 
         if($mapId = (int)$params['id']){
             $activeCharacter = $this->getCharacter();
 
             /**
-             * @var $map Pathfinder\MapModel
+             * @var Pathfinder\MapModel $map
              */
             $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
             $map->getById($mapId);
 
             if($map->hasAccess($activeCharacter)){
                 // check if character has delete right for map type
-                $hasRight = true;
-                if($map->isCorporation()){
-                    if($corpRight = $activeCharacter->getCorporation()->getRights(['map_delete'])){
-                        if($corpRight[0]->get('roleId', true) !== $activeCharacter->get('roleId', true)){
-                            $hasRight = false;
-                        }
-                    }
-                }
-
-                if($hasRight){
+                if($activeCharacter->hasMapRight((int)$map->get('typeId', true), 'map_delete')){
                     $map->setActive(false);
                     $map->save($activeCharacter);
                     $deletedMapIds[] = $mapId;
@@ -107,16 +174,26 @@ class Map extends AbstractRestController {
 
     /**
      * @param Pathfinder\MapModel $map
-     * @param array               $mapData
+     * @param array<string, mixed>               $mapData
      * @return Pathfinder\MapModel
      * @throws \Exception
      */
-    private function update(Pathfinder\MapModel $map, array $mapData) : Pathfinder\MapModel {
+    private function update(Pathfinder\MapModel $map,  $mapData, bool $canShare) : Pathfinder\MapModel {
         $activeCharacter = $this->getCharacter();
 
+        $isNew = $map->dry();
         $map->setData($mapData);
         $typeChange = $map->changed('typeId');
         $map->save($activeCharacter);
+
+        // access ids for $setMapAccess(): new map or type change -> owner only,
+        // no share right or no share data sent -> null (access unchanged)
+        $getAccessIds = function(Pathfinder\AbstractPathfinderModel $primaryModel, string $key) use ($isNew, $typeChange, $canShare, $mapData) : ?array {
+            if($isNew || $typeChange){
+                return [$primaryModel->_id];
+            }
+            return $canShare ? ($mapData[$key] ?? null) : null;
+        };
 
         // save global map access. Depends on map "type" --------------------------------------------------------------
         /**
@@ -130,7 +207,7 @@ class Map extends AbstractRestController {
             $deleted = 0;
             if(is_array($modelIds)){
                 // remove primaryModel id (-> re-add later)
-                $modelIds = array_diff(array_map('intval', $modelIds), [$primaryModel->_id]);
+                $modelIds = array_diff(array_map(intval(...), $modelIds), [$primaryModel->_id]);
 
                 // avoid abuse -> respect share limits (-1 is because the primaryModel has also access)
                 $modelIds = array_slice($modelIds, 0, max($maxShared - 1, 0));
@@ -143,13 +220,13 @@ class Map extends AbstractRestController {
 
                 $compare = $map->compareAccess($modelIds);
 
-                foreach((array)$compare['old'] as $modelId) {
+                foreach((array)($compare['old'] ?? []) as $modelId) {
                     $deleted += $map->removeFromAccess($modelId);
                 }
 
                 $modelClass = (new \ReflectionClass($primaryModel))->getShortName();
                 $tempModel = Pathfinder\AbstractPathfinderModel::getNew($modelClass);
-                foreach((array)$compare['new'] as $modelId) {
+                foreach((array)($compare['new'] ?? []) as $modelId) {
                     $tempModel->getById($modelId);
                     if(
                         $tempModel->valid() &&
@@ -172,14 +249,14 @@ class Map extends AbstractRestController {
         if($map->isPrivate()){
             $accessChangeCount = $setMapAccess(
                 $activeCharacter,
-                $typeChange ? [$activeCharacter->_id] : $mapData['mapCharacters'],
+                $getAccessIds($activeCharacter, 'mapCharacters'),
                 (int)$mapDefaultConf['private']['max_shared']
             );
         }elseif($map->isCorporation()){
             if($corporation = $activeCharacter->getCorporation()){
                 $accessChangeCount = $setMapAccess(
                     $corporation,
-                    $typeChange ? [$corporation->_id] : $mapData['mapCorporations'],
+                    $getAccessIds($corporation, 'mapCorporations'),
                     (int)$mapDefaultConf['corporation']['max_shared']
                 );
             }
@@ -187,7 +264,7 @@ class Map extends AbstractRestController {
             if($alliance = $activeCharacter->getAlliance()){
                 $accessChangeCount = $setMapAccess(
                     $alliance,
-                    $typeChange ? [$alliance->_id] : $mapData['mapAlliances'],
+                    $getAccessIds($alliance, 'mapAlliances'),
                     (int)$mapDefaultConf['alliance']['max_shared']
                 );
             }
@@ -214,13 +291,11 @@ class Map extends AbstractRestController {
      * @param Pathfinder\MapModel $map
      * @throws \Exception
      */
-    protected function broadcastMapAccess(Pathfinder\MapModel $map){
+    protected function broadcastMapAccess(Pathfinder\MapModel $map): void {
         $mapAccess =  [
             'id' => $map->_id,
             'name' => $map->name,
-            'characterIds' => array_map(function($data){
-                return $data->id;
-            }, $map->getCharactersData())
+            'characterIds' => array_map(fn($data) => $data->id, $map->getCharactersData())
         ];
 
         $this->getF3()->webSocket()->write('mapAccess', $mapAccess);
@@ -233,7 +308,29 @@ class Map extends AbstractRestController {
      * broadcast map delete information to clients
      * @param int $mapId
      */
-    private function broadcastMapDeleted(int $mapId){
+    private function broadcastMapDeleted(int $mapId): void{
         $this->getF3()->webSocket()->write('mapDeleted', $mapId);
+    }
+
+    /**
+     * send 401 for a missing map right
+     * @param \Base  $f3
+     * @param string $right
+     */
+    protected function errorRight(\Base $f3, string $right) : void {
+        $f3->set('HALT', true);
+        $f3->error(401, sprintf(self::ERROR_MAP_RIGHT, $this->getCharacter()->name, $right));
+    }
+
+    /**
+     * get map type id from request data ('typeId' from form, or 'type' => ['id' => …])
+     * @param array<string, mixed> $requestData
+     * @return int
+     */
+    protected static function getRequestTypeId(array $requestData) : int {
+        if(isset($requestData['type']['id'])){
+            return (int)$requestData['type']['id'];
+        }
+        return is_array($requestData['typeId'] ?? null) ? 0 : (int)($requestData['typeId'] ?? 0);
     }
 }

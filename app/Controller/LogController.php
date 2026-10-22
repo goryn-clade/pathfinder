@@ -27,13 +27,13 @@ class LogController extends \Prefab  {
      * buffered activity log data for this singleton LogController() class
      * -> this buffered data can be stored somewhere (e.g. DB) before HTTP response
      * -> should be cleared afterwards!
-     * @var array
+     * @var array<string, mixed>
      */
     protected $activityLogBuffer                    = [];
 
     /**
      * get columns from ActivityLogModel that can be uses as counter
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function getActivityLogColumns(): array{
@@ -41,7 +41,7 @@ class LogController extends \Prefab  {
             $f3 = \Base::instance();
             if(!$f3->exists(self::CACHE_KEY_ACTIVITY_COLUMNS, $this->activityLogColumns)){
                 /**
-                 * @var $activityLogModel Pathfinder\ActivityLogModel
+                 * @var Pathfinder\ActivityLogModel $activityLogModel
                  */
                 $activityLogModel = Pathfinder\AbstractPathfinderModel::getNew('ActivityLogModel');
                 $this->activityLogColumns = $activityLogModel->getCountableColumnNames();
@@ -59,7 +59,7 @@ class LogController extends \Prefab  {
      * @param MapLog $log
      * @throws \Exception
      */
-    public function push(MapLog $log){
+    public function push(MapLog $log): void{
         $action = $log->getAction();
 
         // check $action to be valid (table column exists)
@@ -67,8 +67,8 @@ class LogController extends \Prefab  {
             if($mapId = $log->getChannelId()){
                 $logData = $log->getData();
                 if($characterId = (int)$logData['character']['id']){
-                    if($index = $this->getBufferedActivityIndex($characterId, $mapId)){
-                        $this->activityLogBuffer[$index][$action]++;
+                    if(!is_null($index = $this->getBufferedActivityIndex($characterId, $mapId))){
+                        $this->activityLogBuffer[$index][$action] = ($this->activityLogBuffer[$index][$action] ?? 0) + 1;
                     }else{
                         $this->activityLogBuffer[] = [
                             'characterId' => $characterId,
@@ -84,20 +84,17 @@ class LogController extends \Prefab  {
     /**
      * store all buffered activity log data to DB
      */
-    public function logActivities(){
+    public function logActivities(): void{
         if( !empty($this->activityLogBuffer) ){
             $db = \Base::instance()->DB->getDB('PF');
 
-            $quoteStr = function($str) use ($db) {
-                return $db->quotekey($str);
-            };
+            $quoteStr = (fn($str) => $db->quotekey($str));
 
-            $placeholderStr = function($str){
-                return ':' . $str;
-            };
+            $placeholderStr = (fn($str) => ':' . $str);
 
-            $updateRule = function($str){
-                return $str . " = " . $str . " + VALUES(" . $str . ")";
+            $updateRule = function($str) use ($db) {
+                $key = $db->quotekey($str);
+                return $key . " = " . $key . " + VALUES(" . $key . ")";
             };
 
             $year = (int)date('o');
@@ -140,10 +137,10 @@ class LogController extends \Prefab  {
      * get array key/index from "buffered activity log" array
      * @param int $characterId
      * @param int $mapId
-     * @return int
+     * @return int|null
      */
-    private function getBufferedActivityIndex(int $characterId, int $mapId): int {
-        $activityKey = 0;
+    private function getBufferedActivityIndex(int $characterId, int $mapId): ?int {
+        $activityKey = null;
         if($characterId > 0 && $mapId > 0 ){
             foreach($this->activityLogBuffer as $key => $activityData){
                 if(

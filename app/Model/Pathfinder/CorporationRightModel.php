@@ -18,7 +18,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
     protected $table = 'corporation_right';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -30,7 +30,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
         'corporationId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CorporationModel::class,
             'constraint' => [
                 [
                     'table' => 'corporation',
@@ -41,7 +41,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
         'rightId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\RightModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\RightModel::class,
             'constraint' => [
                 [
                     'table' => 'right',
@@ -52,7 +52,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
         'roleId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\RoleModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\RoleModel::class,
             'constraint' => [
                 [
                     'table' => 'role',
@@ -64,19 +64,12 @@ class CorporationRightModel extends AbstractPathfinderModel {
 
     /**
      * set data by associative array
-     * @param array $data
+     * @param array<string, mixed> $data
      */
-    public function setData($data){
-        unset($data['id']);
-        unset($data['created']);
-        unset($data['updated']);
-
-        foreach((array)$data as $key => $value){
-            if(!is_array($value)){
-                if($this->exists($key)){
-                    $this->$key = $value;
-                }
-            }
+    public function setData( $data): void {
+        // only the role is editable -> corporationId/rightId must not be moved
+        if(isset($data['roleId']) && !is_array($data['roleId'])){
+            $this->roleId = (int)$data['roleId'];
         }
     }
 
@@ -101,6 +94,7 @@ class CorporationRightModel extends AbstractPathfinderModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['corporationId', 'rightId'], true);

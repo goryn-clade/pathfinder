@@ -18,7 +18,7 @@ class MapTypeModel extends AbstractPathfinderModel {
     protected $table = 'map_type';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -50,7 +50,7 @@ class MapTypeModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

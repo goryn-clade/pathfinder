@@ -18,7 +18,7 @@ class RightModel extends AbstractPathfinderModel {
     protected $table = 'right';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -45,12 +45,12 @@ class RightModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'corporationRights' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel', 'rightId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel::class, 'rightId']
         ]
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [

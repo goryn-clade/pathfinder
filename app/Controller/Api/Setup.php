@@ -16,17 +16,14 @@ use Exodus4D\Pathfinder\Model;
 
 class Setup extends Controller\Controller {
 
-    /**
-     * only allow requests that passed nginx Basic Auth (same check as Controller\Setup)
-     * @param \Base $f3
-     * @param $params
-     * @return bool
-     */
-    function beforeroute(\Base $f3, $params) : bool {
-        if(($_SERVER['PF_SETUP_AUTH'] ?? '') !== '1'){
+    #[\Override]
+    public function beforeroute(\Base $f3, array $params): bool {
+        // same per-session token as the /setup page (Controller\Setup::getSetupToken()),
+        // so only a browser that passed nginx Basic Auth on /setup can call this API
+        $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
+        if(!Controller\Setup::isValidSetupToken($f3, $provided)){
             http_response_code(401);
-            header('Content-Type: application/json');
-            echo json_encode(['error' => [['type' => 401, 'message' => 'Setup requires authentication']]]);
+            echo json_encode(['error' => [['type' => 401, 'message' => 'Setup requires a valid token']]]);
             return false;
         }
         return parent::beforeroute($f3, $params);
@@ -36,7 +33,7 @@ class Setup extends Controller\Controller {
      * get HTML table <tr>´s for all cronjobs
      * @param \Base $f3
      */
-    public function cronTable(\Base $f3){
+    public function cronTable(\Base $f3): void{
         $return = (object) [];
         $return->error = [];
         $return->jobsData = Cron::instance()->getJobsConfig();
@@ -48,7 +45,7 @@ class Setup extends Controller\Controller {
      * toggle "isPaused" for a cronjob by its name
      * @param \Base $f3
      */
-    public function cronPause(\Base $f3){
+    public function cronPause(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];
@@ -75,7 +72,7 @@ class Setup extends Controller\Controller {
      * -> max execution time might be lower than CLI calls!
      * @param \Base $f3
      */
-    public function cronExecute(\Base $f3){
+    public function cronExecute(\Base $f3): void{
         $postData = (array)$f3->get('POST');
         $return = (object) [];
         $return->error = [];
@@ -97,19 +94,17 @@ class Setup extends Controller\Controller {
 
     /**
      * get HTML for cronJobs
-     * @param array $jobsData
+     * @param array<string, mixed> $jobsData
      * @return string
      */
-    protected function getCronHtml(array $jobsData) : string {
+    protected function getCronHtml( $jobsData) : string {
         $tplData = [
             'cronConfig' => [
                 'jobs' => $jobsData,
                 'settings' => $this->getF3()->constants(Cron::instance(), 'DEFAULT_')
             ],
             'tplCounter' => $this->counter(),
-            'tplConvertBytes' => function(){
-                return call_user_func_array([Number::instance(), 'bytesToString'], func_get_args());
-            }
+            'tplConvertBytes' => fn() => call_user_func_array([Number::instance(), 'bytesToString'], func_get_args())
         ];
         return \Template::instance()->render('templates/ui/cron_table_row.html', null, $tplData, 0);
     }
@@ -121,12 +116,12 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function buildIndex(\Base $f3){
+    public function buildIndex(\Base $f3): void{
         $postData = (array)$f3->get('POST');
-        $type = (string)$postData['type'];
-        $countAll = (int)$postData['countAll'];
-        $count = (int)$postData['count'];
-        $offset = (int)$postData['offset'];
+        $type = (string)($postData['type'] ?? '');
+        $countAll = (int)($postData['countAll'] ?? 0);
+        $count = (int)($postData['count'] ?? 0);
+        $offset = (int)($postData['offset'] ?? 0);
 
         $return = (object) [];
         $return->error = [];
@@ -155,9 +150,7 @@ class Setup extends Controller\Controller {
          * @param int $count
          * @return int
          */
-        $percent = function(int $countAll, int $count){
-            return $countAll ? floor((100/$countAll) * $count) : 0;
-        };
+        $percent = (fn(int $countAll, int $count) => $countAll ? floor((100/$countAll) * $count) : 0);
 
         $controller = new Controller\Ccp\Universe();
         switch($type){
@@ -173,7 +166,8 @@ class Setup extends Controller\Controller {
             case 'Wormholes':
                 $groupId = Config::ESI_GROUP_WORMHOLE_ID;
                 $length = 10;
-                $buildInfo = $controller->setupGroup($groupId, $offset, $length, true);
+                // always refresh from ESI: this button is how admins pull CCP's current wormhole data
+                $buildInfo = $controller->setupGroup($groupId, $offset, $length, true, true);
 
                 $return->offset = $buildInfo['offset'];
                 $return->countAll = $buildInfo['countAll'];
@@ -183,7 +177,8 @@ class Setup extends Controller\Controller {
             case 'Structures':
                 $categoryId = Config::ESI_CATEGORY_STRUCTURE_ID;
                 $length = 1;
-                $buildInfo = $controller->setupCategory($categoryId, $offset, $length);
+                // always refresh from ESI, like 'Wormholes'
+                $buildInfo = $controller->setupCategory($categoryId, $offset, $length, true);
                 $categoryUniverseModel =  Model\Universe\AbstractUniverseModel::getNew('CategoryModel');
                 $categoryUniverseModel->getById($categoryId, 0);
 
@@ -196,8 +191,11 @@ class Setup extends Controller\Controller {
                 break;
             case 'Ships':
                 $categoryId = Config::ESI_CATEGORY_SHIP_ID;
-                $length = 2;
-                $buildInfo = $controller->setupCategory($categoryId, $offset, $length);
+                // 1 group per request: with every type refreshed, the largest group (85 types) takes ~35 s
+                // of the 120 s /api/Setup/ timeout
+                $length = 1;
+                // always refresh from ESI, like 'Wormholes'
+                $buildInfo = $controller->setupCategory($categoryId, $offset, $length, true);
                 $categoryUniverseModel =  Model\Universe\AbstractUniverseModel::getNew('CategoryModel');
                 $categoryUniverseModel->getById($categoryId, 0);
 
@@ -242,9 +240,9 @@ class Setup extends Controller\Controller {
      * @param \Base $f3
      * @throws \Exception
      */
-    public function clearIndex(\Base $f3){
+    public function clearIndex(\Base $f3): void{
         $postData = (array)$f3->get('POST');
-        $type = (string)$postData['type'];
+        $type = (string)($postData['type'] ?? '');
 
         $return = (object) [];
         $return->error = [];
@@ -276,18 +274,21 @@ class Setup extends Controller\Controller {
      * import static 'system_static` table data from *.csv
      * @param int $offset
      * @param int $length
-     * @return array
+     * @return array<string, int>
      * @throws \Exception
      */
     protected function setupSystemStaticTable(int $offset = 0, int $length = 0) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
 
         /**
-         * @var $systemStaticModel Model\Universe\SystemStaticModel
+         * @var Model\Universe\SystemStaticModel $systemStaticModel
          */
         $systemStaticModel = Model\Universe\AbstractUniverseModel::getNew('SystemStaticModel');
         if(!empty($csvData = $systemStaticModel::getCSVData($systemStaticModel->getTable()))){
             $info['countAll'] = count($csvData);
+            if($offset === 0){
+                $this->deleteSystemStaticsNotInCSV($csvData);
+            }
             if($length){
                 $csvData = array_slice($csvData, $offset, $length);
             }
@@ -330,15 +331,43 @@ class Setup extends Controller\Controller {
     }
 
     /**
+     * delete 'system_static' rows that are not in the *.csv
+     * -> setupSystemStaticTable() only inserts/updates by id, so removed statics would stay forever
+     * -> also deletes rows whose id now holds another system/type pair: updating them by id could hit
+     *    the unique (systemId, typeId) key
+     * @param array<int, array<string, mixed>> $csvData all *.csv rows
+     */
+    protected function deleteSystemStaticsNotInCSV(array $csvData) : void {
+        if(!($universeDB = $this->getDB('UNIVERSE'))){
+            return;
+        }
+        $csvPairs = [];
+        foreach($csvData as $data){
+            $csvPairs[(int)$data['id']] = (int)$data['systemId'] . ':' . (int)$data['typeId'];
+        }
+        $deleteIds = [];
+        foreach($universeDB->exec('SELECT `id`, `systemId`, `typeId` FROM `system_static`') as $row){
+            if(($csvPairs[(int)$row['id']] ?? null) !== (int)$row['systemId'] . ':' . (int)$row['typeId']){
+                $deleteIds[] = (int)$row['id'];
+            }
+        }
+        foreach(array_chunk($deleteIds, 500) as $ids){
+            $universeDB->exec('DELETE FROM `system_static` WHERE `id` IN (' . implode(',', $ids) . ')');
+        }
+    }
+
+    /**
      * This function is just for setting up the cache table 'system_neighbour' which is used
      * for system jump calculation. Call this function manually when CCP adds Systems/Stargates
      * @param int $offset
      * @param int $length
-     * @return array
+     * @return array<string, mixed>
      */
     protected function setupSystemJumpTable(int $offset = 0, int $length = 0) : array {
         $info = ['countAll' => 0, 'countChunk' => 0, 'count' => 0, 'offset' => $offset];
-        $universeDB = $this->getDB('UNIVERSE');
+        if(!($universeDB = $this->getDB('UNIVERSE'))){
+            return $info;
+        }
 
         $query = "SELECT SQL_CALC_FOUND_ROWS
                       `system`.`id` `systemId`,
@@ -401,13 +430,9 @@ class Setup extends Controller\Controller {
         }
 
         if($info['countChunk'] = count($rows)){
-            $placeholderStr = function(string $str) : string {
-                return ':' . $str;
-            };
+            $placeholderStr = (fn(string $str): string => ':' . $str);
 
-            $updateRule = function(string $str) : string {
-                return $str . " = VALUES(" . $str . ")";
-            };
+            $updateRule = (fn(string $str): string => $str . " = VALUES(" . $str . ")");
 
             $universeDB->begin();
             foreach($rows as $row){
@@ -420,7 +445,7 @@ class Setup extends Controller\Controller {
                 }
 
                 $columns = array_keys($row);
-                $columnsQuoted = array_map($universeDB->quotekey, $columns);
+                $columnsQuoted = array_map([$universeDB, 'quotekey'], $columns);
                 $placeholder = array_map($placeholderStr, $columns);
                 $args = array_combine($placeholder, $row);
 

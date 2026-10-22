@@ -42,6 +42,8 @@ define([
      * @param context
      * @param callback
      */
+    let getSetupToken = () => $('section[data-setup-token]').first().attr('data-setup-token') || '';
+
     let sendRequest = (url, requestData, context, callback) => {
         if(requestData.count === 0){
             // first iteration
@@ -52,7 +54,7 @@ define([
             url: url,
             type: 'POST',
             dataType: 'json',
-            data: requestData,
+            data: Object.assign({token: getSetupToken()}, requestData),
             context: context
         }).done(function(data){
             callback(this, data);
@@ -482,6 +484,7 @@ define([
 
         // try to connect to WebSocket server
         let socket = new WebSocket(webSocketURI);
+        let connected = false;
 
         socket.onopen = (e) => {
             updateWebSocketPanel({
@@ -503,6 +506,7 @@ define([
 
             if(Util.getObjVal(response, 'load.isValid') === true){
                 // SUCCESS
+                connected = true;
                 updateWebSocketPanel({
                     status: {
                         type: 'success',
@@ -553,17 +557,19 @@ define([
         };
 
         socket.onclose = (closeEvent) => {
-            updateWebSocketPanel({
-                status: {
-                    type: 'danger',
-                    label:  'CONNECTION FAILED',
-                    class: 'txt-color-danger'
-                }
-            });
+            if(!connected){
+                updateWebSocketPanel({
+                    status: {
+                        type: 'danger',
+                        label:  'CONNECTION FAILED',
+                        class: 'txt-color-danger'
+                    }
+                });
 
-            webSocketPanel.hideLoadingAnimation();
+                webSocketPanel.hideLoadingAnimation();
 
-            $('#' + config.webSocketStatsId).remove();
+                $('#' + config.webSocketStatsId).remove();
+            }
         };
     };
 

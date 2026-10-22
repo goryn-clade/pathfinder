@@ -184,8 +184,9 @@ define([
                 let metaData = state.metaData;
                 if(metaData.type){
                     let type = metaData.type;
-                    if(type.includes('wh_eol')){
-                        styleClass.push('pf-wh-eol');
+                    if(type.includes('wh_eol1') || type.includes('wh_eol2') || type.includes('wh_eol3')){
+                        let eolPhase = type.includes('wh_eol3') ? 3 : type.includes('wh_eol2') ? 2 : 1;
+                        styleClass.push('pf-wh-eol' + eolPhase);
                     }
                     if(type.includes('wh_reduced')){
                         styleClass.push('pf-wh-reduced');
@@ -856,15 +857,30 @@ define([
 
         return this.each(function(){
             let selectElement = $(this);
+            let suppressNextOpen = true;
+
+            selectElement.on('select2:opening.suppressInit', e => {
+                if(suppressNextOpen){
+                    e.preventDefault();
+                }
+            });
+
+            // prevent accidental selection on the mouseup that follows a mousedown-to-open
+            selectElement.on('select2:open.guardFirstSelect', () => {
+                selectElement.off('select2:open.guardFirstSelect');
+                selectElement.one('select2:selecting', e => e.preventDefault());
+            });
+
             selectElement.select2(options);
 
-            // initial open dropDown
-            if( !parseInt(selectElement.val()) ){
-                // setTimeout() required because of dropDown positioning
-                setTimeout(() => {
+            setTimeout(() => {
+                suppressNextOpen = false;
+                selectElement.off('select2:opening.suppressInit');
+                // initial open dropDown only when no value set
+                if( !parseInt(selectElement.val()) ){
                     selectElement.select2('open');
-                }, 0);
-            }
+                }
+            }, 0);
         });
     };
 

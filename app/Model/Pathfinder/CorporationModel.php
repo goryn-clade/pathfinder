@@ -97,7 +97,7 @@ class CorporationModel extends AbstractPathfinderModel {
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -132,19 +132,19 @@ class CorporationModel extends AbstractPathfinderModel {
             'default' => 0
         ],
         'corporationCharacters' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class, 'corporationId']
         ],
         'mapCorporations' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationMapModel::class, 'corporationId']
         ],
         'corporationRights' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationRightModel::class, 'corporationId']
         ],
         'corporationStructures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\CorporationStructureModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\CorporationStructureModel::class, 'corporationId']
         ],
         'structures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\StructureModel', 'corporationId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\StructureModel::class, 'corporationId']
         ]
     ];
 
@@ -176,7 +176,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * Event "Hook" function
      * return false will stop any further action
      * @param self $self
-     * @param $pkeys
+     * @param array<string, mixed> $pkeys
      * @return bool
      */
     public function beforeUpdateEvent($self, $pkeys) : bool {
@@ -190,10 +190,10 @@ class CorporationModel extends AbstractPathfinderModel {
     /**
      * get all maps for this corporation
      * @param int|null $mapId
-     * @param array $options
-     * @return array
+     * @param  $options
+     * @return array<string, mixed>
      */
-    public function getMaps(?int $mapId = null, $options = []) : array {
+    public function getMaps(?int $mapId = null,  array $options = []) : array {
         $maps = [];
         $this->filterRel();
 
@@ -208,8 +208,8 @@ class CorporationModel extends AbstractPathfinderModel {
         if($this->mapCorporations){
             $mapCount = 0;
             foreach($this->mapCorporations as $mapCorporation){
-                $validActive = !$options['addInactive'] ? $mapCorporation->mapId->isActive() : true;
-                $validMapCount = !$options['ignoreMapCount'] ? $mapCount < Config::getMapsDefaultConfig('corporation')['max_count'] : true;
+                $validActive = !($options['addInactive'] ?? false) ? $mapCorporation->mapId->isActive() : true;
+                $validMapCount = !($options['ignoreMapCount'] ?? false) ? $mapCount < Config::getMapsDefaultConfig('corporation')['max_count'] : true;
 
                 if($validActive && $validMapCount){
                     $maps[] = $mapCorporation->mapId;
@@ -223,11 +223,11 @@ class CorporationModel extends AbstractPathfinderModel {
 
     /**
      * get all characters in this corporation
-     * @param array $characterIds
-     * @param array $options
+     * @param  $characterIds
+     * @param  $options
      * @return CharacterModel[]
      */
-    public function getCharacters($characterIds = [], $options = []) : array {
+    public function getCharacters( array $characterIds = [],  array $options = []) : array {
         $characters = [];
         $filter = ['active = ?', 1];
 
@@ -238,7 +238,7 @@ class CorporationModel extends AbstractPathfinderModel {
 
         $this->filter('corporationCharacters', $filter);
 
-        if($options['hasLog']){
+        if($options['hasLog'] ?? false){
             // just characters with active log data
             $this->has('corporationCharacters.characterLog', ['active = ?', 1]);
         }
@@ -255,7 +255,7 @@ class CorporationModel extends AbstractPathfinderModel {
     /**
      * get all structure data for this corporation
      * @param int $systemId
-     * @return array
+     * @return array<string, mixed>
      */
     public function getStructuresData(int $systemId) : array {
         $structuresData = [];
@@ -286,7 +286,7 @@ class CorporationModel extends AbstractPathfinderModel {
      * get roles for each character in this corp
      * -> CCP API call
      * @param string $accessToken
-     * @return array
+     * @return array<string, mixed>
      */
     public function getCharactersRoles($accessToken){
         $characterRolesData = [];
@@ -305,27 +305,27 @@ class CorporationModel extends AbstractPathfinderModel {
 
     /**
      * get all corporation rights
-     * @param array $names
-     * @param array $options
+     * @param  $names
+     * @param  $options
      * @return CorporationRightModel[]
      * @throws \Exception
      */
-    public function getRights($names = self::RIGHTS, $options = []) : array {
+    public function getRights( array $names = self::RIGHTS,  array $options = []) : array {
         $corporationRights = [];
         // get available rights
         $right = self::getNew('RightModel');
         if($rights = $right->find(['active = ? AND name IN (?)', 1, $names])){
             // get already stored rights
-            if( !$options['addInactive'] ){
+            if( !($options['addInactive'] ?? false) ){
                 $this->filter('corporationRights', ['active = ?', 1]);
             }
 
-            foreach($rights as $i => $tempRight){
+            foreach($rights as $tempRight){
                 $corporationRight = false;
                 if($this->corporationRights){
                     foreach($this->corporationRights as $tempCorporationRight){
                         /**
-                         * @var $tempCorporationRight CorporationRightModel
+                         * @var CorporationRightModel $tempCorporationRight
                          */
                         if($tempCorporationRight->get('rightId', true) === $tempRight->_id){
                             $corporationRight = $tempCorporationRight;
@@ -376,10 +376,10 @@ class CorporationModel extends AbstractPathfinderModel {
      * add new structure for this corporation
      * @param StructureModel $structure
      */
-    public function saveStructure(StructureModel $structure){
+    public function saveStructure(StructureModel $structure): void {
         if( !$structure->dry() ){
             $corporationStructure = $this->rel('corporationStructures');
-            
+
             // reset in case of potential "contiue" from parent loop
             $corporationStructure->reset();
 
@@ -398,16 +398,16 @@ class CorporationModel extends AbstractPathfinderModel {
 
     /**
      * get all corporations
-     * @param array $options
+     * @param  $options
      * @return \DB\CortexCollection
      */
-    public static function getAll($options = []){
+    public static function getAll( array $options = []){
         $query = [
             'active = :active',
             ':active' => 1
         ];
 
-        if( !$options['addNPC'] ){
+        if( !($options['addNPC'] ?? false) ){
             $query[0] .= ' AND isNPC = :isNPC';
             $query[':isNPC'] = 1;
         }

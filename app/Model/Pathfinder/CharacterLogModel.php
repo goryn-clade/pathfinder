@@ -24,7 +24,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
     protected $table = 'character_log';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -37,7 +37,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
             'type' => Schema::DT_INT,
             'index' => true,
             'unique' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel::class,
             'constraint' => [
                 [
                     'table' => 'character',
@@ -120,9 +120,9 @@ class CharacterLogModel extends AbstractPathfinderModel {
 
     /**
      * set log data by associative array
-     * @param array $logData
+     * @param array<string, mixed> $logData
      */
-    public function setData($logData){
+    public function setData( $logData): void{
 
         if( isset($logData['system']) ){
             $this->systemId = (int)$logData['system']['id'];
@@ -205,8 +205,9 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * return false will stop any further action
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
-    public function afterInsertEvent($self, $pkeys){
+    public function afterInsertEvent($self, $pkeys): void{
         $self->clearCacheData();
     }
 
@@ -215,8 +216,9 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * return false will stop any further action
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
-    public function afterUpdateEvent($self, $pkeys){
+    public function afterUpdateEvent($self, $pkeys): void{
         $self->updateLogsHistory('update');
 
         // check if any "relevant" column has changed
@@ -230,8 +232,9 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * can be overwritten
      * @param self $self
      * @param $pkeys
+     * @param array<string, mixed> $pkeys
      */
-    public function afterEraseEvent($self, $pkeys){
+    public function afterEraseEvent($self, $pkeys): void{
         $self->deleteLogsHistory();
         $self->clearCacheData();
     }
@@ -239,7 +242,8 @@ class CharacterLogModel extends AbstractPathfinderModel {
     /**
      * see parent
      */
-    public function clearCacheData(){
+    #[\Override]
+    public function clearCacheData(): void{
         // clear character "LOG" cache
         // -> character data without "LOG" has not changed!
         if(is_object($this->characterId)){
@@ -256,7 +260,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
      * -> checks $this->fieldChanges
      * @param string $action
      */
-    protected function updateLogsHistory(string $action){
+    protected function updateLogsHistory(string $action): void {
         if(
             $this->valid() &&
             is_object($this->characterId)
@@ -268,7 +272,7 @@ class CharacterLogModel extends AbstractPathfinderModel {
     /**
      * delete 'character log' history data
      */
-    protected function deleteLogsHistory(){
+    protected function deleteLogsHistory(): void {
         if(is_object($this->characterId)){
             $this->characterId->clearCacheDataWithPrefix(CharacterModel::DATA_CACHE_KEY_LOG_HISTORY);
         }

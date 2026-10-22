@@ -221,7 +221,10 @@ define([
                         title: 'name',
                         width: 60,
                         className: [module._config.tableCellEllipsisClass, 'all'].join(' '),
-                        data: 'name'
+                        data: 'name',
+                        render: {
+                            display: data => Util.htmlEncode(data)
+                        }
                     },{
                         targets: 4,
                         name: 'ownerImage',
@@ -255,7 +258,10 @@ define([
                         name: 'note',
                         title: 'note',
                         className: [module._config.tableCellEllipsisClass, 'all', Util.config.popoverTriggerClass, module._config.tableCellPopoverClass].join(' '),
-                        data: 'description'
+                        data: 'description',
+                        render: {
+                            display: data => Util.htmlEncode(data)
+                        }
                     },{
                         targets: 7,
                         name: 'updated',
@@ -1107,8 +1113,8 @@ define([
                     currentLocationData.id !== this._systemData.systemId
                 ){
                     let systemNameStr = (this._systemData.name === this._systemData.alias) ?
-                        '"' + this._systemData.name + '"' :
-                        '"' + this._systemData.alias + '" (' + this._systemData.name + ')';
+                        '"' + Util.htmlEncode(this._systemData.name) + '"' :
+                        '"' + Util.htmlEncode(this._systemData.alias) + '" (' + Util.htmlEncode(this._systemData.name) + ')';
                     systemNameStr = '<span class="txt-color txt-color-warning">' + systemNameStr + '</span>';
 
                     let msg = 'Update structures in ' + systemNameStr + ' ? This is not your current location, "' + currentLocationData.name + '" !';
@@ -1247,7 +1253,7 @@ define([
                     // simple <table> for layout (CSS)
                     let cellData = tableApi.cell(this).data();
                     if(cellData && cellData.length){
-                        let content = '<table><tr><td>' + cellData.replace(/\r?\n/g, '<br />') + '</td></tr></table>';
+                        let content = '<table><tr><td>' + Util.htmlEncode(cellData).replace(/\r?\n/g, '<br />') + '</td></tr></table>';
 
                         let options = {
                             placement: 'top',

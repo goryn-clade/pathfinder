@@ -16,7 +16,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * List of possible handlers (tested)
      * -> final handler will be set dynamic for per instance
-     * @var array
+     * @var array<string, mixed>
      */
     protected $handlerConfig        = [
         //'stream'   => 'json',
@@ -37,7 +37,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * MapLog constructor.
      * @param string $action
-     * @param array $objectData
+     * @param array<string, mixed> $objectData
      * @throws \Exception
      */
     public function __construct(string $action, array $objectData){
@@ -54,11 +54,12 @@ class MapLog extends AbstractCharacterLog {
     public function getTagFromAction(){
         $tag = parent::getTag();
         $actionParts = $this->getActionParts();
-        switch($actionParts[1]){
-            case 'create': $tag = 'success'; break;
-            case 'update': $tag = 'warning'; break;
-            case 'delete': $tag = 'danger'; break;
-        }
+        $tag = match ($actionParts[1]) {
+            'create' => 'success',
+            'update' => 'warning',
+            'delete' => 'danger',
+            default => $tag,
+        };
 
         return $tag;
     }
@@ -66,6 +67,7 @@ class MapLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getChannelName() : string {
         return $this->getChannelType() . '_' . $this->getChannelId();
     }
@@ -73,13 +75,15 @@ class MapLog extends AbstractCharacterLog {
     /**
      * @return string
      */
+    #[\Override]
     public function getMessage() : string {
         return $this->getActionParts()[0] . " '{objName}'";
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
+    #[\Override]
     public function getData() : array {
         $data = parent::getData();
 
@@ -96,13 +100,13 @@ class MapLog extends AbstractCharacterLog {
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return string
      */
     protected function formatData(array $data) : string {
         $actionParts = $this->getActionParts();
         $objectString = !empty($data['object']) ? "'" .  $data['object']['objName'] . "'" . ' #' . $data['object']['objId'] : '';
-        $string = ucfirst($actionParts[1]) . 'd ' . $actionParts[0] . " " . $objectString;
+        $string = ucfirst((string) $actionParts[1]) . 'd ' . $actionParts[0] . " " . $objectString;
 
         // format changed columns (recursive) ---------------------------------------------
         switch($actionParts[1]){
@@ -146,20 +150,21 @@ class MapLog extends AbstractCharacterLog {
 
     /**
      * split $action "CamelCase" wise
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getActionParts() : array {
-        return array_map('strtolower', preg_split('/(?=[A-Z])/', $this->getAction()));
+        return array_map(strtolower(...), preg_split('/(?=[A-Z])/', $this->getAction()));
     }
 
     /**
      * @param bool $logActivity
      */
-    public function logActivity(bool $logActivity){
+    public function logActivity(bool $logActivity): void{
         $this->logActivity = $logActivity;
     }
 
-    public function buffer(){
+    #[\Override]
+    public function buffer(): void{
         parent::buffer();
 
         if($this->logActivity){

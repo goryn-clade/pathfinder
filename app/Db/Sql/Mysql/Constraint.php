@@ -27,9 +27,9 @@ class Constraint
     /**
      * Constraint constructor.
      * @param SQL\TableBuilder $table
-     * @param array $keys
+     * @param array<string, mixed> $keys
      * @param string $referencedTable
-     * @param array $referencedCols
+     * @param array<string, mixed> $referencedCols
      */
     public function __construct(SQL\TableBuilder $table, $keys = [], $referencedTable = '', $referencedCols = ['id'])
     {
@@ -42,7 +42,7 @@ class Constraint
     /**
      * @param mixed $keys
      */
-    public function setKeys($keys)
+    public function setKeys($keys): void
     {
         $this->keys = (array)$keys;
     }
@@ -50,7 +50,7 @@ class Constraint
     /**
      * @param mixed $referencedTable
      */
-    public function setReferencedTable($referencedTable)
+    public function setReferencedTable($referencedTable): void
     {
         $this->referencedTable = $referencedTable;
     }
@@ -58,7 +58,7 @@ class Constraint
     /**
      * @param mixed $referencedCols
      */
-    public function setReferencedCols($referencedCols)
+    public function setReferencedCols($referencedCols): void
     {
         $this->referencedCols = (array)$referencedCols;
     }
@@ -66,7 +66,7 @@ class Constraint
     /**
      * @param string $onDelete
      */
-    public function setOnDelete($onDelete)
+    public function setOnDelete($onDelete): void
     {
         if (in_array($onDelete, self::ACTIONS_DELETE)) {
             $this->onDelete = $onDelete;
@@ -78,7 +78,7 @@ class Constraint
     /**
      * @param string $onUpdate
      */
-    public function setOnUpdate($onUpdate)
+    public function setOnUpdate($onUpdate): void
     {
         if (in_array($onUpdate, self::ACTIONS_UPDATE)) {
             $this->onUpdate = $onUpdate;
@@ -88,7 +88,7 @@ class Constraint
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getKeys()
     {
@@ -104,7 +104,7 @@ class Constraint
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getReferencedCols()
     {

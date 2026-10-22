@@ -17,7 +17,7 @@ use Exodus4D\ESI\Client\GitHub\GitHub as Client;
  * @package lib\api
  *
  * @method ApiInterface send(string $requestHandler, ...$handlerParams)
- * @method ApiInterface sendBatch(array $configs)
+ * @method ApiInterface sendBatch(array<string, mixed> $configs)
  */
 class GitHubClient extends AbstractClient {
 

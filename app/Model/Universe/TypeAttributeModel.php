@@ -18,13 +18,13 @@ class TypeAttributeModel extends AbstractUniverseModel {
     protected $table = 'type_attribute';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'typeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\TypeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\TypeModel::class,
             'constraint' => [
                 [
                     'table' => 'type',
@@ -36,7 +36,7 @@ class TypeAttributeModel extends AbstractUniverseModel {
         'attributeId' => [
             'type' => Schema::DT_INT,
             'index' => true,
-            'belongs-to-one' => 'Exodus4D\Pathfinder\Model\Universe\DogmaAttributeModel',
+            'belongs-to-one' => \Exodus4D\Pathfinder\Model\Universe\DogmaAttributeModel::class,
             'constraint' => [
                 [
                     'table' => 'dogma_attribute',
@@ -71,9 +71,9 @@ class TypeAttributeModel extends AbstractUniverseModel {
     /**
      * @param int $id
      * @param string $accessToken
-     * @param array $additionalOptions
+     * @param array<string, mixed> $additionalOptions
      */
-    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []){}
+    protected function loadData(int $id, string $accessToken = '', array $additionalOptions = []): void {}
 
     /**
      * overwrites parent
@@ -83,6 +83,7 @@ class TypeAttributeModel extends AbstractUniverseModel {
      * @return bool
      * @throws \Exception
      */
+    #[\Override]
     public static function setup($db = null, $table = null, $fields = null){
         if($status = parent::setup($db, $table, $fields)){
             $status = parent::setMultiColumnIndex(['typeId', 'attributeId'], true);

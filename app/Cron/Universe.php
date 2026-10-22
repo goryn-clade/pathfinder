@@ -48,7 +48,7 @@ class Universe extends AbstractCron {
      */
     private function formatMemoryValue(int $size){
         $unit = ['B','KB','MB','GB','TB','PB'];
-        return  str_pad(number_format(@round($size/pow(1024,($i=floor(log($size,1024)))),2), 2, '.', '') . '' . $unit[$i], 9, ' ', STR_PAD_LEFT);
+        return  str_pad(number_format(@round($size/1024 ** $i=floor(log($size,1024)),2), 2, '.', '') . '' . $unit[$i], 9, ' ', STR_PAD_LEFT);
     }
 
     /**
@@ -58,9 +58,7 @@ class Universe extends AbstractCron {
      */
     private function formatSeconds(float $time){
         $time = round($time, 5);
-        $formatSeconds = function($seconds){
-            return str_pad(number_format(round($seconds, 5), 5), 8, ' ', STR_PAD_LEFT);
-        };
+        $formatSeconds = (fn($seconds) => str_pad(number_format(round($seconds, 5), 5), 8, ' ', STR_PAD_LEFT));
 
         $formatted =  $time < 60 ? $formatSeconds($time) . 's' : floor($time / 60) . 'm ' . $formatSeconds(fmod($time, 60)) . 's';
         return str_pad($formatted, 14, ' ', STR_PAD_LEFT);
@@ -69,7 +67,7 @@ class Universe extends AbstractCron {
     /**
      * flush output
      */
-    private function echoFlush(){
+    private function echoFlush(): void{
         flush();
         ob_flush();
     }
@@ -80,7 +78,7 @@ class Universe extends AbstractCron {
      * @param int $paramOffset
      * @param int $paramLength
      */
-    private function echoParams(string $type, int $paramOffset, int $paramLength){
+    private function echoParams(string $type, int $paramOffset, int $paramLength): void{
         echo 'params ───────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo 'type               : ' . $type . PHP_EOL;
         echo 'offset             : ' . $paramOffset . PHP_EOL;
@@ -91,7 +89,7 @@ class Universe extends AbstractCron {
     /**
      * echo configuration
      */
-    private function echoConfig(){
+    private function echoConfig(): void{
         echo 'config ───────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo 'max_execution_time : ' . ini_get('max_execution_time') . PHP_EOL;
         echo 'memory_limit       : ' . ini_get('memory_limit') . PHP_EOL;
@@ -103,9 +101,9 @@ class Universe extends AbstractCron {
      * @param int $total
      * @param int $offset
      * @param int $importCount
-     * @param array $ids
+     * @param array<string, mixed> $ids
      */
-    private function echoInfo(int $total, int $offset, int $importCount, array $ids){
+    private function echoInfo(int $total, int $offset, int $importCount, array $ids): void{
         echo 'info ─────────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo 'all data           : ' . $total . PHP_EOL;
         echo 'import offset      : ' . $offset . PHP_EOL;
@@ -117,7 +115,7 @@ class Universe extends AbstractCron {
     /**
      * echo start
      */
-    private function echoStart(){
+    private function echoStart(): void{
         echo 'start ────────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         $this->echoFlush();
     }
@@ -128,7 +126,7 @@ class Universe extends AbstractCron {
      * @param int $importCount
      * @param int $id
      */
-    private function echoLoading(int $count, int $importCount, int $id){
+    private function echoLoading(int $count, int $importCount, int $id): void{
         echo '[' . date('H:i:s') . '] loading... ' . $this->formatCounterValue($count) . '/' . $importCount . '  id: ' . $this->formatIdValue($id) . PHP_EOL;
         $this->echoFlush();
     }
@@ -140,7 +138,7 @@ class Universe extends AbstractCron {
      * @param float $timeLoopStart
      * @param float $timeTotalStart
      */
-    private function echoLoaded(int $importCount, int $id, float $timeLoopStart, float $timeTotalStart){
+    private function echoLoaded(int $importCount, int $id, float $timeLoopStart, float $timeTotalStart): void{
         $time = microtime(true);
         echo '[' . date('H:i:s') . '] loaded          ' . str_pad('', strlen($importCount), ' ') . '  id: ' . $this->formatIdValue($id)  .
             '  memory: ' . $this->formatMemoryValue(memory_get_usage()) .
@@ -155,7 +153,7 @@ class Universe extends AbstractCron {
      * @param int $importCount
      * @param float $timeTotalStart
      */
-    private function echoFinish(int $count, int $importCount, float $timeTotalStart){
+    private function echoFinish(int $count, int $importCount, float $timeTotalStart): void{
         echo 'finished ─────────────────────────────────────────────────────────────────────────────────────────────────────' . PHP_EOL;
         echo '[' . date('H:i:s') . ']            ' . $this->formatCounterValue($count) . '/' . $importCount .
             '                    peak: ' . $this->formatMemoryValue(memory_get_peak_usage ()) .
@@ -169,11 +167,11 @@ class Universe extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function setup(\Base $f3){
+    function setup(\Base $f3): void{
         $params = (array)$f3->get('GET');
-        $type = (string)$params['type'];
-        $paramOffset = (int)$params['offset'];
-        $paramLength = (int)$params['length'];
+        $type = (string)($params['type'] ?? '');
+        $paramOffset = (int)($params['offset'] ?? 0);
+        $paramLength = (int)($params['length'] ?? 0);
         $timeTotalStart = microtime(true);
         $msg = '';
 
@@ -181,14 +179,14 @@ class Universe extends AbstractCron {
         $importCount = 0;
         $count = 0;
         $modelClass = '';
-        $setupModel = function(Model\Universe\AbstractUniverseModel &$model, int $id){};
+        $setupModel = function(Model\Universe\AbstractUniverseModel &$model, int $id): void{};
 
         switch($type){
             case 'system':
                 // load systems + dependencies (planets, star, types,...)
                 $ids = $f3->ccpClient()->send('getUniverseSystems');
                 $modelClass = 'SystemModel';
-                $setupModel = function(Model\Universe\SystemModel &$model, int $id){
+                $setupModel = function(Model\Universe\SystemModel &$model, int $id): void{
                     $model->loadById($id);
                     $model->loadPlanetsData();
                 };
@@ -197,7 +195,7 @@ class Universe extends AbstractCron {
                 // load all stargates. Systems must be present first!
                 $ids = $f3->ccpClient()->send('getUniverseSystems');
                 $modelClass = 'SystemModel';
-                $setupModel = function(Model\Universe\SystemModel &$model, int $id){
+                $setupModel = function(Model\Universe\SystemModel &$model, int $id): void{
                     $model->loadById($id);
                     $model->loadStargatesData();
                 };
@@ -205,7 +203,7 @@ class Universe extends AbstractCron {
             case 'station':
                 $ids = $f3->ccpClient()->send('getUniverseSystems');
                 $modelClass = 'SystemModel';
-                $setupModel = function(Model\Universe\SystemModel &$model, int $id){
+                $setupModel = function(Model\Universe\SystemModel &$model, int $id): void{
                     if($model->getById($id)){
                         $model->loadStationsData();
                     }else{
@@ -219,7 +217,7 @@ class Universe extends AbstractCron {
                 $sovData = $f3->ccpClient()->send('getSovereigntyMap');
                 $ids = !empty($sovData = $sovData['map']) ? array_keys($sovData): [];
                 $modelClass = 'SystemModel';
-                $setupModel = function(Model\Universe\SystemModel &$model, int $id) use ($sovData) {
+                $setupModel = function(Model\Universe\SystemModel &$model, int $id) use ($sovData): void {
                     if($model->getById($id)){
                         $model->updateSovereigntyData($sovData[$id]);
                     }else{
@@ -232,7 +230,7 @@ class Universe extends AbstractCron {
                 $fwSystems = $f3->ccpClient()->send('getFactionWarSystems');
                 $ids = !empty($fwSystems = $fwSystems['systems']) ? array_keys($fwSystems): [];
                 $modelClass = 'SystemModel';
-                $setupModel = function(Model\Universe\SystemModel &$model, int $id) use ($fwSystems) {
+                $setupModel = function(Model\Universe\SystemModel &$model, int $id) use ($fwSystems): void {
                     if($model->getById($id)){
                         $model->updateFactionWarData($fwSystems[$id]);
                     }else{
@@ -245,7 +243,7 @@ class Universe extends AbstractCron {
                 // setup system index, Systems must be present first!
                 $ids = $f3->ccpClient()->send('getUniverseSystems');
                 $modelClass = 'SystemModel';
-                $setupModel = function(Model\Universe\SystemModel &$model, int $id){
+                $setupModel = function(Model\Universe\SystemModel &$model, int $id): void{
                     $model->getById($id); // no loadById() here! would take "forever" when system not exists and must be build up first...
                     $model->buildIndex();
                 };
@@ -270,7 +268,7 @@ class Universe extends AbstractCron {
             $this->echoStart();
 
             /**
-             * @var $model Model\Universe\SystemModel
+             * @var Model\Universe\SystemModel $model
              */
             $model = Model\Universe\AbstractUniverseModel::getNew($modelClass);
             foreach($ids as $id){
@@ -298,7 +296,7 @@ class Universe extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function updateSovereigntyData(\Base $f3){
+    function updateSovereigntyData(\Base $f3): void{
         $this->logStart(__FUNCTION__);
         $params = $this->getParams(__FUNCTION__);
 
@@ -306,7 +304,7 @@ class Universe extends AbstractCron {
         $msg = '';
 
         /**
-         * @var $system Model\Universe\SystemModel
+         * @var Model\Universe\SystemModel $system
          */
         $system = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
 
@@ -318,7 +316,7 @@ class Universe extends AbstractCron {
 
         $total = count($ids);
         $offset = ($params['offset'] > 0 && $params['offset'] < $total) ? $params['offset'] : 0;
-        $ids = array_slice($ids, $offset, $params['length']);
+        $ids = array_slice($ids, $offset, $params['length'] ?? null);
         $importCount = count($ids);
         $count = 0;
 
@@ -328,14 +326,14 @@ class Universe extends AbstractCron {
             // -> even though they are returned from sovereignty/map endpoint?!
             if(
                 $system->getById($id, 0) &&
-                strpos($system->security, 'C') === false
+                !str_contains((string) $system->security, 'C')
             ){
                 if($changedSovData = $system->updateSovereigntyData($sovData[$id])){
                     $changes['sovereignty'][] = $id;
                 }
 
                 $changedFwData = false;
-                if(is_array($fwSystems[$id])){
+                if(isset($fwSystems[$id]) && is_array($fwSystems[$id])){
                     if($changedFwData = $system->updateFactionWarData($fwSystems[$id])){
                         $changes['factionWarfare'][] = $id;
                     }
@@ -357,13 +355,11 @@ class Universe extends AbstractCron {
             }
         }
 
-        $changedIds = array_reduce($changes, function(array $reducedIds, array $changedIds) : array {
-            return array_unique(array_merge($reducedIds, $changedIds));
-        }, []);
+        $changedIds = array_reduce($changes, fn(array $reducedIds, array $changedIds): array => array_unique(array_merge($reducedIds, $changedIds)), []);
 
         // Log --------------------------------------------------------------------------------------------------------
         $text = sprintf(self::LOG_TEXT_SOV_FW,
-            count($changedIds), count($changes['sovereignty'] ? : []), count($changes['factionWarfare'] ? : []),
+            count($changedIds), count($changes['sovereignty'] ?? []), count($changes['factionWarfare'] ?? []),
             $msg);
 
         $this->logEnd(__FUNCTION__, $total, $count, $importCount, $offset, $text);
@@ -376,11 +372,11 @@ class Universe extends AbstractCron {
      * @param \Base $f3
      * @throws \Exception
      */
-    function updateUniverseSystems(\Base $f3){
+    function updateUniverseSystems(\Base $f3): void{
         $this->logStart(__FUNCTION__);
         /**
-         * @var $systemModel Model\Universe\SystemModel
-         * @var $system Model\Universe\SystemModel
+         * @var Model\Universe\SystemModel $systemModel
+         * @var Model\Universe\SystemModel $system
          */
         $systemModel = Model\Universe\AbstractUniverseModel::getNew('SystemModel');
         $systems = $systemModel->find( null, ['order' => 'updated', 'limit' => 2]);

@@ -4,7 +4,7 @@
 namespace Exodus4D\Pathfinder\Lib;
 
 
-class PriorityCacheStore {
+class PriorityCacheStore implements \Stringable {
 
     /**
      * default max entry limit before store gets truncated
@@ -29,7 +29,7 @@ class PriorityCacheStore {
     protected $cleanupInterval;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $store;
 
@@ -60,7 +60,7 @@ class PriorityCacheStore {
      * @param $key
      * @param $data
      */
-    public function set($key, $data){
+    public function set(string $key, mixed $data): void{
         if(!$this->exists($key)){
             $this->priorityQueue->insert($key, $this->priority--);
         }
@@ -75,7 +75,7 @@ class PriorityCacheStore {
      * @param $key
      * @return mixed|null
      */
-    public function get($key){
+    public function get(string $key){
         return $this->exists($key) ? $this->store[$key] : null;
     }
 
@@ -83,7 +83,7 @@ class PriorityCacheStore {
      * @param $key
      * @return bool
      */
-    public function exists($key){
+    public function exists(string $key): bool{
         return isset($this->store[$key]);
     }
 
@@ -96,7 +96,7 @@ class PriorityCacheStore {
         }
     }
 
-    public function cleanup(){
+    public function cleanup(): void{
         while(
             $this->entryLimit < $this->priorityQueue->count() &&
             $this->priorityQueue->valid()
@@ -107,7 +107,7 @@ class PriorityCacheStore {
         }
     }
 
-    public function clear(){
+    public function clear(): void{
         $limit = $this->entryLimit;
         $this->entryLimit = 0;
         $this->cleanup();
@@ -118,7 +118,7 @@ class PriorityCacheStore {
     /**
      * @return string
      */
-    public function __toString(){
+    public function __toString(): string{
         return 'Store count: ' . count($this->store) . ' priorityQueue count: ' . $this->priorityQueue->count();
     }
 }

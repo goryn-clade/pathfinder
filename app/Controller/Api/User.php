@@ -16,8 +16,24 @@ use Exodus4D\Pathfinder\Exception;
 
 class User extends Controller\Controller{
 
-    // captcha specific session keys
-    const SESSION_CAPTCHA_ACCOUNT_UPDATE            = 'SESSION.CAPTCHA.ACCOUNT.UPDATE';
+    // Methods that do not require an authenticated session
+    private const array PUBLIC_METHODS = ['getCookieCharacter', 'getCaptcha', 'logout', 'getEveServerStatus'];
+
+    /**
+     * Require authentication for all methods except the public allow-list.
+     * User extends Controller (not AccessController) so we enforce it here.
+     */
+    #[\Override]
+    public function beforeroute(\Base $f3, array $params): bool {
+        $return = parent::beforeroute($f3, $params);
+        if($return && !in_array($params['action'] ?? '', self::PUBLIC_METHODS, true) && !$this->getCharacter()){
+            $this->logoutCharacter($f3);
+            $return = false;
+        }
+        return $return;
+    }
+
+    // captcha session key (account deletion only)
     const SESSION_CAPTCHA_ACCOUNT_DELETE            = 'SESSION.CAPTCHA.ACCOUNT.DELETE';
 
     // user specific session keys
@@ -38,9 +54,9 @@ class User extends Controller\Controller{
 
     /**
      * valid reasons for captcha images
-     * @var array
+     * @var array<string, mixed>
      */
-    private static $captchaReason = [self::SESSION_CAPTCHA_ACCOUNT_UPDATE, self::SESSION_CAPTCHA_ACCOUNT_DELETE];
+    private static $captchaReason = [self::SESSION_CAPTCHA_ACCOUNT_DELETE];
 
     /**
      * login a valid character
@@ -55,6 +71,10 @@ class User extends Controller\Controller{
             // check if character belongs to current user
             // -> If there is already a logged in user! (e.g. multi character use)
             $currentUser = $this->getUser();
+
+            // new session id before any SESSION.* write (getUser() above has started the session)
+            session_regenerate_id(true);
+
             $timezone = $this->getF3()->get('getTimeZone')();
 
             $sessionCharacters = [
@@ -115,9 +135,9 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function getCookieCharacter(\Base $f3){
+    public function getCookieCharacter(\Base $f3): void{
         $data = $f3->get('POST');
-        $cookieName = (string)$data['cookie'];
+        $cookieName = (string)($data['cookie'] ?? '');
 
         $return = (object) [];
         $return->ccpImageServer = Config::getPathfinderData('api.ccp_image_server');
@@ -126,7 +146,7 @@ class User extends Controller\Controller{
         if( !empty($cookieData = $this->getCookieByName($cookieName) )){
             // cookie data is valid -> validate data against DB (security check!)
             // -> add characters WITHOUT permission to log in too!
-            if( !empty($characters = $this->getCookieCharacters(array_slice($cookieData, 0, 1, true), false)) ){
+            if( !empty($characters = $this->getCookieCharacters(array_slice($cookieData, 0, 1, true), false, false)) ){
                 // character is valid and allowed to login
                 $return->character = reset($characters)->getData();
                 // get Session status for character
@@ -140,7 +160,7 @@ class User extends Controller\Controller{
             }else{
                 $characterError = (object) [];
                 $characterError->type = 'warning';
-                $characterError->text = 'This can happen through "invalid cookies(SSO)", "login restrictions", "ESI problems".';
+                $characterError->message = 'This can happen through "invalid cookies(SSO)", "login restrictions", "ESI problems".';
                 $return->error[] = $characterError;
             }
         }
@@ -152,7 +172,7 @@ class User extends Controller\Controller{
      * get captcha image and store key to session
      * @param \Base $f3
      */
-    public function getCaptcha(\Base $f3){
+    public function getCaptcha(\Base $f3): void{
         $data = $f3->get('POST');
 
         $return = (object) [];
@@ -196,9 +216,9 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function logout(\Base $f3){
+    public function logout(\Base $f3): void{
         $data = $f3->get('POST');
-        $deleteCookie = (bool)$data['deleteCookie'];
+        $deleteCookie = (bool)($data['deleteCookie'] ?? false);
 
         $this->logoutCharacter($f3, false, true, true, $deleteCookie, 200);
     }
@@ -209,23 +229,27 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function openIngameWindow(\Base $f3){
+    public function openIngameWindow(\Base $f3): void{
         $data = $f3->get('POST');
 
         $return = (object) [];
         $return->error = [];
 
-        if( $targetId = (int)$data['targetId']){
+        if( $targetId = (int)($data['targetId'] ?? 0)){
             $activeCharacter = $this->getCharacter();
 
-            $response =  $f3->ccpClient()->send('openWindow', $targetId, $activeCharacter->getAccessToken());
+            if($activeCharacter){
+                $response =  $f3->ccpClient()->send('openWindow', $targetId, $activeCharacter->getAccessToken());
+            }else{
+                $response = null;
+            }
 
             if(empty($response)){
                 $return->targetId = $targetId;
             }else{
                 $error = (object) [];
                 $error->type = 'error';
-                $error->text = $response['error'];
+                $error->text = $response['error'] ?? '';
                 $return->error[] = $error;
             }
         }
@@ -240,16 +264,11 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function saveAccount(\Base $f3){
+    public function saveAccount(\Base $f3): void{
         $data = $f3->get('POST');
 
         $return = (object)[];
         $return->error = [];
-
-        $captcha = $f3->get(self::SESSION_CAPTCHA_ACCOUNT_UPDATE);
-
-        // reset captcha -> forces user to enter new one
-        $f3->clear(self::SESSION_CAPTCHA_ACCOUNT_UPDATE);
 
         $newUserData = null;
 
@@ -258,39 +277,10 @@ class User extends Controller\Controller{
 
             try{
                 if($activeCharacter = $this->getCharacter()){
-                    $user = $activeCharacter->getUser();
-
-                    // captcha is send -> check captcha ---------------------------------------------------------------
-                    if(isset($formData['captcha']) && !empty($formData['captcha'])){
-                        if($formData['captcha'] === $captcha){
-                            // change/set sensitive user data requires captcha!
-
-                            // set username
-                            if(isset($formData['name']) && !empty($formData['name'])){
-                                $user->name = $formData['name'];
-                            }
-
-                            // set email
-                            if(
-                                isset($formData['email']) &&
-                                isset($formData['email_confirm']) &&
-                                !empty($formData['email']) &&
-                                !empty($formData['email_confirm']) &&
-                                $formData['email'] == $formData['email_confirm']
-                            ){
-                                $user->email = $formData['email'];
-                            }
-
-                            // save/update user model
-                            // this will fail if model validation fails!
+                    if($user = $activeCharacter->getUser()){
+                        if(isset($formData['name']) && !empty($formData['name'])){
+                            $user->name = $formData['name'];
                             $user->save();
-
-                        }else{
-                            // captcha was send but not valid -> return error
-                            $captchaError = (object)[];
-                            $captchaError->type = 'error';
-                            $captchaError->text = 'Captcha does not match';
-                            $return->error[] = $captchaError;
                         }
                     }
 
@@ -304,14 +294,26 @@ class User extends Controller\Controller{
                         $corporation = $activeCharacter->getCorporation();
                         $alliance = $activeCharacter->getAlliance();
 
-                        if(is_object($corporation)){
-                            $corporation->shared = $corporationSharing;
-                            $corporation->save();
+                        // corp/alliance flags apply to every member -> need a right/role to change them
+                        if(is_object($corporation) && (int)$corporation->shared !== $corporationSharing){
+                            if($activeCharacter->hasMapRight(3, 'map_share')){
+                                $corporation->shared = $corporationSharing;
+                                $corporation->save();
+                            }else{
+                                $return->error[] = (new Exception\ValidationException('Changing corporation sharing needs the "map_share" right', 'corporationSharing'))->getError();
+                            }
                         }
 
-                        if(is_object($alliance)){
-                            $alliance->shared = $allianceSharing;
-                            $alliance->save();
+                        if(is_object($alliance) && (int)$alliance->shared !== $allianceSharing){
+                            if(
+                                $activeCharacter->get('roleId', true) &&
+                                in_array($activeCharacter->roleId->name, ['SUPER', 'CORPORATION'], true)
+                            ){
+                                $alliance->shared = $allianceSharing;
+                                $alliance->save();
+                            }else{
+                                $return->error[] = (new Exception\ValidationException('Changing alliance sharing needs a corporation admin role', 'allianceSharing'))->getError();
+                            }
                         }
 
                         $activeCharacter->shared = $privateSharing;
@@ -326,12 +328,12 @@ class User extends Controller\Controller{
                     }
 
                     // get fresh updated user object
-                    $newUserData = $user->getData();
+                    if($user){
+                        $newUserData = $user->getData();
+                    }
                 }
 
-            }catch(Exception\ValidationException $e){
-                $return->error[] = $e->getError();
-            }catch(Exception\RegistrationException $e){
+            }catch(Exception\ValidationException|Exception\RegistrationException $e){
                 $return->error[] = $e->getError();
             }
 
@@ -347,7 +349,7 @@ class User extends Controller\Controller{
      * @param \Base $f3
      * @throws \Exception
      */
-    public function deleteAccount(\Base $f3){
+    public function deleteAccount(\Base $f3): void{
         $data = $f3->get('POST.formData');
         $return = (object) [];
 

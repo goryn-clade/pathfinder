@@ -19,7 +19,7 @@ class StructureStatusModel extends AbstractPathfinderModel {
     protected $table = 'structure_status';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $fieldConf = [
         'active' => [
@@ -44,12 +44,12 @@ class StructureStatusModel extends AbstractPathfinderModel {
             'default' => ''
         ],
         'structures' => [
-            'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\StructureModel', 'statusId']
+            'has-many' => [\Exodus4D\Pathfinder\Model\Pathfinder\StructureModel::class, 'statusId']
         ]
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $tableData = [
         [
