@@ -4,7 +4,7 @@
 # node_modules lives in the image at /opt/deps/node_modules. The repo is mounted
 # at /opt/deps/app, so Node finds the modules one directory up and the host
 # checkout never gets a node_modules folder.
-ARG NODE_VERSION=18
+ARG NODE_VERSION=24
 FROM node:${NODE_VERSION}-bookworm
 
 # gulp-image-resize shells out to GraphicsMagick (its default; imageMagick option is unset)
