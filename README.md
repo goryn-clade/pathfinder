@@ -2,6 +2,11 @@
 
 #### Mapping tool for [*EVE ONLINE*](https://www.eveonline.com)
 
+[![Release](https://img.shields.io/github/v/release/goryn-clade/pathfinder?style=flat-square&label=release)](https://github.com/goryn-clade/pathfinder/releases/latest)
+[![PHP 8.5](https://img.shields.io/badge/php-8.5-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+[![Discord](https://img.shields.io/badge/discord-join-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/zG733etVbj)
+
 This is a community-maintained fork of [Pathfinder](https://github.com/exodus4d/pathfinder) by Exodus4d, kept alive with bug fixes, PHP 8 compatibility, and EVE universe data updates.
 
 **For installation, see the [pathfinder-containers](https://github.com/goryn-clade/pathfinder-containers) repository.**
