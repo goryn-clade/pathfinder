@@ -68,11 +68,12 @@
     "rector/rector": "^2.0"
   },
   "scripts": {
-    "post-install-cmd": "vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",
-    "post-update-cmd": "vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",
     "phpstan": "vendor/bin/phpstan analyse --configuration=../phpstan.neon --memory-limit=512M",
     "phpstan-baseline": "vendor/bin/phpstan analyse --configuration=../phpstan.neon --generate-baseline=../phpstan-baseline.neon --memory-limit=512M",
-    "phpcs": "vendor/bin/phpcs --standard=../.phpcs.xml",
+    "phpcs": [
+      "vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+      "vendor/bin/phpcs --standard=../.phpcs.xml"
+    ],
     "rector": "vendor/bin/rector process --config=../rector.php --dry-run"
   }
 }
