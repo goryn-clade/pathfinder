@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ruleset name="pf-php8-compat">
+  <description>PHP 8.5 compatibility check for pathfinder</description>
+  <file>app</file>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/tmp/*</exclude-pattern>
+  <config name="testVersion" value="8.5-"/>
+  <rule ref="PHPCompatibility">
+    <!-- func_get_args() behavior note — informational only, not a compat break -->
+    <exclude name="PHPCompatibility.FunctionUse.ArgumentFunctionsReportCurrentValue"/>
+  </rule>
+  <!-- Lib/Resource.php: 'resource' is soft-reserved but class predates PHP 7; renaming is out of scope -->
+  <rule ref="PHPCompatibility.Keywords.ForbiddenNames">
+    <exclude-pattern>*/Lib/Resource\.php</exclude-pattern>
+  </rule>
+  <arg name="colors"/>
+  <arg value="sp"/>
+</ruleset>
