@@ -13,6 +13,7 @@ use Exodus4D\Pathfinder\Controller\Api\Rest\Route;
 use Exodus4D\Pathfinder\Enum\ConnectionType;
 use Exodus4D\Pathfinder\Lib\Logging;
 use Exodus4D\Pathfinder\Exception;
+use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Model\Universe;
 
 class ConnectionModel extends AbstractMapTrackingModel {
@@ -304,13 +305,15 @@ class ConnectionModel extends AbstractMapTrackingModel {
     /**
      * look up a Universe wormhole typeId and apply the matching mass class to this connection.
      * uses a direct SQL update to avoid AbstractMapTrackingModel::save() requiring a CharacterModel.
+     * only reads the local Universe DB: K162 options and other non-EVE typeIds must not reach ESI
      */
     public function applyMassFromWormholeTypeId(int $typeId) : bool {
         if($typeId <= 0 || $this->dry()) return false;
         /** @var Universe\TypeModel $typeModel */
         $typeModel = Universe\AbstractUniverseModel::getNew('TypeModel');
-        $typeModel->loadById($typeId);
+        $typeModel->getById($typeId);
         if($typeModel->dry()) return false;
+        if((int)$typeModel->get('groupId', true) !== Config::ESI_GROUP_WORMHOLE_ID) return false;
         $whData = $typeModel->getWormholeData();
         $massIndividual = isset($whData->massIndividual) ? (int)$whData->massIndividual : null;
         $massType = self::jumpMassTypeFromMass($massIndividual);

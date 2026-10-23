@@ -565,36 +565,39 @@ define([], () => {
             4: 'C414 - C17 Conflux',
             5: 'R259 - C18 Redoubt'
         },
+        // incoming wormholes (K162). EVE has one typeId for every K162, so these options use their
+        // own values, far above any EVE typeId. They are saved in signature "typeId": never change
+        // or reuse a value. A meaning that is in both lists keeps the same value.
         // incoming wormholes — generic grouped labels (default)
-        incomingWormholesGeneric: {
-            1: 'K162 - C1/2/3 (unknown)',
-            2: 'K162 - C4/5 (dangerous)',
-            3: 'K162 - C6 (deadly)',
-            4: 'K162 - H',
-            5: 'K162 - L',
-            6: 'K162 - 0.0',
-            7: 'K162 - C12 Thera',
-            8: 'K162 - T Pochven',
-            9: 'K162 - Drifter'
-        },
+        incomingWormholesGeneric: [
+            {value: 1000000017, text: 'K162 - C1/2/3 (unknown)'},
+            {value: 1000000018, text: 'K162 - C4/5 (dangerous)'},
+            {value: 1000000006, text: 'K162 - C6 (deadly)'},
+            {value: 1000000007, text: 'K162 - H'},
+            {value: 1000000008, text: 'K162 - L'},
+            {value: 1000000009, text: 'K162 - 0.0'},
+            {value: 1000000010, text: 'K162 - C12 Thera'},
+            {value: 1000000011, text: 'K162 - T Pochven'},
+            {value: 1000000019, text: 'K162 - Drifter'}
+        ],
         // incoming wormholes — granular per-class labels (enabled per map)
-        incomingWormholesSpecific: {
-            1:  'K162 - C1',
-            2:  'K162 - C2',
-            3:  'K162 - C3',
-            4:  'K162 - C4',
-            5:  'K162 - C5',
-            6:  'K162 - C6',
-            7:  'K162 - H',
-            8:  'K162 - L',
-            9:  'K162 - 0.0',
-            10: 'K162 - C12 Thera',
-            11: 'K162 - T Pochven',
-            12: 'K162 - C14 Sentinel',
-            13: 'K162 - C15 Barbican',
-            14: 'K162 - C16 Vidette',
-            15: 'K162 - C17 Conflux',
-            16: 'K162 - C18 Redoubt'
-        }
+        incomingWormholesSpecific: [
+            {value: 1000000001, text: 'K162 - C1'},
+            {value: 1000000002, text: 'K162 - C2'},
+            {value: 1000000003, text: 'K162 - C3'},
+            {value: 1000000004, text: 'K162 - C4'},
+            {value: 1000000005, text: 'K162 - C5'},
+            {value: 1000000006, text: 'K162 - C6'},
+            {value: 1000000007, text: 'K162 - H'},
+            {value: 1000000008, text: 'K162 - L'},
+            {value: 1000000009, text: 'K162 - 0.0'},
+            {value: 1000000010, text: 'K162 - C12 Thera'},
+            {value: 1000000011, text: 'K162 - T Pochven'},
+            {value: 1000000012, text: 'K162 - C14 Sentinel'},
+            {value: 1000000013, text: 'K162 - C15 Barbican'},
+            {value: 1000000014, text: 'K162 - C16 Vidette'},
+            {value: 1000000015, text: 'K162 - C17 Conflux'},
+            {value: 1000000016, text: 'K162 - C18 Redoubt'}
+        ]
     };
 });
