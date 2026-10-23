@@ -840,7 +840,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @return bool
      */
     public function hasBasicScopes() : bool {
-        return empty(array_diff(Sso::getScopesByAuthType(), $this->esiScopes));
+        return empty(array_diff(Sso::getScopesByAuthType(), (array)$this->esiScopes));
     }
 
     /**
@@ -848,7 +848,7 @@ class CharacterModel extends AbstractPathfinderModel {
      * @return bool
      */
     public function hasAdminScopes() : bool {
-        return empty(array_diff(Sso::getScopesByAuthType('admin'), $this->esiScopes));
+        return empty(array_diff(Sso::getScopesByAuthType('admin'), (array)$this->esiScopes));
     }
 
     /**

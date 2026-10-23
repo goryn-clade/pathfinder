@@ -501,6 +501,8 @@ class Sso extends Api\User{
         try {
             $characterData = $this->verifyJwtAccessToken($accessToken);
             $characterData->characterId = (int)explode(':', $characterData->sub)[2];
+            // "scp" is a string for a single scope and missing for none
+            $characterData->scp = (array)($characterData->scp ?? []);
             return $characterData;
         } catch (\Throwable $e) {
             self::getSSOLogger()->write(sprintf(self::ERROR_VERIFY_CHARACTER, $e->getMessage()));

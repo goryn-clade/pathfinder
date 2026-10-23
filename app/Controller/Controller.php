@@ -348,7 +348,7 @@ class Controller {
                                 $character->updateAffiliation();
 
                                 // check ESI scopes
-                                $scopeHash = Util::getHashFromScopes($character->esiScopes);
+                                $scopeHash = Util::getHashFromScopes((array)$character->esiScopes);
 
                                 if(
                                     $scopeHash === Util::getHashFromScopes(self::getScopesByAuthType()) ||
