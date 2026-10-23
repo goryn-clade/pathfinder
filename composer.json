@@ -72,9 +72,9 @@
     "phpstan/phpstan-deprecation-rules": "^2.0"
   },
   "scripts": {
-    "phpstan": "vendor/bin/phpstan analyse --configuration=../phpstan.neon --memory-limit=512M",
-    "phpstan-baseline": "vendor/bin/phpstan analyse --configuration=../phpstan.neon --generate-baseline=../phpstan-baseline.neon --memory-limit=512M",
-    "phpcs": "vendor/bin/phpcs --standard=../.phpcs.xml",
-    "rector": "vendor/bin/rector process --config=../rector.php --dry-run"
+    "phpstan": "vendor/bin/phpstan analyse --memory-limit=512M",
+    "phpstan-baseline": "vendor/bin/phpstan analyse --generate-baseline --memory-limit=512M",
+    "phpcs": "vendor/bin/phpcs",
+    "rector": "vendor/bin/rector process --dry-run"
   }
 }

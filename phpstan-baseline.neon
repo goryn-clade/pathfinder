@@ -1,0 +1,4654 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\AccessController\:\:beforeroute\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/AccessController.php
+
+		-
+			message: '#^Call to an undefined method DB\\CortexCollection\|Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:erase\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Call to an undefined method DB\\CortexCollection\|Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:save\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Call to an undefined method DB\\CortexCollection\|Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:setActive\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Cannot access property \$_id on int\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Cannot access property \$name on int\.$#'
+			identifier: property.nonObject
+			count: 5
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 3
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Instanceof between null and Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel will always evaluate to false\.$#'
+			identifier: instanceof.alwaysFalse
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Admin\:\:beforeroute\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Admin\:\:dispatch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Admin\:\:filterValidMaps\(\) should return array\<DB\\CortexCollection\|Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\> but returns array\<string, mixed\>\|DB\\CortexCollection\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Admin\:\:getAccessibleCorporations\(\) should return array\<Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\> but returns DB\\CortexCollection\|list\<Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Offset string does not exist on array\{\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Offset string on array\{\} in empty\(\) does not exist\.$#'
+			identifier: empty.offset
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Parameter \#3 \$character of method Exodus4D\\Pathfinder\\Controller\\Admin\:\:dispatch\(\) expects null, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Admin.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Access\:\:search\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Access.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\GitHub\:\:getReleases\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/GitHub.php
+
+		-
+			message: '#^Access to an undefined property DB\\Cortex\:\:\$_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:\$source\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:getData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Cannot access property \$_id on Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\|false\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Cannot access property \$groups on object\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Cannot call method getNewConnection\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\|int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Cannot call method saveConnection\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\|int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Cannot call method saveSystem\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\|int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Cannot call method searchConnection\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\|int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 2
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Map\:\:updateMapByCharacter\(\) should return Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel but returns Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\|int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 2
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#1 \$additionalData of method Exodus4D\\Pathfinder\\Model\\Universe\\CategoryModel\:\:getData\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#1 \$connectionIds of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getConnections\(\) expects null, array\<int\>\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#1 \$filter of method DB\\Cortex\:\:find\(\) expects array\<mixed\>\|null, string given\.$#'
+			identifier: argument.type
+			count: 6
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#1 \$map of method Exodus4D\\Pathfinder\\Controller\\AccessController\:\:broadcastMap\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, array\<string, mixed\>\|stdClass\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#3 \$posX of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:saveSystem\(\) expects int, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Parameter \#4 \$posY of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:saveSystem\(\) expects int, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$scopeId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapScopeModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$target \(string\|null\) does not accept int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$typeId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapTypeModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Result of && is always true\.$#'
+			identifier: booleanAnd.alwaysTrue
+			count: 2
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 3
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between int and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 6
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: app/Controller/Api/Map.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\AbstractEveScoutController\:\:getEveScoutConnections\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Api/Rest/AbstractEveScoutController.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:\$source\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Connection\:\:delete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Connection\:\:get\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:delete\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$connectionIds of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getConnections\(\) expects null, list\<int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$map of method Exodus4D\\Pathfinder\\Controller\\AccessController\:\:broadcastMap\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$mapId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Rest/Connection.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\:\:\$record\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Rest/Log.php
+
+		-
+			message: '#^Cannot call method getConnection\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\|true\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Controller/Api/Rest/Log.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 2
+			path: app/Controller/Api/Rest/Log.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Log\:\:delete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Log.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Log\:\:patch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Log.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Log.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Log.php
+
+		-
+			message: '#^Cannot access property \$name on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Cannot call method getAlliance\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Cannot call method getCorporation\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Cannot call method hasMapRight\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: method.nonObject
+			count: 7
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Map\:\:delete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Map\:\:get\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Map\:\:patch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Map\:\:put\(\) has parameter \$test with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:isOwnedBy\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Parameter \#1 \$obj of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:setAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\AllianceModel\|Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel, Exodus4D\\Pathfinder\\Model\\AbstractModel given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Parameter \#1 \$primaryModel of closure expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\AbstractPathfinderModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, array\<string, mixed\>\|stdClass\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Map.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$constrain\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$height\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$isCollapsed\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$label\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$width\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getData\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:hasAccess\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\MapGroup\:\:delete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\MapGroup\:\:get\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\MapGroup\:\:patch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:save\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$mapId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\AbstractModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$updatedCharacterId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Rest/MapGroup.php
+
+		-
+			message: '#^Call to function is_array\(\) with null will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 2
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:filterJumpData\(\) has parameter \$filterData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:filterJumpData\(\) has parameter \$keepSystems with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:getRouteCacheKey\(\) has parameter \$mapIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:searchRoute\(\) has parameter \$filterData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:searchRoute\(\) has parameter \$mapIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:searchRouteCustom\(\) has parameter \$filterData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:searchRouteCustom\(\) has parameter \$mapIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:searchRouteESI\(\) has parameter \$filterData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:searchRouteESI\(\) has parameter \$mapIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:setDynamicJumpData\(\) has parameter \$filterData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:setDynamicJumpData\(\) has parameter \$mapIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:updateJumpData\(\) has parameter \$rows with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Offset int on array\<string, mixed\> in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 2
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Offset int on array\<string, mixed\> on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Offset int\<min, \-1\>\|int\<1, max\> on array\<string, mixed\> in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^PHPDoc tag @var with type Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel is not subtype of native type array\{mixed, array, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\}\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Parameter \#1 \$key of static method Exodus4D\\Pathfinder\\Controller\\Controller\:\:formatHiveKey\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, array\<string, mixed\>\|int\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Parameter \#1 \$values of method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:filterConnectionTypes\(\) expects array\<string, mixed\>, list\<string\> given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Parameter \#2 \$A of method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:graph_find_path\(\) expects string, int\<min, \-1\>\|int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Parameter \#3 \$B of method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:graph_find_path\(\) expects string, int\<min, \-1\>\|int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:\$idArray \(array\<string, mixed\>\) does not accept array\<int\|string, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:\$jumpArray \(array\<string, mixed\>\) does not accept array\<int\|string, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Route\:\:\$nameArray \(array\<string, mixed\>\) does not accept array\<int\|string, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 4
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Controller/Api/Rest/Route.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:\$groupId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Rest/Signature.php
+
+		-
+			message: '#^Cannot call method updateSignaturesHistory\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Controller/Api/Rest/Signature.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Signature\:\:delete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Signature.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Signature\:\:patch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Signature.php
+
+		-
+			message: '#^Parameter \#1 \$character of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:updateSignaturesHistory\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Rest/Signature.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Controller/Api/Rest/Signature.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Signature.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\SignatureHistory\:\:get\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/SignatureHistory.php
+
+		-
+			message: '#^Parameter \#1 \$character of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:updateSignaturesHistory\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/SignatureHistory.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Rest/SignatureHistory.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Structure\:\:delete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Structure.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Structure\:\:patch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/Structure.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/Structure.php
+
+		-
+			message: '#^Parameter \#1 \$structuresData of method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\Structure\:\:update\(\) expects array\<string, mixed\>, array\<int, array\<string, mixed\>\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Rest/Structure.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$allowUnknownSystems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$persistentAliases\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$persistentSignatures\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\System\:\:delete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\System\:\:get\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\System\:\:patch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Parameter \#1 \$map of method Exodus4D\\Pathfinder\\Controller\\AccessController\:\:broadcastMap\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$updatedCharacterId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Controller/Api/Rest/System.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Api/Rest/SystemGraph.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\SystemGraph\:\:get\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/SystemGraph.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Rest\\SystemSearch\:\:get\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Rest/SystemSearch.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$isPaused\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Argument of an invalid type array\<string, mixed\>\|int\|false supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 2
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:getById\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getTypesCount\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Setup\:\:beforeroute\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(int\|string\)\: mixed\)\|null, Closure\(string\)\: non\-falsy\-string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$csvData of method Exodus4D\\Pathfinder\\Controller\\Api\\Setup\:\:deleteSystemStaticsNotInCSV\(\) expects array\<int, array\<string, mixed\>\>, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$names of method Exodus4D\\Pathfinder\\Lib\\Cron\:\:getJobsConfig\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, array\<string, mixed\>\|int\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Parameter \#2 \$args of method Exodus4D\\Pathfinder\\Lib\\Db\\Sql\:\:exec\(\) expects null, array\<string, int\<min, \-1\>\|int\<1, max\>\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Parameter \#2 \$args of method Exodus4D\\Pathfinder\\Lib\\Db\\Sql\:\:exec\(\) expects null, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$systemId \(int\) does not accept DB\\Cortex\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$typeId \(int\) does not accept DB\\Cortex\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Controller/Api/Setup.php
+
+		-
+			message: '#^Argument of an invalid type array\<string, mixed\>\|int\<min, \-1\>\|int\<1, max\> supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Controller/Api/Statistic.php
+
+		-
+			message: '#^Parameter \#1 \$character of method Exodus4D\\Pathfinder\\Controller\\Api\\Statistic\:\:queryStatistic\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Statistic.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Statistic.php
+
+		-
+			message: '#^Parameter \#2 \$args of method Exodus4D\\Pathfinder\\Lib\\Db\\Sql\:\:exec\(\) expects null, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Statistic.php
+
+		-
+			message: '#^Parameter \#3 \$pad_string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Statistic.php
+
+		-
+			message: '#^Parameter \#1 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:hasAccess\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/System.php
+
+		-
+			message: '#^Parameter \#2 \$characterModel of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:sendRallyPoke\(\) expects Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel, Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/System.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$systems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Api/Universe.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\Universe\:\:search\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/Universe.php
+
+		-
+			message: '#^Parameter \#4 \$accessToken of static method Exodus4D\\Pathfinder\\Controller\\Ccp\\Universe\:\:searchUniverseNameData\(\) expects string, bool\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Api/Universe.php
+
+		-
+			message: '#^Cannot access property \$name on int\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Controller/Api/User.php
+
+		-
+			message: '#^Cannot call method dump\(\) on object\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/User.php
+
+		-
+			message: '#^Cannot call method getUser\(\) on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Api/User.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Api\\User\:\:beforeroute\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Api/User.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Controller\\Api\\User\:\:\$captchaReason \(array\<string, mixed\>\) does not accept default value of type array\<int, string\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Controller/Api/User.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\AppController\:\:beforeroute\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/AppController.php
+
+		-
+			message: '#^Access to an undefined property DB\\Cortex\:\:\$characterId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Access to an undefined property DB\\Cortex\:\:\$userId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$characterId\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$owner\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$scp\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$sub\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Binary operation "\." between array\<string, mixed\>\|string\|null and array\<string, mixed\>\|string\|null results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:getCharacter\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Cannot access property \$_id on Exodus4D\\Pathfinder\\Model\\Pathfinder\\UserModel\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Cannot cast array\<string, mixed\>\|string\|null to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Ccp\\Sso\:\:beforeroute\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Ccp\\Sso\:\:getSsoJwkClaim\(\) should return string but returns array\<string, mixed\>\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Ccp\\Sso\:\:getSsoUrlRoot\(\) should return string but returns array\<string, mixed\>\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Variable \$userCharactersModel in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: app/Controller/Ccp/Sso.php
+
+		-
+			message: '#^Call to function is_object\(\) with stdClass will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Controller/Ccp/Universe.php
+
+		-
+			message: '#^Cannot call method getAll\(\) on array\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Ccp/Universe.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Ccp\\Universe\:\:getSystemsIndex\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Ccp/Universe.php
+
+		-
+			message: '#^Parameter \#1 \$vars of method Base\:\:mset\(\) expects array\<string, mixed\>, array\<int\|string, stdClass\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Ccp/Universe.php
+
+		-
+			message: '#^Parameter \#2 \$rowKeys of static method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:buildTableIndex\(\) expects array\<string, mixed\>, list\<int\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Ccp/Universe.php
+
+		-
+			message: '#^Access to an undefined property DB\\Cortex\:\:\$esiScopes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterAuthenticationModel\:\:\$expires\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterAuthenticationModel\:\:\$token\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:getById\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:hasUserCharacter\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:isAuthorized\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:updateAffiliation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Cannot access offset ''error'' on Exodus4D\\ESI\\Client\\ApiInterface\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Cannot access offset ''status'' on Exodus4D\\ESI\\Client\\ApiInterface\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Cannot call method updateFromESI\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Class Exodus4D\\Pathfinder\\Lib\\Db\\Sql referenced with incorrect case\: Exodus4D\\Pathfinder\\Lib\\Db\\SQL\.$#'
+			identifier: class.nameCase
+			count: 2
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Controller\:\:beforeroute\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Controller\:\:getController\(\) should return Exodus4D\\Pathfinder\\Controller\\Controller but returns object\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Controller\:\:getCookieCharacters\(\) should return array\<Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\> but returns array\<string, DB\\Cortex\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Controller\:\:getScopesByAuthType\(\) should return array\<string, mixed\> but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^PHPDoc tag @return with type Exodus4D\\Pathfinder\\Controller\\Controller\|null is not subtype of native type object\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Parameter \#1 \$string of function rtrim expects string, array\<string, mixed\>\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strtolower expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strtoupper expects string, array\<string, mixed\>\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, list\<string\>\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Parameter \#2 \$file of method Exodus4D\\Pathfinder\\Lib\\Resource\:\:register\(\) expects string, array\<string, mixed\>\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Parameter \#4 \$onsuspect of class Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Session constructor expects Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\callback\|null, Closure given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Variable \$client in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Variable \$trace in empty\(\) always exists and is always falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Controller/Controller.php
+
+		-
+			message: '#^Offset int on array\<string, mixed\> on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Controller/LogController.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Controller\\LogController\:\:\$activityLogBuffer \(array\<string, mixed\>\) does not accept array\<int\|string, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: app/Controller/LogController.php
+
+		-
+			message: '#^Cannot access property \$id on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Controller/MapController.php
+
+		-
+			message: '#^Cannot access property \$name on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Controller/MapController.php
+
+		-
+			message: '#^Anonymous function should return string but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Call to function is_int\(\) with ''''\|''0''\|null will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Cannot call method getConstraintName\(\) on Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Setup\:\:bootstrapDB\(\) should return array\<string, mixed\> but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Setup\:\:checkRequirements\(\) should return array\<string, mixed\> but returns array\<int\|string, array\<string, mixed\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Setup\:\:getIndexData\(\) should return array\<string, mixed\> but returns array\<int\|string, array\<string, array\<int\|string, array\<string, string\>\|int\>\|int\|string\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Controller\\Setup\:\:importTable\(\) should return bool but returns array\<string, mixed\>\|bool\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Offset ''type'' might not exist on array\<string, mixed\>\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_filter expects array, array\<string, mixed\>\|int\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, non\-falsy\-string given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$constraint of method Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Column\:\:addConstraint\(\) expects Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint, Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$constraint of method Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Column\:\:constraintExists\(\) expects Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint, Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$constraint of method Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Column\:\:dropConstraint\(\) expects Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint, Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strtolower expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$string of static method Exodus4D\\Pathfinder\\Lib\\Util\:\:obscureString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#1 \$version1 of function version_compare expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Parameter \#2 \$args of method Exodus4D\\Pathfinder\\Lib\\Db\\Sql\:\:exec\(\) expects null, array\<string, \(int\|string\)\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Variable \$ttl in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Controller/Setup.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$lastExecState\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Cron/AbstractCron.php
+
+		-
+			message: '#^Offset ''offset'' might not exist on array\{\}\|array\{offset\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Cron/AbstractCron.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Cron\\AbstractCron\:\:\$logDisabled \(array\<string, mixed\>\) does not accept array\<int\|string, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Cron/AbstractCron.php
+
+		-
+			message: '#^Offset ''offset'' on non\-empty\-array\<string, mixed\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Cron/CcpSystemsUpdate.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_column expects array, array\<string, mixed\>\|int\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/CcpSystemsUpdate.php
+
+		-
+			message: '#^Parameter \#2 \$args of method Exodus4D\\Pathfinder\\Lib\\Db\\Sql\:\:exec\(\) expects null, array\<string, int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/CcpSystemsUpdate.php
+
+		-
+			message: '#^Parameter \#2 \$args of method Exodus4D\\Pathfinder\\Lib\\Db\\Sql\:\:exec\(\) expects null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/CcpSystemsUpdate.php
+
+		-
+			message: '#^Call to function is_object\(\) with Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Cron/CharacterUpdate.php
+
+		-
+			message: '#^Call to function is_object\(\) with array will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 3
+			path: app/Cron/CharacterUpdate.php
+
+		-
+			message: '#^Parameter \#1 \$accessToken of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:isOnline\(\) expects string, string\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/CharacterUpdate.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/StatisticsUpdate.php
+
+		-
+			message: '#^Parameter \#3 \$pad_string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/StatisticsUpdate.php
+
+		-
+			message: '#^Invalid array key type float\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: app/Cron/Universe.php
+
+		-
+			message: '#^Parameter \#1 \$id of method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getById\(\) expects int, int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/Universe.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Cron/Universe.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strlen expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/Universe.php
+
+		-
+			message: '#^Parameter \#4 \$ids of method Exodus4D\\Pathfinder\\Cron\\Universe\:\:echoInfo\(\) expects array\<string, mixed\>, list given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Cron/Universe.php
+
+		-
+			message: '#^Variable \$system in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: app/Cron/Universe.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Data\\File\\FileHandler\:\:readFileReverse\(\) should return array\<string, mixed\> but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Data/File/FileHandler.php
+
+		-
+			message: '#^PHPDoc tag @return with type mixed is not subtype of native type int\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Data/File/ReverseSplFileObject.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 68 on line 3$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Data/File/ReverseSplFileObject.php
+
+		-
+			message: '#^Parameter \#1 \$offset of method SplFileObject\:\:fseek\(\) expects int, int\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Data/File/ReverseSplFileObject.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Data\\File\\ReverseSplFileObject\:\:\$begin \(int\) does not accept int\|false\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Data/File/ReverseSplFileObject.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Data\\File\\ReverseSplFileObject\:\:\$eol \(array\<string, mixed\>\) does not accept default value of type array\<int, string\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Data/File/ReverseSplFileObject.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Data\\File\\ReverseSplFileObject\:\:\$pointer \(int\) does not accept int\|false\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: app/Data/File/ReverseSplFileObject.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Data\\File\\ReverseSplFileObject\:\:\$position has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Data/File/ReverseSplFileObject.php
+
+		-
+			message: '#^Class Exodus4D\\Pathfinder\\Data\\Mapper\\AbstractIterator extends generic class RecursiveArrayIterator but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Data/Mapper/AbstractIterator.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Data\\Mapper\\AbstractIterator\:\:camelCaseKeys\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Data/Mapper/AbstractIterator.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Data/Mapper/AbstractIterator.php
+
+		-
+			message: '#^Class Exodus4D\\Pathfinder\\Data\\Mapper\\SortingIterator extends generic class ArrayIterator but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Data/Mapper/SortingIterator.php
+
+		-
+			message: '#^Default value of the parameter \#4 \$referencedCols \(array\<int, string\>\) of method Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\:\:__construct\(\) is incompatible with type array\<string, mixed\>\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: app/Db/Sql/Mysql/Constraint.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\:\:\$keys has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Db/Sql/Mysql/Constraint.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\:\:\$onDelete has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Db/Sql/Mysql/Constraint.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\:\:\$onUpdate has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Db/Sql/Mysql/Constraint.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\:\:\$referencedCols has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Db/Sql/Mysql/Constraint.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\:\:\$referencedTable has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Db/Sql/Mysql/Constraint.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Constraint\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Db/Sql/Mysql/Constraint.php
+
+		-
+			message: '#^Parameter \$onsuspect of method Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\Session\:\:__construct\(\) has invalid type Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\callback\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Db/Sql/Mysql/Session.php
+
+		-
+			message: '#^Argument of an invalid type array\<mixed\>\|int\|false supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Db/Sql/Mysql/TableModifier.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Exception\\ConfigException\:\:\$codes \(array\<string, mixed\>\) does not accept default value of type array\<int, int\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Exception/ConfigException.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Exception\\DatabaseException\:\:\$codes \(array\<string, mixed\>\) does not accept default value of type array\<int, int\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Exception/DatabaseException.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Exception\\DateException\:\:\$codes \(array\<string, mixed\>\) does not accept default value of type array\<int, int\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Exception/DateException.php
+
+		-
+			message: '#^Offset int does not exist on array\<string, mixed\>\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Exception/PathfinderException.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Exception\\PathfinderException\:\:\$codes \(array\<string, mixed\>\) does not accept default value of type array\<int, int\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Exception/PathfinderException.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Exception\\RegistrationException\:\:\$codes \(array\<string, mixed\>\) does not accept default value of type array\<int, int\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Exception/RegistrationException.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Exception\\ValidationException\:\:\$codes \(array\<string, mixed\>\) does not accept default value of type array\<int, int\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Exception/ValidationException.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\ESI\\Client\\ApiInterface\:\:setLogRequestHeaders\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Lib/Api/AbstractClient.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\ESI\\Client\\ApiInterface\:\:setLogResponseHeaders\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Lib/Api/AbstractClient.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function call_user_func_array expects callable\(\)\: mixed, array\{Exodus4D\\ESI\\Client\\ApiInterface, string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Api/AbstractClient.php
+
+		-
+			message: '#^Parameter \#2 \$namespace of class Cache\\Namespaced\\NamespacedCachePool constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Api/AbstractClient.php
+
+		-
+			message: '#^Parameter \#1 \$dataSource of method Exodus4D\\ESI\\Client\\Ccp\\Esi\\Esi\:\:setDataSource\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Api/CcpClient.php
+
+		-
+			message: '#^Parameter \#1 \$url of class Exodus4D\\ESI\\Client\\Ccp\\Esi\\Esi constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Api/CcpClient.php
+
+		-
+			message: '#^Parameter \#1 \$url of class Exodus4D\\ESI\\Client\\Ccp\\Sso\\Sso constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Api/SsoClient.php
+
+		-
+			message: '#^Fetching deprecated class constant MYSQL_ATTR_COMPRESS of class PDO\.$#'
+			identifier: classConstant.deprecated
+			count: 1
+			path: app/Lib/Config.php
+
+		-
+			message: '#^Fetching deprecated class constant MYSQL_ATTR_INIT_COMMAND of class PDO\.$#'
+			identifier: classConstant.deprecated
+			count: 1
+			path: app/Lib/Config.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Config\:\:pingDomain\(\) should return int but returns float\|int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Config.php
+
+		-
+			message: '#^Parameter \#2 \$port of static method Exodus4D\\Pathfinder\\Lib\\Config\:\:pingDomain\(\) expects int, int\<0, 65535\>\|false\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Config.php
+
+		-
+			message: '#^Parameter \#2 \$uri of static method Exodus4D\\Pathfinder\\Lib\\Socket\\AbstractSocket\:\:factory\(\) expects string, bool\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Config.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$isPaused\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Lib/Cron.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Cron\:\:getJob\(\) should return Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\|null but returns Exodus4D\\Pathfinder\\Model\\AbstractModel\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Cron.php
+
+		-
+			message: '#^PHPDoc tag @var with type Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel is not subtype of native type null\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: app/Lib/Cron.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\[\]\[\]\)\: Unexpected token "\[", expected type at offset 16 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Lib/Db/Pool.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Lib\\Db\\Pool\:\:\$errors has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Lib/Db/Pool.php
+
+		-
+			message: '#^Parameter \#1 \$array of function reset expects array\|object, array\<string, mixed\>\|int\<min, \-1\>\|int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Db/Sql.php
+
+		-
+			message: '#^Parameter \#1 \$cmds of method DB\\SQL\:\:exec\(\) expects array\<int, string\>\|string, array\<string, mixed\>\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Db/Sql.php
+
+		-
+			message: '#^Parameter \#2 \$args of method Exodus4D\\Pathfinder\\Lib\\Db\\Sql\:\:exec\(\) expects null, array\<string, string\>\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Db/Sql.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of function in_array expects array, array\<string, mixed\>\|bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Db/Sql.php
+
+		-
+			message: '#^Parameter \#4 \$options of method DB\\SQL\:\:__construct\(\) expects array\<int, mixed\>\|null, array\<string, mixed\>\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Db/Sql.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 2
+			path: app/Lib/Logging/AbstractCharacterLog.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Logging\\AbstractLog\:\:getHandlerParams\(\) should return array\<string, mixed\> but returns array\<int, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Logging/AbstractLog.php
+
+		-
+			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:toMonologLevel\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', string given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Lib/Logging/AbstractLog.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Lib\\Logging\\AbstractLog\:\:\$handlerGroups \(array\<string, mixed\>\) does not accept array\<int\|string, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Lib/Logging/AbstractLog.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Logging\\Handler\\AbstractWebhookHandler\:\:getPostData\(\) should return array\<string, mixed\> but returns array\<int\|string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Logging/Handler/AbstractWebhookHandler.php
+
+		-
+			message: '#^Parameter \#1 \$level of method Monolog\\Handler\\AbstractHandler\:\:__construct\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/Handler/AbstractWebhookHandler.php
+
+		-
+			message: '#^Parameter \#2 \$options of function curl_setopt_array expects array\{10002\: non\-empty\-string, 10036\: non\-empty\-string\|null, 19913\: bool, 10023\: array\<int, string\>, 10015\: array\|string, 13\: int, 78\: int\}, array\{10002\: string, 10036\: ''POST'', 19913\: true, 10023\: array\{''Content\-Type\:…''\}, 10015\: non\-empty\-string\|false, 13\: 5, 78\: 3\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/Handler/AbstractWebhookHandler.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Logging\\Handler\\DiscordMapWebhookHandler\:\:getPostData\(\) should return array\<string, list\<array\<string, array\<mixed\>\|int\|string\>\>\|string\> but returns array\{embeds\: list\<array\{title\: non\-falsy\-string, description\: string, color\: int, fields\: array\{\}\|array\{0\: array\{name\: ''Level'', value\: non\-falsy\-string, inline\: true\}, 1\?\: array\{name\: ''IP'', value\: non\-falsy\-string, inline\: true\}\}\|array\{array\{name\: ''IP'', value\: non\-falsy\-string, inline\: true\}\}\|list\{0\: array\{name\: ''Path'', value\: non\-falsy\-string, inline\: true\}, 1\?\: array\{name\: ''IP''\|''Level''\|''Tag'', value\: non\-falsy\-string, inline\: true\}, 2\?\: array\{name\: ''IP''\|''Level'', value\: non\-falsy\-string, inline\: true\}, 3\?\: array\{name\: ''IP'', value\: non\-falsy\-string, inline\: true\}\}\|list\{0\: array\{name\: ''Tag'', value\: non\-falsy\-string, inline\: true\}, 1\?\: array\{name\: ''IP''\|''Level'', value\: non\-falsy\-string, inline\: true\}, 2\?\: array\{name\: ''IP'', value\: non\-falsy\-string, inline\: true\}\}, author\?\: array\{name\: non\-falsy\-string, icon_url\: non\-falsy\-string\}, thumbnail\?\: array\{url\: mixed\}\}\>, allowed_mentions\: array\{parse\: array\{\}\}, content\?\: non\-falsy\-string\}\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Logging/Handler/DiscordMapWebhookHandler.php
+
+		-
+			message: '#^Parameter \#1 \$record of method Monolog\\Formatter\\FormatterInterface\:\:format\(\) expects array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}, array\{task\: ''logData'', load\: array\{meta\: array\<string, mixed\>, log\: array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/Handler/SocketHandler.php
+
+		-
+			message: '#^Parameter \#1 \$record of method Monolog\\Handler\\AbstractHandler\:\:isHandling\(\) expects array\{level\: 100\|200\|250\|300\|400\|500\|550\|600\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/Handler/SocketHandler.php
+
+		-
+			message: '#^Parameter \#1 \$record of method Monolog\\Handler\\AbstractProcessingHandler\:\:processRecord\(\) expects array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/Handler/SocketHandler.php
+
+		-
+			message: '#^Parameter \#1 \$record of method Monolog\\Handler\\SocketHandler\:\:write\(\) expects array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>, formatted\: mixed\}, array\{task\: ''logData'', load\: array\{meta\: array\<string, mixed\>, log\: array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}\}, formatted\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/Handler/SocketHandler.php
+
+		-
+			message: '#^Parameter \#2 \$level of method Monolog\\Handler\\SocketHandler\:\:__construct\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/Handler/SocketHandler.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Lib/Logging/LogCollection.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Logging\\LogCollection\:\:getData\(\) should return array\<string, mixed\> but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Logging/LogCollection.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Lib\\Logging\\LogCollection\:\:\$collection with generic class SplObjectStorage does not specify its types\: TObject, TData$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Lib/Logging/LogCollection.php
+
+		-
+			message: '#^Offset 0 does not exist on array\<string, mixed\>\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/Lib/Logging/MapLog.php
+
+		-
+			message: '#^Offset 1 does not exist on array\<string, mixed\>\.$#'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: app/Lib/Logging/MapLog.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, list\<string\>\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Logging/MapLog.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: app/Lib/Logging/RallyLog.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Lib\\Logging\\LogCollection\|Exodus4D\\Pathfinder\\Lib\\Logging\\MapLog\:\:addLog\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Lib/Monolog.php
+
+		-
+			message: '#^Call to an undefined method Monolog\\Handler\\HandlerInterface\:\:setFormatter\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Lib/Monolog.php
+
+		-
+			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:toMonologLevel\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Monolog.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Lib\\Monolog\:\:\$logs \(array\<array\<Exodus4D\\Pathfinder\\Lib\\Logging\\LogCollection\|Exodus4D\\Pathfinder\\Lib\\Logging\\MapLog\>\>\) does not accept array\<array\<Exodus4D\\Pathfinder\\Lib\\Logging\\AbstractLog\>\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Lib/Monolog.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Lib\\PriorityCacheStore\:\:\$priorityQueue with generic class SplPriorityQueue does not specify its types\: TPriority, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Lib/PriorityCacheStore.php
+
+		-
+			message: '#^Anonymous function has an unused use \$connection\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '''
+				#^Call to method create\(\) of deprecated class React\\EventLoop\\Factory\:
+				1\.2\.0 See Loop instead\.$#
+			'''
+			identifier: staticMethod.deprecatedClass
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Socket\\AbstractSocket\:\:connect\(\) return type with generic interface React\\Promise\\PromiseInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Socket\\AbstractSocket\:\:factory\(\) should return Exodus4D\\Pathfinder\\Lib\\Socket\\SocketInterface but returns object\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Socket\\AbstractSocket\:\:initWrite\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Socket\\AbstractSocket\:\:write\(\) return type with generic interface React\\Promise\\PromiseInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '#^Parameter \#2 \$load of method Exodus4D\\Pathfinder\\Lib\\Socket\\AbstractSocket\:\:newPayload\(\) expects null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '#^Parameter \#2 \$onRejected of method React\\Promise\\PromiseInterface\<mixed\>\:\:then\(\) expects \(callable\(Throwable\)\: \(React\\Promise\\PromiseInterface\<void\>\|void\)\)\|null, Closure\(Exception\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Socket/AbstractSocket.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Socket\\NullSocket\:\:write\(\) return type with generic interface React\\Promise\\PromiseInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Lib/Socket/NullSocket.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Socket\\SocketInterface\:\:write\(\) return type with generic interface React\\Promise\\PromiseInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Lib/Socket/SocketInterface.php
+
+		-
+			message: '#^Binary operation "/" between string and int results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Util\:\:arrayFlattenByValue\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Util\:\:convertScopesString\(\) should return array\<string, mixed\>\|null but returns list\<string\>\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function fileperms expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function is_dir expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function is_file expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Parameter \#1 \$hour of method DateTime\:\:setTime\(\) expects int, int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Parameter \#2 \$minute of method DateTime\:\:setTime\(\) expects int, int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Lib/Util.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$active\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Access to property \$_id on an unknown class Model\\AbstractModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Binary operation "\+" between int\|string\|null and 1 results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:dry\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with int will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 4
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with null will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Cannot access offset int\|string on int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Cannot call method addIndex\(\) on Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\TableModifier\|true\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Cannot call method build\(\) on Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\TableModifier\|true\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Cannot call method castAll\(\) on array\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Cannot call method getCols\(\) on Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\TableModifier\|true\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Cannot call method listIndex\(\) on Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\TableModifier\|true\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:existsCacheValue\(\) should return bool but returns array\|false\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:exportData\(\) should return bool but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getByForeignKey\(\) should return bool but returns DB\\SQL\\Mapper\|false\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getFilter\(\) should return array\<string, mixed\> but returns array\<int\|string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getNew\(\) should return Exodus4D\\Pathfinder\\Model\\AbstractModel but returns object\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getTableModifier\(\) should return bool\|Exodus4D\\Pathfinder\\Db\\Sql\\Mysql\\TableModifier but returns bool\|DB\\SQL\\TableModifier\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:loadCSV\(\) should return array\<string, mixed\> but returns list\<array\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:refClass\(\) return type with generic class ReflectionClass does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:relFind\(\) should return DB\\CortexCollection\|null but returns DB\\CortexCollection\|true\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^PHPDoc tag @return with type Exodus4D\\Pathfinder\\Model\\AbstractModel\|null is not subtype of native type Exodus4D\\Pathfinder\\Model\\AbstractModel\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(string\|null\)\: mixed\)\|null, Closure\(string\)\: string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$col of method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:throwValidationException\(\) expects string, int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$filter of method DB\\Cortex\:\:find\(\) expects array\<mixed\>\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$objectOrClass of class ReflectionClass constructor expects class\-string\<T of object\>\|T of object, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function feof expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fgetcsv expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strtoupper expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_key_exists expects array, array\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, list\<string\|null\>\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#2 \$datetime of static method DateTime\:\:createFromFormat\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#2 \$preserve_keys of function array_reverse expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$fieldConf \(int\) does not accept array\<mixed, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$validationError \(array\<string, mixed\>\) does not accept array\<int\|string, mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between array\<mixed\>\|string and 0 will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Model/AbstractModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\AbstractMapTrackingModel\:\:\$createdCharacterId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/AbstractMapTrackingModel.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Lib\\Logging\\LogInterface\:\:setCharacter\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/AbstractMapTrackingModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$updatedCharacterId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/AbstractMapTrackingModel.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Model/Pathfinder/AbstractMapTrackingModel.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cursor\:\:schema\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/AbstractPathfinderModel.php
+
+		-
+			message: '#^PHPDoc tag @return with type void\|null is not subtype of native type void\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Model/Pathfinder/AbstractPathfinderModel.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_filter expects array, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/AbstractPathfinderModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\AbstractSystemApiBasicModel\:\:\$lastUpdatedValue\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/AbstractSystemApiBasicModel.php
+
+		-
+			message: '#^Call to function is_array\(\) with int will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Model/Pathfinder/AbstractSystemApiBasicModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\AbstractSystemApiBasicModel\:\:getValues\(\) should return array\<string, mixed\> but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/AbstractSystemApiBasicModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$fieldConf \(int\) does not accept array\<string, array\<string, bool\|int\|string\>\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/AbstractSystemApiBasicModel.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Model/Pathfinder/ActivityLogModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ActivityLogModel\:\:getCountableColumnNames\(\) should return array\<string, mixed\> but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/ActivityLogModel.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_keys expects array, array\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/ActivityLogModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/Pathfinder/ActivityLogModel.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$arrays of function array_map expects array, array\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/ActivityLogModel.php
+
+		-
+			message: '#^Cannot call method clearCacheData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/AllianceMapModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/AllianceMapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\AllianceModel\:\:\$allianceCharacters\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/AllianceModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\AllianceModel\:\:\$mapAlliances\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/AllianceModel.php
+
+		-
+			message: '#^Variable \$alliance in PHPDoc tag @var does not match assigned variable \$loaded\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: app/Model/Pathfinder/AllianceModel.php
+
+		-
+			message: '#^Cannot call method getCookieName\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/CharacterAuthenticationModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterLogModel\:\:\$shipId\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterLogModel\:\:\$shipName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterLogModel\:\:\$stationName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterLogModel\:\:\$structureName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterLogModel\:\:\$structureTypeId\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterLogModel\:\:\$structureTypeName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterLogModel\:\:\$systemName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 3
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$shipMass \(int\) does not accept float\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$shipTypeId \(int\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$stationId \(int\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$structureId \(int\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$systemId \(int\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterLogModel.php
+
+		-
+			message: '#^Cannot call method clearCacheData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/CharacterMapModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterMapModel.php
+
+		-
+			message: '#^Access to an undefined property DB\\Cortex\:\:\$characterMaps\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$affiliationUpdated\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$authStatus\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$banned\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$characterAuthentications\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$characterLog\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$characterMaps\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$esiAccessToken\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$esiAccessTokenExpires\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$esiRefreshToken\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$esiScopes\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$kicked\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$lastLogin\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$logLocation\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$ownerHash\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$selectLocation\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$characterId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$owner\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$scp\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Anonymous function has an unused use \$mapId\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Argument of an invalid type object supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 3
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:getAlliance\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:getCorporation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with int will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 2
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Cannot access property \$name on int\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Cannot call method getData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:filterLogsHistory\(\) should return array\<string, mixed\> but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:getAll\(\) has parameter \$characterIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:getAll\(\) should return DB\\CortexCollection but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:getAlliance\(\) should return Exodus4D\\Pathfinder\\Model\\Pathfinder\\AllianceModel\|null but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:getCorporation\(\) should return Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\|null but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:getRole\(\) should return Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel but returns Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:mergeSessionCharacterData\(\) has parameter \$characterDataBase with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:updateLog\(\) has parameter \$additionalOptions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:updateLogHistoryEntry\(\) has parameter \$historyEntry with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Offset 0 does not exist on non\-empty\-array\<string, mixed\>\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Parameter \#1 \$accessToken of method Exodus4D\\Pathfinder\\Controller\\Ccp\\Sso\:\:verifyCharacterData\(\) expects string, string\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Parameter \#1 \$accessToken of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:isOnline\(\) expects string, string\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Parameter \#2 \$accessToken of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:loadById\(\) expects string, string\|true given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$allianceId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\AllianceModel\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$corporationId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$roleId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CharacterModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterStatusModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/CharacterStatusModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\:\:\$active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\:\:\$characterName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\:\:\$record\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionLogModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/Pathfinder/ConnectionLogModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\:\:\$characterName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionLogModel\:\:\$connectionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:\$connectionLog\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:\$eolUpdated\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:\$signatures\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:\$source\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$security\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$systemId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:isAbyss\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:isKspace\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with string\|null will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 3
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Cannot access property \$id on string\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Cannot call method clearCacheData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Cannot call method exec\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Cannot call method get\(\) on string\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Cannot call method hasAccess\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:getLogsData\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:getSignaturesData\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:setEndpointData\(\) has parameter \$endpointData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:setJumpMassType\(\) should return array\<string, mixed\>\|null but returns list\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:set_endpoints\(\) has parameter \$endpointsData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:set_type\(\) has parameter \$type with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:set_type\(\) should return array\<string, mixed\> but returns list\<string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/ConnectionModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionScopeModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/ConnectionScopeModel.php
+
+		-
+			message: '#^Cannot call method clearCacheData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/CorporationMapModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/CorporationMapModel.php
+
+		-
+			message: '#^Access to an undefined property DB\\Cortex\:\:\$corporationId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Access to an undefined property DB\\Cortex\:\:\$structureId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:\$corporationCharacters\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:\$corporationRights\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:\$isNPC\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:\$mapCorporations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getAll\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getAll\(\) should return DB\\CortexCollection but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getCharacters\(\) has parameter \$characterIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getCharacters\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getMaps\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getMaps\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getRights\(\) has parameter \$names with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getRights\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getRights\(\) should return array\<Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationRightModel\> but returns list\<Exodus4D\\Pathfinder\\Model\\AbstractModel\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\:\:getStructuresData\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$corporationId \(int\) does not accept \$this\(Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\)\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$roleId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CorporationModel.php
+
+		-
+			message: '#^Cannot call method getData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Model/Pathfinder/CorporationRightModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/CorporationRightModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/CorporationStructureModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$expr\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$handler\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$history\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$isPaused\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$lastExecMemPeak\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CronModel\:\:\$lastExecState\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Call to function is_null\(\) with int will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 2
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$lastExecEnd \(int\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
+			count: 1
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Variable \$status in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Model/Pathfinder/CronModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$groupSystems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapGroupModel\:\:\$constrain\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapGroupModel\:\:\$height\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapGroupModel\:\:\$isCollapsed\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapGroupModel\:\:\$label\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapGroupModel\:\:\$width\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:logActivity\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Cannot call method clearCacheData\(\) on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Cannot call method hasAccess\(\) on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapGroupModel\:\:\$fieldConf has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapGroupModel\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Model/Pathfinder/MapGroupModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\:\:\$source\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$allowGroups\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$allowUnknownSystems\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$createdCharacterId\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$deleteEolConnections\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$deleteExpiredConnections\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$discordUsername\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$discordWebHookURLHistory\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$discordWebHookURLRally\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$granularK162\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$icon\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$logActivity\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$logHistory\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$mapAlliances\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$mapCharacters\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$mapCorporations\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$persistentAliases\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$persistentSignatures\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$slackChannelHistory\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$slackChannelRally\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$slackIcon\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$slackUsername\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$slackWebHookURL\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$securityClass\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Argument of an invalid type array\<string, mixed\>\|stdClass\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Call to an undefined method Exodus4D\\Pathfinder\\Lib\\Logging\\LogInterface\:\:logActivity\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getAlliance\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getCorporation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with int will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Cannot access offset string on array\<string, mixed\>\|stdClass\|null\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Cannot access property \$_id on Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Cannot access property \$classTab on int\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Cannot access property \$id on int\.$#'
+			identifier: property.nonObject
+			count: 5
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Cannot access property \$label on int\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Cannot access property \$name on int\.$#'
+			identifier: property.nonObject
+			count: 6
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Cannot call method isActive\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:clearAccess\(\) has parameter \$clearKeys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getAll\(\) has parameter \$mapIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getAll\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getAll\(\) should return DB\\CortexCollection but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getAllCharacters\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getAllCorporations\(\) should return array\<Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\> but returns array\<Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\|null\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getCharactersData\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getStructuresData\(\) should return array\<string, mixed\> but returns array\<int, array\<string, array\<string, mixed\>\|int\|string\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getSystemByCCPId\(\) has parameter \$addFilters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:setData\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Parameter \#1 \$string of function base64_encode expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Parameter \#1 \$uri of static method Exodus4D\\Pathfinder\\Lib\\Config\:\:validSocketConnect\(\) expects string, bool\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$allianceId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\AllianceModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$characterId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$corporationId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\CorporationModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$mapId \(int\) does not accept \$this\(Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\)\.$#'
+			identifier: assign.propertyType
+			count: 6
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$mapId \(int\) does not accept int\|string\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$systemId \(int\) does not accept int\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$fieldConf has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Return type \(Closure\) of method Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:getLogFormatter\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:getLogFormatter\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Variable \$connectionIds in empty\(\) always exists and is always falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Model/Pathfinder/MapModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapScopeModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/MapScopeModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapTypeModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/MapTypeModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\RightModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/RightModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel\:\:\$label\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/RoleModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel\:\:\$style\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/RoleModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel\:\:getAll\(\) should return DB\\CortexCollection but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/RoleModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\RoleModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/RoleModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureModel\:\:\$statusId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/StructureModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureModel\:\:\$structureCorporations\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/StructureModel.php
+
+		-
+			message: '#^Cannot access property \$_id on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Pathfinder/StructureModel.php
+
+		-
+			message: '#^Cannot access property \$name on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Pathfinder/StructureModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureModel\:\:getUniverseTypeData\(\) should return stdClass but returns object\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/StructureModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/StructureModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureStatusModel\:\:\$class\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/StructureStatusModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureStatusModel\:\:\$label\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/StructureStatusModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureStatusModel\:\:getAll\(\) should return DB\\CortexCollection but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Pathfinder/StructureStatusModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\StructureStatusModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/StructureStatusModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapModel\:\:\$persistentSignatures\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$alias\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$connectionsSource\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$connectionsTarget\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$constellation\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$constellationId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$createdCharacterId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$effect\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$factionWar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$groupId\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$locked\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$planets\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$rallyPoke\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$rallyUpdated\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$region\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$regionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$securityClass\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$shattered\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$signatures\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$sovereignty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$statics\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$stations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:\$statusId\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getData\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Call to an undefined static method DB\\Cortex\:\:getStatusById\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with Exodus4D\\Pathfinder\\Lib\\PriorityCacheStore will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with int will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 3
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Cannot access property \$id on int\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Cannot call method clearCacheData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Cannot call method hasAccess\(\) on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Match arm comparison between int and ''0\.0'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Match arm comparison between int and ''A'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Match arm comparison between int and ''H'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Match arm comparison between int and ''L'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Match arm comparison between int and ''T'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:sendRallyPoke\(\) has parameter \$rallyData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:setData\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\:\:set_status\(\) has parameter \$status with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Exodus4D\\Pathfinder\\Lib\\PriorityCacheStore\:\:exists\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Exodus4D\\Pathfinder\\Lib\\PriorityCacheStore\:\:get\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Exodus4D\\Pathfinder\\Lib\\PriorityCacheStore\:\:set\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$systemId \(int\) does not accept \$this\(Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemModel\)\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$typeId \(int\) does not accept Exodus4D\\Pathfinder\\Model\\Pathfinder\\MapTypeModel\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and ''A'' will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 3
+			path: app/Model/Pathfinder/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:\$connectionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:\$connectionIdDeleteCascade\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:\$createdCharacterId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:\$groupId\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cursor\:\:schema\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getBasicData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Call to function is_object\(\) with int will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Cannot call method hasAccess\(\) on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Cannot cast Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\|int\|null to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:hasChanged\(\) has parameter \$signatureData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemSignatureModel\:\:setData\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Model/Pathfinder/SystemSignatureModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemStatusModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/SystemStatusModel.php
+
+		-
+			message: '#^Static property Exodus4D\\Pathfinder\\Model\\Pathfinder\\SystemTypeModel\:\:\$tableData \(array\<string, mixed\>\) does not accept default value of type array\<int, array\<string, int\|string\>\>\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Model/Pathfinder/SystemTypeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\UserCharacterModel\:\:\$userId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/UserCharacterModel.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$userCharacters\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Pathfinder/UserCharacterModel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:erase\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Pathfinder/UserCharacterModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Pathfinder/UserCharacterModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\UserModel\:\:\$userCharacters\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Pathfinder/UserModel.php
+
+		-
+			message: '#^Cannot access property \$_id on Exodus4D\\Pathfinder\\Model\\Pathfinder\\UserModel\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Pathfinder/UserModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:\$x\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/AbstractUniverseModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:\$y\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/AbstractUniverseModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:\$z\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/AbstractUniverseModel.php
+
+		-
+			message: '#^Parameter \#1 \$key of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:existsCacheValue\(\) expects string, string\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Universe/AbstractUniverseModel.php
+
+		-
+			message: '#^Parameter \#2 \$rowKeys of static method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:buildTableIndex\(\) expects array\<string, mixed\>, array\<int, string\|true\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Universe/AbstractUniverseModel.php
+
+		-
+			message: '#^Variable \$model in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: app/Model/Universe/AbstractUniverseModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\AllianceModel\:\:\$ticker\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/AllianceModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AllianceModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/AllianceModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\CategoryModel\:\:\$groups\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/CategoryModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Universe\\CategoryModel\:\:getGroupsData\(\) should return array\<string, mixed\> but returns list\<object\|null\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Universe/CategoryModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\ConstellationModel\:\:\$regionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/ConstellationModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\ConstellationModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/ConstellationModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\CorporationModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/CorporationModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\DogmaAttributeModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/DogmaAttributeModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\FactionModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/FactionModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\FactionWarSystemModel\:\:\$contested\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/FactionWarSystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\FactionWarSystemModel\:\:\$occupierFactionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/FactionWarSystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\FactionWarSystemModel\:\:\$ownerFactionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/FactionWarSystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\FactionWarSystemModel\:\:\$victoryPoints\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/FactionWarSystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\FactionWarSystemModel\:\:\$victoryPointsThreshold\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/FactionWarSystemModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Universe\\FactionWarSystemModel\:\:getVictoryPercentage\(\) should return int but returns float\|int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Universe/FactionWarSystemModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\FactionWarSystemModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/FactionWarSystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\GroupModel\:\:\$types\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/GroupModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Universe\\GroupModel\:\:getTypesData\(\) should return array\<string, mixed\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Universe/GroupModel.php
+
+		-
+			message: '#^Cannot access property \$name on int\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Universe/PlanetModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\PlanetModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/PlanetModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\RaceModel\:\:\$factionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/RaceModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\RaceModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/RaceModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\RegionModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/RegionModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SovereigntyMapModel\:\:\$factionId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SovereigntyMapModel.php
+
+		-
+			message: '#^Cannot call method getData\(\) on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Model/Universe/SovereigntyMapModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\SovereigntyMapModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/SovereigntyMapModel.php
+
+		-
+			message: '#^Cannot access property \$name on int\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Universe/StarModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\StarModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/StarModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\StargateModel\:\:\$destinationSystemId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/StargateModel.php
+
+		-
+			message: '#^Cannot access property \$name on int\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Model/Universe/StargateModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Universe\\StargateModel\:\:getData\(\) should return null but returns object\{\}&stdClass\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Universe/StargateModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Universe/StargateModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\StationModel\:\:\$raceId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/StationModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\StationModel\:\:\$services\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/StationModel.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:loadById\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Model/Universe/StationModel.php
+
+		-
+			message: '#^Cannot call method getData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Universe/StationModel.php
+
+		-
+			message: '#^Cannot call method getData\(\) on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Universe/StationModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\StationModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/StationModel.php
+
+		-
+			message: '#^Variable \$faction in PHPDoc tag @var does not match assigned variable \$corporation\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: app/Model/Universe/StationModel.php
+
+		-
+			message: '#^Cannot call method getData\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Universe/StructureModel.php
+
+		-
+			message: '#^Parameter \#1 \$db of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setup\(\) expects null, DB\\SQL\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Universe/StructureModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\StructureModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/StructureModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$constellationId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$effect\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$factionWar\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$planets\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$sovereignty\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$starId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$stargates\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$statics\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:\$stations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Call to an undefined method DB\\Cortex\:\:loadById\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:getStargatesData\(\) should return array\<string, mixed\> but returns list\<null\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:getStaticsData\(\) should return array\<string, mixed\> but returns list\<string\|null\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$security \(int\) does not accept string\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\SystemModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Variable \$factionWar in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Variable \$sovereignty in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: app/Model/Universe/SystemModel.php
+
+		-
+			message: '#^Cannot call method getWormholeName\(\) on int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Model/Universe/SystemStaticModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Universe/SystemStaticModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeAttributeModel\:\:\$attributeId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/TypeAttributeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeAttributeModel\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/TypeAttributeModel.php
+
+		-
+			message: '#^Parameter \#1 \$columns of static method Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:setMultiColumnIndex\(\) expects array\<string, mixed\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Universe/TypeAttributeModel.php
+
+		-
+			message: '#^Return type \(stdClass\) of method Exodus4D\\Pathfinder\\Model\\Universe\\TypeAttributeModel\:\:getData\(\) should be compatible with return type \(null\) of method Exodus4D\\Pathfinder\\Model\\Universe\\AbstractUniverseModel\:\:getData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Model/Universe/TypeAttributeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeAttributeModel\:\:\$attributeId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeAttributeModel\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeModel\:\:\$attributes\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeModel\:\:\$dogmaAttributes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeModel\:\:\$mass\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Universe\\TypeModel\:\:\$statics\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Method Exodus4D\\Pathfinder\\Model\\Universe\\TypeModel\:\:set_dogma_attributes\(\) has parameter \$dogmaAttributesData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Parameter \#1 \$array of function end is passed by reference, so it expects variables only\.$#'
+			identifier: argument.byRef
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Parameter \#1 \$array of static method Exodus4D\\Pathfinder\\Lib\\Util\:\:arrayGetBy\(\) expects array\<string, mixed\>, list\<array\<mixed\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Possibly invalid array key type string\|null\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: app/Model/Universe/TypeModel.php
+
+		-
+			message: '#^Property Exodus4D\\Pathfinder\\Model\\AbstractModel\:\:\$typeId \(int\) does not accept \$this\(Exodus4D\\Pathfinder\\Model\\Universe\\TypeModel\)\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Model/Universe/TypeModel.php

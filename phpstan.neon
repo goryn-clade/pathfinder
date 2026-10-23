@@ -1,0 +1,27 @@
+parameters:
+    level: 8
+    phpVersion: 80500
+    paths:
+        - app
+    excludePaths:
+        - vendor
+        - tmp
+    stubFiles:
+        - stubs/f3/Prefab.php
+        - stubs/f3/Base.php
+        - stubs/f3/Template.php
+        - stubs/f3/Log.php
+        - stubs/f3/Audit.php
+        - stubs/f3/Cache.php
+        - stubs/f3/DB/SQL.php
+        - stubs/f3/DB/Schema.php
+        - stubs/f3/DB/Cortex.php
+        - stubs/f3/DB/CortexCollection.php
+    scanFiles:
+        - vendor/monolog/monolog/src/Monolog/Logger.php
+    bootstrapFiles: []
+    ignoreErrors: []
+
+includes:
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - phpstan-baseline.neon
