@@ -3243,13 +3243,8 @@ define([
 
                 // add incoming K162 options (generic grouped or granular per-class)
                 let incomingSource = granularK162 ? Init.incomingWormholesSpecific : Init.incomingWormholesGeneric;
-                let incomingWHData = [];
-                for(let incomingKey in incomingSource){
-                    if(incomingKey > 0 && incomingSource.hasOwnProperty(incomingKey)){
-                        newSelectOptionsCount++;
-                        incomingWHData.push({value: newSelectOptionsCount, text: incomingSource[incomingKey]});
-                    }
-                }
+                // -> fixed values, not "newSelectOptionsCount": that differs between cached and uncached builds
+                let incomingWHData = incomingSource.map(option => Object.assign({}, option));
                 if(incomingWHData.length > 0){
                     newSelectOptions.push({text: 'Incoming', children: incomingWHData});
                 }

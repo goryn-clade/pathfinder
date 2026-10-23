@@ -553,7 +553,8 @@ define([
                 // ... get endpoint label for source || target system
                 if(signatureData.typeId > 0 && tmpSystem && tmpSystem){
                     // ... get all  available signature type (wormholes) names
-                    let availableSigTypeNames = SystemSignatureModule.getSignatureTypeOptionsBySystem(tmpSystem, 5);
+                    let granularK162 = Util.getObjVal(Util.getCurrentMapData(tmpSystem.data('mapid')), 'config.granularK162');
+                    let availableSigTypeNames = SystemSignatureModule.getSignatureTypeOptionsBySystem(tmpSystem, 5, granularK162);
                     let flattenSigTypeNames = Util.flattenXEditableSelectArray(availableSigTypeNames);
 
                     if(flattenSigTypeNames.hasOwnProperty(signatureData.typeId)){
