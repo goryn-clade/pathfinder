@@ -60,7 +60,7 @@ abstract class AbstractSocket implements SocketInterface {
      */
     protected function getLoop(): EventLoop\LoopInterface {
         if(!($this->loop instanceof EventLoop\LoopInterface)){
-            $this->loop = EventLoop\Factory::create();
+            $this->loop = EventLoop\Loop::get();
         }
 
         return $this->loop;
