@@ -25,7 +25,6 @@ let imageminWebp        = require('imagemin-webp');
 let {finished}          = require('stream/promises');
 let rename              = require('gulp-rename');
 let debug              = require('gulp-debug');
-let notifier            = require('node-notifier');
 
 // -- Helper & NPM modules ----------------------------------------------------
 let flatten             = require('flat');
@@ -1079,12 +1078,7 @@ gulp.task('task:buildImg', gulp.parallel(
  * JS Build done notification
  */
 gulp.task('task:notifyJsDone', done => {
-    notifier.notify({
-        title: 'Done JS build',
-        message: 'JS build task finished',
-        icon: PATH.ASSETS.DEST + '/img/logo.png',
-        wait: false
-    });
+    log(colors.iconSuccess('JS build done'));
     done();
 });
 
@@ -1092,12 +1086,7 @@ gulp.task('task:notifyJsDone', done => {
  * CSS Build done notification
  */
 gulp.task('task:notifyCssDone', done => {
-    notifier.notify({
-        title: 'Done CSS build',
-        message: 'CSS build task finished',
-        icon: PATH.ASSETS.DEST + '/img/logo.png',
-        wait: false
-    });
+    log(colors.iconSuccess('CSS build done'));
     done();
 });
 
