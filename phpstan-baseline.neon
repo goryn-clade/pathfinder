@@ -1993,15 +1993,6 @@ parameters:
 			path: app/Lib/Socket/AbstractSocket.php
 
 		-
-			message: '''
-				#^Call to method create\(\) of deprecated class React\\EventLoop\\Factory\:
-				1\.2\.0 See Loop instead\.$#
-			'''
-			identifier: staticMethod.deprecatedClass
-			count: 1
-			path: app/Lib/Socket/AbstractSocket.php
-
-		-
 			message: '#^Method Exodus4D\\Pathfinder\\Lib\\Socket\\AbstractSocket\:\:connect\(\) return type with generic interface React\\Promise\\PromiseInterface does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
