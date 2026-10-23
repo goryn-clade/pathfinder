@@ -21,8 +21,8 @@ let sass                = require('gulp-sass')(require('sass'));
 let autoprefixer        = require('gulp-autoprefixer');
 let cleanCSS            = require('gulp-clean-css');
 let imageResize         = require('gulp-image-resize');
-let imagemin            = require('gulp-imagemin');
 let imageminWebp        = require('imagemin-webp');
+let {finished}          = require('stream/promises');
 let rename              = require('gulp-rename');
 let debug              = require('gulp-debug');
 let notifier            = require('node-notifier');
@@ -766,7 +766,7 @@ gulp.task('task:brotliCssAssets', () => {
  */
 gulp.task('task:renameJsDest', () => {
     let fileExt = ['js', 'map'].concat(compressionExt);
-    return gulp.src( PATH.JS.DEST_BUILD + '/**/*.{' + fileExt.join(',') + '}', {base: PATH.JS.DEST_BUILD, since: gulp.lastRun('task:renameJsDest')})
+    return gulp.src( PATH.JS.DEST_BUILD + '/**/*.{' + fileExt.join(',') + '}', {base: PATH.JS.DEST_BUILD, since: gulp.lastRun('task:renameJsDest'), encoding: false})
         .pipe(debug({title: 'Rename JS dest: ', showFiles: false}))
         .pipe(gulp.dest(PATH.JS.DEST_BUILD + '/../' + CONF.TAG));
 });
@@ -815,11 +815,13 @@ gulp.task('task:cleanCss', () => {
 
 // == Image build tasks ===============================================================================================
 
-let imgWebpHandler = (config, taskName) => {
-    return gulp.src(config.src, {base: config.base, since: gulp.lastRun(taskName)})
+let imgWebpHandler = async (config, taskName) => {
+    // gulp-imagemin is ESM-only since v8, so it can't be require()d
+    const {default: imagemin} = await import('gulp-imagemin');
+    return finished(gulp.src(config.src, {base: config.base, since: gulp.lastRun(taskName), encoding: false})
         .pipe(imagemin([imageminWebp(config.options)], {verbose: true}))
         .pipe(rename({extname: '.webp'}))
-        .pipe(gulp.dest(PATH.ASSETS.DEST + '/img/' + CONF.TAG));
+        .pipe(gulp.dest(PATH.ASSETS.DEST + '/img/' + CONF.TAG)));
 };
 
 gulp.task('task:imgHeadToWEBP', () => {
@@ -839,7 +841,7 @@ gulp.task('task:imgGalleryToWEBP', () => {
 });
 
 let imgResizeHandler = (config, taskName) => {
-    return gulp.src(config.src, {base: 'img', since: gulp.lastRun(taskName)})
+    return gulp.src(config.src, {base: 'img', since: gulp.lastRun(taskName), encoding: false})
         .pipe(imageResize(config.options))
         .pipe(gulpif(config.rename, rename(config.rename)))
         .pipe(gulp.dest(PATH.ASSETS.DEST + '/img/' + CONF.TAG));
@@ -866,7 +868,7 @@ gulp.task('task:imgHeadResize', gulp.series(
 ));
 
 gulp.task('task:imgGalleryCopy', () => {
-    return gulp.src(PATH.IMG.SRC_GALLERY, {base: 'img', since: gulp.lastRun('task:imgGalleryCopy')})
+    return gulp.src(PATH.IMG.SRC_GALLERY, {base: 'img', since: gulp.lastRun('task:imgGalleryCopy'), encoding: false})
         .pipe(gulp.dest(PATH.ASSETS.DEST + '/img/' + CONF.TAG));
 });
 
@@ -881,7 +883,7 @@ gulp.task('task:imgRest', () => {
         `!${PATH.IMG.SRC_HEADER}`,
         `!${PATH.IMG.SRC_GALLERY}`,
         `!${PATH.IMG.SRC_SVG}`
-    ], {base: 'img', since: gulp.lastRun('task:imgRest')})
+    ], {base: 'img', since: gulp.lastRun('task:imgRest'), encoding: false})
         .pipe(debug({title: 'Copy img "rest" dest: ', showFiles: false}))
         .pipe(gulp.dest(PATH.ASSETS.DEST + '/img/' + CONF.TAG));
 });
