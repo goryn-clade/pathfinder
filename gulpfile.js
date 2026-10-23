@@ -20,11 +20,10 @@ let sass                = require('gulp-sass')(require('sass'));
 let autoprefixer        = require('gulp-autoprefixer');
 let cleanCSS            = require('gulp-clean-css');
 let imageResize         = require('gulp-image-resize');
-let imageminWebp        = require('imagemin-webp');
+let sharp               = require('sharp');
 let {finished}          = require('stream/promises');
 let rename              = require('gulp-rename');
 let debug              = require('gulp-debug');
-let notifier            = require('node-notifier');
 
 // -- Helper & NPM modules ----------------------------------------------------
 let flatten             = require('flat');
@@ -296,7 +295,7 @@ let brotliOptions = {
 
 let compressionExt = [gZipOptions.extension, brotliOptions.extension];
 
-let imageminWebpOptions = {quality: 80};
+let webpOptions = {quality: 80};
 
 let imgResizeOptions = {
     crop : true,
@@ -866,12 +865,24 @@ gulp.task('task:cleanCss', () => {
 
 // == Image build tasks ===============================================================================================
 
-let imgWebpHandler = async (config, taskName) => {
-    // gulp-imagemin is ESM-only since v8, so it can't be require()d
-    const {default: imagemin} = await import('gulp-imagemin');
+// convert images to *.webp with sharp (libvips)
+let toWebp = options => new stream.Transform({
+    objectMode: true,
+    transform(file, enc, cb){
+        sharp(file.contents).webp(options).toBuffer()
+            .then(contents => {
+                file.contents = contents;
+                cb(null, file);
+            }, cb);
+    }
+});
+
+let imgWebpHandler = (config, taskName) => {
     return finished(gulp.src(config.src, {base: config.base, since: gulp.lastRun(taskName), encoding: false})
-        .pipe(imagemin([imageminWebp(config.options)], {verbose: true}))
+        .pipe(bytediff.start())
+        .pipe(toWebp(config.options))
         .pipe(rename({extname: '.webp'}))
+        .pipe(bytediff.stop(data => colors.iconSuccess(`webp → ${colors.magenta(data.fileName)} ${prettyBytes(data.startSize)} → ${prettyBytes(data.endSize)}`)))
         .pipe(gulp.dest(PATH.ASSETS.DEST + '/img/' + CONF.TAG)));
 };
 
@@ -879,7 +890,7 @@ gulp.task('task:imgHeadToWEBP', () => {
     return imgWebpHandler({
         src: PATH.ASSETS.DEST + '/img/' + CONF.TAG + '/header/**/*.png',
         base: PATH.ASSETS.DEST + '/img/' + CONF.TAG,
-        options: imageminWebpOptions
+        options: webpOptions
     }, 'task:imgHeadToWEBP');
 });
 
@@ -887,7 +898,7 @@ gulp.task('task:imgGalleryToWEBP', () => {
     return imgWebpHandler({
         src: PATH.ASSETS.DEST + '/img/' + CONF.TAG + '/gallery/**/*.jpg',
         base: PATH.ASSETS.DEST + '/img/' + CONF.TAG,
-        options: Object.assign({}, imageminWebpOptions, {quality: 90}) // unfortunately src jpg´s are already high compressed
+        options: Object.assign({}, webpOptions, {quality: 90}) // unfortunately src jpg´s are already high compressed
     }, 'task:imgGalleryToWEBP');
 });
 
@@ -1130,12 +1141,7 @@ gulp.task('task:buildImg', gulp.parallel(
  * JS Build done notification
  */
 gulp.task('task:notifyJsDone', done => {
-    notifier.notify({
-        title: 'Done JS build',
-        message: 'JS build task finished',
-        icon: PATH.ASSETS.DEST + '/img/logo.png',
-        wait: false
-    });
+    log(colors.iconSuccess('JS build done'));
     done();
 });
 
@@ -1143,12 +1149,7 @@ gulp.task('task:notifyJsDone', done => {
  * CSS Build done notification
  */
 gulp.task('task:notifyCssDone', done => {
-    notifier.notify({
-        title: 'Done CSS build',
-        message: 'CSS build task finished',
-        icon: PATH.ASSETS.DEST + '/img/logo.png',
-        wait: false
-    });
+    log(colors.iconSuccess('CSS build done'));
     done();
 });
 
