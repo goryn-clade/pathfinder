@@ -12,7 +12,6 @@ let requirejsOptimize   = require('gulp-requirejs-optimize');
 let filter              = require('gulp-filter');
 let gulpif              = require('gulp-if');
 let jshint              = require('gulp-jshint');
-let sourcemaps          = require('gulp-sourcemaps');
 let zlib                = require('zlib');
 let gzip                = require('gulp-gzip');
 let brotli              = require('gulp-brotli');
@@ -64,6 +63,60 @@ let bytediff = {
                     percent: endSize / file.bytediff.startSize
                 }));
             }
+            cb(null, file);
+        }
+    })
+};
+
+// external *.map files (replaces unmaintained gulp-sourcemaps; same output for the options used here)
+let unixPath = filePath => filePath.split(path.sep).join('/');
+let sourcemaps = {
+    // start a map; a file that already has one (e.g. from an earlier write in the same pipe) keeps it
+    init: () => new stream.Transform({
+        objectMode: true,
+        transform(file, enc, cb){
+            if(file.isNull() || file.sourceMap){
+                return cb(null, file);
+            }
+            file.sourceMap = {
+                version: 3,
+                names: [],
+                mappings: '',
+                sources: [unixPath(file.relative)],
+                sourcesContent: [file.contents.toString()],
+                file: unixPath(file.relative)
+            };
+            cb(null, file);
+        }
+    }),
+    // write the map next to the file, without sources content
+    write: sourceRoot => new stream.Transform({
+        objectMode: true,
+        transform(file, enc, cb){
+            if(file.isNull() || !file.sourceMap){
+                return cb(null, file);
+            }
+            let sourceMap = file.sourceMap;
+            let sourceMapPath = file.path + '.map';
+            delete sourceMap.sourcesContent;
+            sourceMap.sources = sourceMap.sources.map(unixPath);
+            sourceMap.file = file.basename;
+            sourceMap.sourceRoot = sourceRoot;
+            if(sourceRoot === '' || (sourceRoot && sourceRoot[0] === '.')){
+                sourceMap.sourceRoot = unixPath(path.join(path.relative(path.dirname(sourceMapPath), file.base), sourceRoot));
+            }
+
+            let mapFile = file.clone({deep: false, contents: false});
+            mapFile.path = sourceMapPath;
+            mapFile.contents = Buffer.from(JSON.stringify(sourceMap));
+            mapFile.stat = null;
+            this.push(mapFile);
+
+            let comment = {
+                css: `\n/*# sourceMappingURL=${mapFile.basename} */\n`,
+                js: `\n//# sourceMappingURL=${mapFile.basename}\n`
+            }[file.extname.slice(1)] || '';
+            file.contents = Buffer.concat([file.contents, Buffer.from(comment)]);
             cb(null, file);
         }
     })
@@ -137,9 +190,6 @@ let uglifyJsOptions = {
     nameCache: {},          // cache mangled variable and property names across multiple invocations of minify()
     keep_classnames: true   // pass true to prevent discarding or mangling of class names.
 };
-
-// Sourcemaps options
-// https://www.npmjs.com/package/gulp-sourcemaps
 
 // -- Error output ------------------------------------------------------------
 
@@ -654,7 +704,7 @@ gulp.task('task:concatJS', () => {
         }))
         .pipe(bytediff.start())
         .pipe(gulpif(CONF.JS.UGLIFY, minify(uglifyJsOptions)))
-        .pipe(gulpif(CONF.JS.SOURCEMAPS, sourcemaps.write('.', {includeContent: false, sourceRoot: '/js'}))) // prod (minify)
+        .pipe(gulpif(CONF.JS.SOURCEMAPS, sourcemaps.write('/js'))) // prod (minify)
         .pipe(bytediff.stop(data => {
             trackFile(data, {src: 'startSize', src_percent: 'percent', uglify: 'endSize'});
             return colors.green('Build concat file "' + data.fileName + '"');
@@ -674,7 +724,7 @@ gulp.task('task:diffJS', () => {
         .pipe(bytediff.start())
         .pipe(gulpif(CONF.JS.SOURCEMAPS, sourcemaps.init()))
         .pipe(gulpif(CONF.JS.UGLIFY, minify(uglifyJsOptions)))
-        .pipe(gulpif(CONF.JS.SOURCEMAPS, sourcemaps.write('.', {includeContent: false, sourceRoot: '/js'})))
+        .pipe(gulpif(CONF.JS.SOURCEMAPS, sourcemaps.write('/js')))
         .pipe(bytediff.stop(data => {
             trackFile(data, {src: 'startSize', src_percent: 'percent', uglify: 'endSize'});
             return colors.iconSuccess(`build → ${colors.magenta(data.fileName)}`);
@@ -787,29 +837,30 @@ gulp.task('task:sass', () => {
             trackFile(data, {src: 'startSize', src_percent: 'percent', uglify: 'endSize'});
             return colors.iconSuccess(`build → ${colors.magenta(data.fileName)}`);
         }))
-        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.write('.', {includeContent: false, sourceRoot: '../../../sass'})))
+        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.write('../../../sass')))
         .pipe(gulp.dest(PATH.ASSETS.DEST + '/css/' + CONF.TAG))
 
         .pipe(filter(['!*.map']))
-        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.init({loadMaps: true})))
+        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.init()))
         .pipe(autoprefixer(autoprefixerOptions))
         .pipe(bytediff.start())
         .pipe(bytediff.stop(data => {
             trackFile(data, {src: 'startSize', src_percent: 'percent', uglify: 'endSize'});
             return colors.green('Autoprefix CSS file "' + data.fileName + '"');
         }))
-        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.write('.', {includeContent: false})))
+        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.write()))
         .pipe(gulp.dest(PATH.ASSETS.DEST + '/css/' + CONF.TAG));
 });
 
 /**
  * css-clean can be used to "optimize" generated CSS [optional]
+ * (not in any build; its map would start from the built CSS, the map from task:sass is not loaded)
  */
 gulp.task('task:cleanCss', () => {
     return gulp.src('public/css/' + CONF.TAG + '/*.css')
-        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.init({loadMaps: true})))
+        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.init()))
         .pipe(cleanCSS(cleanCssOptions))
-        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.write('.', {includeContent: false})))
+        .pipe(gulpif(CONF.CSS.SOURCEMAPS, sourcemaps.write()))
         .pipe(gulp.dest(PATH.ASSETS.DEST + '/css/' + CONF.TAG));
 });
 
