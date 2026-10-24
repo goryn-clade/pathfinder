@@ -57,6 +57,16 @@ enum ConnectionType: string
     }
 
     /**
+     * The cases allowed in the `scope` column.
+     *
+     * @return list<self>
+     */
+    public static function scopeCases(): array
+    {
+        return [self::Wh, self::Stargate, self::Jumpbridge, self::Abyssal];
+    }
+
+    /**
      * The three EOL phase cases, in phase order.
      *
      * @return list<self>

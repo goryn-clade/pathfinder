@@ -118,6 +118,9 @@ class ConnectionModel extends AbstractMapTrackingModel {
         5_000         => ConnectionType::WhJumpMassS->value,
     ];
 
+    // Allowed values in sourceEndpointType / targetEndpointType
+    public const ENDPOINT_TYPES = ['bubble'];
+
     /**
      * @return string[]
      */
@@ -197,6 +200,20 @@ class ConnectionModel extends AbstractMapTrackingModel {
     }
 
     /**
+     * setter for connection scope
+     * -> unknown values are ignored: the current scope is kept. On insert an empty
+     *    scope is set by setAutoScopeAndType()
+     * @param mixed $scope
+     * @return string
+     */
+    public function set_scope(mixed $scope) : string {
+        if(is_string($scope) && in_array(ConnectionType::tryFrom($scope), ConnectionType::scopeCases(), true)){
+            return $scope;
+        }
+        return (string)$this->get('scope', true);
+    }
+
+    /**
      * setter for endpoints data (data for source/target endpoint)
      * @param  $endpointsData
      */
@@ -216,7 +233,12 @@ class ConnectionModel extends AbstractMapTrackingModel {
      */
     public function setEndpointData(string $label,  array $endpointData = []): void {
         if($this->exists($field = $label . 'EndpointType')){
-            $types = empty($types = (array)($endpointData['types'] ?? [])) ? null : $types;
+            // keep known endpoint types only
+            $types = array_values(array_unique(array_filter(
+                (array)($endpointData['types'] ?? []),
+                fn(mixed $t): bool => is_string($t) && in_array($t, self::ENDPOINT_TYPES, true)
+            )));
+            $types = empty($types) ? null : $types;
             if($this->$field != $types){
                 $this->$field = $types;
             }
