@@ -2557,12 +2557,6 @@ parameters:
 			path: app/Model/Pathfinder/CharacterMapModel.php
 
 		-
-			message: '#^Access to an undefined property DB\\Cortex\:\:\$characterMaps\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Model/Pathfinder/CharacterModel.php
-
-		-
 			message: '#^Access to an undefined property Exodus4D\\Pathfinder\\Model\\Pathfinder\\CharacterModel\:\:\$affiliationUpdated\.$#'
 			identifier: property.notFound
 			count: 1
@@ -2679,19 +2673,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type object supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 3
-			path: app/Model/Pathfinder/CharacterModel.php
-
-		-
-			message: '#^Call to an undefined method DB\\Cortex\:\:getAlliance\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Model/Pathfinder/CharacterModel.php
-
-		-
-			message: '#^Call to an undefined method DB\\Cortex\:\:getCorporation\(\)\.$#'
-			identifier: method.notFound
-			count: 1
+			count: 2
 			path: app/Model/Pathfinder/CharacterModel.php
 
 		-
