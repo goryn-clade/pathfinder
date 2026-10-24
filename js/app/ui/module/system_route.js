@@ -242,7 +242,7 @@ define([
                                 // get current row data (important!)
                                 // -> "rowData" param is not current state, values are "on createCell()" state
                                 rowData = tableApi.row( $(cell).parents('tr')).data();
-                                let routeData = module.getRouteRequestDataFromRowData(rowData, module._systemData.mapId, module._routeSettings);
+                                let routeData = module.getRouteRequestDataFromRowData(rowData, module._routeSettings);
 
                                 // overwrite some params
                                 routeData.skipSearch = 0;
@@ -306,10 +306,7 @@ define([
                     // fill routesTable with data ---------------------------------------------------------------------
                     Util.getLocalStore('map').getItem(module._systemData.mapId).then(dataStore => {
                         // selected systems (if already stored)
-                        let systemsTo = [{
-                            systemId: 30000142,
-                            name: 'Jita'
-                        }];
+                        let systemsTo = SystemRouteModule.defaultRouteTargets;
 
                         if(
                             dataStore &&
@@ -318,15 +315,15 @@ define([
                             systemsTo = dataStore.routes;
                         }
                         
-                        // set global route settings from store
-                        let routeSettings = {};
+                        // set global route settings from store (fall back to defaults if never saved)
+                        let routeSettings = Object.assign({}, SystemRouteModule.defaultRouteSettings);
                         if(
                             dataStore &&
                             dataStore.routeSettings
                         ){
-                            routeSettings = dataStore.routeSettings
+                            Object.assign(routeSettings, dataStore.routeSettings);
                         }
-                        module._routeSettings = routeSettings
+                        module._routeSettings = routeSettings;
 
                         // add "Rally Point" systems to table
                         let systemsToData = module.getRallySystemsData(module._systemData.mapId);
@@ -495,7 +492,7 @@ define([
          * @returns {Object}
          */
         getRouteRequestDataFromRowData(rowData, routeSettings){
-          
+
             return {
                 mapIds:             (rowData.hasOwnProperty('mapIds'))              ? rowData.mapIds                : [],
                 systemFromData:     (rowData.hasOwnProperty('systemFromData'))      ? rowData.systemFromData        : {},
@@ -553,7 +550,7 @@ define([
             let routeData = [];
 
             this._tableApi.rows().every(function(){
-                routeData.push(module.getRouteRequestDataFromRowData(this.data(), module._systemData.mapId));
+                routeData.push(module.getRouteRequestDataFromRowData(this.data(), module._routeSettings));
             });
 
             this.getRouteData({routeData: routeData}, 'callbackAddRouteRows');
@@ -921,9 +918,9 @@ define([
                     selectClass: this._config.systemDialogSelectClass,
                     systemSelectOptions: systemSelectOptions,
                     maxSelectionLength: maxSelectionLength,
-                    // new options — ensure EOL phase keys are always defined so Mustache
-                    // renders a numeric value, not "" (which == 0 and would uncheck the box)
-                    routeSettings: Object.assign({wormholesEOL1: 1, wormholesEOL2: 1, wormholesEOL3: 1}, routeSettingsOptions),
+                    // ensure all keys are defined so Mustache renders a numeric value, not ""
+                    // (which == 0 and would uncheck the box)
+                    routeSettings: Object.assign({}, SystemRouteModule.defaultRouteSettings, routeSettingsOptions),
                     select2Class: Util.config.select2Class,
                     routeDialogSizeSelectId: this._config.routeDialogSizeSelectId,
                     select2Class: Util.config.select2Class,
@@ -933,7 +930,6 @@ define([
                         selected: false
                     }))
                 };
-                console.log(data);
                 
                 requirejs(['text!templates/dialog/route_settings.html', 'mustache'], (template, Mustache) => {
                     let content = Mustache.render(template, data);
@@ -965,10 +961,11 @@ define([
                                     
                                     // route settings additions
                                     let routeSettingsData = $(form).getFormValues();
+                                    let routeSettings = this._routeSettings;
                                     if(
                                         routeSettingsData
                                     ){
-                                        let routeSettings = {
+                                        routeSettings = {
                                             stargates: routeSettingsData.hasOwnProperty('stargates') ? parseInt(routeSettingsData.stargates) : 0,
                                             jumpbridges: routeSettingsData.hasOwnProperty('jumpbridges') ? parseInt(routeSettingsData.jumpbridges) : 0,
                                             wormholes: routeSettingsData.hasOwnProperty('wormholes') ? parseInt(routeSettingsData.wormholes) : 0,
@@ -984,14 +981,20 @@ define([
                                             endpointsBubble: routeSettingsData.hasOwnProperty('endpointsBubble') ? parseInt(routeSettingsData.endpointsBubble) : 0,
                                         };
                                         Util.getLocalStore('map').setItem(`${dialogData.mapId}.routeSettings`, routeSettings);
+                                        this._routeSettings = routeSettings;
+                                        SystemRouteModule.getCache('routes').clear();
                                     }
                                     // end route settings additions
 
 
                                     this.showNotify({title: 'Route settings stored', type: 'success'});
 
-                                    // (re) draw table
-                                    this.drawRouteTable(dialogData.mapId, dialogData.systemFromData, systemsToData, routeSettingsData);
+                                    // rebuild table -> recalculate all routes with new settings (same targets as on load)
+                                    let routeTargets = this.getRallySystemsData(dialogData.mapId);
+                                    routeTargets.push(...(systemsToData.length ? systemsToData : SystemRouteModule.defaultRouteTargets));
+
+                                    this._tableApi.clear();
+                                    this.drawRouteTable(dialogData.mapId, dialogData.systemFromData, routeTargets, routeSettings);
                                 }
                             }
                         }
@@ -1273,6 +1276,29 @@ define([
             ttl: 5,
             maxSize: 100
         }
+    };
+
+    // route targets used until the user selects systems in "Route settings"
+    SystemRouteModule.defaultRouteTargets = [{
+        systemId: 30000142,
+        name: 'Jita'
+    }];
+
+    // route search options used until the user saves "Route settings" (matches the dialog's default checkboxes)
+    SystemRouteModule.defaultRouteSettings = {
+        stargates: 1,
+        jumpbridges: 1,
+        wormholes: 1,
+        wormholesReduced: 1,
+        wormholesCritical: 1,
+        wormholesEOL1: 1,
+        wormholesEOL2: 1,
+        wormholesEOL3: 1,
+        wormholesThera: 1,
+        wormholesTurnur: 1,
+        wormholesSizeMin: '',
+        excludeTypes: [],
+        endpointsBubble: 1
     };
 
     SystemRouteModule.defaultConfig = {
