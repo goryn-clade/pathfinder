@@ -866,12 +866,24 @@ define([
             });
 
             // prevent accidental selection on the mouseup that follows a mousedown-to-open
-            selectElement.on('select2:open.guardFirstSelect', () => {
-                selectElement.off('select2:open.guardFirstSelect');
-                selectElement.one('select2:selecting', e => e.preventDefault());
+            // -> accept a mouse selection only if its mousedown also started on an option
+            // -> keyboard selection (Enter) is never blocked
+            let optionMouseDown = false;
+            selectElement.on('select2:open', () => {
+                optionMouseDown = false;
+            });
+            selectElement.on('select2:selecting', e => {
+                let originalEvent = Util.getObjVal(e, 'params.args.originalEvent');
+                if(originalEvent && originalEvent.type === 'mouseup' && !optionMouseDown){
+                    e.preventDefault();
+                }
             });
 
             selectElement.select2(options);
+
+            selectElement.data('select2').$dropdown.on('mousedown', '.select2-results__option', () => {
+                optionMouseDown = true;
+            });
 
             setTimeout(() => {
                 suppressNextOpen = false;
