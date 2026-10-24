@@ -312,8 +312,18 @@ class Map extends Controller\AccessController {
                 $return->error[] = $missingRightError;
             }elseif( !$mapType->dry() ){
                 $defaultConfig = Config::getMapsDefaultConfig($mapType->name);
+                $freeMapSlots = $activeCharacter->getFreeMapSlots($mapType->name);
 
                 foreach($importData['mapData'] as $mapData){
+                    if($freeMapSlots < 1){
+                        $maxCountError = (object) [];
+                        $maxCountError->type = 'error';
+                        $maxCountError->text = 'Map limit reached: max ' . $defaultConfig['max_count'] . ' ' . $mapType->name . ' maps.'
+                            .' Delete a map first';
+                        $return->error[] = $maxCountError;
+                        break;
+                    }
+
                     if(
                         isset($mapData['config']) &&
                         isset($mapData['data'])
@@ -341,6 +351,7 @@ class Map extends Controller\AccessController {
                                     $map->typeId = $mapType;
                                     $map->scopeId = $mapScope;
                                     $map->save($activeCharacter);
+                                    $freeMapSlots--;
 
                                     // new system IDs will be generated
                                     // therefore we need to temp store a mapping between IDs

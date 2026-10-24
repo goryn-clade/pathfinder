@@ -1443,21 +1443,56 @@ class CharacterModel extends AbstractPathfinderModel {
                 $maps = array_merge($maps,  $corporation->getMaps());
             }
 
-            if(is_object($this->characterMaps)){
-                $mapCountPrivate = 0;
-                foreach($this->characterMaps as $characterMap){
-                    if(
-                        $mapCountPrivate < Config::getMapsDefaultConfig('private')['max_count'] &&
-                        $characterMap->mapId->isActive()
-                    ){
-                        $maps[] = $characterMap->mapId;
-                        $mapCountPrivate++;
-                    }
+            $maps = array_merge($maps, $this->getPrivateMaps());
+        }
+
+        return $maps;
+    }
+
+    /**
+     * get active private maps of this character, limited to 'max_count'
+     * @return MapModel[]
+     */
+    public function getPrivateMaps() : array {
+        $maps = [];
+
+        if(is_object($this->characterMaps)){
+            foreach($this->characterMaps as $characterMap){
+                if(count($maps) >= Config::getMapsDefaultConfig('private')['max_count']){
+                    break;
+                }
+                if($characterMap->mapId->isActive()){
+                    $maps[] = $characterMap->mapId;
                 }
             }
         }
 
         return $maps;
+    }
+
+    /**
+     * get number of maps of a map type this character can still create,
+     * before the owner (character, corporation, alliance) reaches 'max_count'
+     * -> counts maps the same way getMaps() lists them
+     * @param string $mapTypeName 'private', 'corporation' or 'alliance'
+     * @return int
+     */
+    public function getFreeMapSlots(string $mapTypeName) : int {
+        switch($mapTypeName){
+            case 'private':
+                $maps = $this->getPrivateMaps();
+                break;
+            case 'corporation':
+                $maps = ($corporation = $this->getCorporation()) ? $corporation->getMaps() : [];
+                break;
+            case 'alliance':
+                $maps = ($alliance = $this->getAlliance()) ? $alliance->getMaps() : [];
+                break;
+            default:
+                return 0;
+        }
+
+        return max(0, (int)Config::getMapsDefaultConfig($mapTypeName)['max_count'] - count($maps));
     }
 
     /** 
@@ -1469,6 +1504,9 @@ class CharacterModel extends AbstractPathfinderModel {
         $maps = ["maps" => [], "mapIds" => []];
         
         // get all characters in session and iterate over them
+        /**
+         * @var CharacterModel $character
+         */
         foreach(static::getAll(array_column($this->getF3()->get(User::SESSION_KEY_CHARACTERS), 'ID')) as $character){            
             if($alliance = $character->getAlliance()){
                 foreach($alliance->getMaps() as $map){
@@ -1488,17 +1526,8 @@ class CharacterModel extends AbstractPathfinderModel {
                 }
             }
 
-            if(is_object($character->characterMaps)){
-                $mapCountPrivate = 0;
-                foreach($character->characterMaps as $characterMap){
-                    if(
-                        $mapCountPrivate < Config::getMapsDefaultConfig('private')['max_count'] &&
-                        $characterMap->mapId->isActive()
-                    ){
-                        array_push($maps["maps"], $characterMap->mapId);
-                        $mapCountPrivate++;
-                    }
-                }
+            foreach($character->getPrivateMaps() as $map){
+                array_push($maps["maps"], $map);
             }
         }
 
