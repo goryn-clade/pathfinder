@@ -174,9 +174,34 @@ class SystemModel extends AbstractMapTrackingModel {
         $this->copyfrom($data, ['statusId', 'locked', 'rallyUpdated', 'position', 'description']);
 
         // update group membership when provided (null detaches, int attaches)
+        // -> only attach to an existing group on the same map, else keep the current group
         if(array_key_exists('groupId', $data)){
-            $this->groupId = $data['groupId'] ? (int)$data['groupId'] : null;
+            $groupId = $data['groupId'] ? (int)$data['groupId'] : null;
+            if(is_null($groupId) || $this->isGroupOnSameMap($groupId)){
+                $this->groupId = $groupId;
+            }
         }
+    }
+
+    /**
+     * check if an active map group with $groupId exists on this system's map
+     * @param int $groupId
+     * @return bool
+     * @throws \Exception
+     */
+    protected function isGroupOnSameMap(int $groupId) : bool {
+        $mapId = (int)$this->get('mapId', true);
+        if(!$groupId || !$mapId){
+            return false;
+        }
+
+        /**
+         * @var MapGroupModel $group
+         */
+        $group = self::getNew('MapGroupModel');
+        $group->getById($groupId, 0);
+
+        return !$group->dry() && (int)$group->get('mapId', true) === $mapId;
     }
 
     /**
