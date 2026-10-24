@@ -207,8 +207,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
      * @return string
      */
     public function set_scope(mixed $scope) : string {
-        $scopeValues = array_map(fn(ConnectionType $c) => $c->value, ConnectionType::scopeCases());
-        if(is_string($scope) && in_array($scope, $scopeValues, true)){
+        if(is_string($scope) && in_array(ConnectionType::tryFrom($scope), ConnectionType::scopeCases(), true)){
             return $scope;
         }
         return (string)$this->get('scope', true);
