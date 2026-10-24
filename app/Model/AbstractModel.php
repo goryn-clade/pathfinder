@@ -902,6 +902,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
     /**
      * insert/update static data into this table
      * WARNING: rows will be deleted if not part of $tableData !
+     * -> nothing is deleted if no row in $tableData has an id
      * @param  $tableData
      * @param array<string, mixed> $tableData
      * @return array<string, mixed>
@@ -936,11 +937,14 @@ abstract class AbstractModel extends Cortex implements \Stringable {
         }
 
         // remove old data
-        $oldRows = $this->find('id NOT IN (' . implode(',', $rowIDs) . ')');
-        if($oldRows){
-            foreach($oldRows as $oldRow){
-                $oldRow->erase();
-                $deletedCount++;
+        // -> skip if no row has an id: "id NOT IN ()" is invalid SQL
+        if(!empty($rowIDs)){
+            $oldRows = $this->find('id NOT IN (' . implode(',', $rowIDs) . ')');
+            if($oldRows){
+                foreach($oldRows as $oldRow){
+                    $oldRow->erase();
+                    $deletedCount++;
+                }
             }
         }
         return ['added' => $addedCount, 'updated' => $updatedCount, 'deleted' => $deletedCount];
