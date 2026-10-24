@@ -1,8 +1,8 @@
 <set errorData="{{ @errorData ?? null }}" /><check if="{{ @errorData->trace }}">
     <div class="pf-splash-debug">
-        <h4 class="pf-splash-debug-headline">Trace:</kbd>
+        <h4 class="pf-splash-debug-headline">Trace:
             <span class="pull-right">Debug: <kbd>{{ @DEBUG }}</kbd></span>
         </h4>
-        <pre class="pf-splash-pre">{{ @errorData->trace  | raw }}</pre>
+        <pre class="pf-splash-pre">{{ is_array(@errorData->trace) ? implode("\n", @errorData->trace) : @errorData->trace }}</pre>
     </div>
 </check>
