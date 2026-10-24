@@ -558,6 +558,9 @@ class CharacterModel extends AbstractPathfinderModel {
                     $corporationRight->roleId->name === 'MEMBER' ||
                     (int)$corporationRight->get('roleId', true) === (int)$this->get('roleId', true);
             case 4: // alliance -> only SUPER admins can delete
+                if(!$this->getAlliance()){
+                    return false;
+                }
                 return $right !== 'map_delete' || $isSuper;
             default:
                 return false;
