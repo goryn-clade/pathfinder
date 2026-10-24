@@ -213,7 +213,7 @@ class Route extends AbstractRestController {
             $includeScopes        = $this->filterConnectionTypes($includeScopes);
             $includeTypes         = $this->filterConnectionTypes($includeTypes);
             $excludeTypes         = $this->filterConnectionTypes($excludeTypes);
-            $excludeEndpointTypes = array_values(array_intersect($excludeEndpointTypes, ['bubble']));
+            $excludeEndpointTypes = array_values(array_intersect($excludeEndpointTypes, Pathfinder\ConnectionModel::ENDPOINT_TYPES));
 
             if( !empty($includeScopes) ){
                 $whereQuery .= " `connection`.`scope` IN ('" . implode("', '", $includeScopes) . "') AND ";
