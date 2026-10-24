@@ -277,7 +277,7 @@ class Controller {
             ];
 
             $authenticationModel = $character->rel('characterAuthentications');
-            $authenticationModel->copyfrom($authData);
+            $authenticationModel->copyfrom($authData, ['characterId', 'selector', 'token', 'expires']);
             $authenticationModel->save();
 
             $cookieValue = implode(':', [$selector, $validator]);
