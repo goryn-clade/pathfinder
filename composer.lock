@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01325144d88df4b5427754fb73f954e3",
+    "content-hash": "5affac6d46fc9cd19d3fbc237b03f3ca",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -779,16 +779,16 @@
         },
         {
             "name": "goryn-clade/pathfinder_esi",
-            "version": "v3.0.1",
+            "version": "v3.0.2-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goryn-clade/pathfinder_esi.git",
-                "reference": "332f4f5480e76ea80abd6dfdcf9a191c3f2ca3e1"
+                "reference": "db7f2895eca1a48f429fa1904995926acc8c7b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/332f4f5480e76ea80abd6dfdcf9a191c3f2ca3e1",
-                "reference": "332f4f5480e76ea80abd6dfdcf9a191c3f2ca3e1",
+                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/db7f2895eca1a48f429fa1904995926acc8c7b27",
+                "reference": "db7f2895eca1a48f429fa1904995926acc8c7b27",
                 "shasum": ""
             },
             "require": {
@@ -799,8 +799,9 @@
                 "php-64bit": ">=8.2"
             },
             "require-dev": {
-                "phpstan/phpstan": "^2.1",
-                "rector/rector": "^2.4"
+                "phpstan/phpstan": "^2.3",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "rector/rector": "^2.7"
             },
             "type": "library",
             "autoload": {
@@ -820,10 +821,10 @@
             "description": "ESI API library for Pathfinder",
             "homepage": "https://github.com/goryn-clade/pathfinder_esi",
             "support": {
-                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.2",
+                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.2-beta.1",
                 "issues": "https://github.com/goryn-clade/pathfinder_esi/issues"
             },
-            "time": "2026-10-22T00:14:12+00:00"
+            "time": "2026-10-23T18:00:07+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3101,6 +3102,7 @@
     "aliases": [],
     "minimum-stability": "beta",
     "stability-flags": {
+        "goryn-clade/pathfinder_esi": 10,
         "ikkez/f3-cortex": 20,
         "phpcompatibility/php-compatibility": 15
     },
