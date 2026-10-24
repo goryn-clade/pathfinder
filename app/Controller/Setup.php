@@ -43,6 +43,15 @@ class Setup extends Controller {
     }
 
     /**
+     * setup page and setup API are only available while ENVIRONMENT.SETUP_ENABLED is on
+     * @param \Base $f3
+     * @return bool
+     */
+    public static function isSetupEnabled(\Base $f3) : bool {
+        return (bool)$f3->get('ENVIRONMENT.SETUP_ENABLED');
+    }
+
+    /**
      * check a setup action token against the one stored in this session
      * -> no session token (the /setup page was never loaded) -> always invalid
      * @param \Base $f3
@@ -226,7 +235,7 @@ class Setup extends Controller {
      * @throws \Exception
      */
     public function init(\Base $f3): void{
-        if(!$f3->get('ENVIRONMENT.SETUP_ENABLED')){
+        if(!self::isSetupEnabled($f3)){
             $f3->error(404);
             return;
         }
