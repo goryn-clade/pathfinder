@@ -48,6 +48,8 @@ class AppController extends Controller {
 
             // characters  from cookies
             $f3->set('cookieCharacters', $this->getCookieByName(self::COOKIE_PREFIX_CHARACTER, true));
+            // CSRF token for the character switch (POST /sso/login)
+            $f3->set('tplCsrfToken', self::getCsrfToken($f3));
             $f3->set('getCharacterGrid', fn($characters) => ((12 / count($characters)) <= 3) ? 3 : (12 / count($characters)));
         }
 

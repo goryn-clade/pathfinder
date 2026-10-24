@@ -34,6 +34,11 @@ class Controller {
     const COOKIE_NAME_STATE                         = 'cookie';
     const COOKIE_PREFIX_CHARACTER                   = 'char';
 
+    /**
+     * session key for the token that state changing POST forms send (CSRF)
+     */
+    const SESSION_KEY_CSRF_TOKEN                    = 'SESSION.CSRF.TOKEN';
+
     // log text
     const ERROR_SESSION_SUSPECT                     = 'id: [%45s], ip: [%45s], User-Agent: [%s]';
     const ERROR_TEMP_CHARACTER_ID                   = 'Invalid temp characterId: %s';
@@ -206,6 +211,29 @@ class Controller {
      */
     protected function getCookieState() : bool {
         return (bool)count( $this->getCookieByName(self::COOKIE_NAME_STATE) );
+    }
+
+    /**
+     * get (or create) the CSRF token for this session
+     * @param \Base $f3
+     * @return string
+     */
+    protected static function getCsrfToken(\Base $f3) : string {
+        if(!$f3->exists(self::SESSION_KEY_CSRF_TOKEN)){
+            $f3->set(self::SESSION_KEY_CSRF_TOKEN, bin2hex(random_bytes(32)));
+        }
+        return (string)$f3->get(self::SESSION_KEY_CSRF_TOKEN);
+    }
+
+    /**
+     * check: request is a POST with a valid CSRF token
+     * @param \Base $f3
+     * @return bool
+     */
+    protected static function isValidCsrfPost(\Base $f3) : bool {
+        return $f3->get('VERB') === 'POST' &&
+            $f3->exists(self::SESSION_KEY_CSRF_TOKEN) &&
+            hash_equals((string)$f3->get(self::SESSION_KEY_CSRF_TOKEN), (string)$f3->get('POST.token'));
     }
 
     /**

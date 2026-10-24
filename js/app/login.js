@@ -105,8 +105,14 @@ define([
         let ssoButtonElement = $('.' + config.ssoButtonClass);
         let cookieHintElement = $('#' + config.cookieHintId);
 
-        $(document).on('click', '.' + config.characterSelectionClass + ' a', function(){
+        // character switch -> send as POST with cookie name + token (server refuses GET)
+        $(document).on('click', '.' + config.characterSelectionClass + ' a[data-method="post"]', function(e){
+            e.preventDefault();
             $('.' + config.splashOverlayClass).showSplashOverlay();
+            let form = $('<form>', {method: 'post', action: this.getAttribute('href')})
+                .append($('<input>', {type: 'hidden', name: 'cookie', value: this.dataset.cookie}))
+                .append($('<input>', {type: 'hidden', name: 'token', value: this.dataset.token}));
+            form.appendTo('body')[0].submit();
         });
 
         $(document).on('click', '.' + config.ssoButtonClass , function(){
@@ -629,8 +635,7 @@ define([
                     dataType: 'json',
                     context: {
                         cookieName: requestData.cookie,
-                        charEl: charEl,
-                        browserTabId: Util.getBrowserTabId()
+                        charEl: charEl
                     }
                 }).done(function(responseData, textStatus, request){
                     $(this.charEl).hideLoadingAnimation();
@@ -651,7 +656,7 @@ define([
                         let data = {
                             link: this.charEl.dataset.href,
                             cookieName: this.cookieName,
-                            browserTabId: this.browserTabId,
+                            token: this.charEl.dataset.token,
                             ccpImageServer: responseData.ccpImageServer,
                             character: responseData.character,
                             isManager: Util.getObjVal(responseData, 'character.role.name') === 'CORPORATION',
