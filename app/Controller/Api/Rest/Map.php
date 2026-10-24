@@ -25,6 +25,11 @@ class Map extends AbstractRestController {
     const ERROR_MAP_RIGHT = 'Character %s does not have sufficient rights for %s';
 
     /**
+     * error message map limit ('max_count') reached for map type
+     */
+    const ERROR_MAP_COUNT = 'Map limit reached: max %d %s maps. Delete a map first';
+
+    /**
      * request keys for map sharing (map_share right)
      */
     const SHARE_KEYS = ['mapCharacters', 'mapCorporations', 'mapAlliances'];
@@ -70,6 +75,17 @@ class Map extends AbstractRestController {
 
         if(!$activeCharacter->hasMapRight(self::getRequestTypeId($requestData), 'map_create')){
             $this->errorRight($f3, 'map_create');
+            return;
+        }
+
+        /**
+         * @var Pathfinder\MapTypeModel $mapType
+         */
+        $mapType = Pathfinder\AbstractPathfinderModel::getNew('MapTypeModel');
+        $mapType->getById(self::getRequestTypeId($requestData));
+        if($activeCharacter && !$mapType->dry() && $activeCharacter->getFreeMapSlots($mapType->name) < 1){
+            $f3->set('HALT', true);
+            $f3->error(403, sprintf(self::ERROR_MAP_COUNT, Config::getMapsDefaultConfig($mapType->name)['max_count'], $mapType->name));
             return;
         }
 
