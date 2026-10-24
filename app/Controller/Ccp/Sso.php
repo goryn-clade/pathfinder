@@ -354,24 +354,20 @@ class Sso extends Api\User{
 
     /**
      * login by cookie name (character switch)
-     * -> POST with "cookie" and the session CSRF "token"; a GET only routes back to the login page
+     * -> POST with "cookie" and the session CSRF "token"; anything else routes back to the login page
      * @param \Base $f3
      * @throws \Exception
      */
     public function login(\Base $f3) : void {
         // switch by cookie changes the logged in character -> POST with session token only (CSRF)
-        if($f3->get('VERB') !== 'POST'){
-            $f3->reroute(['login']);
-            return;
-        }
-
         if(!self::isValidCsrfPost($f3)){
             $f3->set(self::SESSION_KEY_SSO_ERROR, self::ERROR_COOKIE_LOGIN_TOKEN);
             $f3->reroute(['login']);
             return;
         }
 
-        $cookieName = (string)($f3->get('POST.cookie') ?? '');
+        $cookieName = $f3->get('POST.cookie');
+        $cookieName = is_string($cookieName) ? $cookieName : '';
         $character = null;
 
         if( !empty($cookieName) ){

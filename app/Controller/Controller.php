@@ -231,9 +231,11 @@ class Controller {
      * @return bool
      */
     protected static function isValidCsrfPost(\Base $f3) : bool {
+        $token = $f3->get('POST.token');
         return $f3->get('VERB') === 'POST' &&
+            is_string($token) &&
             $f3->exists(self::SESSION_KEY_CSRF_TOKEN) &&
-            hash_equals((string)$f3->get(self::SESSION_KEY_CSRF_TOKEN), (string)$f3->get('POST.token'));
+            hash_equals((string)$f3->get(self::SESSION_KEY_CSRF_TOKEN), $token);
     }
 
     /**

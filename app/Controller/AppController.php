@@ -47,9 +47,9 @@ class AppController extends Controller {
             $f3->set('tplAuthType', $f3->get('BASE') . $f3->alias( 'sso', ['action' => 'requestAuthorization'] ));
 
             // characters  from cookies
-            $f3->set('cookieCharacters', $this->getCookieByName(self::COOKIE_PREFIX_CHARACTER, true));
-            // CSRF token for the character switch (POST /sso/login)
-            $f3->set('tplCsrfToken', self::getCsrfToken($f3));
+            $f3->set('cookieCharacters', $cookieCharacters = $this->getCookieByName(self::COOKIE_PREFIX_CHARACTER, true));
+            // CSRF token for the character switch (POST /sso/login), only needed with characters to switch to
+            $f3->set('tplCsrfToken', $cookieCharacters ? self::getCsrfToken($f3) : '');
             $f3->set('getCharacterGrid', fn($characters) => ((12 / count($characters)) <= 3) ? 3 : (12 / count($characters)));
         }
 
