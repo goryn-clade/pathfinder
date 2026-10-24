@@ -18,6 +18,12 @@ class Setup extends Controller\Controller {
 
     #[\Override]
     public function beforeroute(\Base $f3, array $params): bool {
+        // the API is only available while setup is enabled, the same as the /setup page
+        if(!Controller\Setup::isSetupEnabled($f3)){
+            $f3->error(404);
+            return false;
+        }
+
         // same per-session token as the /setup page (Controller\Setup::getSetupToken()),
         // so only a browser that passed nginx Basic Auth on /setup can call this API
         $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
