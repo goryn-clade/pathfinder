@@ -220,6 +220,12 @@ class User extends Controller\Controller{
         $data = $f3->get('POST');
         $deleteCookie = (bool)($data['deleteCookie'] ?? false);
 
+        // logout also ends cookie login -> ask CCP to revoke the ESI "refresh_token" (best effort)
+        // -> no SQL cache (ttl 0): the token may have rotated seconds ago
+        if($deleteCookie && ($activeCharacter = $this->getCharacter(0))){
+            (new Controller\Ccp\Sso())->revokeRefreshToken($activeCharacter);
+        }
+
         $this->logoutCharacter($f3, false, true, true, $deleteCookie, 200);
     }
 
