@@ -1,3 +1,6 @@
+@use "../bootstrap/mixins";
+@use "../colors";
+
 $breadcrumb-arrow-size: 15px;
 
 .pf-head-breadcrumb {
@@ -27,17 +30,17 @@ $breadcrumb-arrow-size: 15px;
       right: -10px;
       top: -1px;
       z-index: 10;
-      border-left: 10px solid $gray-light;
+      border-left: 10px solid colors.$gray-light;
       border-top: $breadcrumb-arrow-size solid transparent;
       border-bottom: $breadcrumb-arrow-size solid transparent;
     }
 
     &:hover {
       .pf-head-breadcrumb-item{
-        color: $teal-lighter;
+        color: colors.$teal-lighter;
 
         & > img{
-          border-color: $teal-lighter !important;
+          border-color: colors.$teal-lighter !important;
         }
       }
 
@@ -88,7 +91,7 @@ $breadcrumb-arrow-size: 15px;
     padding: 0 5px 0 15px;
     line-height: 30px;
     width: auto;
-    @include transition(color 0.15s ease-out, max-width 0.15s ease-in-out);
+    @include mixins.transition(color 0.15s ease-out, max-width 0.15s ease-in-out);
     will-change: color, max-width;
 
     [class^="pf-system-sec-"]{

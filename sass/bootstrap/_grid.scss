@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Grid system
 // --------------------------------------------------
@@ -8,16 +11,16 @@
 // Set the container width, and override it for fixed navbars in media queries.
 
 .container {
-  @include container-fixed();
+  @include mixins.container-fixed();
 
-  @media (min-width: $screen-sm-min) {
-    width: $container-sm;
+  @media (min-width: variables.$screen-sm-min) {
+    width: variables.$container-sm;
   }
-  @media (min-width: $screen-md-min) {
-    width: $container-md;
+  @media (min-width: variables.$screen-md-min) {
+    width: variables.$container-md;
   }
-  @media (min-width: $screen-lg-min) {
-    width: $container-lg;
+  @media (min-width: variables.$screen-lg-min) {
+    width: variables.$container-lg;
   }
 }
 
@@ -28,7 +31,7 @@
 // width for fluid, full width layouts.
 
 .container-fluid {
-  @include container-fixed();
+  @include mixins.container-fixed();
 }
 
 
@@ -37,7 +40,7 @@
 // Rows contain and clear the floats of your columns.
 
 .row {
-  @include make-row();
+  @include mixins.make-row();
 }
 
 
@@ -45,7 +48,7 @@
 //
 // Common styles for small and large grid columns
 
-@include make-grid-columns();
+@include mixins.make-grid-columns();
 
 
 // Extra small grid
@@ -53,7 +56,7 @@
 // Columns, offsets, pushes, and pulls for extra small devices like
 // smartphones.
 
-@include make-grid(xs);
+@include mixins.make-grid(xs);
 
 
 // Small grid
@@ -61,8 +64,8 @@
 // Columns, offsets, pushes, and pulls for the small device range, from phones
 // to tablets.
 
-@media (min-width: $screen-sm-min) {
-  @include make-grid(sm);
+@media (min-width: variables.$screen-sm-min) {
+  @include mixins.make-grid(sm);
 }
 
 
@@ -70,8 +73,8 @@
 //
 // Columns, offsets, pushes, and pulls for the desktop device range.
 
-@media (min-width: $screen-md-min) {
-  @include make-grid(md);
+@media (min-width: variables.$screen-md-min) {
+  @include mixins.make-grid(md);
 }
 
 
@@ -79,6 +82,6 @@
 //
 // Columns, offsets, pushes, and pulls for the large desktop device range.
 
-@media (min-width: $screen-lg-min) {
-  @include make-grid(lg);
+@media (min-width: variables.$screen-lg-min) {
+  @include mixins.make-grid(lg);
 }

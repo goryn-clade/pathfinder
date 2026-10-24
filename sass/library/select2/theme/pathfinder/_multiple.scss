@@ -1,6 +1,9 @@
+@use "../../../../colors";
+@use "../../../../variables";
+
 .select2-selection--multiple {
-  background-color: $gray-dark;
-  border: 1px solid $gray-light;
+  background-color: colors.$gray-dark;
+  border: 1px solid colors.$gray-light;
   border-radius: 0;
   cursor: text;
 
@@ -32,9 +35,9 @@
   }
 
   .select2-selection__choice {
-    background-color:  $gray-lighter;
+    background-color:  colors.$gray-lighter;
 
-    border: 1px solid $gray-lighter;
+    border: 1px solid colors.$gray-lighter;
     border-radius: 0;
     cursor: default;
 
@@ -44,12 +47,12 @@
     margin-top: 3px;
     padding: 0 5px;
 
-    color: $gray-dark;
+    color: colors.$gray-dark;
     font-weight: bold;
   }
 
   .select2-selection__choice__remove {
-    color: $red-dark;
+    color: colors.$red-dark;
     cursor: pointer;
 
     display: inline-block;
@@ -84,7 +87,7 @@
 
 &.select2-container--focus {
   .select2-selection--multiple {
-    border-color: $input-border-focus;
+    border-color: variables.$input-border-focus;
     box-shadow: inset -1px 1px 5px 0 rgba(0, 0, 0, 0.8) !important;
     outline: 0;
   }

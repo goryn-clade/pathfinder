@@ -1,3 +1,5 @@
+@use "../colors";
+
 .pf-svg-wrapper {
   width: 0;
   height: 0;
@@ -9,9 +11,9 @@ $logo-animation-duration: 3.5s;
 $logo-animation-loop:     1; // infinite
 
 .logo-ploygon-top-right{
-  fill: $teal;
+  fill: colors.$teal;
   fill-rule: evenodd;
-  stroke: $teal;
+  stroke: colors.$teal;
   stroke-width: $logo-stroke-width;
   stroke-linecap: butt;
   stroke-linejoin: miter;
@@ -24,9 +26,9 @@ $logo-animation-loop:     1; // infinite
 }
 
 .logo-ploygon-bottom-left{
-  fill: $green;
+  fill: colors.$green;
   fill-rule: evenodd;
-  stroke: $green;
+  stroke: colors.$green;
   stroke-width: $logo-stroke-width;
   stroke-linecap: butt;
   stroke-linejoin: miter;
@@ -39,9 +41,9 @@ $logo-animation-loop:     1; // infinite
 }
 
 .logo-ploygon-bottom-right{
-  fill: $teal-dark;
+  fill: colors.$teal-dark;
   fill-rule: evenodd;
-  stroke: $teal-dark;
+  stroke: colors.$teal-dark;
   stroke-width: $logo-stroke-width;
   stroke-linecap: butt;
   stroke-linejoin: miter;
@@ -54,9 +56,9 @@ $logo-animation-loop:     1; // infinite
 }
 
 .logo-ploygon-top-left{
-  fill: $gray-light;
+  fill: colors.$gray-light;
   fill-rule: evenodd;
-  stroke: $gray-light;
+  stroke: colors.$gray-light;
   stroke-width: $logo-stroke-width;
   stroke-linecap: butt;
   stroke-linejoin: miter;

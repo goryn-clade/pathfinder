@@ -1,26 +1,28 @@
+@use "../variables";
+
 //
 // Breadcrumbs
 // --------------------------------------------------
 
 
 .breadcrumb {
-  padding: $breadcrumb-padding-vertical $breadcrumb-padding-horizontal;
-  margin-bottom: $line-height-computed;
+  padding: variables.$breadcrumb-padding-vertical variables.$breadcrumb-padding-horizontal;
+  margin-bottom: variables.$line-height-computed;
   list-style: none;
-  background-color: $breadcrumb-bg;
-  border-radius: $border-radius-base;
+  background-color: variables.$breadcrumb-bg;
+  border-radius: variables.$border-radius-base;
 
   > li {
     display: inline-block;
 
     + li:before {
-      content: "#{$breadcrumb-separator}\00a0"; // Unicode space added since inline-block means non-collapsing white-space
+      content: "#{variables.$breadcrumb-separator}\00a0"; // Unicode space added since inline-block means non-collapsing white-space
       padding: 0 5px;
-      color: $breadcrumb-color;
+      color: variables.$breadcrumb-color;
     }
   }
 
   > .active {
-    color: $breadcrumb-active-color;
+    color: variables.$breadcrumb-active-color;
   }
 }

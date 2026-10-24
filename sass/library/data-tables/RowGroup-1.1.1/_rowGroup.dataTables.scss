@@ -1,5 +1,7 @@
+@use "../../../colors";
+
 table.dataTable tr.dtrg-group {
-  background-color: rgba($gray-darker, 0.4);
+  background-color: rgba(colors.$gray-darker, 0.4);
 }
 
 table.dataTable tr.dtrg-group.dtrg-level-0 td {

@@ -1,3 +1,8 @@
+@use "sass:math";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+
 $colMinWidth:               444px;
 
 $mapHeight:                 1500px;
@@ -7,7 +12,7 @@ $mapAreaHeight:             520px + 38px;
 $mapAreaMinHeight:          300px;
 $mapAreaMaxHeight:          1000px;              // no vertical scrollbar: $mapHeight + 38px;
 
-$mapModuleMaxWidth:         floor(4 * ($mapWidth + 16) / 3);
+$mapModuleMaxWidth:         math.floor(4 * ($mapWidth + 16) / 3);
 $mapModuleGridGap:          10px;
 $mapModuleGridRowMinHeight: 38px;
 
@@ -27,7 +32,7 @@ $mapModuleGridRowMinHeight: 38px;
           "wrapper" minmax($mapModuleGridRowMinHeight, 1fr) /
           1fr;
 
-  @media screen and (min-width: $screen-lg){
+  @media screen and (min-width: variables.$screen-lg){
     grid-template-areas:
             "tabs1   tabs1   tabs1   tabs1"
             "wrapper wrapper wrapper wrapper";
@@ -47,7 +52,7 @@ $mapModuleGridRowMinHeight: 38px;
   // -> default: 'grid-3'
   &.grid-3 {
     .pf-map-tab-content {
-      @media screen and (min-width: $screen-lg){
+      @media screen and (min-width: variables.$screen-lg){
         grid-template:
                 "map   map   map   area2" minmax(0, max-content)
                 "area1 area1 area3 area2" minmax(0, max-content)
@@ -61,14 +66,14 @@ $mapModuleGridRowMinHeight: 38px;
   // -> default: 'right'
   &.left {
     .pf-map-tab-content {
-      @media screen and (min-width: $screen-sm){
+      @media screen and (min-width: variables.$screen-sm){
         grid-template-areas:
                 "map   map"
                 "area1 area1"
                 "area3 area2";
       }
 
-      @media screen and (min-width: $screen-md){
+      @media screen and (min-width: variables.$screen-md){
         grid-template-areas:
                 "map   map   map"
                 "area2 area1 area1"
@@ -79,7 +84,7 @@ $mapModuleGridRowMinHeight: 38px;
   }
 
   &.left.grid-3 {
-    @media screen and (min-width: $screen-lg){ // swap grid tab element
+    @media screen and (min-width: variables.$screen-lg){ // swap grid tab element
       grid-template-areas:
               ".       tabs1   tabs1   tabs1"
               "wrapper wrapper wrapper wrapper";
@@ -87,7 +92,7 @@ $mapModuleGridRowMinHeight: 38px;
     }
 
     .pf-map-tab-content {
-      @media screen and (min-width: $screen-lg){ // swap grid area columns
+      @media screen and (min-width: variables.$screen-lg){ // swap grid area columns
         grid-template-areas:
                 "area2 map   map   map"
                 "area2 area1 area1 area3"
@@ -122,8 +127,8 @@ $mapModuleGridRowMinHeight: 38px;
         position: absolute;
         top: -4px;
         left: 60%;
-        background: $gray-dark;
-        color: $orange;
+        background: colors.$gray-dark;
+        color: colors.$orange;
         border-radius: 9px;
         padding: 3px 4px;
         font-size: 11px;
@@ -145,7 +150,7 @@ $mapModuleGridRowMinHeight: 38px;
 
     > a {
       &:hover, &:focus, &.editable-open {
-        color: $orange;
+        color: colors.$orange;
         background-color: transparent;
         border-color: transparent;
       }
@@ -153,19 +158,19 @@ $mapModuleGridRowMinHeight: 38px;
   }
 
   .pf-map-type-tab-private {
-    border-top: 2px solid $indigo;
+    border-top: 2px solid colors.$indigo;
   }
 
   .pf-map-type-tab-corporation {
-    border-top: 2px solid $green;
+    border-top: 2px solid colors.$green;
   }
 
   .pf-map-type-tab-alliance {
-    border-top: 2px solid $blue;
+    border-top: 2px solid colors.$blue;
   }
 
   .pf-map-type-tab-global {
-    border-top: 2px solid $teal-lighter;
+    border-top: 2px solid colors.$teal-lighter;
   }
 
   .pf-map-tab-icon {
@@ -191,7 +196,7 @@ $mapModuleGridRowMinHeight: 38px;
           "area3" minmax(0, max-content) /
           1fr;
 
-  @media screen and (min-width: $screen-sm){
+  @media screen and (min-width: variables.$screen-sm){
     grid-template:
             "map   map"   max-content
             "area1 area1" minmax(0, min-content)
@@ -199,7 +204,7 @@ $mapModuleGridRowMinHeight: 38px;
             1fr 1fr;
   }
 
-  @media screen and (min-width: $screen-md){
+  @media screen and (min-width: variables.$screen-md){
     grid-template:
             "map   map   map"   max-content
             "area1 area1 area2" minmax(0, max-content)
@@ -218,7 +223,7 @@ $mapModuleGridRowMinHeight: 38px;
     position: relative;
     border-radius: 5px;
     min-height: 0; // animated for drop-zone
-    @include transition(min-height 0.3s ease);
+    @include mixins.transition(min-height 0.3s ease);
 
     &-map {
       grid-area: map;
@@ -232,15 +237,15 @@ $mapModuleGridRowMinHeight: 38px;
       max-height: $mapAreaMaxHeight;
       overflow: hidden; // required for resizing to work with pos: absolute "overlay" elements
       padding: 5px;
-      background: rgba($gray-darker, 0.93);
-      box-shadow: inset -3px 3px 10px 0 rgba($black, 0.3);
+      background: rgba(colors.$gray-darker, 0.93);
+      box-shadow: inset -3px 3px 10px 0 rgba(colors.$black, 0.3);
       will-change: width, height;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
       border: {
         width: 1px;
         style: solid;
-        color: $gray-dark;
+        color: colors.$gray-dark;
       }
 
       &:before {
@@ -250,15 +255,15 @@ $mapModuleGridRowMinHeight: 38px;
         right: 0;
         border-style: solid;
         border-width: 14px 14px 0 0;
-        border-color: transparent $gray-dark transparent transparent;
+        border-color: transparent colors.$gray-dark transparent transparent;
         cursor: row-resize;
       }
 
       &:focus, &:hover {
-        border: 1px solid $gray;
+        border: 1px solid colors.$gray;
 
         &:before {
-          border-color: transparent $gray transparent transparent;
+          border-color: transparent colors.$gray transparent transparent;
         }
       }
     }
@@ -280,7 +285,7 @@ $mapModuleGridRowMinHeight: 38px;
     &-b {
       grid-area: area2;
 
-      @media screen and (min-width: $screen-lg){
+      @media screen and (min-width: variables.$screen-lg){
         margin-top: 0 !important;
       }
     }
@@ -298,8 +303,8 @@ $mapModuleGridRowMinHeight: 38px;
 
 // Module (panel) =====================================================================================================
 .pf-module {
-  font-family: $font-family-bold;
-  background: rgba($gray, 0.27);
+  font-family: variables.$font-family-bold;
+  background: rgba(colors.$gray, 0.27);
   padding: 10px;
   width: 100%;
   overflow: hidden;
@@ -315,7 +320,7 @@ $mapModuleGridRowMinHeight: 38px;
     left: 0;
     border-style: solid;
     border-width: 0 0 9px 9px;
-    border-color: transparent transparent transparent $gray;
+    border-color: transparent transparent transparent colors.$gray;
     cursor: row-resize;
   }
 
@@ -359,7 +364,7 @@ $mapModuleGridRowMinHeight: 38px;
   }
 
   .pf-dynamic-area {
-    background: rgba($gray-darker, 0.4);
+    background: rgba(colors.$gray-darker, 0.4);
     min-height: initial;
   }
 
@@ -376,7 +381,7 @@ $mapModuleGridRowMinHeight: 38px;
     }
 
     .fa-sync {
-      @include transition(transform 1.6s ease-out);
+      @include mixins.transition(transform 1.6s ease-out);
     }
   }
 }

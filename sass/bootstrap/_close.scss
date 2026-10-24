@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Close icons
 // --------------------------------------------------
@@ -5,17 +8,17 @@
 
 .close {
   float: right;
-  font-size: ($font-size-base * 1.5);
-  font-weight: $close-font-weight;
+  font-size: (variables.$font-size-base * 1.5);
+  font-weight: variables.$close-font-weight;
   line-height: 1;
-  color: $close-color;
+  color: variables.$close-color;
 
   &:hover,
   &:focus {
-    color: $close-color;
+    color: variables.$close-color;
     text-decoration: none;
     cursor: pointer;
-    @include opacity(.5);
+    @include mixins.opacity(.5);
   }
 
   // [converter] extracted button& to button.close

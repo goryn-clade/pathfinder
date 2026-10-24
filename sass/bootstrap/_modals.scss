@@ -1,3 +1,8 @@
+@use "sass:color";
+@use "../colors";
+@use "../variables";
+@use "mixins";
+
 //
 // Modals
 // --------------------------------------------------
@@ -22,7 +27,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: $zindex-modal;
+  z-index: variables.$zindex-modal;
   -webkit-overflow-scrolling: touch;
 
   // Prevent Chrome on Windows from adding a focus outline. For details, see
@@ -31,13 +36,13 @@
 
   // When fading in the modal, animate it to slide down
   &.fade .modal-dialog {
-    @include translate(0, -25%);
+    @include mixins.translate(0, -25%);
     //@include transition-transform(0.24s ease-out);
-    @include transition-transform(0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275));
+    @include mixins.transition-transform(0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275));
   }
 
   &.in .modal-dialog {
-    @include translate(0, 0);
+    @include mixins.translate(0, 0);
   }
 }
 
@@ -46,18 +51,18 @@
   position: relative;
   width: auto;
   margin: 10px;
-  z-index: $zindex-modal;
+  z-index: variables.$zindex-modal;
 }
 
 // Actual modal
 .modal-content {
   position: relative;
-  background-color: $modal-content-bg;
+  background-color: variables.$modal-content-bg;
   //border: 1px solid $modal-content-fallback-border-color; //old browsers fallback (ie8 etc)
   //border: 1px solid $modal-content-border-color;
   border: none;
   //border-radius: $border-radius-large;
-  @include box-shadow(0 3px 9px rgba(0,0,0,.5));
+  @include mixins.box-shadow(0 3px 9px rgba(0,0,0,.5));
   //background-clip: padding-box;
   background-clip: initial;
   // Remove focus outline from opened modal
@@ -71,21 +76,21 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: $zindex-modal-background;
-  background-color: $modal-backdrop-bg;
+  z-index: variables.$zindex-modal-background;
+  background-color: variables.$modal-backdrop-bg;
   // Fade for backdrop
-  &.fade { @include opacity(0); }
-  &.in { @include opacity($modal-backdrop-opacity); }
+  &.fade { @include mixins.opacity(0); }
+  &.in { @include mixins.opacity(variables.$modal-backdrop-opacity); }
 }
 
 // Modal header
 // Top section of the modal w/ title and dismiss
 .modal-header {
-  padding: $modal-title-padding;
+  padding: variables.$modal-title-padding;
   // border-bottom: 1px solid $modal-header-border-color;
-  border-bottom: 1px solid darken($modal-content-bg, 5%);
-  min-height: ($modal-title-padding + $modal-title-line-height);
-  background-color: darken($modal-content-bg, 3%);
+  border-bottom: 1px solid color.adjust(variables.$modal-content-bg, $lightness: -5%);
+  min-height: (variables.$modal-title-padding + variables.$modal-title-line-height);
+  background-color: color.adjust(variables.$modal-content-bg, $lightness: -3%);
 }
 // Close icon
 .modal-header, .modal-body{
@@ -99,15 +104,15 @@
 // Title text within header
 .modal-title {
   margin: 0;
-  line-height: $modal-title-line-height;
+  line-height: variables.$modal-title-line-height;
 }
 
 // Modal body
 // Where all modal content resides (sibling of .modal-header and .modal-footer)
 .modal-body {
   position: relative;
-  padding: $modal-inner-padding;
-  color: $gray-lighter;
+  padding: variables.$modal-inner-padding;
+  color: colors.$gray-lighter;
   //border-left: 1px solid $modal-content-bg;
   //border-right: 1px solid $modal-content-bg;
   border: none;
@@ -115,11 +120,11 @@
 
 // Footer (for actions)
 .modal-footer {
-  padding: ($modal-inner-padding - 1) $modal-inner-padding $modal-inner-padding;
+  padding: (variables.$modal-inner-padding - 1) variables.$modal-inner-padding variables.$modal-inner-padding;
   text-align: right; // right align buttons
-  border-top: 1px solid darken($modal-content-bg, 5%);
-  background-color: darken($modal-content-bg, 3%);
-  @include clearfix(); // clear it in case folks use .pull-* classes on buttons
+  border-top: 1px solid color.adjust(variables.$modal-content-bg, $lightness: -5%);
+  background-color: color.adjust(variables.$modal-content-bg, $lightness: -3%);
+  @include mixins.clearfix(); // clear it in case folks use .pull-* classes on buttons
 
   // Properly space out buttons
   .btn + .btn {
@@ -137,20 +142,20 @@
 }
 
 // Scale up the modal
-@media (min-width: $screen-sm-min) {
+@media (min-width: variables.$screen-sm-min) {
   // Automatically set modal's width for larger viewports
   .modal-dialog {
-    width: $modal-md;
+    width: variables.$modal-md;
     margin: 30px auto;
   }
   .modal-content {
-    @include box-shadow(0 5px 15px rgba(0,0,0,.5));
+    @include mixins.box-shadow(0 5px 15px rgba(0,0,0,.5));
   }
 
   // Modal sizes
-  .modal-sm { width: $modal-sm; }
+  .modal-sm { width: variables.$modal-sm; }
 }
 
-@media (min-width: $screen-md-min) {
-  .modal-lg { width: $modal-lg; }
+@media (min-width: variables.$screen-md-min) {
+  .modal-lg { width: variables.$modal-lg; }
 }

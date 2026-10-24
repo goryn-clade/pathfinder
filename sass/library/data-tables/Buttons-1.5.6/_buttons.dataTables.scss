@@ -1,6 +1,6 @@
 
-@import 'mixins';
-@import 'common';
+@use 'mixins';
+@use 'common';
 
 button.dt-button,
 div.dt-button,
@@ -108,12 +108,12 @@ div.dt-button-collection {
 
 		&:active:not(.disabled),
 		&.active:not(.disabled) {
-			@include dtb-two-stop-gradient(#f0f0f0, #dadada);
+			@include mixins.dtb-two-stop-gradient(#f0f0f0, #dadada);
 			box-shadow: inset 1px 1px 3px #666;
 		}
 	}
 
-	@include dtb-fixed-collection();
+	@include mixins.dtb-fixed-collection();
 }
 
 div.dt-button-background {
@@ -123,7 +123,7 @@ div.dt-button-background {
 	width: 100%;
 	height: 100%;
 
-	@include dtb-radial-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7) );
+	@include mixins.dtb-radial-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7) );
 
 	z-index: 2001;
 }
@@ -138,5 +138,5 @@ div.dt-button-background {
 button.dt-button.processing,
 div.dt-button.processing,
 a.dt-button.processing {
-	@include dtb-processing();
+	@include mixins.dtb-processing();
 }

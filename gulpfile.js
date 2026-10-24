@@ -259,8 +259,7 @@ let CONF = {
 
 // -- Plugin options ----------------------------------------------------------
 let sassOptions = {
-    errorLogToConsole: true,
-    outputStyle: 'compressed' // nested, expanded, compact, compressed
+    style: 'compressed' // expanded, compressed
 };
 
 let autoprefixerOptions = {
@@ -824,7 +823,7 @@ gulp.task('task:renameJsDest', () => {
 
 /**
  * build CSS rom SASS files
- * -> 1. node-sass
+ * -> 1. sass (Dart Sass, modern API)
  *    2. autoprefixer
  */
 gulp.task('task:sass', () => {

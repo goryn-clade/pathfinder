@@ -1,3 +1,7 @@
+@use "../colors";
+@use "../variables";
+@use "mixins";
+
 //
 // Typography
 // --------------------------------------------------
@@ -8,24 +12,24 @@
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: $headings-font-family;
-  font-weight: $headings-font-weight;
-  line-height: $headings-line-height;
-  color: $headings-color;
+  font-family: variables.$headings-font-family;
+  font-weight: variables.$headings-font-weight;
+  line-height: variables.$headings-line-height;
+  color: variables.$headings-color;
 
   small,
   .small {
     font-weight: normal;
     line-height: 1;
-    color: $headings-small-color;
+    color: variables.$headings-small-color;
   }
 }
 
 h1, .h1,
 h2, .h2,
 h3, .h3 {
-  margin-top: $line-height-computed;
-  margin-bottom: ($line-height-computed / 2);
+  margin-top: variables.$line-height-computed;
+  margin-bottom: (variables.$line-height-computed / 2);
 
   small,
   .small {
@@ -35,8 +39,8 @@ h3, .h3 {
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-  margin-top: ($line-height-computed / 2);
-  margin-bottom: ($line-height-computed / 2);
+  margin-top: (variables.$line-height-computed / 2);
+  margin-bottom: (variables.$line-height-computed / 2);
 
   small,
   .small {
@@ -44,28 +48,28 @@ h6, .h6 {
   }
 }
 
-h1, .h1 { font-size: $font-size-h1; }
-h2, .h2 { font-size: $font-size-h2; }
-h3, .h3 { font-size: $font-size-h3; }
-h4, .h4 { font-size: $font-size-h4; }
-h5, .h5 { font-size: $font-size-h5; }
-h6, .h6 { font-size: $font-size-h6; }
+h1, .h1 { font-size: variables.$font-size-h1; }
+h2, .h2 { font-size: variables.$font-size-h2; }
+h3, .h3 { font-size: variables.$font-size-h3; }
+h4, .h4 { font-size: variables.$font-size-h4; }
+h5, .h5 { font-size: variables.$font-size-h5; }
+h6, .h6 { font-size: variables.$font-size-h6; }
 
 
 // Body text
 // -------------------------
 
 p {
-  margin: 0 0 ($line-height-computed / 2);
+  margin: 0 0 (variables.$line-height-computed / 2);
 }
 
 .lead {
-  margin-bottom: $line-height-computed;
+  margin-bottom: variables.$line-height-computed;
   font-size: 16px;
   font-weight: 200;
   line-height: 1.4;
 
-  @media (min-width: $screen-sm-min) {
+  @media (min-width: variables.$screen-sm-min) {
     font-size: 16px;
   }
 }
@@ -89,18 +93,18 @@ cite    { font-style: normal; }
 
 // Contextual colors
 .text-muted {
-  color: $text-muted;
+  color: variables.$text-muted;
 }
 
-@include text-emphasis-variant('.text-primary', $brand-primary);
+@include mixins.text-emphasis-variant('.text-primary', colors.$brand-primary);
 
-@include text-emphasis-variant('.text-success', $state-success-text);
+@include mixins.text-emphasis-variant('.text-success', variables.$state-success-text);
 
-@include text-emphasis-variant('.text-info', $state-info-text);
+@include mixins.text-emphasis-variant('.text-info', variables.$state-info-text);
 
-@include text-emphasis-variant('.text-warning', $state-warning-text);
+@include mixins.text-emphasis-variant('.text-warning', variables.$state-warning-text);
 
-@include text-emphasis-variant('.text-danger', $state-danger-text);
+@include mixins.text-emphasis-variant('.text-danger', variables.$state-danger-text);
 
 // Contextual backgrounds
 // For now we'll leave these alongside the text classes until v4 when we can
@@ -110,24 +114,24 @@ cite    { font-style: normal; }
   // automatically.
   color: #fff;
 }
-@include bg-variant('.bg-primary', $brand-primary);
+@include mixins.bg-variant('.bg-primary', colors.$brand-primary);
 
-@include bg-variant('.bg-success', $state-success-bg);
+@include mixins.bg-variant('.bg-success', variables.$state-success-bg);
 
-@include bg-variant('.bg-info', $state-info-bg);
+@include mixins.bg-variant('.bg-info', variables.$state-info-bg);
 
-@include bg-variant('.bg-warning', $state-warning-bg);
+@include mixins.bg-variant('.bg-warning', variables.$state-warning-bg);
 
-@include bg-variant('.bg-danger', $state-danger-bg);
+@include mixins.bg-variant('.bg-danger', variables.$state-danger-bg);
 
 
 // Page header
 // -------------------------
 
 .page-header {
-  padding-bottom: (($line-height-computed / 2) - 1);
-  margin: ($line-height-computed * 2) 0 $line-height-computed;
-  border-bottom: 1px solid $page-header-border-color;
+  padding-bottom: ((variables.$line-height-computed / 2) - 1);
+  margin: (variables.$line-height-computed * 2) 0 variables.$line-height-computed;
+  border-bottom: 1px solid variables.$page-header-border-color;
 }
 
 
@@ -138,7 +142,7 @@ cite    { font-style: normal; }
 ul,
 ol {
   margin-top: 0;
-  margin-bottom: ($line-height-computed / 2);
+  margin-bottom: (variables.$line-height-computed / 2);
   ul,
   ol {
     margin-bottom: 0;
@@ -155,7 +159,7 @@ ol {
 
 // Inline turns list items into inline-block
 .list-inline {
-  @extend .list-unstyled;
+  // @extend .list-unstyled: in pathfinder.scss
   margin-left: -5px;
 
   > li {
@@ -168,11 +172,11 @@ ol {
 // Description Lists
 dl {
   margin-top: 0; // Remove browser default
-  margin-bottom: ($line-height-computed - 8);
+  margin-bottom: (variables.$line-height-computed - 8);
 }
 dt,
 dd {
-  line-height: $line-height-computed;
+  line-height: variables.$line-height-computed;
 }
 dt {
   font-weight: bold;
@@ -186,18 +190,18 @@ dd {
 // Defaults to being stacked without any of the below styles applied, until the
 // grid breakpoint is reached (default of ~768px).
 
-@media (min-width: $grid-float-breakpoint) {
+@media (min-width: variables.$grid-float-breakpoint) {
   .dl-horizontal {
     dt {
       float: left;
-      width: ($component-offset-horizontal - 15);
+      width: (variables.$component-offset-horizontal - 15);
       clear: left;
       text-align: right;
-      @include text-overflow();
+      @include mixins.text-overflow();
     }
     dd {
-      margin-left: $component-offset-horizontal;
-      @include clearfix(); // Clear the floated `dt` if an empty `dd` is present
+      margin-left: variables.$component-offset-horizontal;
+      @include mixins.clearfix(); // Clear the floated `dt` if an empty `dd` is present
     }
   }
 }
@@ -210,7 +214,7 @@ abbr[title],
 // Add data-* attribute to help out our tooltip plugin, per https://github.com/twbs/bootstrap/issues/5257
 abbr[data-original-title] {
   cursor: help;
-  border-bottom: 1px dotted $abbr-border-color;
+  border-bottom: 1px dotted variables.$abbr-border-color;
 }
 .initialism {
   font-size: 90%;
@@ -219,10 +223,10 @@ abbr[data-original-title] {
 
 // Blockquotes
 blockquote {
-  padding: ($line-height-computed / 3) ($line-height-computed / 3 * 2);
-  margin: 0 0 ($line-height-computed / 3 * 2);
-  font-size: $blockquote-font-size;
-  border-left: 3px solid $blockquote-border-color;
+  padding: (variables.$line-height-computed / 3) (variables.$line-height-computed / 3 * 2);
+  margin: 0 0 (variables.$line-height-computed / 3 * 2);
+  font-size: variables.$blockquote-font-size;
+  border-left: 3px solid variables.$blockquote-border-color;
 
   p,
   ul,
@@ -239,8 +243,8 @@ blockquote {
   .small {
     display: block;
     font-size: 80%; // back to default font-size
-    line-height: $line-height-base;
-    color: $blockquote-small-color;
+    line-height: variables.$line-height-base;
+    color: variables.$blockquote-small-color;
 
     &:before {
       content: '\2014 \00A0'; // em dash, nbsp
@@ -253,9 +257,9 @@ blockquote {
 // Heads up: `blockquote.pull-right` has been deprecated as of v3.1.0.
 .blockquote-reverse,
 blockquote.pull-right {
-  padding-right: ($line-height-computed / 3 * 2);
+  padding-right: (variables.$line-height-computed / 3 * 2);
   padding-left: 0;
-  border-right: 3px solid $blockquote-border-color;
+  border-right: 3px solid variables.$blockquote-border-color;
   border-left: 0;
   text-align: right;
 
@@ -278,7 +282,7 @@ blockquote:after {
 
 // Addresses
 address {
-  margin-bottom: $line-height-computed;
+  margin-bottom: variables.$line-height-computed;
   font-style: normal;
-  line-height: $line-height-base;
+  line-height: variables.$line-height-base;
 }

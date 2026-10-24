@@ -1,3 +1,10 @@
+@use "sass:color";
+@use "sass:map";
+@use "sass:string";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "function";
+
 // keyframes mixin
 @mixin keyframes($name) {
   @-webkit-keyframes #{$name} {
@@ -100,13 +107,13 @@
 // SVG pulse "fill" ===============================================================================
 @include keyframes(pfPulseDanger){
   0% {
-    fill: $red;
+    fill: colors.$red;
   }
   50% {
-    fill: $red-darker;
+    fill: colors.$red-darker;
   }
   100% {
-    fill: $red;
+    fill: colors.$red;
   }
 }
 
@@ -133,43 +140,43 @@
 @mixin pf-pulse-Background($status, $keepVisible: false){
   $statusMap: (
     success: (
-      color: $gray-dark,
-      backgroundColor: $green-dark
+      color: colors.$gray-dark,
+      backgroundColor: colors.$green-dark
     ),
     warning: (
-      color: $gray-darker,
-      backgroundColor: $orange
+      color: colors.$gray-darker,
+      backgroundColor: colors.$orange
     ),
     danger: (
-      color: $gray-darker,
-      backgroundColor: $red
+      color: colors.$gray-darker,
+      backgroundColor: colors.$red
     )
   );
 
-  $map: map-get($statusMap, $status);
+  $map: map.get($statusMap, $status);
 
-  $name: pulseBackground + capitalize($status);
+  $name: pulseBackground + function.capitalize($status);
   $nameActive: $name + 'Active';
 
   $className: 'pf-animation-pulse-' + $status;
   @if $keepVisible {
-    $className: str-insert($className, '-keep', -1);
-    $name: str-insert($name, 'Keep', -1);
-    $nameActive: str-insert($nameActive, 'Keep', -1);
+    $className: string.insert($className, '-keep', -1);
+    $name: string.insert($name, 'Keep', -1);
+    $nameActive: string.insert($nameActive, 'Keep', -1);
   }
 
-  @include pf-pulse-keyframes($name, map-get($map, 'color'), map-get($map, 'backgroundColor'), $keepVisible);
-  @include pf-pulse-keyframes($nameActive, map-get($map, 'color'), darken(map-get($map, 'backgroundColor'), 5%), $keepVisible);
+  @include pf-pulse-keyframes($name, map.get($map, 'color'), map.get($map, 'backgroundColor'), $keepVisible);
+  @include pf-pulse-keyframes($nameActive, map.get($map, 'color'), color.adjust(map.get($map, 'backgroundColor'), $lightness: -5%), $keepVisible);
 
   .#{$className}{
-    @include animation($name 1s 1);
-    @include animation-timing-function(cubic-bezier(0.53, -0.03, 0.68, 0.38));
+    @include mixins.animation($name 1s 1);
+    @include mixins.animation-timing-function(cubic-bezier(0.53, -0.03, 0.68, 0.38));
     will-change: color, background-color;
     animation-fill-mode: forwards;
 
     .sorting_1{
-      @include animation($nameActive 1s 1);
-      @include animation-timing-function(cubic-bezier(0.53, -0.03, 0.68, 0.38));
+      @include mixins.animation($nameActive 1s 1);
+      @include mixins.animation-timing-function(cubic-bezier(0.53, -0.03, 0.68, 0.38));
       will-change: color, background-color;
       animation-fill-mode: forwards;
     }
@@ -185,15 +192,15 @@
 
 // rotate =========================================================================================
 .pf-animate-rotate{
-  @include transition( all 0.08s linear );
+  @include mixins.transition( all 0.08s linear );
 }
 
 .pf-animate-rotate.right{
-  @include rotate( 90deg );
+  @include mixins.rotate( 90deg );
 }
 
 .pf-animate-rotate.left{
-  @include rotate( -90deg );
+  @include mixins.rotate( -90deg );
 }
 
 // rainbow background =============================================================================
@@ -207,9 +214,9 @@
 }
 
 @mixin rainbow(){
-  background: repeating-linear-gradient(-45deg, $green-light 0%, $teal-lighter 12.5%, $teal-lightest 25%, $green 37.5%, $green-light 50%);
+  background: repeating-linear-gradient(-45deg, colors.$green-light 0%, colors.$teal-lighter 12.5%, colors.$teal-lightest 25%, colors.$green 37.5%, colors.$green-light 50%);
   background-size:100vw 100vw;
-  @include animation(rotateRainbow 3s infinite linear forwards);
+  @include mixins.animation(rotateRainbow 3s infinite linear forwards);
 }
 
 // navigation link active/hover indicator =========================================================
@@ -221,9 +228,9 @@
       content: '';
       position: absolute;
       #{$position}: 0;
-      background-color: $green;
+      background-color: colors.$green;
       opacity: 0;
-      @include transition( $position 0.15s ease-out, opacity 0.15s ease-out );
+      @include mixins.transition( $position 0.15s ease-out, opacity 0.15s ease-out );
       will-change: opacity, $position;
 
       @if $position == 'left' {

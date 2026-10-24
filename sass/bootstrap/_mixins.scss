@@ -1,3 +1,8 @@
+@use "sass:color";
+@use "sass:math";
+@use "../colors";
+@use "../variables";
+
 //
 // Mixins
 // --------------------------------------------------
@@ -34,7 +39,7 @@
   // WebKit
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
-  outline-color: $teal-lighter;
+  outline-color: colors.$teal-lighter;
 }
 
 // Center-align a block level element
@@ -54,7 +59,7 @@
 }
 
 // Placeholder text
-@mixin placeholder($color: $input-color-placeholder) {
+@mixin placeholder($color: variables.$input-color-placeholder) {
   &::-moz-placeholder           { color: $color;   // Firefox
                                   opacity: 1; } // See https://github.com/twbs/bootstrap/pull/11526
   &:-ms-input-placeholder       { color: $color; } // Internet Explorer 10+
@@ -263,7 +268,7 @@
 }
 
 // CSS3 Content Columns
-@mixin content-columns($column-count, $column-gap: $grid-gutter-width) {
+@mixin content-columns($column-count, $column-gap: variables.$grid-gutter-width) {
   -webkit-column-count: $column-count;
      -moz-column-count: $column-count;
           column-count: $column-count;
@@ -305,7 +310,7 @@
   background-image: -webkit-linear-gradient(left, color-stop($start-color $start-percent), color-stop($end-color $end-percent)); // Safari 5.1-6, Chrome 10+
   background-image:  linear-gradient(to right, $start-color $start-percent, $end-color $end-percent); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=1); // IE9 and down
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{color.ie-hex-str($start-color)}', endColorstr='#{color.ie-hex-str($end-color)}', GradientType=1); // IE9 and down
 }
 
 // Vertical gradient, from top to bottom
@@ -316,7 +321,7 @@
   background-image: -webkit-linear-gradient(top, $start-color $start-percent, $end-color $end-percent);  // Safari 5.1-6, Chrome 10+
   background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{color.ie-hex-str($start-color)}', endColorstr='#{color.ie-hex-str($end-color)}', GradientType=0); // IE9 and down
 }
 
 @mixin gradient-directional($start-color: #555, $end-color: #333, $deg: 45deg) {
@@ -328,13 +333,13 @@
   background-image: -webkit-linear-gradient(left, $start-color, $mid-color $color-stop, $end-color);
   background-image: linear-gradient(to right, $start-color, $mid-color $color-stop, $end-color);
   background-repeat: no-repeat;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=1); // IE9 and down, gets no color-stop at all for proper fallback
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{color.ie-hex-str($start-color)}', endColorstr='#{color.ie-hex-str($end-color)}', GradientType=1); // IE9 and down, gets no color-stop at all for proper fallback
 }
 @mixin gradient-vertical-three-colors($start-color: #00b3ee, $mid-color: #7a43b6, $color-stop: 50%, $end-color: #c3325f) {
   background-image: -webkit-linear-gradient($start-color, $mid-color $color-stop, $end-color);
   background-image: linear-gradient($start-color, $mid-color $color-stop, $end-color);
   background-repeat: no-repeat;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down, gets no color-stop at all for proper fallback
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{color.ie-hex-str($start-color)}', endColorstr='#{color.ie-hex-str($end-color)}', GradientType=0); // IE9 and down, gets no color-stop at all for proper fallback
 }
 @mixin gradient-radial($inner-color: #555, $outer-color: #333) {
   background-image: -webkit-radial-gradient(circle, $inner-color, $outer-color);
@@ -361,7 +366,7 @@
 // Short retina mixin for setting background-image and -size
 
 @mixin img-retina($file-1x, $file-2x, $width-1x, $height-1x) {
-  background-image: url(if($bootstrap-sass-asset-helper, twbs-image-path("#{$file-1x}"), "#{$file-1x}"));
+  background-image: url(if(variables.$bootstrap-sass-asset-helper, twbs-image-path("#{$file-1x}"), "#{$file-1x}"));
 
   @media
   only screen and (-webkit-min-device-pixel-ratio: 2),
@@ -370,7 +375,7 @@
   only screen and (        min-device-pixel-ratio: 2),
   only screen and (                min-resolution: 192dpi),
   only screen and (                min-resolution: 2dppx) {
-    background-image: url(if($bootstrap-sass-asset-helper, twbs-image-path("#{$file-2x}"), "#{$file-2x}"));
+    background-image: url(if(variables.$bootstrap-sass-asset-helper, twbs-image-path("#{$file-2x}"), "#{$file-2x}"));
     background-size: $width-1x $height-1x;
   }
 }
@@ -395,7 +400,7 @@
 // Dividers (basically an hr) within dropdowns and nav lists
 @mixin nav-divider($color: #e5e5e5) {
   height: 1px;
-  margin: (($line-height-computed / 3) - 1) 0;
+  margin: ((variables.$line-height-computed / 3) - 1) 0;
   overflow: hidden;
   background-color: $color;
 }
@@ -429,10 +434,10 @@
   color: $text-color;
 
   hr {
-    border-top-color: darken($border, 5%);
+    border-top-color: color.adjust($border, $lightness: -5%);
   }
   .alert-link {
-    color: darken($text-color, 10%);
+    color: color.adjust($text-color, $lightness: -10%);
   }
 }
 
@@ -459,7 +464,7 @@
     > th.#{$state}:hover,
     &.#{$state}:hover > td,
     &.#{$state}:hover > th {
-      background-color: darken($background, 5%);
+      background-color: color.adjust($background, $lightness: -5%);
     }
   }
 }
@@ -482,7 +487,7 @@
     &:hover,
     &:focus {
       color: $color;
-      background-color: darken($background, 5%);
+      background-color: color.adjust($background, $lightness: -5%);
     }
     &.active,
     &.active:hover,
@@ -508,13 +513,13 @@
   &:active,
   &.active:not(.toggle-on):not(.toggle-off) {
     color: $color;
-    background-color: lighten($background, 6%);
-        border-color: lighten($border, 6%);
+    background-color: color.adjust($background, $lightness: 6%);
+        border-color: color.adjust($border, $lightness: 6%);
   }
   .open & { &.dropdown-toggle {
     color: $color;
-    background-color: lighten($background, 6%);
-        border-color: lighten($border, 6%);
+    background-color: color.adjust($background, $lightness: 6%);
+        border-color: color.adjust($border, $lightness: 6%);
   } }
   &:active,
   &.active {
@@ -584,7 +589,7 @@
   &[href] {
     &:hover,
     &:focus {
-      background-color: darken($color, 10%);
+      background-color: color.adjust($color, $lightness: -10%);
     }
   }
 }
@@ -603,7 +608,7 @@
     background-color: $color;
   }
   a#{$parent}:hover {
-    background-color: darken($color, 10%);
+    background-color: color.adjust($color, $lightness: -10%);
   }
 }
 
@@ -615,7 +620,7 @@
     color: $color;
   }
   a#{$parent}:hover {
-    color: darken($color, 10%);
+    color: color.adjust($color, $lightness: -10%);
   }
 }
 
@@ -624,8 +629,8 @@
 // Vertically center elements in the navbar.
 // Example: an element has a height of 30px, so write out `.navbar-vertical-align(30px);` to calculate the appropriate top margin.
 @mixin navbar-vertical-align($element-height) {
-  margin-top: (($navbar-height - $element-height) / 2);
-  margin-bottom: (($navbar-height - $element-height) / 2);
+  margin-top: ((variables.$navbar-height - $element-height) / 2);
+  margin-bottom: ((variables.$navbar-height - $element-height) / 2);
 }
 
 // Progress bars
@@ -666,127 +671,127 @@
 @mixin container-fixed() {
   margin-right: auto;
   margin-left: auto;
-  padding-left:  ($grid-gutter-width / 2);
-  padding-right: ($grid-gutter-width / 2);
+  padding-left:  (variables.$grid-gutter-width / 2);
+  padding-right: (variables.$grid-gutter-width / 2);
   @include clearfix();
 }
 
 // Creates a wrapper for a series of columns
-@mixin make-row($gutter: $grid-gutter-width) {
+@mixin make-row($gutter: variables.$grid-gutter-width) {
   margin-left:  ($gutter / -2);
   margin-right: ($gutter / -2);
   @include clearfix();
 }
 
 // Generate the extra small columns
-@mixin make-xs-column($columns, $gutter: $grid-gutter-width) {
+@mixin make-xs-column($columns, $gutter: variables.$grid-gutter-width) {
   position: relative;
   float: left;
-  width: percentage(($columns / $grid-columns));
+  width: math.percentage(($columns / variables.$grid-columns));
   min-height: 1px;
   padding-left:  ($gutter / 2);
   padding-right: ($gutter / 2);
 }
 @mixin make-xs-column-offset($columns) {
-  @media (min-width: $screen-xs-min) {
-    margin-left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-xs-min) {
+    margin-left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-xs-column-push($columns) {
-  @media (min-width: $screen-xs-min) {
-    left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-xs-min) {
+    left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-xs-column-pull($columns) {
-  @media (min-width: $screen-xs-min) {
-    right: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-xs-min) {
+    right: math.percentage(($columns / variables.$grid-columns));
   }
 }
 
 
 // Generate the small columns
-@mixin make-sm-column($columns, $gutter: $grid-gutter-width) {
+@mixin make-sm-column($columns, $gutter: variables.$grid-gutter-width) {
   position: relative;
   min-height: 1px;
   padding-left:  ($gutter / 2);
   padding-right: ($gutter / 2);
 
-  @media (min-width: $screen-sm-min) {
+  @media (min-width: variables.$screen-sm-min) {
     float: left;
-    width: percentage(($columns / $grid-columns));
+    width: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-sm-column-offset($columns) {
-  @media (min-width: $screen-sm-min) {
-    margin-left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-sm-min) {
+    margin-left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-sm-column-push($columns) {
-  @media (min-width: $screen-sm-min) {
-    left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-sm-min) {
+    left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-sm-column-pull($columns) {
-  @media (min-width: $screen-sm-min) {
-    right: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-sm-min) {
+    right: math.percentage(($columns / variables.$grid-columns));
   }
 }
 
 
 // Generate the medium columns
-@mixin make-md-column($columns, $gutter: $grid-gutter-width) {
+@mixin make-md-column($columns, $gutter: variables.$grid-gutter-width) {
   position: relative;
   min-height: 1px;
   padding-left:  ($gutter / 2);
   padding-right: ($gutter / 2);
 
-  @media (min-width: $screen-md-min) {
+  @media (min-width: variables.$screen-md-min) {
     float: left;
-    width: percentage(($columns / $grid-columns));
+    width: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-md-column-offset($columns) {
-  @media (min-width: $screen-md-min) {
-    margin-left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-md-min) {
+    margin-left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-md-column-push($columns) {
-  @media (min-width: $screen-md-min) {
-    left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-md-min) {
+    left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-md-column-pull($columns) {
-  @media (min-width: $screen-md-min) {
-    right: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-md-min) {
+    right: math.percentage(($columns / variables.$grid-columns));
   }
 }
 
 
 // Generate the large columns
-@mixin make-lg-column($columns, $gutter: $grid-gutter-width) {
+@mixin make-lg-column($columns, $gutter: variables.$grid-gutter-width) {
   position: relative;
   min-height: 1px;
   padding-left:  ($gutter / 2);
   padding-right: ($gutter / 2);
 
-  @media (min-width: $screen-lg-min) {
+  @media (min-width: variables.$screen-lg-min) {
     float: left;
-    width: percentage(($columns / $grid-columns));
+    width: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-lg-column-offset($columns) {
-  @media (min-width: $screen-lg-min) {
-    margin-left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-lg-min) {
+    margin-left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-lg-column-push($columns) {
-  @media (min-width: $screen-lg-min) {
-    left: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-lg-min) {
+    left: math.percentage(($columns / variables.$grid-columns));
   }
 }
 @mixin make-lg-column-pull($columns) {
-  @media (min-width: $screen-lg-min) {
-    right: percentage(($columns / $grid-columns));
+  @media (min-width: variables.$screen-lg-min) {
+    right: math.percentage(($columns / variables.$grid-columns));
   }
 }
 
@@ -801,7 +806,7 @@
   $list: '';
   $i: 1;
   $list: ".col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}";
-  @for $i from (1 + 1) through $grid-columns {
+  @for $i from (1 + 1) through variables.$grid-columns {
     $list: "#{$list}, .col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}";
   }
   #{$list} {
@@ -809,8 +814,8 @@
     // Prevent columns from collapsing when empty
     min-height: 1px;
     // Inner gutter via padding
-    padding-left:  ($grid-gutter-width / 2);
-    padding-right: ($grid-gutter-width / 2);
+    padding-left:  (variables.$grid-gutter-width / 2);
+    padding-right: (variables.$grid-gutter-width / 2);
   }
 }
 
@@ -820,7 +825,7 @@
   $list: '';
   $i: 1;
   $list: ".col-#{$class}-#{$i}";
-  @for $i from (1 + 1) through $grid-columns {
+  @for $i from (1 + 1) through variables.$grid-columns {
     $list: "#{$list}, .col-#{$class}-#{$i}";
   }
   #{$list} {
@@ -832,22 +837,22 @@
 @mixin calc-grid-column($index, $class, $type) {
   @if ($type == width) and ($index > 0) {
     .col-#{$class}-#{$index} {
-      width: percentage(($index / $grid-columns));
+      width: math.percentage(($index / variables.$grid-columns));
     }
   }
   @if ($type == push) {
     .col-#{$class}-push-#{$index} {
-      left: percentage(($index / $grid-columns));
+      left: math.percentage(($index / variables.$grid-columns));
     }
   }
   @if ($type == pull) {
     .col-#{$class}-pull-#{$index} {
-      right: percentage(($index / $grid-columns));
+      right: math.percentage(($index / variables.$grid-columns));
     }
   }
   @if ($type == offset) {
     .col-#{$class}-offset-#{$index} {
-      margin-left: percentage(($index / $grid-columns));
+      margin-left: math.percentage(($index / variables.$grid-columns));
     }
   }
 }
@@ -863,10 +868,10 @@
 // Create grid for specific class
 @mixin make-grid($class) {
   @include float-grid-columns($class);
-  @include loop-grid-columns($grid-columns, $class, width);
-  @include loop-grid-columns($grid-columns, $class, pull);
-  @include loop-grid-columns($grid-columns, $class, push);
-  @include loop-grid-columns($grid-columns, $class, offset);
+  @include loop-grid-columns(variables.$grid-columns, $class, width);
+  @include loop-grid-columns(variables.$grid-columns, $class, pull);
+  @include loop-grid-columns(variables.$grid-columns, $class, push);
+  @include loop-grid-columns(variables.$grid-columns, $class, offset);
 }
 
 // Form validation states
@@ -890,7 +895,7 @@
     @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075)); // Redeclare so transitions work
     &:focus {
      // border-color: darken($border-color, 5%);
-      $shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px lighten($border-color, 20%);
+      $shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px color.adjust($border-color, $lightness: 20%);
       @include box-shadow($shadow);
     }
   }
@@ -927,8 +932,8 @@
 // Example usage: change the default blue border and shadow to white for better
 // contrast against a dark gray background.
 
-@mixin form-control-focus($color: $input-border-focus) {
-  $color-rgba: rgba(red($color), green($color), blue($color), .6);
+@mixin form-control-focus($color: variables.$input-border-focus) {
+  $color-rgba: rgba(color.red($color), color.green($color), color.blue($color), .6);
   &:focus {
     border-color: $color;
     outline: 0;

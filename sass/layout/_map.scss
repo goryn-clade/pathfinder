@@ -1,3 +1,10 @@
+@use "sass:color";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+@use "animation";
+@use "map_module";
+
 $mapOverlayTop:         8px;
 $mapOverlayRight:       25px;
 $mapOverlayBottom:      25px;
@@ -15,7 +22,7 @@ $mapBubbleWidth:        30px;
   animation-name: bounce;
 }
 
-@include keyframes(bounce){
+@include animation.keyframes(bounce){
   0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
   40% {transform: translateY(-8px);}
   60% {transform: translateY(-4px);}
@@ -26,7 +33,7 @@ $mapBubbleWidth:        30px;
   position: absolute;
   display: none; // triggered by js
   z-index: 10000;
-  background: rgba($black, 0.25);
+  background: rgba(colors.$black, 0.25);
   border-radius: 5px;
 
   &.pf-map-overlay-timer{
@@ -50,16 +57,16 @@ $mapBubbleWidth:        30px;
       text-align: center;
       font-size: 16px;
       cursor: pointer;
-      @include transition(color .18s ease-in-out);
+      @include mixins.transition(color .18s ease-in-out);
       will-change: color;
 
       &:hover{
-        color: $orange-dark;
+        color: colors.$orange-dark;
       }
 
       &.disabled{
         cursor: not-allowed;
-        color: $gray-darker;
+        color: colors.$gray-darker;
       }
     }
 
@@ -69,12 +76,12 @@ $mapBubbleWidth:        30px;
       text-align: center;
       font-size: 11px;
       line-height: 13px;
-      @include transition(color .18s ease-in-out);
+      @include mixins.transition(color .18s ease-in-out);
       will-change: color;
     }
 
     .active{
-      color: $orange-dark;
+      color: colors.$orange-dark;
     }
   }
 
@@ -93,10 +100,10 @@ $mapBubbleWidth:        30px;
       width: 0; // is animated
       height: 26px;
       opacity: 0; // is animated
-      color: $gray-light;
+      color: colors.$gray-light;
       transform: scale(0);
       transform-origin: 50% 50% 0px;
-      @include transition(color .18s ease-in-out );
+      @include mixins.transition(color .18s ease-in-out );
       cursor: help;
       will-change: all;
 
@@ -111,7 +118,7 @@ $mapBubbleWidth:        30px;
       }
 
       &.active, &:hover{
-        color: $orange-dark;
+        color: colors.$orange-dark;
       }
     }
   }
@@ -131,7 +138,7 @@ $mapBubbleWidth:        30px;
 
       .pf-map-overlay-headline{
         font-size: 12px;
-        font-family: $font-family-bold;
+        font-family: variables.$font-family-bold;
         white-space: nowrap;
 
         .badge{
@@ -183,13 +190,13 @@ $mapBubbleWidth:        30px;
       width: 32px;
       cursor: pointer;
       text-align: center;
-      border-left: 1px solid $gray-darker;
+      border-left: 1px solid colors.$gray-darker;
 
       .pf-map-overlay-local-trigger{
         margin-bottom: 10px;
 
         &:hover, &.right{
-          color: $orange-dark; // overlay open
+          color: colors.$orange-dark; // overlay open
         }
       }
 
@@ -206,7 +213,7 @@ $mapBubbleWidth:        30px;
 
     .badge{
       font-family: Arial, sans-serif;         // fix for element width on custom font family
-      background-color: $gray-darker;
+      background-color: colors.$gray-darker;
     }
   }
 
@@ -249,10 +256,10 @@ $mapBubbleWidth:        30px;
 }
 
 .pf-map{
-  width: $mapWidth;
-  height: $mapHeight;
+  width: map_module.$mapWidth;
+  height: map_module.$mapHeight;
   position: relative;
-  font-family: $font-family-bold;
+  font-family: variables.$font-family-bold;
   will-change: transform;
 
   &.pf-map-move{
@@ -273,12 +280,12 @@ $mapBubbleWidth:        30px;
   // gets applied to source/target (system) if <svg> or endpoint is hovered
   .jtk-source-hover, .jtk-target-hover{
     @include bounce-up-down;
-    @include box-shadow(0 6px 12px rgba(0,0,0,.3));
+    @include mixins.box-shadow(0 6px 12px rgba(0,0,0,.3));
   }
 
   // gets applied to *all* systems that are target for a drop of current element
   .jtk-drag-active{
-    @include transition(box-shadow 0.12s ease-out, transform 0.08s ease-out !important);
+    @include mixins.transition(box-shadow 0.12s ease-out, transform 0.08s ease-out !important);
 
   }
 
@@ -288,7 +295,7 @@ $mapBubbleWidth:        30px;
 
     &.jtk-drag-active{
       // @see .pf-system:hover style. We want the same hover style for systems that are active drop-target
-      @include box-shadow(0 6px 12px rgba(0,0,0, 0.3));
+      @include mixins.box-shadow(0 6px 12px rgba(0,0,0, 0.3));
       transform: translate3d(0, -1px, 0) scale(1.1) !important;
     }
 
@@ -300,8 +307,8 @@ $mapBubbleWidth:        30px;
     min-width: 60px;
     height: auto;
     overflow: hidden; // hide bg on round corners -_-
-    background-color: $gray-dark;
-    font-family: $font-family-bold;
+    background-color: colors.$gray-dark;
+    font-family: variables.$font-family-bold;
     z-index: 100;
     will-change: top, left, opacity, transform;
 
@@ -309,17 +316,17 @@ $mapBubbleWidth:        30px;
     border: {
       width: 2px;
       style: solid;
-      color: $gray-light;
+      color: colors.$gray-light;
     }
     border-radius: 5px;
 
     // change border color with transition
-    @include transition( border-color 0.2s ease-out, box-shadow 0.12s ease-out, opacity 0.12s ease-out);
+    @include mixins.transition( border-color 0.2s ease-out, box-shadow 0.12s ease-out, opacity 0.12s ease-out);
     transform: translate3d(0, 0, 0);
 
     &:not(.jtk-drag-hover):hover{
       // makes the systems "flying" :)
-      @include box-shadow(0 6px 12px rgba(0,0,0, 0.3));
+      @include mixins.box-shadow(0 6px 12px rgba(0,0,0, 0.3));
       transform: translate3d(0, -1px, 0) !important;
     }
 
@@ -327,7 +334,7 @@ $mapBubbleWidth:        30px;
       border-style: dashed;
 
       .pf-system-head-name{
-        color: $gray-light;
+        color: colors.$gray-light;
       }
     }
 
@@ -343,7 +350,7 @@ $mapBubbleWidth:        30px;
         border: none;
         display: inline-block;
         min-width: 50px;
-        color: $gray-lighter;
+        color: colors.$gray-lighter;
         margin-right: 2px;
         letter-spacing: 0.03em;
         -webkit-font-smoothing: antialiased;
@@ -355,7 +362,7 @@ $mapBubbleWidth:        30px;
         text-align: right;
         min-width: 8px;
         margin-right: 1px;
-        color: $green;
+        color: colors.$green;
         cursor: help;
 
         &:empty{
@@ -376,7 +383,7 @@ $mapBubbleWidth:        30px;
 
       .pf-system-head-expand{
         margin-left: 2px;
-        color: $gray-light;
+        color: colors.$gray-light;
         width: 10px;
         display: none;  // triggered by JS
         transform: translateY(0); // fixed "blurry" text in scaled parent
@@ -393,7 +400,7 @@ $mapBubbleWidth:        30px;
       display: flex;
       justify-content: space-between;
       flex-wrap: nowrap;
-      color: lighten($gray-light, 10%);
+      color: color.adjust(colors.$gray-light, $lightness: 10%);
       font-size: 10px;
       line-height: 14px; // 15 is "default", lower it a bit and set fix "height" for 1-2px bottom space
       height: 15px;
@@ -462,20 +469,20 @@ $mapBubbleWidth:        30px;
         top: {
           width: 1px;
           style: dashed;
-          color: $gray-light;
+          color: colors.$gray-light;
         }
       }
 
       .pf-system-body-item{
         position: relative;
-        color: lighten($gray-light, 10%);
+        color: color.adjust(colors.$gray-light, $lightness: 10%);
         font-size: 10px;
         line-height: 16px;
         height: 16px;
 
         .pf-system-body-right{
           float: right;
-          color: $orange-light;
+          color: colors.$orange-light;
           width: 50px;
           overflow: hidden;
           white-space: nowrap;
@@ -513,8 +520,8 @@ $mapBubbleWidth:        30px;
       }
 
       .tooltip-inner{
-        color: $gray-dark;
-        background-color: $gray-lighter;
+        color: colors.$gray-dark;
+        background-color: colors.$gray-lighter;
         padding: 3px 3px;
       }
 
@@ -523,16 +530,16 @@ $mapBubbleWidth:        30px;
 
   // active system
   .pf-system-active:not(.pf-map-endpoint-source):not(.pf-map-endpoint-target){
-    @include box-shadow($yellow-lighter 0px 0px 8px 0px);
+    @include mixins.box-shadow(colors.$yellow-lighter 0px 0px 8px 0px);
   }
 
 
   // selected system
   .pf-system-selected:not(.pf-map-endpoint-source):not(.pf-map-endpoint-target){
-    @include box-shadow($red-darker 0px 0px 8px 0px);
-    background-color: $red-darker;
+    @include mixins.box-shadow(colors.$red-darker 0px 0px 8px 0px);
+    background-color: colors.$red-darker;
     .pf-system-head, .pf-system-body{
-      background-color: $red-darker;
+      background-color: colors.$red-darker;
     }
   }
 
@@ -548,7 +555,7 @@ $mapBubbleWidth:        30px;
     }
 
     .fa-lock{
-      color: $gray-light !important;
+      color: colors.$gray-light !important;
       display: inline-block !important;
     }
   }
@@ -556,7 +563,7 @@ $mapBubbleWidth:        30px;
   // debug system class
   .pf-system-debug{
     position: absolute;
-    color: $white;
+    color: colors.$white;
     font-size: 10px;
     line-height: 22px;
     text-align: center;
@@ -571,7 +578,7 @@ $mapBubbleWidth:        30px;
       line-height: 10px;
       top: 1px;
       left: 2px;
-      color: $black;
+      color: colors.$black;
     }
   }
 
@@ -586,11 +593,11 @@ $mapBubbleWidth:        30px;
 
     svg {
       circle{
-        @include transition(stroke 0.18s ease-out, fill 0.18s ease-out);
+        @include mixins.transition(stroke 0.18s ease-out, fill 0.18s ease-out);
       }
 
       *{
-        stroke: $gray-light;
+        stroke: colors.$gray-light;
         cursor: pointer;
       }
     }
@@ -598,7 +605,7 @@ $mapBubbleWidth:        30px;
     // hover (with cursor) on endpoints (before drag)
     &:hover{
       circle{
-        stroke: $orange !important;
+        stroke: colors.$orange !important;
       }
     }
 
@@ -648,15 +655,15 @@ $mapBubbleWidth:        30px;
 
   .jtk-endpoint-drop-allowed{
     circle {
-      stroke: $green !important;
-      fill: $green !important;
+      stroke: colors.$green !important;
+      fill: colors.$green !important;
     }
   }
 
   .jtk-endpoint-drop-forbidden{
     circle {
-      stroke: $red-dark !important;
-      fill: $red-dark !important;
+      stroke: colors.$red-dark !important;
+      fill: colors.$red-dark !important;
     }
   }
 
@@ -665,12 +672,12 @@ $mapBubbleWidth:        30px;
     z-index: 6;         // above group (5), below proxy endpoints (8)
     cursor: pointer;
     overflow: unset;    // fixes a strange 1px flicker issue when connection is hovered and "jumps" up+down
-    @include transition(stroke 0.18s ease-out, opacity 0.18s ease-out);
+    @include mixins.transition(stroke 0.18s ease-out, opacity 0.18s ease-out);
     will-change: all;
 
     path {
       shape-rendering: geometricPrecision;        // maybe better render quality ?!
-      @include transition(stroke 0.18s ease-out);
+      @include mixins.transition(stroke 0.18s ease-out);
     }
 
     &.jtk-hover{
@@ -678,7 +685,7 @@ $mapBubbleWidth:        30px;
       filter: drop-shadow(-3px 3px 4px rgba(0,0,0, 0.3));
 
       path:first-child{
-        stroke: $gray-lightest;
+        stroke: colors.$gray-lightest;
       }
     }
 
@@ -696,7 +703,7 @@ $mapBubbleWidth:        30px;
     }
 
     path:nth-child(2){
-      stroke: darken($pink-darker, 8%);
+      stroke: color.adjust(colors.$pink-darker, $lightness: -8%);
       stroke-dasharray: 2px, 8px, 2px, 8px;
     }
 
@@ -706,7 +713,7 @@ $mapBubbleWidth:        30px;
       }
 
       path:nth-child(2){
-        stroke: $gray-lightest;
+        stroke: colors.$gray-lightest;
       }
     }
   }
@@ -719,7 +726,7 @@ $mapBubbleWidth:        30px;
     }
 
     path:nth-child(2){
-      stroke: $teal-lighter;
+      stroke: colors.$teal-lighter;
       stroke-dasharray: 15px, 10px, 5px, 10px, 5px, 10px;
     }
 
@@ -729,7 +736,7 @@ $mapBubbleWidth:        30px;
       }
 
       path:nth-child(2){
-        stroke: $gray-lightest;
+        stroke: colors.$gray-lightest;
       }
     }
   }
@@ -738,11 +745,11 @@ $mapBubbleWidth:        30px;
     z-index: 6;
 
     path:first-child{
-      stroke: $gray-light;
+      stroke: colors.$gray-light;
     }
 
     path:nth-child(2){
-      stroke: $indigo-darkest;
+      stroke: colors.$indigo-darkest;
     }
   }
 
@@ -757,33 +764,33 @@ $mapBubbleWidth:        30px;
 
   .pf-map-connection-wh-eol1 {
     path:first-child{
-      stroke: $pink-light;
+      stroke: colors.$pink-light;
     }
   }
 
   .pf-map-connection-wh-eol2 {
     path:first-child{
-      stroke: $pink-dark;
+      stroke: colors.$pink-dark;
     }
   }
 
   .pf-map-connection-wh-eol3 {
     path:first-child{
-      stroke: $pink-darker;
+      stroke: colors.$pink-darker;
     }
   }
 
   .pf-map-connection-wh-reduced {
 
     path:nth-child(2){
-      stroke: $orange;
+      stroke: colors.$orange;
     }
   }
 
   .pf-map-connection-wh-critical {
 
     path:nth-child(2){
-      stroke: $red-dark;
+      stroke: colors.$red-dark;
     }
   }
 
@@ -820,7 +827,7 @@ $mapBubbleWidth:        30px;
   }
 
   .pf-map-connection-active{
-    filter: drop-shadow( 0px 0px 3px $yellow-lighter) !important; // overwrite "hover" shadow
+    filter: drop-shadow( 0px 0px 3px colors.$yellow-lighter) !important; // overwrite "hover" shadow
   }
 
   .pf-map-connection-process{
@@ -836,7 +843,7 @@ $mapBubbleWidth:        30px;
     opacity: 1;
     pointer-events: none; // click through overlays
     will-change: opacity;
-    @include transition(opacity 0.18s ease-out);
+    @include mixins.transition(opacity 0.18s ease-out);
 
     &.jtk-hover:not(.debug){
       opacity: 0 !important;
@@ -846,8 +853,8 @@ $mapBubbleWidth:        30px;
   %map-overlay{
     font-size: 11px;
     z-index: 1020;
-    background-color: $gray;
-    color: $gray-lighter;
+    background-color: colors.$gray;
+    color: colors.$gray-lighter;
   }
 
   .pf-map-component-overlay{
@@ -855,7 +862,7 @@ $mapBubbleWidth:        30px;
     line-height: 14px;
     padding: 1px 4px;
     border-radius: 6px;
-    @include box-shadow(0 3px 6px rgba(0,0,0,.3));
+    @include mixins.box-shadow(0 3px 6px rgba(0,0,0,.3));
 
     &.small{
       -webkit-font-smoothing: antialiased;
@@ -878,7 +885,7 @@ $mapBubbleWidth:        30px;
     }
 
     &.debug{
-      background-color: $purple-dark;
+      background-color: colors.$purple-dark;
       opacity: 0.8;
     }
   }
@@ -896,32 +903,32 @@ $mapBubbleWidth:        30px;
   }
 
   .frig{
-    background-color: $orange-light;
-    color: $gray-darkest;
+    background-color: colors.$orange-light;
+    color: colors.$gray-darkest;
   }
 
   .mass{
-    background-color: $red-dark;
-    color: $gray-lightest;
+    background-color: colors.$red-dark;
+    color: colors.$gray-lightest;
   }
 
   .eol{
-    background-color: $gray;
-    color: $pink-dark;
+    background-color: colors.$gray;
+    color: colors.$pink-dark;
   }
 
   // Arrow overlays ===================================================================================================
   .pf-map-connection-arrow-overlay-success{
     .pf-map-connection-arrow-overlay{
-      stroke: $gray-dark;
-      fill: $green;
+      stroke: colors.$gray-dark;
+      fill: colors.$green;
     }
   }
 
   .pf-map-connection-arrow-overlay-danger{
     .pf-map-connection-arrow-overlay{
-      stroke: $gray-dark;
-      fill: $red;
+      stroke: colors.$gray-dark;
+      fill: colors.$red;
 
       animation-name: pfPulseDanger;
       animation-duration: 4s;
@@ -932,13 +939,13 @@ $mapBubbleWidth:        30px;
 
 // DratSelect =========================================================================================================
 .pf-map-drag-to-select {
-  background: $teal-dark !important;
+  background: colors.$teal-dark !important;
   display: block;
   position: absolute;
   visibility: hidden; // triggered by js
   opacity: 0; // triggered by js
   z-index: 9000;
-  border: 1px dashed $gray-lighter;
+  border: 1px dashed colors.$gray-lighter;
 
   // positioning set by js
   left:   var(--selectBox-left, 0px) ;
@@ -949,7 +956,7 @@ $mapBubbleWidth:        30px;
   pointer-events: none; // required for "mouseover" event which should be ignored
   will-change: left, top, width, height, opacity;
   border-radius: 5px;
-  @include transition(opacity 0.15s linear);
+  @include mixins.transition(opacity 0.15s linear);
 
   &.active {
     visibility: visible;
@@ -967,7 +974,7 @@ $mapBubbleWidth:        30px;
 // context menu =======================================================================================================
 .dropdown-menu{
   min-width: 150px; // overwrite default
-  font-family: $font-family-bold;
+  font-family: variables.$font-family-bold;
   z-index: 1050; // over tooltips
   will-change: opacity, top, left, transform;
 
@@ -995,7 +1002,7 @@ $mapBubbleWidth:        30px;
 
   // top menu
   &[role] > li{
-    @include pf-navigation-indicator(left);
+    @include animation.pf-navigation-indicator(left);
   }
 
   & > li {
@@ -1022,17 +1029,17 @@ $mapBubbleWidth:        30px;
 
 // tooltip for a system with active user (they are not positioned within the system element)
 .pf-system-tooltip-inner{
-  color: $gray-lighter;
+  color: colors.$gray-lighter;
   padding: 2px 4px;
   min-width: 25px; // make sure tooltip is not flickering on low numbers -> fix width
-  @include transition( color 0.2s ease-out );
+  @include mixins.transition( color 0.2s ease-out );
 }
 
 // map group container ============================================================================
 
 .pf-map-group {
   position: absolute;
-  border: 1px dashed $gray-light;
+  border: 1px dashed colors.$gray-light;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.15);
   // no z-index here — avoids creating a stacking context that would trap child systems below connectors/endpoints
@@ -1056,7 +1063,7 @@ $mapBubbleWidth:        30px;
 
   // highlight when a system is being dragged over it
   &.jtk-drag-hover {
-    border-color: $blue;
+    border-color: colors.$blue;
     background: rgba(0, 80, 160, 0.15);
   }
 
@@ -1077,7 +1084,7 @@ $mapBubbleWidth:        30px;
 }
 
 .pf-map-group-handle {
-  color: $gray;
+  color: colors.$gray;
   font-size: 10px;
   cursor: grab;
   padding: 2px 4px 2px 0;
@@ -1088,14 +1095,14 @@ $mapBubbleWidth:        30px;
   }
 
   &:hover {
-    color: $gray-light;
+    color: colors.$gray-light;
   }
 }
 
 .pf-map-group-label {
-  color: $gray-lighter;
+  color: colors.$gray-lighter;
   font-size: 11px;
-  font-family: $font-family-bold;
+  font-family: variables.$font-family-bold;
   letter-spacing: 0.04em;
   flex: 1;
   overflow: hidden;
@@ -1112,21 +1119,21 @@ $mapBubbleWidth:        30px;
   margin-left: 4px;
 
   i {
-    color: $gray-light;
+    color: colors.$gray-light;
     font-size: 10px;
     cursor: pointer;
     padding: 2px;
 
     &:hover {
-      color: $gray-lighter;
+      color: colors.$gray-lighter;
     }
   }
 
   .pf-map-group-delete {
-    color: $red-dark;
+    color: colors.$red-dark;
 
     &:hover {
-      color: lighten($red-dark, 10%);
+      color: color.adjust(colors.$red-dark, $lightness: 10%);
     }
   }
 }
@@ -1143,8 +1150,8 @@ $mapBubbleWidth:        30px;
   top: 100%;
   right: 0;
   z-index: 200;
-  background: $gray-darker;
-  border: 1px solid $gray-dark;
+  background: colors.$gray-darker;
+  border: 1px solid colors.$gray-dark;
   border-radius: 3px;
   min-width: 100px;
   padding: 2px 0;
@@ -1153,15 +1160,15 @@ $mapBubbleWidth:        30px;
   .pf-map-group-cog-item {
     display: block;
     padding: 4px 10px;
-    color: $gray-lighter;
+    color: colors.$gray-lighter;
     font-size: 11px;
     white-space: nowrap;
     cursor: pointer;
     text-decoration: none;
 
     &:hover {
-      background: $gray-dark;
-      color: $white;
+      background: colors.$gray-dark;
+      color: colors.$white;
     }
   }
 }
@@ -1188,8 +1195,8 @@ $mapBubbleWidth:        30px;
     right: 3px;
     width: 7px;
     height: 7px;
-    border-right: 2px solid $gray;
-    border-bottom: 2px solid $gray;
+    border-right: 2px solid colors.$gray;
+    border-bottom: 2px solid colors.$gray;
     border-radius: 0 0 2px 0;
     opacity: 0.5;
     transition: opacity 0.15s;
