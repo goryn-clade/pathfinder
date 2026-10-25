@@ -15,7 +15,7 @@ use Exodus4D\Pathfinder\Model\Pathfinder;
 class System extends Controller\AccessController {
 
     /**
-     * default max rally pokes per character within RALLY_POKE_PERIOD_DEFAULT
+     * default max rally pokes per account (user) within RALLY_POKE_PERIOD_DEFAULT
      * -> used if RALLY_POKE_LIMIT is missing in pathfinder.ini
      */
     const RALLY_POKE_LIMIT_DEFAULT              = 5;
@@ -27,9 +27,10 @@ class System extends Controller\AccessController {
     const RALLY_POKE_PERIOD_DEFAULT             = 300;
 
     /**
-     * Redis key prefix for rally poke counters (+ characterId)
+     * Redis key prefix for rally poke counters (+ userId)
+     * -> per account, so all characters of one user share one counter
      */
-    const RALLY_POKE_KEY_PREFIX                 = 'pathfinder:rally_poke:character:';
+    const RALLY_POKE_KEY_PREFIX                 = 'pathfinder:rally_poke:user:';
 
     /**
      * set destination for system, station or structure
@@ -102,7 +103,7 @@ class System extends Controller\AccessController {
                 // only pokes that would be sent count against the limit -> a rally point without poke is not limited
                 $hasPoke = !empty($system->getRallyPokeHandlers($rallyData));
 
-                if($hasPoke && ($retryIn = $this->checkRallyPokeLimit($f3, (int)$activeCharacter?->_id))){
+                if($hasPoke && ($retryIn = $this->checkRallyPokeLimit($f3, (int)$activeCharacter?->getUser()?->_id))){
                     $error = (object) [];
                     $error->type = 'warning';
                     $error->title = 'Rally poke limit';
@@ -119,21 +120,21 @@ class System extends Controller\AccessController {
     }
 
     /**
-     * count a rally poke for a character against RALLY_POKE_LIMIT per RALLY_POKE_PERIOD
-     * -> fixed window counter in Redis (CACHE backend), keyed by characterId
+     * count a rally poke for an account (user) against RALLY_POKE_LIMIT per RALLY_POKE_PERIOD
+     * -> fixed window counter in Redis (CACHE backend), keyed by userId
      * -> no limit if CACHE is not Redis
      * -> fails open: pokes are allowed (warning logged) if Redis is not available
      * @param \Base $f3
-     * @param int $characterId
+     * @param int $userId
      * @return int seconds until the next poke is allowed, 0 if this poke is allowed
      */
-    protected function checkRallyPokeLimit(\Base $f3, int $characterId) : int {
+    protected function checkRallyPokeLimit(\Base $f3, int $userId) : int {
         $limit = Config::getPathfinderData('notification.rally_poke_limit');
         $limit = is_numeric($limit) ? (int)$limit : self::RALLY_POKE_LIMIT_DEFAULT;
         $period = Config::getPathfinderData('notification.rally_poke_period');
         $period = is_numeric($period) ? (int)$period : self::RALLY_POKE_PERIOD_DEFAULT;
 
-        if($limit <= 0 || $period <= 0 || $characterId <= 0){
+        if($limit <= 0 || $period <= 0 || $userId <= 0){
             return 0;
         }
 
@@ -165,7 +166,7 @@ class System extends Controller\AccessController {
                 $client->select((int)$conf['db']);
             }
 
-            $key = self::RALLY_POKE_KEY_PREFIX . $characterId;
+            $key = self::RALLY_POKE_KEY_PREFIX . $userId;
             $count = (int)$client->incr($key);
             $ttl = (int)$client->ttl($key);
             if($ttl < 0){
@@ -177,8 +178,8 @@ class System extends Controller\AccessController {
             return $count > $limit ? max(1, $ttl) : 0;
         }catch(\RedisException $e){
             self::getLogger('ERROR')->write(sprintf(
-                'Rally poke limit not checked, poke allowed (characterId: %d): Redis unavailable: %s',
-                $characterId,
+                'Rally poke limit not checked, poke allowed (userId: %d): Redis unavailable: %s',
+                $userId,
                 $e->getMessage()
             ));
         }
