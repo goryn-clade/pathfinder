@@ -2872,6 +2872,19 @@ define([
     let recentlyDeletedMapIds = new Map(); // id -> expiresAt (ms)
     const RECENTLY_DELETED_TTL_MS = 5000;
 
+    // Maps created on this client. A map update request that started before the create
+    // returns without the new map; keep it until a response lists it or the grace period ends.
+    let pendingCreatedMaps = new Map(); // id -> {mapData, expiresAt (ms)}
+    const PENDING_CREATED_TTL_MS = 10000;
+
+    /**
+     * keep a map created on this client in the cache until the server lists it
+     * @param mapData
+     */
+    let addPendingCreatedMap = mapData => {
+        pendingCreatedMaps.set(mapData.config.id, {mapData: mapData, expiresAt: Date.now() + PENDING_CREATED_TTL_MS});
+    };
+
     let isRecentlyDeleted = mapId => {
         let expiresAt = recentlyDeletedMapIds.get(mapId);
         if(expiresAt && expiresAt > Date.now()) return true;
@@ -2887,6 +2900,17 @@ define([
      */
     let setCurrentMapData = mapData => {
         Init.currentMapData = mapData.filter(m => !isRecentlyDeleted(m.config.id));
+
+        // server now lists the map -> stop protecting it. Re-add maps it does not list yet
+        pendingCreatedMaps.forEach((pending, mapId) => {
+            if(Init.currentMapData.some(m => m.config.id === mapId)){
+                pendingCreatedMaps.delete(mapId);
+            }else if(pending.expiresAt <= Date.now() || isRecentlyDeleted(mapId)){
+                pendingCreatedMaps.delete(mapId);
+            }else{
+                Init.currentMapData.push(pending.mapData);
+            }
+        });
 
         return getCurrentMapData();
     };
@@ -2958,6 +2982,7 @@ define([
     let deleteCurrentMapData = mapId => {
         Init.currentMapData = Init.currentMapData.filter(mapData => mapData.config.id !== mapId);
         recentlyDeletedMapIds.set(mapId, Date.now() + RECENTLY_DELETED_TTL_MS);
+        pendingCreatedMaps.delete(mapId);
     };
 
     /**
@@ -3775,6 +3800,7 @@ define([
         filterCurrentMapData: filterCurrentMapData,
         updateCurrentMapData: updateCurrentMapData,
         deleteCurrentMapData: deleteCurrentMapData,
+        addPendingCreatedMap: addPendingCreatedMap,
         setCurrentUserData: setCurrentUserData,
         getCurrentUserData: getCurrentUserData,
         getCurrentCharacter: getCurrentCharacter,
