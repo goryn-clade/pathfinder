@@ -5,7 +5,7 @@
 {{ @tplCounter('reset', 'database_warning_all') }}
 <section data-setup-token="{{ @setupToken }}">
     {* setup actions POST this form (token in the body, never in the URL). Buttons set the action with formaction *}
-    <form id="pf-setup-action-form" method="post" action="" hidden>
+    <form id="pf-setup-action-form" method="post" action="/setup" hidden>
         <input type="hidden" name="token" value="{{ @setupToken }}">
     </form>
     <div class="container">

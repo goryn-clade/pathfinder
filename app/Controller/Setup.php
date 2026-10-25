@@ -250,10 +250,12 @@ class Setup extends Controller {
         // never the query string: nginx logs the request line, so a token in the URL ends up in the logs
         if(isset($params['action'])){
             if($f3->get('VERB') !== 'POST'){
+                header('Allow: POST');
                 $f3->error(405, 'Setup actions require POST');
                 return;
             }
-            $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
+            $provided = $f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '';
+            $provided = is_string($provided) ? $provided : '';
             if(!self::isValidSetupToken($f3, $provided)){
                 $f3->error(401, 'Setup requires a valid token');
                 return;
@@ -290,6 +292,23 @@ class Setup extends Controller {
             case 'invalidateCookies':
                 $this->invalidateCookies($f3);
                 break;
+        }
+
+        // Post/Redirect/Get: back to the action's section of the page, so a refresh does not repeat the action
+        // -> fixCols runs inside checkDatabase() below, which redirects when it is done
+        // -> exportTable sends a file download instead of the page
+        $actionSections = [
+            'createDB'          => 'pf-setup-database',
+            'bootstrapDB'       => 'pf-setup-database',
+            'importTable'       => 'pf-setup-database',
+            'flushRedisDb'      => 'pf-setup-cache',
+            'clearFiles'        => 'pf-setup-administration',
+            'invalidateCookies' => 'pf-setup-administration'
+        ];
+        $action = $params['action'] ?? null;
+        if(is_string($action) && isset($actionSections[$action])){
+            $f3->reroute('@setup#' . $actionSections[$action]);
+            return;
         }
 
         // ============================================================================================================
@@ -1532,7 +1551,7 @@ class Setup extends Controller {
         }
 
         if($exec){
-            $f3->reroute('@setup');
+            $f3->reroute('@setup#pf-setup-database');
         }
 
         return $this->databases;
