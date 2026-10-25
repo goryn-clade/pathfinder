@@ -263,6 +263,7 @@ abstract class AbstractModel extends Cortex implements \Stringable {
             $val = trim($val);
         }
 
+        $currentVal = null;
         $trackChange = !$this->dry() && $key != 'updated' && $this->exists($key);
         if($trackChange){
             // get raw column data (no objects)
