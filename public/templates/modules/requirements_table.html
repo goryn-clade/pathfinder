@@ -58,9 +58,11 @@
                             <td class="text-right col-xs-{{ count(@requirement.task) * 2 }} col-md-{{ count(@requirement.task) * 2 }} no-padding text-right">
                                 <div class="btn-group btn-group-justified">
                                     <repeat group="{{ @requirement.task }}" key="{{ @taskKey }}" value="{{ @taskData }}">
-                                        <a href="?{{ @taskData.action }}" class="btn btn-default {{ @taskData.btn }}" role="button">
-                                            <i class="fas fa-fw {{ @taskData.icon }}"></i>&nbsp;{{ @taskData.label }}
-                                        </a>
+                                        <div class="btn-group">
+                                            <button type="submit" form="pf-setup-action-form" formaction="?{{ @taskData.action }}" class="btn btn-default {{ @taskData.btn }}" {{ (@taskData.disabled ?? false) ? 'disabled' : '' }}>
+                                                <i class="fas fa-fw {{ @taskData.icon }}"></i>&nbsp;{{ @taskData.label }}
+                                            </button>
+                                        </div>
                                     </repeat>
                                 </div>
                             </td>

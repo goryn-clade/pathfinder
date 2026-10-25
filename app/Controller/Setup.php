@@ -245,9 +245,15 @@ class Setup extends Controller {
         // create the session token before any output (session cookie must go out with the headers)
         self::getSetupToken($f3);
 
-        // Defense-in-depth behind nginx Basic Auth: require the session's setup token for any mutating action
+        // Defense-in-depth behind nginx Basic Auth: require the session's setup token for any mutating action.
+        // Actions are POST only and the token comes from the POST body or the X-Setup-Token header,
+        // never the query string: nginx logs the request line, so a token in the URL ends up in the logs
         if(isset($params['action'])){
-            $provided = (string)($params['token'] ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
+            if($f3->get('VERB') !== 'POST'){
+                $f3->error(405, 'Setup actions require POST');
+                return;
+            }
+            $provided = (string)($f3->get('POST.token') ?? $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '');
             if(!self::isValidSetupToken($f3, $provided)){
                 $f3->error(401, 'Setup requires a valid token');
                 return;
@@ -913,7 +919,7 @@ class Setup extends Controller {
              * @param string $tag
              * @return array
              */
-            $getDatabaseStatus = function(\Redis $client, string $tag) use ($getDbLabel, $f3) : array {
+            $getDatabaseStatus = function(\Redis $client, string $tag) use ($getDbLabel) : array {
                 $redisDatabases = [];
                 if($client->isConnected() && !$client->getLastError()){
                     $dbNum = $client->getDbNum();
@@ -930,12 +936,12 @@ class Setup extends Controller {
                                         'action' => 'flushRedisDb',
                                         'host' => $client->getHost(),
                                         'port' => $client->getPort(),
-                                        'db' => $dbNum,
-                                        'token' => self::getSetupToken($f3)
+                                        'db' => $dbNum
                                     ]) . '#pf-setup-cache',
                                     'label' => 'Flush',
                                     'icon' => 'fa-trash',
-                                    'btn' => 'btn-danger' . (($dbSize > 0) ? '' : ' disabled')
+                                    'btn' => 'btn-danger',
+                                    'disabled' => $dbSize <= 0
                                 ]
                             ]
                         ]
@@ -2038,12 +2044,12 @@ class Setup extends Controller {
                 [
                     'action' => http_build_query([
                         'action' => 'clearFiles',
-                        'dir' => $key,
-                        'token' => self::getSetupToken($f3)
-                    ]),
+                        'dir' => $key
+                    ]) . '#pf-setup-administration',
                     'label' => 'Delete files',
                     'icon' => 'fa-trash',
-                    'btn' => 'btn-danger' . (($bytes > 0) ? '' : ' disabled')
+                    'btn' => 'btn-danger',
+                    'disabled' => $bytes <= 0
                 ]
             ];
         }
