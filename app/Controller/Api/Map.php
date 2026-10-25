@@ -305,7 +305,13 @@ class Map extends Controller\AccessController {
             $mapType = Pathfinder\AbstractPathfinderModel::getNew('MapTypeModel');
             $mapType->getById((int)$importData['typeId']);
 
-            if( !$mapType->dry() && !$activeCharacter->hasMapRight($mapType->_id, 'map_import') ){
+            if( !$mapType->dry() && !$activeCharacter->getMapOwner((int)$mapType->_id) ){
+                // corp/alliance map -> character's corp/alliance gets access -> it must exist
+                $missingOwnerError = (object) [];
+                $missingOwnerError->type = 'error';
+                $missingOwnerError->text = 'You need a ' . $mapType->name . ' to import maps of this type';
+                $return->error[] = $missingOwnerError;
+            }elseif( !$mapType->dry() && !$activeCharacter->hasMapRight($mapType->_id, 'map_import') ){
                 $missingRightError = (object) [];
                 $missingRightError->type = 'error';
                 $missingRightError->text = 'You do not have the right to import maps of this type';
@@ -392,16 +398,8 @@ class Map extends Controller\AccessController {
                                     }
 
                                     // map access info should not automatically imported
-                                    if($map->isPrivate()){
-                                        $map->setAccess($activeCharacter);
-                                    }elseif($map->isCorporation()){
-                                        if($corporation = $activeCharacter->getCorporation()){
-                                            $map->setAccess($corporation);
-                                        }
-                                    }elseif($map->isAlliance()){
-                                        if($alliance = $activeCharacter->getAlliance()){
-                                            $map->setAccess($alliance);
-                                        }
+                                    if($owner = $activeCharacter->getMapOwner((int)$mapType->_id)){
+                                        $map->setAccess($owner);
                                     }
 
                                     // broadcast map Access -> and send map Data

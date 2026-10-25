@@ -535,6 +535,22 @@ class CharacterModel extends AbstractPathfinderModel {
     }
 
     /**
+     * get the model that gets access to a new map of this type
+     * -> private: this character, corporation: its corporation, alliance: its alliance
+     * -> null if the character has no corporation/alliance for that type (or the type is unknown)
+     * @param int $mapTypeId
+     * @return CharacterModel|CorporationModel|AllianceModel|null
+     */
+    public function getMapOwner(int $mapTypeId) : CharacterModel|CorporationModel|AllianceModel|null {
+        return match($mapTypeId){
+            2 => $this,
+            3 => $this->getCorporation(),
+            4 => $this->getAlliance(),
+            default => null
+        };
+    }
+
+    /**
      * check if character has a map right (e.g. 'map_update') for a map type
      * -> same rules as Util.hasRight() and MapUtil.checkRight() in JS
      * @param int    $mapTypeId
