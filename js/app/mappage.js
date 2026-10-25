@@ -265,48 +265,54 @@ define([
     });
 
     /**
-     * init 'beforeunload' event
+     * init 'pagehide' event
      * @param mapModule
      * @returns {Promise<any>}
      */
     let initUnload = mapModule => new Promise(resolve => {
 
         /**
-         * handles "final" map update request before window.unload event
-         * -> navigator.sendBeacon browser support required
+         * handles "final" map update request when the page is left (reload, close, navigation)
+         * -> sends only if there are unsaved map changes
+         * -> navigator.sendBeacon, fallback fetch() with "keepalive"
          *    ajax would not work here, because browsers might cancel the request!
-         * @param mapModule
          */
-        let mapUpdateUnload = mapModule => {
-            // get updated map data
-            let mapData = ModuleMap.getMapModuleDataForUpdate(mapModule);
+        let mapUpdateUnload = () => {
+            try{
+                // get updated map data
+                let mapData = ModuleMap.getMapModuleDataForUpdate(mapModule);
 
-            if(mapData.length){
-                let fd = new FormData();
-                fd.set('mapData', JSON.stringify(mapData));
-                navigator.sendBeacon(Init.path.updateUnloadData, fd);
+                if(mapData.length){
+                    let fd = new FormData();
+                    fd.set('mapData', JSON.stringify(mapData));
 
-                console.info('Map update request send by: %O', navigator.sendBeacon);
+                    if(!(navigator.sendBeacon && navigator.sendBeacon(Init.path.updateUnloadData, fd))){
+                        fetch(Init.path.updateUnloadData, {
+                            method: 'POST',
+                            body: fd,
+                            keepalive: true,
+                            credentials: 'same-origin'
+                        }).catch(() => {});
+                    }
+                }
+            }catch(e){
+                // never block leaving the page
+                console.warn('Final map update failed: %O', e);
             }
         };
 
-        // Send map update request on tab close/reload, in order to save map changes that
+        // Send map update request when the page is left, in order to save map changes that
         // haven´t been saved through default update trigger
-        window.addEventListener('beforeunload', e => {
+        // -> "pagehide" fires once per unload (reload, tab close, mobile); "beforeunload" does not always fire
+        window.addEventListener('pagehide', e => {
+            // save unsaved map changes ...
+            mapUpdateUnload();
+
             // close "SharedWorker" connection
             MapWorker.close();
 
             // clear periodic update timeouts
-            // -> this function will handle the final map update request
             clearUpdateTimeouts();
-
-            // save unsaved map changes ...
-            if(navigator.sendBeacon){
-                mapUpdateUnload(mapModule);
-            }else{
-                // fallback if sendBeacon() is not supported by browser
-                triggerMapUpdatePing();
-            }
 
             // check if character should be switched on reload or current character should be loaded afterwards
             let characterSwitch = Boolean( $('body').data('characterSwitch') );
@@ -317,8 +323,6 @@ define([
                 }
             }
 
-            // IMPORTANT, return false in order to not "abort" ajax request in background!
-            return false;
         }, false);
 
         resolve({
