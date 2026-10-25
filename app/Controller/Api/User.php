@@ -20,13 +20,14 @@ class User extends Controller\Controller{
     private const array PUBLIC_METHODS = ['getCookieCharacter', 'getCaptcha', 'logout', 'getEveServerStatus'];
 
     /**
-     * Require authentication for all methods except the public allow-list.
-     * User extends Controller (not AccessController) so we enforce it here.
+     * Require a valid login for all methods except the public allow-list.
+     * User extends Controller (not AccessController) so we enforce it here,
+     * with the same checks as AccessController (login timer, ban, kick, allowlist).
      */
     #[\Override]
     public function beforeroute(\Base $f3, array $params): bool {
         $return = parent::beforeroute($f3, $params);
-        if($return && !in_array($params['action'] ?? '', self::PUBLIC_METHODS, true) && !$this->getCharacter()){
+        if($return && !in_array($params['action'] ?? '', self::PUBLIC_METHODS, true) && $this->isLoggedIn($f3) !== 'OK'){
             $this->logoutCharacter($f3);
             $return = false;
         }
