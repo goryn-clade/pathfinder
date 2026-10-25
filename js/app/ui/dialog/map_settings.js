@@ -408,7 +408,9 @@ define([
                                                 // new map — tab doesn't exist yet; inject into cache and trigger render
                                                 let newMapData = {config: mapData, data: {systems: [], connections: []}};
                                                 Util.updateCurrentMapData(newMapData);
-                                                Util.addPendingCreatedMap(newMapData);
+                                                if(method === 'PUT'){
+                                                    Util.addPendingCreatedMap(newMapData);
+                                                }
                                                 ModuleMap.updateMapModule(Util.getMapModule()[0]);
                                             }
 

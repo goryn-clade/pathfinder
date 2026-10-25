@@ -2899,6 +2899,7 @@ define([
      * @param mapData
      */
     let setCurrentMapData = mapData => {
+        let previousMapData = Init.currentMapData || [];
         Init.currentMapData = mapData.filter(m => !isRecentlyDeleted(m.config.id));
 
         // server now lists the map -> stop protecting it. Re-add maps it does not list yet
@@ -2908,7 +2909,8 @@ define([
             }else if(pending.expiresAt <= Date.now() || isRecentlyDeleted(mapId)){
                 pendingCreatedMaps.delete(mapId);
             }else{
-                Init.currentMapData.push(pending.mapData);
+                // prefer the live cache entry: it may hold newer config/data than the creation snapshot
+                Init.currentMapData.push(previousMapData.find(m => m.config.id === mapId) || pending.mapData);
             }
         });
 
