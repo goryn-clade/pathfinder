@@ -414,7 +414,7 @@ class Setup extends Controller {
 
                 $environmentData[$var] = [
                     'label' => $var,
-                    'value' => ((empty($value) && !is_int($value)) ? '&nbsp;' : $value),
+                    'value' => ((empty($value) && !is_int($value)) ? "\u{00A0}" : $value),
                     'check' => $check
                 ];
             }
@@ -813,7 +813,7 @@ class Setup extends Controller {
              * @param string $tag
              * @return string
              */
-            $getDbLabel = (fn(int $dbNum, string $tag): string => '<i class="fas fa-fw fa-database"></i> db(' . $dbNum . ') : ' . $tag);
+            $getDbLabel = (fn(int $dbNum, string $tag): string => '<i class="fas fa-fw fa-database"></i> db(' . $dbNum . ') : ' . $f3->encode($tag));
 
             /**
              * get client information for a Redis client
@@ -976,7 +976,7 @@ class Setup extends Controller {
                     }elseif(!array_key_exists($uidDb = 'db_' . ($conf['db'] ?? 0), $redisConfig[$uid]['status'])){
                         $redisConfig[$uid]['status'] += $getDatabaseStatus($client, $conf['tag'] ?? 'default');
                     }else{
-                        $redisConfig[$uid]['status'][$uidDb]['label'] .= '; ' . ($conf['tag'] ?? 'default');
+                        $redisConfig[$uid]['status'][$uidDb]['label'] .= '; ' . \Base::instance()->encode($conf['tag'] ?? 'default');
                     }
 
                     if($error = $client->getLastError()){
