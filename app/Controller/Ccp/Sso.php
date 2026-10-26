@@ -44,6 +44,8 @@ class Sso extends Api\User{
     // F3 cache key for CCP JWKS — avoids fetching on every login callback
     const JWKS_CACHE_KEY                            = 'sso_jwks_keyset';
     const JWKS_CACHE_TTL                            = 3600;
+    // label for deriving the JWKS cache HMAC sub-key from TOKEN_ENCRYPTION_KEY
+    const JWKS_CACHE_HMAC_LABEL                     = 'pathfinder-jwks-cache-hmac-v1';
 
     // error messages
     const ERROR_CCP_SSO_URL                         = 'Invalid "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_URL" url. %s';
@@ -59,6 +61,7 @@ class Sso extends Api\User{
     const ERROR_COOKIE_LOGIN_TOKEN                  = 'Character switch failed (request expired). Please try again';
     const ERROR_CCP_JWK_CLAIM                       = 'Invalid "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_JWK_CLAIM" url. %s';
     const ERROR_TOKEN_VERIFICATION                  = 'Could not validate the authenticity of the Access Token';
+    const WARNING_JWKS_CACHE_HMAC                   = 'Warning: cached CCP JWKS has a missing or invalid HMAC (tampered, or cached by an older version). Discarded and refetched. %s';
 
     /**
      * redirect user to CCP SSO page and request authorization
@@ -580,13 +583,27 @@ class Sso extends Api\User{
     /**
      * get JWK from CCP and return decoded json object
      * Results are cached in F3 for JWKS_CACHE_TTL seconds to avoid a round-trip on every login.
+     * The cache entry carries an HMAC-SHA256 so a JWKS swapped in via cache (Redis) write access
+     * is rejected and refetched. Without a usable key the cache is skipped.
      * @return array<string, mixed>
     */
     protected function getCcpJwkData() : array {
         $f3 = $this->getF3();
+        $hmacKey = self::getJwksCacheHmacKey();
 
-        if ($cached = $f3->get(self::JWKS_CACHE_KEY)) {
-            return $cached;
+        if ($hmacKey !== null && ($cached = $f3->get(self::JWKS_CACHE_KEY))) {
+            $json = is_array($cached) ? ($cached['json'] ?? null) : null;
+            $mac = is_array($cached) ? ($cached['mac'] ?? null) : null;
+            if (
+                is_string($json) && is_string($mac) &&
+                hash_equals(hash_hmac('sha256', $json, $hmacKey), $mac) &&
+                is_array($jwks = json_decode($json, true))
+            ) {
+                return $jwks;
+            }
+            // missing/wrong HMAC or undecodable JSON (tampered, or written by older code) -> discard and refetch
+            $f3->clear(self::JWKS_CACHE_KEY);
+            self::getSSOLogger()->write(sprintf(self::WARNING_JWKS_CACHE_HMAC, __METHOD__));
         }
 
         $jwkJson = $f3->ssoClient()->send('getJWKS');
@@ -594,7 +611,12 @@ class Sso extends Api\User{
         if( !empty($jwkJson) ){
             // ensure items in 'keys' are arrays and not objects
             array_walk($jwkJson['keys'], function(&$item): void{$item = (array) $item;});
-            $f3->set(self::JWKS_CACHE_KEY, $jwkJson, self::JWKS_CACHE_TTL);
+            if ($hmacKey !== null && ($json = json_encode($jwkJson)) !== false) {
+                $f3->set(self::JWKS_CACHE_KEY, [
+                    'json' => $json,
+                    'mac'  => hash_hmac('sha256', $json, $hmacKey)
+                ], self::JWKS_CACHE_TTL);
+            }
             return $jwkJson;
         }
 
@@ -694,6 +716,20 @@ class Sso extends Api\User{
         }
 
         return $str;
+    }
+
+    /**
+     * HMAC sub-key for the JWKS cache entry, derived from TOKEN_ENCRYPTION_KEY with a fixed label
+     * so the encryption key bytes are not reused directly. Null if the key is missing or malformed
+     * (login fails closed in that case anyway, see TokenCipher).
+     * @return string|null
+     */
+    protected static function getJwksCacheHmacKey() : ?string {
+        try {
+            return Lib\TokenCipher::deriveSubKey(self::JWKS_CACHE_HMAC_LABEL);
+        } catch (\RuntimeException) {
+            return null;
+        }
     }
 
     /**
