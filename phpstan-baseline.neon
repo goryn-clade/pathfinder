@@ -2101,12 +2101,6 @@ parameters:
 			path: app/Model/AbstractModel.php
 
 		-
-			message: '#^Access to property \$_id on an unknown class Model\\AbstractModel\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Model/AbstractModel.php
-
-		-
 			message: '#^Binary operation "\+" between int\|string\|null and 1 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
