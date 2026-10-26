@@ -501,6 +501,7 @@ class Sso extends Api\User{
         try {
             $characterData = $this->verifyJwtAccessToken($accessToken);
             $characterData->characterId = (int)explode(':', $characterData->sub)[2];
+            /** @var \stdClass $characterData JWT::decode() returns a stdClass */
             // "scp" is a string for a single scope and missing for none
             $characterData->scp = (array)($characterData->scp ?? []);
             return $characterData;
