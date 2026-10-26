@@ -4,6 +4,10 @@
 {* counter for DB warnings (all databases) *}
 {{ @tplCounter('reset', 'database_warning_all') }}
 <section data-setup-token="{{ @setupToken }}">
+    {* setup actions POST this form (token in the body, never in the URL). Buttons set the action with formaction *}
+    <form id="pf-setup-action-form" method="post" action="/setup" hidden>
+        <input type="hidden" name="token" value="{{ @setupToken }}">
+    </form>
     <div class="container">
 
         <div class="row"></div>
@@ -892,17 +896,23 @@
                         <div class="panel-footer btn-group btn-group-justified">
                             <check if="{{ @dbInformation.info.dbCreate ?? null }}">
                                 <true>
-                                    <a href="?action=createDB&db={{ @dbKey }}&token={{ @setupToken }}#pf-setup-database" class="btn btn-success {{ true ?'':'disabled' }}" title="Try to create new '{{ @dbInformation.info.name }}' database." data-container="body">
-                                        <i class="fas fa-fw fa-plus"></i> Create database
-                                    </a>
+                                    <div class="btn-group">
+                                        <button type="submit" form="pf-setup-action-form" formaction="?action=createDB&db={{ @dbKey }}#pf-setup-database" class="btn btn-success" title="Try to create new '{{ @dbInformation.info.name }}' database." data-container="body">
+                                            <i class="fas fa-fw fa-plus"></i> Create database
+                                        </button>
+                                    </div>
                                 </true>
                                 <false>
-                                    <a href="?action=bootstrapDB&db={{ @dbKey }}&token={{ @setupToken }}#pf-setup-database" class="btn btn-primary {{ (@dbInformation.info.setupEnable && @dbConnectionStatus == 'OK') ?'':'disabled' }}">
-                                        <i class="fas fa-fw fa-sync"></i> Setup tables
-                                    </a>
-                                    <a href="?action=fixCols&token={{ @setupToken }}#pf-setup-database" class="btn btn-default {{ @dbInformation.info.columnQueries ?'':'disabled' }}">
-                                        <i class="fas fa-fw fa-magic"></i> Fix columns/keys
-                                    </a>
+                                    <div class="btn-group">
+                                        <button type="submit" form="pf-setup-action-form" formaction="?action=bootstrapDB&db={{ @dbKey }}#pf-setup-database" class="btn btn-primary" {{ (@dbInformation.info.setupEnable && @dbConnectionStatus == 'OK') ?'':'disabled' }}>
+                                            <i class="fas fa-fw fa-sync"></i> Setup tables
+                                        </button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button type="submit" form="pf-setup-action-form" formaction="?action=fixCols#pf-setup-database" class="btn btn-default" {{ @dbInformation.info.columnQueries ?'':'disabled' }}>
+                                            <i class="fas fa-fw fa-magic"></i> Fix columns/keys
+                                        </button>
+                                    </div>
                                 </false>
                             </check>
                         </div>
@@ -1443,9 +1453,11 @@
                                     <td class="col-xs-6 no-padding">
                                         <div class="btn-group btn-group-justified">
                                             <repeat group="{{ @dirData.task }}"  value="{{ @taskData }}">
-                                                <a href="?{{ @taskData.action }}#pf-setup-administration" class="btn {{ @taskData.btn }}" role="button">
-                                                    <i class="fas fa-fw {{ @taskData.icon }}"></i>&nbsp;{{ @taskData.label }}
-                                                </a>
+                                                <div class="btn-group">
+                                                    <button type="submit" form="pf-setup-action-form" formaction="?{{ @taskData.action }}" class="btn {{ @taskData.btn }}" {{ (@taskData.disabled ?? false) ? 'disabled' : '' }}>
+                                                        <i class="fas fa-fw {{ @taskData.icon }}"></i>&nbsp;{{ @taskData.label }}
+                                                    </button>
+                                                </div>
                                             </repeat>
                                         </div>
                                     </td>
@@ -1473,9 +1485,11 @@
                                 <td>Invalidate all Cookie data</td>
                                 <td class="col-xs-6 no-padding">
                                     <div class="btn-group btn-group-justified">
-                                        <a class="btn btn-danger" href="?action=invalidateCookies&token={{ @setupToken }}#pf-setup-administration" role="button" >
-                                            <i class="fas fa-fw fa-trash"></i>&nbsp;Clear authentication data
-                                        </a>
+                                        <div class="btn-group">
+                                            <button type="submit" form="pf-setup-action-form" formaction="?action=invalidateCookies#pf-setup-administration" class="btn btn-danger">
+                                                <i class="fas fa-fw fa-trash"></i>&nbsp;Clear authentication data
+                                            </button>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
