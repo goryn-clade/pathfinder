@@ -527,6 +527,47 @@ class Controller {
     }
 
     /**
+     * check login status: valid character, login timer, ban, kick and allowlist
+     * @param \Base $f3
+     * @return string
+     * @throws \Exception
+     */
+    protected function isLoggedIn(\Base $f3) : string {
+        $loginStatus = 'UNKNOWN';
+        // disable ttl cache time here. Further getCharacter() calls should use a short ttl
+        if($character = $this->getCharacter(0)){
+            if($character->checkLoginTimer()){
+                if(( $authStatus = $character->isAuthorized()) === 'OK'){
+                    $loginStatus = 'OK';
+                }else{
+                    $loginStatus = $authStatus;
+                }
+            }else{
+                $loginStatus = 'MAX LOGIN TIME EXCEEDED';
+            }
+        }else{
+            $loginStatus = 'NO SESSION FOUND';
+        }
+
+        // log character access status in debug mode
+        if(
+            $loginStatus !== 'OK' &&
+            $f3->get('DEBUG') === 3 &&
+            is_object($character)
+        ){
+            self::getLogger('CHARACTER_ACCESS')->write(
+                sprintf(Pathfinder\CharacterModel::LOG_ACCESS,
+                    $character->_id ,
+                    $loginStatus,
+                    $character->name
+                )
+            );
+        }
+
+        return $loginStatus;
+    }
+
+    /**
      * log out current character or all active characters (multiple browser tabs)
      * -> send response data to client
      * @param \Base $f3
