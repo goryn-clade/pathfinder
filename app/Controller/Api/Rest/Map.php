@@ -30,6 +30,11 @@ class Map extends AbstractRestController {
     const ERROR_MAP_COUNT = 'Map limit reached: max %d %s maps. Delete a map first';
 
     /**
+     * error message no corporation/alliance to own a new map of that type
+     */
+    const ERROR_MAP_OWNER = 'Character %s has no corporation or alliance for this map type';
+
+    /**
      * request keys for map sharing (map_share right)
      */
     const SHARE_KEYS = ['mapCharacters', 'mapCorporations', 'mapAlliances'];
@@ -70,7 +75,7 @@ class Map extends AbstractRestController {
      * @throws \Exception
      */
     public function put(\Base $f3,  array $test) : void {
-        $requestData = $this->getRequestData($f3);
+        $requestData = self::normalizeRequestType($this->getRequestData($f3));
         $activeCharacter = $this->getCharacter();
 
         if(!$activeCharacter->hasMapRight(self::getRequestTypeId($requestData), 'map_create')){
@@ -93,9 +98,12 @@ class Map extends AbstractRestController {
          * @var Pathfinder\MapModel $map
          */
         $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
-        $mapData = $this->update($map, $requestData, true)->getData();
+        if(!$map = $this->update($map, $requestData, true)){
+            $this->errorOwner($f3);
+            return;
+        }
 
-        $this->out($mapData);
+        $this->out($map->getData());
     }
 
     /**
@@ -104,7 +112,7 @@ class Map extends AbstractRestController {
      * @throws \Exception
      */
     public function patch(\Base $f3,  array $params) : void {
-        $requestData = $this->getRequestData($f3);
+        $requestData = self::normalizeRequestType($this->getRequestData($f3));
         $mapData = [];
 
         if($mapId = (int)$params['id']){
@@ -146,7 +154,11 @@ class Map extends AbstractRestController {
                     return;
                 }
 
-                $mapData = $this->update($map, $requestData, $canShare)->getData(true);
+                if(!$map = $this->update($map, $requestData, $canShare)){
+                    $this->errorOwner($f3);
+                    return;
+                }
+                $mapData = $map->getData(true);
             }
         }
 
@@ -191,13 +203,24 @@ class Map extends AbstractRestController {
     /**
      * @param Pathfinder\MapModel $map
      * @param array<string, mixed>               $mapData
-     * @return Pathfinder\MapModel
+     * @return Pathfinder\MapModel|null null if nothing was saved (no owner for the new map type)
      * @throws \Exception
      */
-    private function update(Pathfinder\MapModel $map,  $mapData, bool $canShare) : Pathfinder\MapModel {
+    private function update(Pathfinder\MapModel $map,  $mapData, bool $canShare) : ?Pathfinder\MapModel {
         $activeCharacter = $this->getCharacter();
 
         $isNew = $map->dry();
+
+        // new map or type change -> the character's own corp/alliance gets access -> it must exist
+        // -> checked before setData(), so a refused map is never changed
+        $newTypeId = (int)($mapData['typeId'] ?? 0);
+        if(
+            ($isNew || ($newTypeId && $newTypeId !== (int)$map->get('typeId', true))) &&
+            !$activeCharacter?->getMapOwner($newTypeId)
+        ){
+            return null;
+        }
+
         $map->setData($mapData);
         $typeChange = $map->changed('typeId');
         $map->save($activeCharacter);
@@ -336,6 +359,30 @@ class Map extends AbstractRestController {
     protected function errorRight(\Base $f3, string $right) : void {
         $f3->set('HALT', true);
         $f3->error(401, sprintf(self::ERROR_MAP_RIGHT, $this->getCharacter()->name, $right));
+    }
+
+    /**
+     * send 403 when the character has no corporation/alliance to own a new map of that type
+     * @param \Base $f3
+     */
+    protected function errorOwner(\Base $f3) : void {
+        $f3->set('HALT', true);
+        $f3->error(403, sprintf(self::ERROR_MAP_OWNER, $this->getCharacter()?->name));
+    }
+
+    /**
+     * keep exactly one map type key in request data, so the type that is checked is the type that is saved
+     * -> MapModel::setData() reads both 'type' and 'typeId', the last one wins
+     * @param array<string, mixed> $requestData
+     * @return array<string, mixed>
+     */
+    protected static function normalizeRequestType(array $requestData) : array {
+        $typeId = self::getRequestTypeId($requestData);
+        unset($requestData['type'], $requestData['typeId']);
+        if($typeId){
+            $requestData['typeId'] = $typeId;
+        }
+        return $requestData;
     }
 
     /**
