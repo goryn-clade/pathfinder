@@ -449,7 +449,11 @@ define([
                     dataType: 'json',
                     context: context
                 }).done(function(data){
-
+                    if(data.error && data.error.length > 0){
+                        for(let error of data.error){
+                            Util.showNotify({title: error.title || 'sendPoke', text: error.text, type: error.type || 'error'});
+                        }
+                    }
                 }).fail(function(jqXHR, status, error){
                     let reason = status + ' ' + error;
                     Util.showNotify({title: jqXHR.status + ': sendPoke', text: reason, type: 'warning'});

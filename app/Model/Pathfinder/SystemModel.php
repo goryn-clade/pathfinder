@@ -784,6 +784,37 @@ class SystemModel extends AbstractMapTrackingModel {
     }
 
     /**
+     * get log handlers a rally point poke would be sent to
+     * -> Slack and/or Discord, if requested in $rallyData and enabled for the map
+     * @param array<string, mixed> $rallyData
+     * @return array<string, mixed> handler config by handler key
+     * @throws \Exception
+     */
+    public function getRallyPokeHandlers(array $rallyData) : array {
+        $handlers = [];
+
+        // Slack poke -----------------------------------------------------------------------------
+        $slackChannelKey = 'slackChannelRally';
+        if(
+            ($rallyData['pokeSlack'] ?? false) === true &&
+            $this->getMap()->isSlackChannelEnabled($slackChannelKey)
+        ){
+            $handlers['slackRally'] = $this->getMap()->getSlackWebHookConfig($slackChannelKey);
+        }
+
+        // Discord poke ---------------------------------------------------------------------------
+        $discordChannelKey = 'discordWebHookURLRally';
+        if(
+            ($rallyData['pokeDiscord'] ?? false) === true &&
+            $this->getMap()->isDiscordChannelEnabled($discordChannelKey)
+        ){
+            $handlers['discordRally'] = $this->getMap()->getDiscordWebHookConfig($discordChannelKey);
+        }
+
+        return $handlers;
+    }
+
+    /**
      * send rally point poke to various "APIs"
      * -> send to a Slack channel
      * -> send to a Discord channel
@@ -794,29 +825,13 @@ class SystemModel extends AbstractMapTrackingModel {
      * @throws \Exception
      */
     public function sendRallyPoke( array $rallyData, CharacterModel $characterModel): void{
-        // rally log needs at least one handler to be valid
-        $isValidLog = false;
         $log = new Logging\RallyLog('rallySet', $this->getMap()->getLogChannelData());
 
-        // Slack poke -----------------------------------------------------------------------------
-        $slackChannelKey = 'slackChannelRally';
-        if(
-            $rallyData['pokeSlack'] === true &&
-            $this->getMap()->isSlackChannelEnabled($slackChannelKey)
-        ){
-            $isValidLog = true;
-            $log->addHandler('slackRally', null, $this->getMap()->getSlackWebHookConfig($slackChannelKey));
-        }
-
-        // Discord poke ---------------------------------------------------------------------------
-        $discordChannelKey = 'discordWebHookURLRally';
-        if(
-            $rallyData['pokeDiscord'] === true &&
-            $this->getMap()->isDiscordChannelEnabled($discordChannelKey)
-        ){
-            $isValidLog = true;
-
-            $log->addHandler('discordRally', null, $this->getMap()->getDiscordWebHookConfig($discordChannelKey));
+        // rally log needs at least one handler to be valid
+        $handlers = $this->getRallyPokeHandlers($rallyData);
+        $isValidLog = !empty($handlers);
+        foreach($handlers as $handlerKey => $handlerConfig){
+            $log->addHandler($handlerKey, null, $handlerConfig);
         }
 
         // Buffer log -----------------------------------------------------------------------------
