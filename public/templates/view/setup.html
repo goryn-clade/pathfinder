@@ -106,10 +106,10 @@
                                     <td class="text-right">
                                         <check if="{{ @directoryData.check }}">
                                             <true>
-                                                <kbd>{{@directoryData.value | raw}}</kbd>
+                                                <kbd>{{@directoryData.value}}</kbd>
                                             </true>
                                             <false>
-                                                <kbd class="txt-color txt-color-danger">{{@directoryData.value | raw}}</kbd>
+                                                <kbd class="txt-color txt-color-danger">{{@directoryData.value}}</kbd>
                                             </false>
                                         </check>
                                     </td>
@@ -279,10 +279,10 @@
                                     <td class="text-right col-md-8">
                                         <check if="{{ @environmentData.check }}">
                                             <true>
-                                                <kbd>{{@environmentData.value | raw}}</kbd>
+                                                <kbd>{{@environmentData.value}}</kbd>
                                             </true>
                                             <false>
-                                                <kbd class="txt-color txt-color-danger">{{@environmentData.value | raw}}</kbd>
+                                                <kbd class="txt-color txt-color-danger">{{@environmentData.value}}</kbd>
                                             </false>
                                         </check>
                                     </td>
@@ -1097,10 +1097,10 @@
                                             <td class="text-right col-md-8">
                                                 <check if="{{ @entry.check !== false }}">
                                                     <true>
-                                                        <kbd>{{@entry.value | raw}}</kbd>
+                                                        <kbd>{{@entry.value}}</kbd>
                                                     </true>
                                                     <false>
-                                                        <kbd class="txt-color txt-color-danger">{{@entry.value | raw}}</kbd>
+                                                        <kbd class="txt-color txt-color-danger">{{@entry.value}}</kbd>
                                                     </false>
                                                 </check>
                                             </td>
