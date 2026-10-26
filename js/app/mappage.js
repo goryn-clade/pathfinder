@@ -285,8 +285,6 @@ define([
                 let fd = new FormData();
                 fd.set('mapData', JSON.stringify(mapData));
                 navigator.sendBeacon(Init.path.updateUnloadData, fd);
-
-                console.info('Map update request send by: %O', navigator.sendBeacon);
             }
         };
 

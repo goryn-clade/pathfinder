@@ -928,7 +928,6 @@ define([
             connection.setConnector(newConnector);
 
             let map = connection._jsPlumb.instance;
-            let oldScope = connection.scope;
             let oldTypes = MapUtil.filterDefaultTypes(connection.getType());
             let newTypes = [MapUtil.getDefaultConnectionTypeByScope(scope)];
             let removeTypes = oldTypes.intersect(MapUtil.filterDefaultTypes(Object.keys(map._connectionTypes)).diff(newTypes));
@@ -941,11 +940,6 @@ define([
 
             // change scope
             connection.scope = scope;
-
-            console.info(
-                'connection "scope" changed for %O. Scope %o → %o, Types %o → %o',
-                connection, oldScope, scope, oldTypes, newTypes
-            );
         }
     };
 
@@ -1047,11 +1041,6 @@ define([
     let updateConnection = (connection, newConnectionData) => {
         // check connection is currently dragged -> skip update
         if(connection.suspendedElement){
-            console.info(
-                'connection update skipped for %O. SuspendedElement: %o',
-                connection,
-                connection.suspendedElement
-            );
             return connection;
         }
 
@@ -2939,9 +2928,7 @@ define([
                 if(!select){
                     // ... select is NOT "forced" -> auto select system on jump
                     let activeElement = systemFormsActive(MapUtil.getTabContentElementByMapElement(system));
-                    if(activeElement !== null){
-                        console.info('Skip auto select systemId %i. Reason: %o', data.systemId, activeElement);
-                    }else{
+                    if(activeElement === null){
                         select = true;
                     }
                 }
