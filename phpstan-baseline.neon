@@ -121,12 +121,6 @@ parameters:
 			path: app/Controller/Api/Map.php
 
 		-
-			message: '#^Cannot access property \$_id on Exodus4D\\Pathfinder\\Model\\Pathfinder\\ConnectionModel\|false\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Controller/Api/Map.php
-
-		-
 			message: '#^Cannot access property \$groups on object\|null\.$#'
 			identifier: property.nonObject
 			count: 1
