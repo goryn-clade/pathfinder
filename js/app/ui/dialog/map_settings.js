@@ -406,7 +406,11 @@ define([
                                                 ModuleMap.updateTabData(tabLinkEls[0], mapData);
                                             }else if(tabLinkEls.length === 0){
                                                 // new map — tab doesn't exist yet; inject into cache and trigger render
-                                                Util.updateCurrentMapData({config: mapData, data: {systems: [], connections: []}});
+                                                let newMapData = {config: mapData, data: {systems: [], connections: []}};
+                                                Util.updateCurrentMapData(newMapData);
+                                                if(method === 'PUT'){
+                                                    Util.addPendingCreatedMap(newMapData);
+                                                }
                                                 ModuleMap.updateMapModule(Util.getMapModule()[0]);
                                             }
 
