@@ -375,7 +375,7 @@ class TypeModel extends AbstractUniverseModel {
             $group->loadById($data['groupId'], $accessToken, $additionalOptions);
             $data['groupId'] = $group;
 
-            $this->copyfrom($data);
+            $this->copyfrom($data, ['id', 'name', 'description', 'published', 'groupId', 'marketGroupId', 'radius', 'volume', 'packagedVolume', 'capacity', 'portionSize', 'mass', 'graphicId', 'dogma_attributes']);
             $this->save();
         }
     }
