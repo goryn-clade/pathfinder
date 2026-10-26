@@ -1430,13 +1430,10 @@ define([
     let initDefaultSelect2Config = () => {
         $.fn.select2.defaults.set('theme', 'pathfinder');
 
+        // Select2 default "escapeMarkup" escapes string markup.
+        // -> templates and messages that need HTML return a jQuery element instead (not escaped again)
         $.fn.select2.defaults.set('language', {
-            searching: params => '&nbsp;<i class="fas fa-sync fa-spin"></i>&nbsp;&nbsp;searching...'
-        });
-
-        $.fn.select2.defaults.set('escapeMarkup', markup => {
-            // required for HTML in options
-            return markup;
+            searching: params => $('<span>').html('&nbsp;<i class="fas fa-sync fa-spin"></i>&nbsp;&nbsp;searching...')
         });
 
         let initScrollbar = (resultsWrapper) => {
