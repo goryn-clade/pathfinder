@@ -48,7 +48,7 @@
     "ikkez/f3-cortex": "dev-master#47d2596914776877ef4d87706d1faa812d1398f2",
     "ikkez/f3-sheet": "0.4.*",
     "xfra35/f3-cron": "1.2.*",
-    "monolog/monolog": "^2.10",
+    "monolog/monolog": "^3.12",
     "league/html-to-markdown": "5.0.*",
     "cache/redis-adapter": "^1.2",
     "cache/array-adapter": "1.1.*",
