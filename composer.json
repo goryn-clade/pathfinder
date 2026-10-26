@@ -49,7 +49,7 @@
     "ikkez/f3-sheet": "0.4.*",
     "xfra35/f3-cron": "1.2.*",
     "monolog/monolog": "^2.10",
-    "league/html-to-markdown": "5.0.*",
+    "league/html-to-markdown": "5.2.*",
     "cache/redis-adapter": "^1.2",
     "cache/array-adapter": "1.1.*",
     "cache/void-adapter": "^1.1",
