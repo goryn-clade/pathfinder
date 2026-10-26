@@ -56,6 +56,7 @@ class Sso extends Api\User{
     const ERROR_CHARACTER_FORBIDDEN                 = 'Character "%s" is not authorized to log in. Reason: %s';
     const ERROR_SERVICE_TIMEOUT                     = 'CCP SSO service timeout (%ss). Try again later';
     const ERROR_COOKIE_LOGIN                        = 'Login from Cookie failed (data not found). Please retry by CCP SSO';
+    const ERROR_COOKIE_LOGIN_TOKEN                  = 'Character switch failed (request expired). Please try again';
     const ERROR_CCP_JWK_CLAIM                       = 'Invalid "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_JWK_CLAIM" url. %s';
     const ERROR_TOKEN_VERIFICATION                  = 'Could not validate the authenticity of the Access Token';
 
@@ -352,13 +353,21 @@ class Sso extends Api\User{
     }
 
     /**
-     * login by cookie name
+     * login by cookie name (character switch)
+     * -> POST with "cookie" and the session CSRF "token"; anything else routes back to the login page
      * @param \Base $f3
      * @throws \Exception
      */
     public function login(\Base $f3) : void {
-        $data = (array)$f3->get('GET');
-        $cookieName = (string)$data['cookie'];
+        // switch by cookie changes the logged in character -> POST with session token only (CSRF)
+        if(!self::isValidCsrfPost($f3)){
+            $f3->set(self::SESSION_KEY_SSO_ERROR, self::ERROR_COOKIE_LOGIN_TOKEN);
+            $f3->reroute(['login']);
+            return;
+        }
+
+        $cookieName = $f3->get('POST.cookie');
+        $cookieName = is_string($cookieName) ? $cookieName : '';
         $character = null;
 
         if( !empty($cookieName) ){

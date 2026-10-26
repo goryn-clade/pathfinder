@@ -75,7 +75,7 @@
         <div class="container pf-character-selection">
             <repeat group="{{ @cookieCharacters }}" key="{{ @cookieName }}" value="{{ @characterData }}">
                 <div class="pf-character-box new">
-                    <div class="pf-dynamic-area" data-cookie="{{ @cookieName }}" data-href="{{ @BASE }}{{ 'sso','action=login' | alias }}">
+                    <div class="pf-dynamic-area" data-cookie="{{ @cookieName }}" data-token="{{ @tplCsrfToken }}" data-href="{{ @BASE }}{{ 'sso','action=login' | alias }}">
                         {* character data is dynamically *}
                     </div>
                 </div>
