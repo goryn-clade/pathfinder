@@ -1,3 +1,7 @@
+@use "../../bootstrap/mixins";
+@use "../../colors";
+@use "../../variables";
+
 @charset "UTF-8";
 /*
  * blueimp Gallery CSS 2.11.1
@@ -46,7 +50,7 @@
   margin: 1em auto;
   /* Set the carousel width/height ratio to 16/9: */
   padding-bottom: 56.25%;
-  @include box-shadow(0 4px 10px rgba(0,0,0, 0.4));
+  @include mixins.box-shadow(0 4px 10px rgba(0,0,0, 0.4));
   border-radius: 5px;
   -ms-touch-action: pan-y;
   touch-action: pan-y;
@@ -106,13 +110,13 @@
   margin-top: -17px;
   font-size: 22px;
   line-height: 35px;
-  color: $gray-light;
+  color: colors.$gray-light;
   text-decoration: none;
   text-align: center;
-  background: rgba($black, 0.2);
+  background: rgba(colors.$black, 0.2);
   border-radius: 5px;
-  @include box-sizing(content-box);
-  @include transition(color 0.09s linear);
+  @include mixins.box-sizing(content-box);
+  @include mixins.transition(color 0.09s linear);
   will-change: color;
   opacity: 1;
   cursor: pointer;
@@ -131,9 +135,9 @@
   margin: 0 40px 0 0;
   font-size: 14px;
   line-height: 14px;
-  font-font: $font-family-bold;
-  color: $gray-light;
-  text-shadow: 0 1px 3px $gray-darkest;
+  font-font: variables.$font-family-bold;
+  color: colors.$gray-light;
+  text-shadow: 0 1px 3px colors.$gray-darkest;
   opacity: 1;
   display: none;
 }
@@ -172,25 +176,25 @@
   font-size: 22px;
   line-height: 35px;
   text-align: center;
-  background: rgba($black, 0.2);
+  background: rgba(colors.$black, 0.2);
   border-radius: 5px;
-  @include box-sizing(content-box);
-  @include transition(color 0.09s linear);
+  @include mixins.box-sizing(content-box);
+  @include mixins.transition(color 0.09s linear);
   will-change: color;
-  color: $orange;
+  color: colors.$orange;
   cursor: pointer;
   opacity: 1;
   display: none;
 }
 .blueimp-gallery-playing > .play-pause {
-  color: $gray-darker;
+  color: colors.$gray-darker;
   //background-position: -15px 0;
 }
 .blueimp-gallery > .prev:hover,
 .blueimp-gallery > .next:hover,
 .blueimp-gallery > .close:hover,
 .blueimp-gallery > .play-pause:hover {
-  color: $orange;
+  color: colors.$orange;
 }
 .blueimp-gallery-controls > .prev,
 .blueimp-gallery-controls > .next,

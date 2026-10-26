@@ -24,11 +24,7 @@ class Admin extends Controller{
     const ERROR_SSO_CHARACTER_ROLES                 = 'Insufficient in-game roles. "%s" requires at least one of these corp roles: %s.';
 
     const LOG_TEXT_KICK_BAN                         = '%s "%s" from corporation "%s", by "%s"';
-
-    /**
-     * session key for the admin action token (CSRF)
-     */
-    const SESSION_KEY_ADMIN_TOKEN                   = 'SESSION.ADMIN.TOKEN';
+    const LOG_TEXT_KICK_BAN_REFUSED                 = 'REFUSED %s "%s" from corporation "%s", by "%s" (target role "%s")';
 
     const KICK_OPTIONS = [
         5 => '5m',
@@ -54,7 +50,7 @@ class Admin extends Controller{
         if($character = $this->getAdminCharacter($f3)){
             $f3->set('tplLogged', true);
             $f3->set('character', $character);
-            $f3->set('tplAdminToken', self::getAdminToken($f3));
+            $f3->set('tplAdminToken', self::getCsrfToken($f3));
             $this->dispatch($f3, $params, $character);
         }
 
@@ -144,7 +140,7 @@ class Admin extends Controller{
             $f3->set('tplPage', $parts[0] ?? 'settings');
 
             // actions (e.g. /admin/members/ban/…) change state -> POST with session token only (CSRF)
-            if(isset($parts[1]) && !self::isValidAdminPost($f3)){
+            if(isset($parts[1]) && !self::isValidCsrfPost($f3)){
                 $f3->reroute('@admin(@*=/' . $parts[0] . ')');
                 return;
             }
@@ -210,29 +206,6 @@ class Admin extends Controller{
     }
 
     /**
-     * get (or create) the admin action token for this session
-     * @param \Base $f3
-     * @return string
-     */
-    protected static function getAdminToken(\Base $f3) : string {
-        if(!$f3->exists(self::SESSION_KEY_ADMIN_TOKEN)){
-            $f3->set(self::SESSION_KEY_ADMIN_TOKEN, bin2hex(random_bytes(32)));
-        }
-        return (string)$f3->get(self::SESSION_KEY_ADMIN_TOKEN);
-    }
-
-    /**
-     * check: request is a POST with a valid admin token
-     * @param \Base $f3
-     * @return bool
-     */
-    protected static function isValidAdminPost(\Base $f3) : bool {
-        return $f3->get('VERB') === 'POST' &&
-            $f3->exists(self::SESSION_KEY_ADMIN_TOKEN) &&
-            hash_equals((string)$f3->get(self::SESSION_KEY_ADMIN_TOKEN), (string)$f3->get('POST.token'));
-    }
-
-    /**
      * save or delete settings (e.g. corporation rights)
      * @param CharacterModel $character
      * @param int $corporationId
@@ -282,7 +255,7 @@ class Admin extends Controller{
         $maxKickTime = array_key_last($kickOptions);
         $minutes = in_array($minutes, range($minKickTime, $maxKickTime)) ? $minutes : 0;
 
-        $kickCharacters = $this->filterValidCharacters($character, $kickCharacterId);
+        $kickCharacters = $this->filterValidCharacters($character, $kickCharacterId, $minutes ? 'KICK' : 'KICK REVOKE');
         foreach($kickCharacters as $kickCharacter){
             $kickCharacter->kick($minutes);
             $kickCharacter->save();
@@ -292,7 +265,7 @@ class Admin extends Controller{
                     self::LOG_TEXT_KICK_BAN,
                     $minutes ? 'KICK' : 'KICK REVOKE',
                     $kickCharacter->name,
-                    $kickCharacter->getCorporation()->name,
+                    $kickCharacter->getCorporation()?->name,
                     $character->name
                 )
             );
@@ -305,7 +278,7 @@ class Admin extends Controller{
      * @param int $value
      */
     protected function banCharacter(CharacterModel $character, $banCharacterId, $value): void {
-        $banCharacters = $this->filterValidCharacters($character, $banCharacterId);
+        $banCharacters = $this->filterValidCharacters($character, $banCharacterId, $value ? 'BAN' : 'BAN REVOKE');
         foreach($banCharacters as $banCharacter){
             $banCharacter->ban($value);
             $banCharacter->save();
@@ -315,7 +288,7 @@ class Admin extends Controller{
                     self::LOG_TEXT_KICK_BAN,
                     $value ? 'BAN' : 'BAN REVOKE',
                     $banCharacter->name,
-                    $banCharacter->getCorporation()->name,
+                    $banCharacter->getCorporation()?->name,
                     $character->name
                 )
             );
@@ -324,24 +297,40 @@ class Admin extends Controller{
 
     /**
      * checks whether a $character has admin access rights for $characterId
-     * -> must be in same corporation
+     * -> CORPORATION admins: same corporation, target without an admin role
      * @param CharacterModel $character
      * @param int $characterId
-     * @return array<string, mixed>|\DB\CortexCollection
+     * @param string $action action name for the log of refused requests
+     * @return CharacterModel[]
      */
-    protected function filterValidCharacters(CharacterModel $character, $characterId){
+    protected function filterValidCharacters(CharacterModel $character, $characterId, string $action){
         $characters = [];
-        // check if kickCharacters belong to same Corp as admin character
-        // -> remove admin char from valid characters...
-        if( !empty($characterIds = array_diff([$characterId], [$character->_id])) ){
-            if($character->roleId->name === 'SUPER'){
-                if($filterCharacters = CharacterModel::getAll($characterIds)){
-                    $characters = $filterCharacters;
-                }
-            }else{
-                if($corporation = $character->getCorporation()){
-                    $characters = $corporation->getCharacters($characterIds);
-                }
+        $filterCharacters = [];
+        // SUPER admins: any character, CORPORATION admins: characters of their corporation
+        if($character->roleId->name === 'SUPER'){
+            if($superCharacters = CharacterModel::getAll([$characterId])){
+                $filterCharacters = $superCharacters;
+            }
+        }elseif($corporation = $character->getCorporation()){
+            $filterCharacters = $corporation->getCharacters([$characterId]);
+        }
+
+        /** @var CharacterModel $filterCharacter */
+        foreach($filterCharacters as $filterCharacter){
+            // e.g. corporation admins must not kick/ban other admins, nobody kicks/bans themselves
+            if($character->canKickBan($filterCharacter)){
+                $characters[] = $filterCharacter;
+            }elseif((int)$filterCharacter->_id !== (int)$character->_id){
+                self::getLogger()->write(
+                    sprintf(
+                        self::LOG_TEXT_KICK_BAN_REFUSED,
+                        $action,
+                        $filterCharacter->name,
+                        $filterCharacter->getCorporation()?->name,
+                        $character->name,
+                        $filterCharacter->getRoleName()
+                    )
+                );
             }
         }
         return $characters;

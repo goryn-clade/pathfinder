@@ -10,42 +10,66 @@
  */
 
 // CSS Reset - https://github.com/simbo/css-reset-and-normalize
-@import "reset";
+@use "reset";
 
 // Core variables and mixins
-@import "colors";
-@import "variables";
-@import "themes";
+@use "colors";
+@use "variables";
+@use "oxygen-fonts";
+@use "themes";
 
 // load bootstrap with all its dependencies
-@import "bootstrap";
+@use "bootstrap";
 
 // load Font Awesome with all its dependencies
-@import "library/fontawesome/fontawesome";
-@import "library/fontawesome/regular";
-@import "library/fontawesome/solid";
-@import "library/fontawesome/brands";
+@use "library/fontawesome/fontawesome";
+@use "library/fontawesome/regular";
+@use "library/fontawesome/solid";
+@use "library/fontawesome/brands";
 
 // Libraries (Remove if not needed)
-@import "library/custom-scrollbar/_mCustomScrollbar";               // malihu-custom-scrollbar-plugin
-@import "library/data-tables/_all";                                 // DataTables 1.10.12 + extensions
+@use "library/custom-scrollbar/_mCustomScrollbar";               // malihu-custom-scrollbar-plugin
+@use "library/data-tables/_all";                                 // DataTables 1.10.12 + extensions
 
-@import "library/x-editable/_bootstrap-editable";                   // X-editable - v1.5.1
-@import "library/slidebars/_slidebars";                             // Slidebars Navigation
-@import "library/easy-pie-chart/_easyPieChart";                     // Easy Pie Chart 2.1.6
-@import "library/select2/_core";                                    // Select2 4.0.13
-@import "library/blue-imp-gallery/_blueimp-gallery";                // Blue Imp Gallery
-@import "library/blue-imp-gallery/_bootstrap-image-gallery";        // Blue Imp Gallery Bootstrap
-@import "library/blue-imp-gallery/_bootstrap-image-gallery";        // Blue Imp Gallery Bootstrap
-@import "library/bootstrap-toggle/_bootstrap-toggle";               // Bootstrap Toggle v2.2.0
-@import "library/bootstrap-checkbox/_awesome-bootstrap-checkbox";   // Bootstrap Customized Checkboxes v0.3.7 - https://github.com/flatlogic/awesome-bootstrap-checkbox
-@import "library/summernote/_summernote";                           // Summernote WYSIWYG editor v0.8.10
+@use "library/x-editable/_bootstrap-editable";                   // X-editable - v1.5.1
+@use "library/slidebars/_slidebars";                             // Slidebars Navigation
+@use "library/easy-pie-chart/_easyPieChart";                     // Easy Pie Chart 2.1.6
+@use "library/select2/_core";                                    // Select2 4.0.13
+@use "library/blue-imp-gallery/_blueimp-gallery";                // Blue Imp Gallery
+@use "library/blue-imp-gallery/_bootstrap-image-gallery";        // Blue Imp Gallery Bootstrap
+@use "library/bootstrap-toggle/_bootstrap-toggle";               // Bootstrap Toggle v2.2.0
+@use "library/bootstrap-checkbox/_awesome-bootstrap-checkbox";   // Bootstrap Customized Checkboxes v0.3.7 - https://github.com/flatlogic/awesome-bootstrap-checkbox
+@use "library/summernote/_summernote";                           // Summernote WYSIWYG editor v0.8.10
 //@import "library/jsplumb/_jsplumbtoolkit-defaults";                 // JsPlumb SVG map v2.9.3
 
 // Main THEME (Imports by order - do not change order)
-@import "main";
-@import "main-colorpallet";
+@use "main";
+@use "main-colorpallet";
 
 // my modules
-@import "layout/all";
+@use "layout/all" as layout;
 
+// Cross-module @extend rules
+// With @use, an @extend only reaches the module it is in and the modules that one uses.
+// These extend selectors that are also defined in modules loaded later, so they live here,
+// where every module is upstream (as they did with @import).
+.btn-group-xs > .btn { @extend .btn-xs; }
+.btn-group-sm > .btn { @extend .btn-sm; }
+.btn-group-lg > .btn { @extend .btn-lg; }
+
+.input-group-lg > .form-control,
+.input-group-lg > .input-group-addon,
+.input-group-lg > .input-group-btn > .btn { @extend .input-lg; }
+.input-group-sm > .form-control,
+.input-group-sm > .input-group-addon,
+.input-group-sm > .input-group-btn > .btn { @extend .input-sm; }
+
+.list-inline { @extend .list-unstyled; }
+
+.pf-landing .pf-landing-list li > i { @extend .fas; }
+
+.editable-input .editable-checklist > div > label {
+  @extend .checkbox;
+
+  > span { @extend label; }
+}

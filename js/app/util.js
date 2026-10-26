@@ -1430,13 +1430,10 @@ define([
     let initDefaultSelect2Config = () => {
         $.fn.select2.defaults.set('theme', 'pathfinder');
 
+        // Select2 default "escapeMarkup" escapes string markup.
+        // -> templates and messages that need HTML return a jQuery element instead (not escaped again)
         $.fn.select2.defaults.set('language', {
-            searching: params => '&nbsp;<i class="fas fa-sync fa-spin"></i>&nbsp;&nbsp;searching...'
-        });
-
-        $.fn.select2.defaults.set('escapeMarkup', markup => {
-            // required for HTML in options
-            return markup;
+            searching: params => $('<span>').html('&nbsp;<i class="fas fa-sync fa-spin"></i>&nbsp;&nbsp;searching...')
         });
 
         let initScrollbar = (resultsWrapper) => {
@@ -2872,6 +2869,19 @@ define([
     let recentlyDeletedMapIds = new Map(); // id -> expiresAt (ms)
     const RECENTLY_DELETED_TTL_MS = 5000;
 
+    // Maps created on this client. A map update request that started before the create
+    // returns without the new map; keep it until a response lists it or the grace period ends.
+    let pendingCreatedMaps = new Map(); // id -> {mapData, expiresAt (ms)}
+    const PENDING_CREATED_TTL_MS = 10000;
+
+    /**
+     * keep a map created on this client in the cache until the server lists it
+     * @param mapData
+     */
+    let addPendingCreatedMap = mapData => {
+        pendingCreatedMaps.set(mapData.config.id, {mapData: mapData, expiresAt: Date.now() + PENDING_CREATED_TTL_MS});
+    };
+
     let isRecentlyDeleted = mapId => {
         let expiresAt = recentlyDeletedMapIds.get(mapId);
         if(expiresAt && expiresAt > Date.now()) return true;
@@ -2886,7 +2896,20 @@ define([
      * @param mapData
      */
     let setCurrentMapData = mapData => {
+        let previousMapData = Init.currentMapData || [];
         Init.currentMapData = mapData.filter(m => !isRecentlyDeleted(m.config.id));
+
+        // server now lists the map -> stop protecting it. Re-add maps it does not list yet
+        pendingCreatedMaps.forEach((pending, mapId) => {
+            if(Init.currentMapData.some(m => m.config.id === mapId)){
+                pendingCreatedMaps.delete(mapId);
+            }else if(pending.expiresAt <= Date.now() || isRecentlyDeleted(mapId)){
+                pendingCreatedMaps.delete(mapId);
+            }else{
+                // prefer the live cache entry: it may hold newer config/data than the creation snapshot
+                Init.currentMapData.push(previousMapData.find(m => m.config.id === mapId) || pending.mapData);
+            }
+        });
 
         return getCurrentMapData();
     };
@@ -2958,6 +2981,7 @@ define([
     let deleteCurrentMapData = mapId => {
         Init.currentMapData = Init.currentMapData.filter(mapData => mapData.config.id !== mapId);
         recentlyDeletedMapIds.set(mapId, Date.now() + RECENTLY_DELETED_TTL_MS);
+        pendingCreatedMaps.delete(mapId);
     };
 
     /**
@@ -3775,6 +3799,7 @@ define([
         filterCurrentMapData: filterCurrentMapData,
         updateCurrentMapData: updateCurrentMapData,
         deleteCurrentMapData: deleteCurrentMapData,
+        addPendingCreatedMap: addPendingCreatedMap,
         setCurrentUserData: setCurrentUserData,
         getCurrentUserData: getCurrentUserData,
         getCurrentCharacter: getCurrentCharacter,

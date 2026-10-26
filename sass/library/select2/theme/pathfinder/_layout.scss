@@ -1,6 +1,10 @@
+@use "sass:meta";
+@use "../../../../bootstrap/mixins";
+@use "../../../../colors";
+
 .select2-container--pathfinder {
-  @import "sass/library/select2/theme/pathfinder/single";
-  @import "sass/library/select2/theme/pathfinder/multiple";
+  @include meta.load-css("single");
+  @include meta.load-css("multiple");
 
   &.select2-container--open.select2-container--above {
     .select2-selection--single, .select2-selection--multiple {
@@ -20,10 +24,10 @@
 
   .select2-search--dropdown {
     .select2-search__field {
-      border: 1px solid $gray-light;
+      border: 1px solid colors.$gray-light;
 
       &:focus {
-        border: 1px solid $teal-lighter;
+        border: 1px solid colors.$teal-lighter;
       }
     }
   }
@@ -70,8 +74,8 @@
     }
 
     &[aria-disabled=true] {
-      color: $gray-light;
-      background-color: $gray;
+      color: colors.$gray-light;
+      background-color: colors.$gray;
 
       // add a icon to all "disabled" options
       .pf-select-item-anchor {
@@ -85,14 +89,14 @@
           position: absolute;
           left: 2px;
           top: 0;
-          color: $gray-light;
+          color: colors.$gray-light;
         }
       }
     }
 
     &[aria-selected=true] {
-      color: $gray-light;
-      background-color: $gray;
+      color: colors.$gray-light;
+      background-color: colors.$gray;
     }
 
     .select2-results__option {
@@ -130,22 +134,22 @@
   }
 
   .select2-results__option--highlighted[aria-selected] {
-    background-color: $gray-lighter;
-    color: $gray-dark;
+    background-color: colors.$gray-lighter;
+    color: colors.$gray-dark;
   }
 
   .select2-results__group {
     cursor: default;
     display: block;
     padding: 6px;
-    background-color: $gray-darker;
+    background-color: colors.$gray-darker;
     color: #777; // like .navbar-default
   }
 
   // custom PF styles -------------------------------
   &.select2-container--open .select2-dropdown {
-    border-color: $teal-lighter;
-    @include box-shadow(0 6px 12px rgba(0,0,0, 0.3));
+    border-color: colors.$teal-lighter;
+    @include mixins.box-shadow(0 6px 12px rgba(0,0,0, 0.3));
   }
 
 }
@@ -163,10 +167,10 @@ select[readonly].select2-hidden-accessible {
     touch-action: none;
 
     .select2-selection {
-      background-color: $gray;
+      background-color: colors.$gray;
 
       .select2-selection__arrow{
-        background-color: $gray;
+        background-color: colors.$gray;
       }
 
       .select2-selection__clear{

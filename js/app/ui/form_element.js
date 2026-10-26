@@ -17,6 +17,20 @@ define([
     };
 
     /**
+     * escape a value for use in HTML text or a quoted attribute
+     * -> Select2 escapes string results, so templates that build markup escape their data here
+     *    and return a jQuery element (which Select2 does not escape again)
+     * @param value
+     * @returns {string}
+     */
+    let escapeHtml = value => String(value === undefined || value === null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    /**
      * format result data
      * @param data
      * @returns {*}
@@ -29,7 +43,7 @@ define([
 
         if(data.hasOwnProperty('children')){
             // category group label
-            markup += `<div class="col-xs-9">${data.text}</div>`;
+            markup += `<div class="col-xs-9">${escapeHtml(data.text)}</div>`;
             markup += `<div class="col-xs-3 text-right">(${data.children.length})</div>`;
         }else{
             let imagePath = '';
@@ -61,17 +75,17 @@ define([
             }
 
             if(imagePath){
-                thumb = `<img class="${config.select2ImageLazyLoadClass}" src="${Util.imgRoot()}svg/logo_simple.svg" data-src="${imagePath}" style="max-width: 100%"/>`;
+                thumb = `<img class="${config.select2ImageLazyLoadClass}" src="${Util.imgRoot()}svg/logo_simple.svg" data-src="${escapeHtml(imagePath)}" style="max-width: 100%"/>`;
             }else if(iconName){
                 thumb = `<i class="fas fa-fw ${iconName}"></i>`;
             }
 
             markup += `<div class="col-xs-2">${thumb}</div>`;
-            markup += `<div class="col-xs-10 pf-text-ellipsis">${data.text}</div>`;
+            markup += `<div class="col-xs-10 pf-text-ellipsis">${escapeHtml(data.text)}</div>`;
         }
         markup += '</div>';
 
-        return markup;
+        return $(markup);
     };
 
     /**
@@ -101,17 +115,17 @@ define([
 
             let classes = [securityClass, Util.config.popoverTriggerClass, Util.config.helpDefaultClass];
 
-            markup += `<span>${name}</span>`;
+            markup += `<span>${escapeHtml(name)}</span>`;
             if(sizeLabel !== undefined){
-                markup += `<span><kbd>${sizeLabel}</kbd></span>`;
+                markup += `<span><kbd>${escapeHtml(sizeLabel)}</kbd></span>`;
             }
             markup += '<i class="fas fa-long-arrow-alt-right txt-color txt-color-grayLight"></i>';
-            markup += `<span class="${classes.join(' ')}" data-name="${name}">&nbsp;&nbsp;${label}</span>`;
+            markup += `<span class="${escapeHtml(classes.join(' '))}" data-name="${escapeHtml(name)}">&nbsp;&nbsp;${escapeHtml(label)}</span>`;
             if(suffix.length){
-                markup += `&nbsp;<span>${suffix}</span>`;
+                markup += `&nbsp;<span>${escapeHtml(suffix)}</span>`;
             }
         }else{
-            markup += `<span>${state.text}</span>`;
+            markup += `<span>${escapeHtml(state.text)}</span>`;
         }
 
         return $(markup);
@@ -131,7 +145,7 @@ define([
 
         if(data.hasOwnProperty('children')){
             // optgroup label
-            markup += '<div class="col-xs-9">' + data.text + '</div>';
+            markup += '<div class="col-xs-9">' + escapeHtml(data.text) + '</div>';
             markup += '<div class="col-xs-3 text-right">(' + data.children.length + ')</div>';
         }else{
             // child label
@@ -148,18 +162,18 @@ define([
                         let suffix = labelParts[1] ? labelParts[1] : '';
 
 
-                        markup += '<div class="col-xs-3">' + parts[0] + '</div>';
+                        markup += '<div class="col-xs-3">' + escapeHtml(parts[0]) + '</div>';
                         markup += '<div class="col-xs-2 text-center"><i class="fas fa-long-arrow-alt-right txt-color txt-color-grayLight"></i></div>';
-                        markup += '<div class="col-xs-3 ' + securityClass + '">' + label + '</div>';
-                        markup += '<div class="col-xs-4 text-right">' + suffix + '</div>';
+                        markup += '<div class="col-xs-3 ' + escapeHtml(securityClass) + '">' + escapeHtml(label) + '</div>';
+                        markup += '<div class="col-xs-4 text-right">' + escapeHtml(suffix) + '</div>';
                         break;
                     case 'system':
-                        markup += '<div class="col-xs-10">' + parts[0] + '</div>';
-                        markup += '<div class="col-xs-2 ' + securityClass + '">' + parts[1] + '</div>';
+                        markup += '<div class="col-xs-10">' + escapeHtml(parts[0]) + '</div>';
+                        markup += '<div class="col-xs-2 ' + escapeHtml(securityClass) + '">' + escapeHtml(parts[1]) + '</div>';
                         break;
                 }
             }else{
-                markup += '<div class="col-xs-12">' + data.text + '</div>';
+                markup += '<div class="col-xs-12">' + escapeHtml(data.text) + '</div>';
             }
         }
         markup += '</div>';
@@ -201,10 +215,10 @@ define([
             }
 
             let securityClass = Util.getSecurityClassForSystem(parts[1]);
-            markup += `<span class="${styleClass.join(' ')}">${parts[0]}</span>`;
-            markup += `<span class="${securityClass}">&nbsp;&nbsp;${parts[1]}</span>`;
+            markup += `<span class="${styleClass.join(' ')}">${escapeHtml(parts[0])}</span>`;
+            markup += `<span class="${escapeHtml(securityClass)}">&nbsp;&nbsp;${escapeHtml(parts[1])}</span>`;
         }else{
-            markup += `<span>${state.text}</span>`;
+            markup += `<span>${escapeHtml(state.text)}</span>`;
         }
 
         return $(markup);
@@ -265,13 +279,13 @@ define([
 
             let markup = '<div class="clearfix">';
             markup += '<div class="col-xs-1">';
-            markup += '<i class="fas fa-char fa-fw" data-char-content="' + label + '"></i>';
+            markup += '<i class="fas fa-char fa-fw" data-char-content="' + escapeHtml(label) + '"></i>';
             markup += '</div>';
             markup += '<div class="col-xs-3">';
-            markup += '<div class="pf-fake-connection ' + connectionClass + '"></div>';
+            markup += '<div class="pf-fake-connection ' + escapeHtml(connectionClass) + '"></div>';
             markup += '</div>';
             markup += '<div class="col-xs-8">';
-            markup += text;
+            markup += escapeHtml(text);
             markup += '</div>';
             markup += '</div>';
 
@@ -302,7 +316,7 @@ define([
         options = $.extend({}, defaultConfig, options);
 
         let formatStatusSelectionData = state => {
-            return '<i class="fas ' + options.iconClass + ' ' + state.class + '"></i>&nbsp;&nbsp;&nbsp;' + state.text;
+            return $('<span>').html('<i class="fas ' + escapeHtml(options.iconClass) + ' ' + escapeHtml(state.class) + '"></i>&nbsp;&nbsp;&nbsp;' + escapeHtml(state.text));
         };
 
         let formatStatusResultData = data => {
@@ -311,9 +325,9 @@ define([
 
             let markup = '<div class="clearfix ' + config.resultOptionImageClass + '">';
             markup += '<div class="col-xs-2">';
-            markup += '<i class="fas ' + options.iconClass + ' ' + data.class + '"></i>';
+            markup += '<i class="fas ' + escapeHtml(options.iconClass) + ' ' + escapeHtml(data.class) + '"></i>';
             markup += '</div>';
-            markup += '<div class="col-xs-10">' + data.text + '</div>';
+            markup += '<div class="col-xs-10">' + escapeHtml(data.text) + '</div>';
             markup += '</div>';
 
             return $(markup);
@@ -355,17 +369,17 @@ define([
             let hideShatteredClass = !data.shattered ? 'hide' : '';
 
             let markup = '<div class="clearfix ' + config.resultOptionImageClass + '">';
-            markup += '<div class="col-xs-4 pf-select-item-anchor ' + systemNameClass + '">' + data.text + '</div>';
-            markup += '<div class="col-xs-2 text-right ' + data.effectClass + '">';
+            markup += '<div class="col-xs-4 pf-select-item-anchor ' + systemNameClass + '">' + escapeHtml(data.text) + '</div>';
+            markup += '<div class="col-xs-2 text-right ' + escapeHtml(data.effectClass) + '">';
             markup += '<i class="fas fa-fw fa-square ' + hideEffectClass + '"></i>';
             markup += '</div>';
-            markup += '<div class="col-xs-2 text-right ' + data.secClass + '">' + data.security + '</div>';
+            markup += '<div class="col-xs-2 text-right ' + escapeHtml(data.secClass) + '">' + escapeHtml(data.security) + '</div>';
             markup += '<div class="col-xs-2 text-right ' + shatteredClass + '">';
             markup += '<i class="fas fa-fw fa-chart-pie ' + hideShatteredClass + '"></i>';
             markup += '</div>';
-            markup += '<div class="col-xs-2 text-right ' + data.trueSecClass + '">' + data.trueSec + '</div></div>';
+            markup += '<div class="col-xs-2 text-right ' + escapeHtml(data.trueSecClass) + '">' + escapeHtml(data.trueSec) + '</div></div>';
 
-            return markup;
+            return $(markup);
         }
 
         $.when(
@@ -477,9 +491,9 @@ define([
             if(data.loading) return data.text;
 
             let markup = '<div class="clearfix">';
-            markup += '<div class="col-sm-10">' + data.text + '</div></div>';
+            markup += '<div class="col-sm-10">' + escapeHtml(data.text) + '</div></div>';
 
-            return markup;
+            return $(markup);
         };
 
         return this.each(function(){
@@ -560,9 +574,9 @@ define([
             if(data.placeholder) return data.placeholder;
 
             let markup = '<div class="clearfix">';
-            markup += '<div class="col-sm-10">' + data.text + '</div></div>';
+            markup += '<div class="col-sm-10">' + escapeHtml(data.text) + '</div></div>';
 
-            return markup;
+            return $(markup);
         }
 
         /**

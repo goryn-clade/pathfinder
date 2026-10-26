@@ -1,3 +1,8 @@
+@use "sass:color";
+@use "../colors";
+@use "../variables";
+@use "mixins";
+
 //
 // Forms
 // --------------------------------------------------
@@ -21,12 +26,12 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-  margin-bottom: $line-height-computed;
-  font-size: ($font-size-base * 1.5);
+  margin-bottom: variables.$line-height-computed;
+  font-size: (variables.$font-size-base * 1.5);
   line-height: inherit;
-  color: $legend-color;
+  color: variables.$legend-color;
   border: 0;
-  border-bottom: 1px solid $legend-border-color;
+  border-bottom: 1px solid variables.$legend-border-color;
 }
 
 label {
@@ -44,7 +49,7 @@ label {
 
 // Override content-box in Normalize (* isn't specific enough)
 input[type="search"] {
-  @include box-sizing(border-box);
+  @include mixins.box-sizing(border-box);
 }
 
 // Position radios and checkboxes better
@@ -76,16 +81,16 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  @include tab-focus();
+  @include mixins.tab-focus();
 }
 
 // Adjust output element
 output {
   display: block;
-  padding-top: ($padding-base-vertical + 1);
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  color: $input-color;
+  padding-top: (variables.$padding-base-vertical + 1);
+  font-size: variables.$font-size-base;
+  line-height: variables.$line-height-base;
+  color: variables.$input-color;
 }
 
 
@@ -114,23 +119,23 @@ output {
 .form-control {
   display: block;
   width: 100%;
-  height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
-  padding: $padding-base-vertical $padding-base-horizontal;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  color: $input-color;
-  background-color: $input-bg;
+  height: variables.$input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: variables.$padding-base-vertical variables.$padding-base-horizontal;
+  font-size: variables.$font-size-base;
+  line-height: variables.$line-height-base;
+  color: variables.$input-color;
+  background-color: variables.$input-bg;
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid $input-border;
-  border-radius: $input-border-radius;
-  @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
-  @include transition(border-color ease-out .15s, box-shadow ease-out .15s);
+  border: 1px solid variables.$input-border;
+  border-radius: variables.$input-border-radius;
+  @include mixins.box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+  @include mixins.transition(border-color ease-out .15s, box-shadow ease-out .15s);
 
   // Customize the `:focus` state to imitate native WebKit styles.
-  @include form-control-focus();
+  @include mixins.form-control-focus();
 
   // Placeholder
-  @include placeholder();
+  @include mixins.placeholder();
 
   // Disabled and read-only inputs
   //
@@ -141,7 +146,7 @@ output {
   &[readonly],
   fieldset[disabled] & {
     cursor: not-allowed;
-    background-color: $input-bg-disabled;
+    background-color: variables.$input-bg-disabled;
     opacity: 1; // iOS fix for unreadable disabled content
   }
 
@@ -172,7 +177,7 @@ input[type="search"] {
 // given height of the input.
 
 input[type="date"] {
-  line-height: $input-height-base;
+  line-height: variables.$input-height-base;
 }
 
 
@@ -193,7 +198,7 @@ input[type="date"] {
 .radio,
 .checkbox {
   display: block;
-  min-height: $line-height-computed; // clear the floating input if there is no label text
+  min-height: variables.$line-height-computed; // clear the floating input if there is no label text
   margin-top: 10px;
   margin-bottom: 10px;
   padding-left: 20px;
@@ -253,9 +258,9 @@ input[type="checkbox"],
 // Build on `.form-control` with modifier classes to decrease or increase the
 // height and font-size of form controls.
 
-@include input-size('.input-sm', $input-height-small, $padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+@include mixins.input-size('.input-sm', variables.$input-height-small, variables.$padding-small-vertical, variables.$padding-small-horizontal, variables.$font-size-small, variables.$line-height-small, variables.$border-radius-small);
 
-@include input-size('.input-lg', $input-height-large, $padding-large-vertical, $padding-large-horizontal, $font-size-large, $line-height-large, $border-radius-large);
+@include mixins.input-size('.input-lg', variables.$input-height-large, variables.$padding-large-vertical, variables.$padding-large-horizontal, variables.$font-size-large, variables.$line-height-large, variables.$border-radius-large);
 
 
 // Form control feedback states
@@ -268,31 +273,31 @@ input[type="checkbox"],
 
   // Ensure icons don't overlap text
   .form-control {
-    padding-right: ($input-height-base * 1.25);
+    padding-right: (variables.$input-height-base * 1.25);
   }
 
   // Feedback icon (requires .glyphicon classes)
   .form-control-feedback {
     position: absolute;
-    top: ($line-height-computed + 5); // Height of the `label` and its margin
+    top: (variables.$line-height-computed + 5); // Height of the `label` and its margin
     right: 0;
     display: block;
-    width: $input-height-base;
-    height: $input-height-base;
-    line-height: $input-height-base;
+    width: variables.$input-height-base;
+    height: variables.$input-height-base;
+    line-height: variables.$input-height-base;
     text-align: center;
   }
 }
 
 // Feedback states
 .has-success {
-  @include form-control-validation($green, $green, $state-success-bg);
+  @include mixins.form-control-validation(colors.$green, colors.$green, variables.$state-success-bg);
 }
 .has-warning {
-  @include form-control-validation($state-warning-text, $state-warning-text, $state-warning-bg);
+  @include mixins.form-control-validation(variables.$state-warning-text, variables.$state-warning-text, variables.$state-warning-bg);
 }
 .has-error {
-  @include form-control-validation($red, $red, $state-danger-bg);
+  @include mixins.form-control-validation(colors.$red, colors.$red, variables.$state-danger-bg);
 }
 
 
@@ -315,7 +320,7 @@ input[type="checkbox"],
   display: block; // account for any element using help-block
   margin-top: 5px;
   margin-bottom: 10px;
-  color: lighten($text-color, 10%); // lighten the text some for contrast
+  color: color.adjust(variables.$text-color, $lightness: 10%); // lighten the text some for contrast
 }
 
 
@@ -334,7 +339,7 @@ input[type="checkbox"],
 .form-inline {
 
   // Kick in the inline
-  @media (min-width: $screen-sm-min) {
+  @media (min-width: variables.$screen-sm-min) {
     // Inline-block all the things for "inline"
     .form-group {
       display: inline-block;
@@ -401,26 +406,26 @@ input[type="checkbox"],
   .checkbox-inline {
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: ($padding-base-vertical + 1); // Default padding plus a border
+    padding-top: (variables.$padding-base-vertical + 1); // Default padding plus a border
   }
   // Account for padding we're adding to ensure the alignment and of help text
   // and other content below items
   .radio,
   .checkbox {
-    min-height: ($line-height-computed + ($padding-base-vertical + 1));
+    min-height: (variables.$line-height-computed + (variables.$padding-base-vertical + 1));
   }
 
   // Make form groups behave like rows
   .form-group {
-    @include make-row();
+    @include mixins.make-row();
   }
 
   .form-control-static {
-    padding-top: ($padding-base-vertical + 1);
+    padding-top: (variables.$padding-base-vertical + 1);
   }
 
   // Only right align form labels here when the columns stop stacking
-  @media (min-width: $screen-sm-min) {
+  @media (min-width: variables.$screen-sm-min) {
     .control-label {
       text-align: right;
     }
@@ -432,6 +437,6 @@ input[type="checkbox"],
   // `position: relative;` on them. Also accounts for the grid gutter padding.
   .has-feedback .form-control-feedback {
     top: 0;
-    right: ($grid-gutter-width / 2);
+    right: (variables.$grid-gutter-width / 2);
   }
 }

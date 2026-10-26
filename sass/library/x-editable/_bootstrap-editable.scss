@@ -1,3 +1,5 @@
+@use "../../colors";
+
 /*! X-editable - v1.5.0
 * In-place editing with Twitter Bootstrap, jQuery UI or pure jQuery
 * http://github.com/vitalets/x-editable
@@ -181,7 +183,7 @@ a.editable-click.editable-disabled:hover {
 
 .editable-empty, .editable-empty:hover, .editable-empty:focus{
   font-style: italic;
-  color: $red;
+  color: colors.$red;
   /* border-bottom: none; */
   text-decoration: none;
 }

@@ -551,6 +551,39 @@ class CharacterModel extends AbstractPathfinderModel {
     }
 
     /**
+     * get the name of the character role (e.g. 'MEMBER', 'SUPER', 'CORPORATION')
+     * @return string|null
+     */
+    public function getRoleName() : ?string {
+        /** @var RoleModel|null $role */
+        $role = $this->get('roleId', true) ? $this->roleId : null;
+        return $role?->name;
+    }
+
+    /**
+     * check if this (admin) character may kick or ban $character
+     * -> SUPER admins: any other character
+     * -> CORPORATION admins: other characters in their corporation without an admin role
+     * @param CharacterModel $character
+     * @return bool
+     */
+    public function canKickBan(CharacterModel $character) : bool {
+        if((int)$character->_id === (int)$this->_id){
+            return false;
+        }
+        switch($this->getRoleName()){
+            case 'SUPER':
+                return true;
+            case 'CORPORATION':
+                return !in_array($character->getRoleName(), ['SUPER', 'CORPORATION'], true) &&
+                    $this->get('corporationId', true) &&
+                    (int)$this->get('corporationId', true) === (int)$character->get('corporationId', true);
+            default:
+                return false;
+        }
+    }
+
+    /**
      * check if character has a map right (e.g. 'map_update') for a map type
      * -> same rules as Util.hasRight() and MapUtil.checkRight() in JS
      * @param int    $mapTypeId

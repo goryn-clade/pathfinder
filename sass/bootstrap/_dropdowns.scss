@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Dropdown menus
 // --------------------------------------------------
@@ -10,9 +13,9 @@
   height: 0;
   margin-left: 2px;
   vertical-align: middle;
-  border-top:   $caret-width-base solid;
-  border-right: $caret-width-base solid transparent;
-  border-left:  $caret-width-base solid transparent;
+  border-top:   variables.$caret-width-base solid;
+  border-right: variables.$caret-width-base solid transparent;
+  border-left:  variables.$caret-width-base solid transparent;
 }
 
 // The dropdown wrapper (div)
@@ -30,19 +33,19 @@
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: $zindex-dropdown;
+  z-index: variables.$zindex-dropdown;
   display: none; // none by default, but block on "open" of the menu
   float: left;
   min-width: 160px;
   padding: 5px 0;
   margin: 2px 0 0; // override default ul
   list-style: none;
-  font-size: $font-size-base;
-  background-color: $dropdown-bg;
-  border: 1px solid $dropdown-fallback-border; // IE8 fallback
-  border: 1px solid $dropdown-border;
+  font-size: variables.$font-size-base;
+  background-color: variables.$dropdown-bg;
+  border: 1px solid variables.$dropdown-fallback-border; // IE8 fallback
+  border: 1px solid variables.$dropdown-border;
   border-radius: 5px;
-  @include box-shadow(0 6px 12px rgba(0,0,0,.4));
+  @include mixins.box-shadow(0 6px 12px rgba(0,0,0,.4));
   background-clip: padding-box;
 
   // Aligns the dropdown menu to right
@@ -55,7 +58,7 @@
 
   // Dividers (basically an hr) within the dropdown
   .divider {
-    @include nav-divider($dropdown-divider-bg);
+    @include mixins.nav-divider(variables.$dropdown-divider-bg);
   }
 
   // Links within the dropdown menu
@@ -64,8 +67,8 @@
     padding: 3px 15px;
     clear: both;
     font-weight: normal;
-    line-height: $line-height-base;
-    color: $dropdown-link-color;
+    line-height: variables.$line-height-base;
+    color: variables.$dropdown-link-color;
     white-space: nowrap; // prevent links from randomly breaking onto new lines
   }
 }
@@ -75,8 +78,8 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: $dropdown-link-hover-color;
-    background-color: $dropdown-link-hover-bg;
+    color: variables.$dropdown-link-hover-color;
+    background-color: variables.$dropdown-link-hover-bg;
   }
 }
 
@@ -85,10 +88,10 @@
   &,
   &:hover,
   &:focus {
-    color: $dropdown-link-active-color;
+    color: variables.$dropdown-link-active-color;
     text-decoration: none;
     outline: 0;
-    background-color: $dropdown-link-active-bg;
+    background-color: variables.$dropdown-link-active-bg;
   }
 }
 
@@ -100,7 +103,7 @@
   &,
   &:hover,
   &:focus {
-    color: $dropdown-link-disabled-color;
+    color: variables.$dropdown-link-disabled-color;
   }
 }
 // Nuke hover/focus effects
@@ -110,7 +113,7 @@
     text-decoration: none;
     background-color: transparent;
     background-image: none; // Remove CSS gradient
-    @include reset-filter();
+    @include mixins.reset-filter();
     cursor: not-allowed;
   }
 }
@@ -151,9 +154,9 @@
 .dropdown-header {
   display: block;
   padding: 3px 20px;
-  font-size: $font-size-small;
-  line-height: $line-height-base;
-  color: $dropdown-header-color;
+  font-size: variables.$font-size-small;
+  line-height: variables.$line-height-base;
+  color: variables.$dropdown-header-color;
 }
 
 // Backdrop to catch body clicks on mobile, etc.
@@ -163,7 +166,7 @@
   right: 0;
   bottom: 0;
   top: 0;
-  z-index: ($zindex-dropdown - 10);
+  z-index: (variables.$zindex-dropdown - 10);
 }
 
 // Right aligned dropdowns
@@ -182,7 +185,7 @@
   // Reverse the caret
   .caret {
     border-top: 0;
-    border-bottom: $caret-width-base solid;
+    border-bottom: variables.$caret-width-base solid;
     content: "";
   }
   // Different positioning for bottom up menu
@@ -198,7 +201,7 @@
 //
 // Reiterate per navbar.less and the modified component alignment there.
 
-@media (min-width: $grid-float-breakpoint) {
+@media (min-width: variables.$grid-float-breakpoint) {
   .navbar-right {
     .dropdown-menu {
       right: 0; left: auto;

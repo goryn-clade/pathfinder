@@ -1,3 +1,5 @@
+@use "../variables";
+
 //
 // Code (inline and block)
 // --------------------------------------------------
@@ -8,42 +10,42 @@ code,
 kbd,
 pre,
 samp {
-  font-family: $font-family-monospace;
+  font-family: variables.$font-family-monospace;
 }
 
 // Inline code
 code {
   padding: 2px 4px;
   font-size: 90%;
-  color: $code-color;
-  background-color: $code-bg;
+  color: variables.$code-color;
+  background-color: variables.$code-bg;
   white-space: nowrap;
-  border-radius: $border-radius-small;
+  border-radius: variables.$border-radius-small;
 }
 
 // User input typically entered via keyboard
 kbd {
   padding: 2px 4px;
   font-size: 90%;
-  color: $kbd-color;
-  background-color: $kbd-bg;
-  border-radius: $border-radius-small;
+  color: variables.$kbd-color;
+  background-color: variables.$kbd-bg;
+  border-radius: variables.$border-radius-small;
   box-shadow: inset 0 -1px 0 rgba(0,0,0,.25);
 }
 
 // Blocks of code
 pre {
   display: block;
-  padding: (($line-height-computed - 1) / 2);
-  margin: 0 0 ($line-height-computed / 2);
-  font-size: ($font-size-base - 1); // 14px to 13px
-  line-height: $line-height-base;
+  padding: ((variables.$line-height-computed - 1) / 2);
+  margin: 0 0 (variables.$line-height-computed / 2);
+  font-size: (variables.$font-size-base - 1); // 14px to 13px
+  line-height: variables.$line-height-base;
   word-break: break-all;
   word-wrap: break-word;
-  color: $pre-color;
-  background-color: $pre-bg;
+  color: variables.$pre-color;
+  background-color: variables.$pre-bg;
  // border: 1px solid $pre-border-color;
-  border-radius: $border-radius-small;
+  border-radius: variables.$border-radius-small;
 
   // Account for some code outputs that place code tags in pre tags
   code {
@@ -64,6 +66,6 @@ pre {
 
 // Enable scrollable blocks of code
 .pre-scrollable {
-  max-height: $pre-scrollable-max-height;
+  max-height: variables.$pre-scrollable-max-height;
   overflow-y: scroll;
 }

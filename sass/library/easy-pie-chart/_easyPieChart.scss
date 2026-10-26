@@ -1,3 +1,5 @@
+@use "../../colors";
+
 // global pie chart styles
 .pf-pie-chart {
   position: relative !important;
@@ -29,7 +31,7 @@
 
   span {
     font-size: 10px;
-    color: $gray;
+    color: colors.$gray;
   }
 
 }

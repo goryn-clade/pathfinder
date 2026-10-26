@@ -1,16 +1,19 @@
+@use "../../../../colors";
+@use "../../../../variables";
+
 .select2-selection--single {
-  background-color: $gray-dark;
-  border: 1px solid $gray-light;
+  background-color: colors.$gray-dark;
+  border: 1px solid colors.$gray-light;
   border-radius: 0;
   height: 32px;
 
   &:focus {
-    border-color: $input-border-focus;
+    border-color: variables.$input-border-focus;
     box-shadow: inset -1px 1px 5px 0 rgba(0, 0, 0, 0.8) !important;
   }
 
   .select2-selection__rendered {
-    color: $gray-lighter;
+    color: colors.$gray-lighter;
     line-height: 30px; // + 1px border == 32px
     font-family: 'Oxygen Bold';
     padding-left: 15px;
@@ -30,12 +33,12 @@
     font-weight: bold;
 
     &:hover {
-      color: $red-darker;
+      color: colors.$red-darker;
     }
   }
 
   .select2-selection__placeholder {
-    color: $gray-light;
+    color: colors.$gray-light;
   }
 
   .select2-selection__arrow {
@@ -82,7 +85,7 @@
 
 &.select2-container--disabled {
   .select2-selection--single {
-    background-color: $input-bg-disabled;
+    background-color: variables.$input-bg-disabled;
     cursor: default;
     pointer-events: none;
 
@@ -94,7 +97,7 @@
 
 &.select2-container--open {
   .select2-selection--single {
-    border: 1px solid $teal-lighter;
+    border: 1px solid colors.$teal-lighter;
 
     .select2-selection__arrow {
       b {

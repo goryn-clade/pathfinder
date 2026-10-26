@@ -1,11 +1,14 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Pagination (multiple pages)
 // --------------------------------------------------
 .pagination {
   display: inline-block;
   padding-left: 0;
-  margin: $line-height-computed 0;
-  border-radius: $border-radius-base;
+  margin: variables.$line-height-computed 0;
+  border-radius: variables.$border-radius-base;
 
   > li {
     display: inline; // Remove list-style and block-level defaults
@@ -13,27 +16,27 @@
     > span {
       position: relative;
       float: left; // Collapse white-space
-      padding: $padding-base-vertical $padding-base-horizontal;
-      line-height: $line-height-base;
+      padding: variables.$padding-base-vertical variables.$padding-base-horizontal;
+      line-height: variables.$line-height-base;
       text-decoration: none;
-      color: $pagination-color;
-      background-color: $pagination-bg;
-      border: 1px solid $pagination-border;
+      color: variables.$pagination-color;
+      background-color: variables.$pagination-bg;
+      border: 1px solid variables.$pagination-border;
       margin-left: -1px;
     }
     &:first-child {
       > a,
       > span {
         margin-left: 0;
-        border-top-left-radius: $border-radius-base;
-        border-bottom-left-radius: $border-radius-base;
+        border-top-left-radius: variables.$border-radius-base;
+        border-bottom-left-radius: variables.$border-radius-base;
       }
     }
     &:last-child {
       > a,
       > span {
-        border-top-right-radius: $border-radius-base;
-        border-bottom-right-radius: $border-radius-base;
+        border-top-right-radius: variables.$border-radius-base;
+        border-bottom-right-radius: variables.$border-radius-base;
       }
     }
   }
@@ -42,9 +45,9 @@
   > li > span {
     &:hover,
     &:focus {
-      color: $pagination-hover-color;
-      background-color: $pagination-hover-bg;
-      border-color: $pagination-hover-border;
+      color: variables.$pagination-hover-color;
+      background-color: variables.$pagination-hover-bg;
+      border-color: variables.$pagination-hover-border;
     }
   }
 
@@ -54,9 +57,9 @@
     &:hover,
     &:focus {
       z-index: 2;
-      color: $pagination-active-color;
-      background-color: $pagination-active-bg;
-      border-color: $pagination-active-border;
+      color: variables.$pagination-active-color;
+      background-color: variables.$pagination-active-bg;
+      border-color: variables.$pagination-active-border;
       cursor: default;
     }
   }
@@ -68,9 +71,9 @@
     > a,
     > a:hover,
     > a:focus {
-      color: $pagination-disabled-color;
-      background-color: $pagination-disabled-bg;
-      border-color: $pagination-disabled-border;
+      color: variables.$pagination-disabled-color;
+      background-color: variables.$pagination-disabled-bg;
+      border-color: variables.$pagination-disabled-border;
       cursor: not-allowed;
     }
   }
@@ -81,10 +84,10 @@
 
 // Large
 .pagination-lg {
-  @include pagination-size($padding-large-vertical, $padding-large-horizontal, $font-size-large, $border-radius-large);
+  @include mixins.pagination-size(variables.$padding-large-vertical, variables.$padding-large-horizontal, variables.$font-size-large, variables.$border-radius-large);
 }
 
 // Small
 .pagination-sm {
-  @include pagination-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $border-radius-small);
+  @include mixins.pagination-size(variables.$padding-small-vertical, variables.$padding-small-horizontal, variables.$font-size-small, variables.$border-radius-small);
 }

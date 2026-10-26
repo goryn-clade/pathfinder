@@ -1,6 +1,11 @@
+@use "sass:color";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+
 .popover{
   // on top of modals even if they are attached to <body>
-  z-index: $zindex-modal + 10;
+  z-index: variables.$zindex-modal + 10;
   // give large popups more space..
   max-width: 600px;
 
@@ -10,7 +15,7 @@
 
   .popover-title{
     text-transform: capitalize;
-    font-family: $font-family-readable;
+    font-family: variables.$font-family-readable;
     font-weight: bold;
 
     kbd{
@@ -21,22 +26,22 @@
   }
 
   .popover-content {
-    font-family: $font-family-readable;
+    font-family: variables.$font-family-readable;
 
     > .hidden + .popover-footer,      // first content child is .hidden -> border radius to footer
     > .popover-footer:first-child {   // no content -> border radius to footer
-      border-top-left-radius: ($border-radius-large - 1);
-      border-top-right-radius: ($border-radius-large - 1);
+      border-top-left-radius: (variables.$border-radius-large - 1);
+      border-top-right-radius: (variables.$border-radius-large - 1);
     }
   }
 
   .popover-footer{
     margin: 0;                            // reset heading margin
     padding: 8px 14px;                    // same as popover-title
-    background-color: $popover-title-bg;
-    border-top: 1px solid darken($popover-bg, 5%);
-    border-bottom-left-radius: ($border-radius-large - 1);
-    border-bottom-right-radius: ($border-radius-large - 1);
+    background-color: variables.$popover-title-bg;
+    border-top: 1px solid color.adjust(variables.$popover-bg, $lightness: -5%);
+    border-bottom-left-radius: (variables.$border-radius-large - 1);
+    border-bottom-right-radius: (variables.$border-radius-large - 1);
   }
 
   // image in popover
@@ -45,12 +50,12 @@
   }
 
   h4{
-    color: $gray-lighter;
+    color: colors.$gray-lighter;
   }
 
   // table in pop popover
   table{
-    color: $gray-lighter;
+    color: colors.$gray-lighter;
     line-height: 16px;
     font-size: 11px;
 
@@ -98,7 +103,7 @@
   h6{
     white-space: nowrap;
     margin-right: 50px;
-    @include clearfix();
+    @include mixins.clearfix();
   }
 
   .well{
@@ -110,15 +115,15 @@
     margin: 0;
 
     .list-group-item{
-      color: $gray-dark;
+      color: colors.$gray-dark;
 
       &:hover{
-        color: $gray-darkest;
+        color: colors.$gray-darkest;
       }
 
       &.disabled{
-        background-color: $gray;
-        color: $gray-light;
+        background-color: colors.$gray;
+        color: colors.$gray-light;
         cursor: not-allowed;
       }
 

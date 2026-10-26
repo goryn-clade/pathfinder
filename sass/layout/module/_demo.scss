@@ -1,3 +1,5 @@
+@use "../../colors";
+
 $colMinWidth:       210px;
 $rowMinHeight:      38px;
 $rowMinHeightInit:  200px;
@@ -72,7 +74,7 @@ $rowMaxHeight:      800px;
             right: 0;
             border-style: solid;
             border-width: 9px 9px 0 0;
-            border-color: transparent $gray transparent transparent;
+            border-color: transparent colors.$gray transparent transparent;
             cursor: se-resize;
           }
         }

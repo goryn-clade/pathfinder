@@ -34,6 +34,11 @@ class Controller {
     const COOKIE_NAME_STATE                         = 'cookie';
     const COOKIE_PREFIX_CHARACTER                   = 'char';
 
+    /**
+     * session key for the token that state changing POST forms send (CSRF)
+     */
+    const SESSION_KEY_CSRF_TOKEN                    = 'SESSION.CSRF.TOKEN';
+
     // log text
     const ERROR_SESSION_SUSPECT                     = 'id: [%45s], ip: [%45s], User-Agent: [%s]';
     const ERROR_TEMP_CHARACTER_ID                   = 'Invalid temp characterId: %s';
@@ -209,6 +214,31 @@ class Controller {
     }
 
     /**
+     * get (or create) the CSRF token for this session
+     * @param \Base $f3
+     * @return string
+     */
+    protected static function getCsrfToken(\Base $f3) : string {
+        if(!$f3->exists(self::SESSION_KEY_CSRF_TOKEN)){
+            $f3->set(self::SESSION_KEY_CSRF_TOKEN, bin2hex(random_bytes(32)));
+        }
+        return (string)$f3->get(self::SESSION_KEY_CSRF_TOKEN);
+    }
+
+    /**
+     * check: request is a POST with a valid CSRF token
+     * @param \Base $f3
+     * @return bool
+     */
+    protected static function isValidCsrfPost(\Base $f3) : bool {
+        $token = $f3->get('POST.token');
+        return $f3->get('VERB') === 'POST' &&
+            is_string($token) &&
+            $f3->exists(self::SESSION_KEY_CSRF_TOKEN) &&
+            hash_equals((string)$f3->get(self::SESSION_KEY_CSRF_TOKEN), $token);
+    }
+
+    /**
      * search for existing cookies
      * -> either a specific cookie by its name
      * -> or get multiple cookies by their name (search by prefix)
@@ -277,7 +307,7 @@ class Controller {
             ];
 
             $authenticationModel = $character->rel('characterAuthentications');
-            $authenticationModel->copyfrom($authData);
+            $authenticationModel->copyfrom($authData, ['characterId', 'selector', 'token', 'expires']);
             $authenticationModel->save();
 
             $cookieValue = implode(':', [$selector, $validator]);
@@ -494,6 +524,47 @@ class Controller {
         }else{
             throw new \Exception( sprintf(self::ERROR_TEMP_CHARACTER_ID, $characterId) );
         }
+    }
+
+    /**
+     * check login status: valid character, login timer, ban, kick and allowlist
+     * @param \Base $f3
+     * @return string
+     * @throws \Exception
+     */
+    protected function isLoggedIn(\Base $f3) : string {
+        $loginStatus = 'UNKNOWN';
+        // disable ttl cache time here. Further getCharacter() calls should use a short ttl
+        if($character = $this->getCharacter(0)){
+            if($character->checkLoginTimer()){
+                if(( $authStatus = $character->isAuthorized()) === 'OK'){
+                    $loginStatus = 'OK';
+                }else{
+                    $loginStatus = $authStatus;
+                }
+            }else{
+                $loginStatus = 'MAX LOGIN TIME EXCEEDED';
+            }
+        }else{
+            $loginStatus = 'NO SESSION FOUND';
+        }
+
+        // log character access status in debug mode
+        if(
+            $loginStatus !== 'OK' &&
+            $f3->get('DEBUG') === 3 &&
+            is_object($character)
+        ){
+            self::getLogger('CHARACTER_ACCESS')->write(
+                sprintf(Pathfinder\CharacterModel::LOG_ACCESS,
+                    $character->_id ,
+                    $loginStatus,
+                    $character->name
+                )
+            );
+        }
+
+        return $loginStatus;
     }
 
     /**

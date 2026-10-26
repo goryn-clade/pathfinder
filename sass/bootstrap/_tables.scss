@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Tables
 // --------------------------------------------------
@@ -5,7 +8,7 @@
 
 table {
   max-width: 100%;
-  background-color: $table-bg;
+  background-color: variables.$table-bg;
 }
 th {
   text-align: left;
@@ -25,17 +28,17 @@ th {
     > tr {
       > th,
       > td {
-        padding: $table-cell-padding;
-        line-height: $line-height-base;
+        padding: variables.$table-cell-padding;
+        line-height: variables.$line-height-base;
         vertical-align: top;
-        border-top: 1px solid $table-border-color;
+        border-top: 1px solid variables.$table-border-color;
       }
     }
   }
   // Bottom align for column headings
   > thead > tr > th {
     vertical-align: bottom;
-    border-bottom: 0px solid $table-border-color;
+    border-bottom: 0px solid variables.$table-border-color;
   }
   // Remove top border from thead by default
   > caption + thead,
@@ -50,12 +53,12 @@ th {
   }
   // Account for multiple tbody instances
   > tbody + tbody {
-    border-top: 2px solid $table-border-color;
+    border-top: 2px solid variables.$table-border-color;
   }
 
   // Nesting
   .table {
-    background-color: $body-bg;
+    background-color: variables.$body-bg;
   }
 }
 
@@ -69,7 +72,7 @@ th {
     > tr {
       > th,
       > td {
-        padding: $table-condensed-cell-padding;
+        padding: variables.$table-condensed-cell-padding;
       }
     }
   }
@@ -81,14 +84,14 @@ th {
 // Add borders all around the table and between all the columns.
 
 .table-bordered {
-  border: 1px solid $table-border-color;
+  border: 1px solid variables.$table-border-color;
   > thead,
   > tbody,
   > tfoot {
     > tr {
       > th,
       > td {
-        border: 1px solid $table-border-color;
+        border: 1px solid variables.$table-border-color;
       }
     }
   }
@@ -109,7 +112,7 @@ th {
   > tbody > tr:nth-child(odd) {
     > td,
     > th {
-      background-color: $table-bg-accent;
+      background-color: variables.$table-bg-accent;
     }
   }
 }
@@ -123,7 +126,7 @@ th {
   > tbody > tr:hover {
     > td,
     > th {
-      background-color: $table-bg-hover;
+      background-color: variables.$table-bg-hover;
     }
   }
 }
@@ -156,11 +159,11 @@ table {
 // inheritance to nested tables.
 
 // Generate the contextual variants
-@include table-row-variant('active', $table-bg-active);
-@include table-row-variant('success', $state-success-bg);
-@include table-row-variant('info', $state-info-bg);
-@include table-row-variant('warning', $state-warning-bg);
-@include table-row-variant('danger', $state-danger-bg);
+@include mixins.table-row-variant('active', variables.$table-bg-active);
+@include mixins.table-row-variant('success', variables.$state-success-bg);
+@include mixins.table-row-variant('info', variables.$state-info-bg);
+@include mixins.table-row-variant('warning', variables.$state-warning-bg);
+@include mixins.table-row-variant('danger', variables.$state-danger-bg);
 
 
 // Responsive tables
@@ -169,14 +172,14 @@ table {
 // by enabling horizontal scrolling. Only applies <768px. Everything above that
 // will display normally.
 
-@media (max-width: $screen-xs-max) {
+@media (max-width: variables.$screen-xs-max) {
   .table-responsive {
     width: 100%;
-    margin-bottom: ($line-height-computed * 0.75);
+    margin-bottom: (variables.$line-height-computed * 0.75);
     overflow-y: hidden;
     overflow-x: scroll;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    border: 1px solid $table-border-color;
+    border: 1px solid variables.$table-border-color;
     -webkit-overflow-scrolling: touch;
 
     // Tighten up spacing

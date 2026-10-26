@@ -82,6 +82,18 @@ class LogController extends \Prefab  {
     }
 
     /**
+     * drop buffered activity log data of a map
+     * -> e.g. after a rolled back map import
+     * @param int $mapId
+     */
+    public function removeActivities(int $mapId): void{
+        $this->activityLogBuffer = array_filter(
+            $this->activityLogBuffer,
+            fn(array $activityData): bool => (int)$activityData['mapId'] !== $mapId
+        );
+    }
+
+    /**
      * store all buffered activity log data to DB
      */
     public function logActivities(): void{

@@ -11,7 +11,7 @@
 // Core variables and mixins
 // @import "colors";
 // @import "variables";
-@import "bootstrap/mixins";
+@use "bootstrap/mixins";
 
 // Reset
 // @import "bootstrap/normalize";
@@ -19,44 +19,44 @@
 
 
 // Core CSS
-@import "bootstrap/scaffolding";
-@import "bootstrap/type";
-@import "bootstrap/code";
-@import "bootstrap/grid";
-@import "bootstrap/tables";
-@import "bootstrap/forms";
-@import "bootstrap/buttons";
+@use "bootstrap/scaffolding";
+@use "bootstrap/type";
+@use "bootstrap/code";
+@use "bootstrap/grid";
+@use "bootstrap/tables";
+@use "bootstrap/forms";
+@use "bootstrap/buttons";
 
 // Components
-@import "bootstrap/component-animations";
+@use "bootstrap/component-animations";
 //@import "bootstrap/glyphicons"; // currently not used -> FontAwesome is primary icon font
-@import "bootstrap/dropdowns";
-@import "bootstrap/button-groups";
-@import "bootstrap/input-groups";
-@import "bootstrap/navs";
-@import "bootstrap/navbar";
-@import "bootstrap/breadcrumbs";
-@import "bootstrap/pagination";
-@import "bootstrap/pager";
-@import "bootstrap/labels";
-@import "bootstrap/badges";
+@use "bootstrap/dropdowns";
+@use "bootstrap/button-groups";
+@use "bootstrap/input-groups";
+@use "bootstrap/navs";
+@use "bootstrap/navbar";
+@use "bootstrap/breadcrumbs";
+@use "bootstrap/pagination";
+@use "bootstrap/pager";
+@use "bootstrap/labels";
+@use "bootstrap/badges";
 //@import "bootstrap/jumbotron"; // currently not used
-@import "bootstrap/thumbnails";
-@import "bootstrap/alerts";
-@import "bootstrap/progress-bars";
-@import "bootstrap/media";
-@import "bootstrap/list-group";
-@import "bootstrap/panels";
-@import "bootstrap/wells";
-@import "bootstrap/close";
+@use "bootstrap/thumbnails";
+@use "bootstrap/alerts";
+@use "bootstrap/progress-bars";
+@use "bootstrap/media";
+@use "bootstrap/list-group";
+@use "bootstrap/panels";
+@use "bootstrap/wells";
+@use "bootstrap/close";
 
 // Components w/ JavaScript
-@import "bootstrap/modals";
-@import "bootstrap/tooltip";
-@import "bootstrap/popovers";
+@use "bootstrap/modals";
+@use "bootstrap/tooltip";
+@use "bootstrap/popovers";
 //@import "bootstrap/carousel"; // currently not used
 
 // Utility classes
-@import "bootstrap/utilities";
-@import "bootstrap/responsive-utilities";
+@use "bootstrap/utilities";
+@use "bootstrap/responsive-utilities";
 

@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Scaffolding
 // --------------------------------------------------
@@ -9,11 +12,11 @@
 // For recommendations on resolving such conflicts, see
 // http://getbootstrap.com/getting-started/#third-box-sizing
 * {
-  @include box-sizing(border-box);
+  @include mixins.box-sizing(border-box);
 }
 *:before,
 *:after {
-  @include box-sizing(border-box);
+  @include mixins.box-sizing(border-box);
 }
 
 
@@ -25,13 +28,13 @@ html {
 }
 
 body {
-  font-family: $font-family-base;
-  font-style: $font-style-base;
-  font-weight: $font-weight-base;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  color: $text-color;
-  background-color: $body-bg;
+  font-family: variables.$font-family-base;
+  font-style: variables.$font-style-base;
+  font-weight: variables.$font-weight-base;
+  font-size: variables.$font-size-base;
+  line-height: variables.$line-height-base;
+  color: variables.$text-color;
+  background-color: variables.$body-bg;
 }
 
 // Reset fonts for relevant elements
@@ -48,17 +51,17 @@ textarea {
 // Links
 
 a {
-  color: $link-color;
+  color: variables.$link-color;
   text-decoration: none;
 
   &:hover,
   &:focus {
-    color: $link-hover-color;
+    color: variables.$link-hover-color;
     text-decoration: underline;
   }
 
   &:focus {
-    @include tab-focus();
+    @include mixins.tab-focus();
     text-decoration: none;
   }
 }
@@ -82,27 +85,27 @@ img {
 
 // Responsive images (ensure images don't scale beyond their parents)
 .img-responsive {
-  @include img-responsive();
+  @include mixins.img-responsive();
 }
 
 // Rounded corners
 .img-rounded {
-  border-radius: $border-radius-large;
+  border-radius: variables.$border-radius-large;
 }
 
 // Image thumbnails
 //
 // Heads up! This is mixin-ed into thumbnails.less for `.thumbnail`.
 .img-thumbnail {
-  padding: $thumbnail-padding;
-  line-height: $line-height-base;
-  background-color: $thumbnail-bg;
-  border: 1px solid $thumbnail-border;
-  border-radius: $thumbnail-border-radius;
-  @include transition(all .2s ease-in-out);
+  padding: variables.$thumbnail-padding;
+  line-height: variables.$line-height-base;
+  background-color: variables.$thumbnail-bg;
+  border: 1px solid variables.$thumbnail-border;
+  border-radius: variables.$thumbnail-border-radius;
+  @include mixins.transition(all .2s ease-in-out);
 
   // Keep them at most 100% wide
-  @include img-responsive(inline-block);
+  @include mixins.img-responsive(inline-block);
 }
 
 // Perfect circle
@@ -114,10 +117,10 @@ img {
 // Horizontal rules
 
 hr {
-  margin-top:    $line-height-computed;
-  margin-bottom: $line-height-computed;
+  margin-top:    variables.$line-height-computed;
+  margin-bottom: variables.$line-height-computed;
   border: 0;
-  border-top: 1px solid $hr-border;
+  border-top: 1px solid variables.$hr-border;
 }
 
 

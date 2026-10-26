@@ -1,3 +1,6 @@
+@use "../../bootstrap/mixins";
+@use "../../colors";
+
 .pf-system-killboard-module {
 
   .pf-system-killboard-wsStatusWrapper {
@@ -15,7 +18,7 @@
       overflow: visible;
       min-height: 50px;
       will-change: transform, opacity, margin-left;
-      @include transition(padding-left 0.12s cubic-bezier(0.30, 0.80, 0.80, 1.70));
+      @include mixins.transition(padding-left 0.12s cubic-bezier(0.30, 0.80, 0.80, 1.70));
 
       // character headline
       h3 {
@@ -37,7 +40,7 @@
       a {
         &:hover {
           > img {
-            border-color: $teal-lighter;
+            border-color: colors.$teal-lighter;
           }
         }
       }
@@ -89,11 +92,11 @@
         min-height: 50px;
         max-height: 50px;
         margin-right: 10px;
-        border: 1px solid $gray-darker;
+        border: 1px solid colors.$gray-darker;
         overflow: hidden;
         will-change: border-color;
         border-radius: 50%;
-        @include transition(border-color 0.12s ease-out);
+        @include mixins.transition(border-color 0.12s ease-out);
       }
 
       .pf-system-killboard-img-m {
@@ -105,11 +108,11 @@
         min-height: 32px;
         max-height: 32px;
         margin-right: 10px;
-        border: 1px solid $gray-darker;
+        border: 1px solid colors.$gray-darker;
         overflow: hidden;
         will-change: border-color;
         border-radius: 50%;
-        @include transition(border-color 0.12s ease-out);
+        @include mixins.transition(border-color 0.12s ease-out);
         align-self: center;
       }
 
@@ -122,11 +125,11 @@
         min-height: 20px;
         max-height: 20px;
         margin-right: 10px;
-        border: 1px solid $gray-darker;
+        border: 1px solid colors.$gray-darker;
         overflow: hidden;
         will-change: border-color;
         border-radius: 50%;
-        @include transition(border-color 0.12s ease-out);
+        @include mixins.transition(border-color 0.12s ease-out);
       }
 
       &:before {
@@ -137,10 +140,10 @@
         z-index: 10;
         left: -18px;
         top: 16px;
-        color: $teal;
+        color: colors.$teal;
         opacity: 0;
         will-change: opacity, left;
-        @include transition(all 0.12s ease-out);
+        @include mixins.transition(all 0.12s ease-out);
       }
 
       &:not(.pf-system-killboard-list-head):hover {
@@ -160,7 +163,7 @@
           font-style: normal;
           font-weight: bold;
           font-size: 13px;
-          color: $red-dark;
+          color: colors.$red-dark;
           position: absolute;
           bottom: -6px;
           left: 20px
@@ -174,7 +177,7 @@
           font-weight: bold;
           font-size: 11px;
           color: var(--color);
-          background-color: $gray-dark;
+          background-color: colors.$gray-dark;
           line-height: 1;
           border-radius: 9px;
           padding: 3px 4px;
@@ -194,12 +197,12 @@
 .pf-kb-exclude-list {
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid $gray-darker;
+  border-top: 1px solid colors.$gray-darker;
 }
 
 .pf-kb-exclude-label {
   font-size: 11px;
-  color: $gray-light;
+  color: colors.$gray-light;
   margin-bottom: 4px;
 }
 
@@ -208,18 +211,18 @@
   padding: 2px 6px;
   margin-bottom: 3px;
   font-size: 12px;
-  color: $gray-lighter;
-  background-color: $gray-dark;
+  color: colors.$gray-lighter;
+  background-color: colors.$gray-dark;
   border-radius: 3px;
 }
 
 .pf-kb-exclude-remove {
   cursor: pointer;
   margin-right: 5px;
-  color: $gray-light;
+  color: colors.$gray-light;
   font-weight: bold;
 
   &:hover {
-    color: $red;
+    color: colors.$red;
   }
 }

@@ -1,3 +1,8 @@
+@use "sass:color";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+
 
 .ribbon-wrapper {
   width: 72px;
@@ -10,8 +15,8 @@
 }
 
 .ribbon {
-  font: bold 12px $font-family-bold;
-  color: $gray-darker;
+  font: bold 12px variables.$font-family-bold;
+  color: colors.$gray-darker;
   text-align: center;
   text-shadow: rgba(255,255,255,0.2) 0px 1px 0px;
   position: relative;
@@ -19,7 +24,7 @@
   left: -4px;
   top: 16px;
   width: 99px;
-  @include box-shadow(2px 3px 3px rgba(0,0,0,0.2));
+  @include mixins.box-shadow(2px 3px 3px rgba(0,0,0,0.2));
   transform: rotate(45deg);
 
 
@@ -32,48 +37,48 @@
   }
 
   &.ribbon-default{
-    color: $gray-lighter;
-    background-color: darken($modal-content-bg, 3%);
-    background-image: linear-gradient(top, darken($modal-content-bg, 6%), darken($gray-dark, 3%));
+    color: colors.$gray-lighter;
+    background-color: color.adjust(variables.$modal-content-bg, $lightness: -3%);
+    background-image: linear-gradient(top, color.adjust(variables.$modal-content-bg, $lightness: -6%), color.adjust(colors.$gray-dark, $lightness: -3%));
 
     &:before, &:after{
-      border-top:   3px solid darken($gray-dark, 23%);
+      border-top:   3px solid color.to-gamut(color.adjust(colors.$gray-dark, $lightness: -23%), $method: clip); // clip: darken() clamped at black
     }
   }
 
   &.ribbon-green{
-    background-color: $green;
-    background-image: linear-gradient(top, darken($green, 3%), darken($green-dark, 3%));
+    background-color: colors.$green;
+    background-image: linear-gradient(top, color.adjust(colors.$green, $lightness: -3%), color.adjust(colors.$green-dark, $lightness: -3%));
 
     &:before, &:after{
-      border-top:   3px solid darken($green-dark, 23%);
+      border-top:   3px solid color.adjust(colors.$green-dark, $lightness: -23%);
     }
   }
 
   &.ribbon-orange{
-    background-color: $orange;
-    background-image: linear-gradient(top, darken($orange, 3%), darken($orange-dark, 3%));
+    background-color: colors.$orange;
+    background-image: linear-gradient(top, color.adjust(colors.$orange, $lightness: -3%), color.adjust(colors.$orange-dark, $lightness: -3%));
 
     &:before, &:after{
-      border-top:   3px solid darken($orange-dark, 18%) ;
+      border-top:   3px solid color.adjust(colors.$orange-dark, $lightness: -18%) ;
     }
   }
 
   &.ribbon-red{
-    background-color:  $red;
-    background-image: linear-gradient(top, darken($red, 10%), darken($red, 18%));
+    background-color:  colors.$red;
+    background-image: linear-gradient(top, color.adjust(colors.$red, $lightness: -10%), color.adjust(colors.$red, $lightness: -18%));
 
     &:before, &:after{
-      border-top:   3px solid darken($red, 38%);
+      border-top:   3px solid color.adjust(colors.$red, $lightness: -38%);
     }
   }
 
   &.ribbon-blue{
-    background-color: $blue;
-    background-image: linear-gradient(top, darken($blue, 3%), darken($blue-dark, 3%));
+    background-color: colors.$blue;
+    background-image: linear-gradient(top, color.adjust(colors.$blue, $lightness: -3%), color.adjust(colors.$blue-dark, $lightness: -3%));
 
     &:before, &:after{
-      border-top:   3px solid darken($blue-dark, 18%);
+      border-top:   3px solid color.adjust(colors.$blue-dark, $lightness: -18%);
     }
   }
 
