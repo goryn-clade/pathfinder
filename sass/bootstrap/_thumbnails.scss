@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Thumbnails
 // --------------------------------------------------
@@ -6,17 +9,17 @@
 // Mixin and adjust the regular image class
 .thumbnail {
   display: block;
-  padding: $thumbnail-padding;
-  margin-bottom: $line-height-computed;
-  line-height: $line-height-base;
-  background-color: $thumbnail-bg;
-  border: 1px solid $thumbnail-border;
-  border-radius: $thumbnail-border-radius;
-  @include transition(all .2s ease-in-out);
+  padding: variables.$thumbnail-padding;
+  margin-bottom: variables.$line-height-computed;
+  line-height: variables.$line-height-base;
+  background-color: variables.$thumbnail-bg;
+  border: 1px solid variables.$thumbnail-border;
+  border-radius: variables.$thumbnail-border-radius;
+  @include mixins.transition(all .2s ease-in-out);
 
   > img,
   a > img {
-    @include img-responsive();
+    @include mixins.img-responsive();
     margin-left: auto;
     margin-right: auto;
   }
@@ -25,8 +28,8 @@
 
   // Image captions
   .caption {
-    padding: $thumbnail-caption-padding;
-    color: $thumbnail-caption-color;
+    padding: variables.$thumbnail-caption-padding;
+    color: variables.$thumbnail-caption-color;
   }
 }
 
@@ -34,5 +37,5 @@
 a.thumbnail:hover,
 a.thumbnail:focus,
 a.thumbnail.active {
-  border-color: $link-color;
+  border-color: variables.$link-color;
 }

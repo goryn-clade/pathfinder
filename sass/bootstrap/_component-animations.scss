@@ -1,3 +1,5 @@
+@use "mixins";
+
 //
 // Component animations
 // --------------------------------------------------
@@ -9,7 +11,7 @@
 
 .fade {
   opacity: 0;
-  @include transition(opacity .15s linear);
+  @include mixins.transition(opacity .15s linear);
   &.in {
     opacity: 1;
   }
@@ -26,5 +28,5 @@
   height: 0;
   overflow: hidden;
   will-change: height;
-  @include transition(height .35s ease);
+  @include mixins.transition(height .35s ease);
 }

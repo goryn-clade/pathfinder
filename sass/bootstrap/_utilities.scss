@@ -1,3 +1,5 @@
+@use "mixins";
+
 //
 // Utility classes
 // --------------------------------------------------
@@ -7,10 +9,10 @@
 // -------------------------
 
 .clearfix {
-  @include clearfix();
+  @include mixins.clearfix();
 }
 .center-block {
-  @include center-block();
+  @include mixins.center-block();
 }
 .pull-right {
   float: right !important;
@@ -34,7 +36,7 @@
   visibility: hidden;
 }
 .text-hide {
-  @include text-hide();
+  @include mixins.text-hide();
 }
 
 

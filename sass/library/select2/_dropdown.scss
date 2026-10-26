@@ -1,7 +1,9 @@
-.select2-dropdown {
-  background-color: $gray-dark;
+@use "../../colors";
 
-  border: 1px solid $gray-light;
+.select2-dropdown {
+  background-color: colors.$gray-dark;
+
+  border: 1px solid colors.$gray-light;
   border-radius: 4px;
 
   box-sizing: border-box;
@@ -28,7 +30,7 @@
 
 .select2-results__option {
   padding: 6px;
-  color: $gray-lighter;
+  color: colors.$gray-lighter;
   user-select: none;
   -webkit-user-select: none;
 

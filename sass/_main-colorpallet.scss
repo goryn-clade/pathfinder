@@ -1,80 +1,83 @@
+@use "colors";
+@use "variables";
+
 
 /*
  * TEXT COLOR
  */
 .txt-color {
-  &.txt-color-blue          { color: $blue !important; }
-  &.txt-color-blueLight     { color: $blueLight !important; }
-  &.txt-color-blueDark      { color: $blueDark !important; }
-  &.txt-color-grayLightest  { color: $gray-lightest !important; }
-  &.txt-color-grayLighter   { color: $gray-lighter !important; }
-  &.txt-color-grayLight     { color: $gray-light !important; }
-  &.txt-color-gray          { color: $gray !important; }
-  &.txt-color-grayDark      { color: $gray-dark !important; }
-  &.txt-color-greenLight    { color: $green-light !important; }
-  &.txt-color-green         { color: $green !important; }
-  &.txt-color-greenDark     { color: $green-dark  !important; }
-  &.txt-color-redLight      { color: $redLight !important; }
-  &.txt-color-red           { color: $red !important; }
-  &.txt-color-redDark       { color: $red-dark !important; }
-  &.txt-color-redDarker     { color: $red-darker !important; }
-  &.txt-color-yellow        { color: $yellow !important; }
-  &.txt-color-yellowDark    { color: $yellow-dark !important; }
-  &.txt-color-orangeLight   { color: $orange-light !important; }
-  &.txt-color-orange        { color: $orange !important; }
-  &.txt-color-orangeDark    { color: $orange-dark !important; }
-  &.txt-color-pink          { color: $pink !important; }
-  &.txt-color-pinkDark      { color: $pinkDark !important; }
-  &.txt-color-purple        { color: $purple !important; }
-  &.txt-color-darken        { color: $darken !important; }
-  &.txt-color-lighten       { color: $lighten !important; }
-  &.txt-color-white         { color: $white !important; }
-  &.txt-color-magenta       { color: $magenta !important; }
-  &.txt-color-tealLightest  { color: $teal-lightest !important; }
-  &.txt-color-tealLighter   { color: $teal-lighter !important; }
-  &.txt-color-teal          { color: $teal !important; }
-  &.txt-color-indigoDark    { color: $indigo-dark !important; }
-  &.txt-color-indigoDarkest { color: $indigo-darkest !important; }
+  &.txt-color-blue          { color: colors.$blue !important; }
+  &.txt-color-blueLight     { color: variables.$blueLight !important; }
+  &.txt-color-blueDark      { color: variables.$blueDark !important; }
+  &.txt-color-grayLightest  { color: colors.$gray-lightest !important; }
+  &.txt-color-grayLighter   { color: colors.$gray-lighter !important; }
+  &.txt-color-grayLight     { color: colors.$gray-light !important; }
+  &.txt-color-gray          { color: colors.$gray !important; }
+  &.txt-color-grayDark      { color: colors.$gray-dark !important; }
+  &.txt-color-greenLight    { color: colors.$green-light !important; }
+  &.txt-color-green         { color: colors.$green !important; }
+  &.txt-color-greenDark     { color: colors.$green-dark  !important; }
+  &.txt-color-redLight      { color: variables.$redLight !important; }
+  &.txt-color-red           { color: colors.$red !important; }
+  &.txt-color-redDark       { color: colors.$red-dark !important; }
+  &.txt-color-redDarker     { color: colors.$red-darker !important; }
+  &.txt-color-yellow        { color: colors.$yellow !important; }
+  &.txt-color-yellowDark    { color: colors.$yellow-dark !important; }
+  &.txt-color-orangeLight   { color: colors.$orange-light !important; }
+  &.txt-color-orange        { color: colors.$orange !important; }
+  &.txt-color-orangeDark    { color: colors.$orange-dark !important; }
+  &.txt-color-pink          { color: colors.$pink !important; }
+  &.txt-color-pinkDark      { color: variables.$pinkDark !important; }
+  &.txt-color-purple        { color: variables.$purple !important; }
+  &.txt-color-darken        { color: variables.$darken !important; }
+  &.txt-color-lighten       { color: variables.$lighten !important; }
+  &.txt-color-white         { color: colors.$white !important; }
+  &.txt-color-magenta       { color: variables.$magenta !important; }
+  &.txt-color-tealLightest  { color: colors.$teal-lightest !important; }
+  &.txt-color-tealLighter   { color: colors.$teal-lighter !important; }
+  &.txt-color-teal          { color: colors.$teal !important; }
+  &.txt-color-indigoDark    { color: colors.$indigo-dark !important; }
+  &.txt-color-indigoDarkest { color: colors.$indigo-darkest !important; }
 
-  &.txt-color-gold          { color: $gold !important; }
-  &.txt-color-silver        { color: $silver !important; }
-  &.txt-color-bronze        { color: $bronze !important; }
+  &.txt-color-gold          { color: colors.$gold !important; }
+  &.txt-color-silver        { color: colors.$silver !important; }
+  &.txt-color-bronze        { color: colors.$bronze !important; }
 
-  &.txt-color-primary       { color: $brand-primary !important; }
-  &.txt-color-success       { color: $brand-success !important; }
-  &.txt-color-information   { color: $brand-info !important; }
-  &.txt-color-info          { color: $brand-info !important; }
-  &.txt-color-warning       { color: $brand-warning !important; }
-  &.txt-color-danger        { color: $brand-danger !important; }
-  &.txt-color-hint          { color: $brand-hint !important; }
+  &.txt-color-primary       { color: colors.$brand-primary !important; }
+  &.txt-color-success       { color: colors.$brand-success !important; }
+  &.txt-color-information   { color: colors.$brand-info !important; }
+  &.txt-color-info          { color: colors.$brand-info !important; }
+  &.txt-color-warning       { color: colors.$brand-warning !important; }
+  &.txt-color-danger        { color: colors.$brand-danger !important; }
+  &.txt-color-hint          { color: colors.$brand-hint !important; }
 }
 /*
  * BACKGROUNDS
  */
 .bg-color {
-  &.bg-color-blue           { background-color: $blue !important; }
-  &.bg-color-blueLight      { background-color: $blueLight !important; }
-  &.bg-color-blueDark       { background-color: $blueDark !important; }
-  &.bg-color-green          { background-color: $green !important; }
-  &.bg-color-greenLight     { background-color: $greenLight !important; }
-  &.bg-color-greenDark      { background-color: $greenDark  !important; }
-  &.bg-color-red            { background-color: $red !important; }
-  &.bg-color-yellow         { background-color: $yellow !important; }
-  &.bg-color-orange         { background-color: $orange !important; }
-  &.bg-color-orangeDark     { background-color: $orangeDark !important; }
-  &.bg-color-pink           { background-color: $pink !important; }
-  &.bg-color-pinkDark       { background-color: $pinkDark !important; }
-  &.bg-color-purple         { background-color: $purple !important; }
-  &.bg-color-darken         { background-color: $darken !important; }
-  &.bg-color-lighten        { background-color: $lighten !important; }
-  &.bg-color-white          { background-color: $white !important; }
-  &.bg-color-gray           { background-color: $gray !important; }
-  &.bg-color-grayDark       { background-color: $gray-dark !important; }
-  &.bg-color-grayDarker     { background-color: $gray-darker !important; }
-  &.bg-color-magenta        { background-color: $magenta !important; }
-  &.bg-color-tealLighter    { background-color: $teal-lighter !important; }
-  &.bg-color-tealDark       { background-color: $teal-dark !important; }
-  &.bg-color-tealDarker     { background-color: $teal-darker !important; }
-  &.bg-color-tealDarkest    { background-color: $teal-darkest !important; }
-  &.bg-color-redLight       { background-color: $redLight !important; }
+  &.bg-color-blue           { background-color: colors.$blue !important; }
+  &.bg-color-blueLight      { background-color: variables.$blueLight !important; }
+  &.bg-color-blueDark       { background-color: variables.$blueDark !important; }
+  &.bg-color-green          { background-color: colors.$green !important; }
+  &.bg-color-greenLight     { background-color: variables.$greenLight !important; }
+  &.bg-color-greenDark      { background-color: variables.$greenDark  !important; }
+  &.bg-color-red            { background-color: colors.$red !important; }
+  &.bg-color-yellow         { background-color: colors.$yellow !important; }
+  &.bg-color-orange         { background-color: colors.$orange !important; }
+  &.bg-color-orangeDark     { background-color: variables.$orangeDark !important; }
+  &.bg-color-pink           { background-color: colors.$pink !important; }
+  &.bg-color-pinkDark       { background-color: variables.$pinkDark !important; }
+  &.bg-color-purple         { background-color: variables.$purple !important; }
+  &.bg-color-darken         { background-color: variables.$darken !important; }
+  &.bg-color-lighten        { background-color: variables.$lighten !important; }
+  &.bg-color-white          { background-color: colors.$white !important; }
+  &.bg-color-gray           { background-color: colors.$gray !important; }
+  &.bg-color-grayDark       { background-color: colors.$gray-dark !important; }
+  &.bg-color-grayDarker     { background-color: colors.$gray-darker !important; }
+  &.bg-color-magenta        { background-color: variables.$magenta !important; }
+  &.bg-color-tealLighter    { background-color: colors.$teal-lighter !important; }
+  &.bg-color-tealDark       { background-color: colors.$teal-dark !important; }
+  &.bg-color-tealDarker     { background-color: colors.$teal-darker !important; }
+  &.bg-color-tealDarkest    { background-color: colors.$teal-darkest !important; }
+  &.bg-color-redLight       { background-color: variables.$redLight !important; }
 }

@@ -1,3 +1,4 @@
+@use "sass:list";
 
 @mixin dtb-two-stop-gradient($fromColor, $toColor) {
 	background-color: $toColor; /* Fallback */
@@ -6,7 +7,7 @@
 	background-image:     -ms-linear-gradient(top, $fromColor 0%, $toColor 100%); /* IE10 */
 	background-image:      -o-linear-gradient(top, $fromColor 0%, $toColor 100%); /* Opera 11.10+ */
 	background-image:         linear-gradient(to bottom, $fromColor 0%, $toColor 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{nth( $fromColor, 1 )}', EndColorStr='#{nth( $toColor, 1 )}');
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{list.nth( $fromColor, 1 )}', EndColorStr='#{list.nth( $toColor, 1 )}');
 }
 
 @mixin dtb-radial-gradient ($fromColor, $toColor ) {

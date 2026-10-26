@@ -1,3 +1,8 @@
+@use "sass:color";
+@use "bootstrap/mixins";
+@use "colors";
+@use "variables";
+
 html {
 	margin: 0;
 	padding: 0;
@@ -27,14 +32,14 @@ a:hover, a:active, a:focus, button, button:active, button:focus, object, embed, 
 	
 h1,h3,h4 {
 	margin:0;
-	font-family: $font-family-bold;
+	font-family: variables.$font-family-bold;
 }
 
 .page-title {
     margin: 12px 0 28px;
     span {
-        font-size: $font-size-base+3;
-        color: $gray-dark;
+        font-size: variables.$font-size-base+3;
+        color: colors.$gray-dark;
         display: inline-block;
         vertical-align: 1px;
     }
@@ -133,25 +138,25 @@ input[type="color"]:focus,
 
 h1, .h1 {
 	letter-spacing: -1px;
-	font-size: $font-size-h1;
+	font-size: variables.$font-size-h1;
 	margin: 10px 0;
 
 	small, .small {
-		font-size: $font-size-h4;
+		font-size: variables.$font-size-h4;
 		font-weight: 300;
 		letter-spacing: -1px;
 	}
 }
 
 h2, .h2 {
-	font-size: $font-size-h2;
+	font-size: variables.$font-size-h2;
 	margin: 20px 0;
 	line-height: normal;
 }
 
 h3, .h3 {
 	display: block;
-	font-size: $font-size-h3;
+	font-size: variables.$font-size-h3;
 	font-weight: 400;
 	margin: 20px 0;
 	line-height: normal;
@@ -163,7 +168,7 @@ h4, .h4 {
 }
 
 h5, .h5 {
-	font-size: $font-size-h5;
+	font-size: variables.$font-size-h5;
 	font-weight: 300;
 	margin-top: 0;
 	margin-bottom: 10px;
@@ -171,7 +176,7 @@ h5, .h5 {
 }
 
 h6, .h6 {
-	font-size: $font-size-h6;
+	font-size: variables.$font-size-h6;
 	margin: 10px 0;
 	font-weight: bold;
 	line-height: normal;
@@ -181,7 +186,7 @@ h6, .h6 {
 	margin:15px 14px 20px;
 	border-bottom:none;
 	display:block;
-	color: darken( $gray-light, 20.9%);
+	color: color.adjust( colors.$gray-light, $lightness: -20.9%);
 	font-size:20px;
 	font-weight:400;
 }
@@ -221,7 +226,7 @@ h6, .h6 {
 .form hr {
 	margin-left:-13px;
 	margin-right:-13px;
-	border-color:rgba(red($black), green($black), blue($black), 0.1);
+	border-color:rgba(color.red(colors.$black), color.green(colors.$black), color.blue(colors.$black), 0.1);
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
@@ -229,7 +234,7 @@ h6, .h6 {
 .form fieldset {
 	display: block;
 	border: none;
-	background: rgba(red($white), green($white), blue($white), 0.9);
+	background: rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.9);
 	position: relative;
 }
 
@@ -248,7 +253,7 @@ h6, .h6 {
 	margin:0;
 	display: block;
 	padding: 13px 14px 15px;
-	border-top: 1px solid rgba(red($black), green($black), blue($black), 0.1);
+	border-top: 1px solid rgba(color.red(colors.$black), color.green(colors.$black), color.blue(colors.$black), 0.1);
 	background: rgba(248, 248, 248, 0.9);
 	text-align:right;
 	margin-top:25px;
@@ -257,11 +262,11 @@ h6, .h6 {
 .form header, legend {
 	display: block;
 	padding: 8px 0;
-	border-bottom: 1px dashed rgba(red($black), green($black), blue($black), 0.2);
-	background: $white;
+	border-bottom: 1px dashed rgba(color.red(colors.$black), color.green(colors.$black), color.blue(colors.$black), 0.2);
+	background: colors.$white;
 	font-size: 16px;
 	font-weight: 300;
-	color:  $gray-darker;
+	color:  colors.$gray-darker;
 	margin: 25px 0px 20px;
 } .no-padding .form header {
 	margin: 25px 14px 0;
@@ -277,7 +282,7 @@ h6, .h6 {
   padding: 6px 10px;
   will-change: background-color, border-color;
   border-radius: 0;
-  @include transition(all ease-out .15s);
+  @include mixins.transition(all ease-out .15s);
 }
 
 .input-group-addon .fa {
@@ -297,35 +302,35 @@ input[type="text"],
 input[type="password"],
 input[type="email"]{
   &:focus + .input-group-addon {
-    border-color: $teal-lighter;
+    border-color: colors.$teal-lighter;
     //background-color: lighten($state-info-text, 23%);
-    color: $teal-lighter;
+    color: colors.$teal-lighter;
   }
 }
 
 .has-warning input[type="text"], .has-warning input[type="text"] + .input-group-addon {
-	border-color: $state-warning-border;
+	border-color: variables.$state-warning-border;
 }.has-warning input[type="text"] + .input-group-addon {
-	background-color: darken($state-warning-bg, 5%);
-	color:$state-warning-text;
+	background-color: color.adjust(variables.$state-warning-bg, $lightness: -5%);
+	color:variables.$state-warning-text;
 }
 .has-warning input[type="text"]:focus, .has-warning input[type="text"]:focus + .input-group-addon {
-	border-color: $state-warning-border;
+	border-color: variables.$state-warning-border;
 }.has-warning input[type="text"]:focus + .input-group-addon {
-	background-color: darken($state-warning-bg, 45%);
-	color:$white;
+	background-color: color.adjust(variables.$state-warning-bg, $lightness: -45%);
+	color:colors.$white;
 }
 
 .has-error .input-group-addon {
-	border-color: $red !important;
-	background:$red !important;
-	color:$state-danger-text !important;
+	border-color: colors.$red !important;
+	background:colors.$red !important;
+	color:variables.$state-danger-text !important;
 }
 
 .has-success .input-group-addon {
-	border-color: $state-success-border !important;
-	background-color:$state-success-text !important;
-	color: $state-success-border !important;
+	border-color: variables.$state-success-border !important;
+	background-color:variables.$state-success-text !important;
+	color: variables.$state-success-border !important;
 }
 
 .form fieldset .form-group:last-child, .form fieldset .form-group:last-child .note,
@@ -338,7 +343,7 @@ input[type="email"]{
 	padding: 0 1px;
 	font-size: 11px;
 	line-height: 15px;
-	color: lighten($text-color, 10%);
+	color: color.adjust(variables.$text-color, $lightness: 10%);
 }
 
 	/*
@@ -352,7 +357,7 @@ input[type="email"]{
 		right:10px;
 		top:10px;
 		font-size:12px;
-		color:$gray-light;
+		color:colors.$gray-light;
 	}
 
 	.input-icon-left > i {
@@ -382,7 +387,7 @@ input[type="email"]{
 	input[type="search"].ui-autocomplete-loading,
 	input[type="tel"].ui-autocomplete-loading,
 	input[type="color"].ui-autocomplete-loading {
-		background-image: url("#{$base-url}/select2-spinner.gif") !important;
+		background-image: url("#{variables.$base-url}/select2-spinner.gif") !important;
 		background-repeat: no-repeat;
 		background-position: 99% 50%;
 		padding-right:27px
@@ -433,43 +438,43 @@ input[type="email"]{
 }
 
 .alert-danger {
-    border-color: $state-danger-border;
-    color: $state-danger-text;
-    background: $state-danger-bg;
+    border-color: variables.$state-danger-border;
+    color: variables.$state-danger-text;
+    background: variables.$state-danger-bg;
     text-shadow:none;
 
   .ui-pnotify-icon{
-    color: $state-danger-border;
+    color: variables.$state-danger-border;
   }
 }
 
 .alert-warning {
-    border-color: $state-warning-border;
-    color:  $state-warning-text;
-    background:  $state-warning-bg;
+    border-color: variables.$state-warning-border;
+    color:  variables.$state-warning-text;
+    background:  variables.$state-warning-bg;
 
   .ui-pnotify-icon{
-    color: $state-warning-border;
+    color: variables.$state-warning-border;
   }
 }
 
 .alert-success {
-    border-color: $state-success-border;
-    color: $state-success-text;
-    background: $state-success-bg;
+    border-color: variables.$state-success-border;
+    color: variables.$state-success-text;
+    background: variables.$state-success-bg;
 
   .ui-pnotify-icon{
-    color: $state-success-border;
+    color: variables.$state-success-border;
   }
 }
 
 .alert-info {
-    border-color: $state-info-border;
-    color: $state-info-text;
-    background: $state-info-bg;
+    border-color: variables.$state-info-border;
+    color: variables.$state-info-text;
+    background: variables.$state-info-bg;
 
   .ui-pnotify-icon{
-    color: $state-info-border;
+    color: variables.$state-info-border;
   }
 }
 
@@ -479,23 +484,23 @@ input[type="email"]{
  */
 
 .progress-micro {
-	height: $progressbar-micro !important;
-	line-height:$progressbar-micro !important;
+	height: variables.$progressbar-micro !important;
+	line-height:variables.$progressbar-micro !important;
 }
 
 .progress-xs {
-	height: $progressbar-xs !important;
-	line-height:$progressbar-xs !important;
+	height: variables.$progressbar-xs !important;
+	line-height:variables.$progressbar-xs !important;
 }
 
 .progress-sm {
-	height: $progressbar-sm !important;
-	line-height:$progressbar-sm !important;
+	height: variables.$progressbar-sm !important;
+	line-height:variables.$progressbar-sm !important;
 }
 
 .progress-lg {
-	height: $progressbar-lg !important;
-	line-height:$progressbar-lg !important;
+	height: variables.$progressbar-lg !important;
+	line-height:variables.$progressbar-lg !important;
 }
 
 .progress .progress-bar {
@@ -605,9 +610,9 @@ input[type="email"]{
 	margin-bottom: 20px;
 	overflow: hidden;
 	height: 18px;
-	background: $gray-light;
-	@include box-shadow( 0 1px 0 transparent, 0 0 0 1px $gray-light inset);
-	border-radius: $progressbar-radius;
+	background: colors.$gray-light;
+	@include mixins.box-shadow( 0 1px 0 transparent, 0 0 0 1px colors.$gray-light inset);
+	border-radius: variables.$progressbar-radius;
 }
 
 .progress-bar {
@@ -615,18 +620,18 @@ input[type="email"]{
 	width: 0;
 	height: 100%;
 	font-size: 11px;
-	color: $white;
+	color: colors.$white;
 	text-align: center;
-	background-color: $blue;
+	background-color: colors.$blue;
 	font-weight: bold;
-	@include transition(width 1s ease-in-out, background-color 1s ease-in-out) ;
+	@include mixins.transition(width 1s ease-in-out, background-color 1s ease-in-out) ;
 }
 
 .progress-striped .progress-bar {
-  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
   background-size: 40px 40px;
 }
 
@@ -639,52 +644,52 @@ input[type="email"]{
 }
 
 .progress-bar-danger {
-  background-color: $brand-danger;
+  background-color: colors.$brand-danger;
 }
 
 .progress-striped .progress-bar-danger {
-  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
 }
 
 .progress-bar-success {
-  background-color: $brand-success;
+  background-color: colors.$brand-success;
 }
 
 .progress-striped .progress-bar-success {
-  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
 }
 
 .progress-bar-warning {
-  background-color: $brand-warning;
+  background-color: colors.$brand-warning;
 }
 
 .progress-striped .progress-bar-warning {
-  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
 }
 
 .progress-bar-info {
-  background-color: $brand-info;
+  background-color: colors.$brand-info;
 }
 
 .progress-striped .progress-bar-info {
-  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, rgba(red($white), green($white), blue($white), 0.15)), color-stop(0.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(45deg, rgba(red($white), green($white), blue($white), 0.15) 25%, transparent 25%, transparent 50%, rgba(red($white), green($white), blue($white), 0.15) 50%, rgba(red($white), green($white), blue($white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 25%, transparent 25%, transparent 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 50%, rgba(color.red(colors.$white), color.green(colors.$white), color.blue(colors.$white), 0.15) 75%, transparent 75%, transparent);
 }
 
 
 .progress-info .bar, .progress .bar-info {
-	background:  $brand-info;
+	background:  colors.$brand-info;
 }
 
 .vertical-bars {
@@ -744,29 +749,29 @@ input[type="email"]{
 }
 
 .nav-tabs>li>a {
-	  color: $gray-light;
+	  color: colors.$gray-light;
   //color: $gray-lighter;
-  font-family: $font-family-bold;
+  font-family: variables.$font-family-bold;
 
   &:hover{
-    color: $gray-lighter;
-    border-color: transparent transparent $gray-light transparent;
+    color: colors.$gray-lighter;
+    border-color: transparent transparent colors.$gray-light transparent;
     margin-top: 1px;
     border-top-width: 0;
   }
 }
 .nav-tabs > li.active > a {
 
-    background-color: $gray-lighter;
-    color: $gray-darkest;
+    background-color: colors.$gray-lighter;
+    color: colors.$gray-darkest;
 	border-top-width: 0px !important;
 	margin-top: 1px !important;
 	font-weight:bold;
 }
 .tabs-left .nav-tabs > li.active > a {
-	-webkit-box-shadow: -2px 0 0 $blue;
-	-moz-box-shadow: -2px 0 0 $blue;
-	box-shadow: -2px 0 0 $blue;
+	-webkit-box-shadow: -2px 0 0 colors.$blue;
+	-moz-box-shadow: -2px 0 0 colors.$blue;
+	box-shadow: -2px 0 0 colors.$blue;
 	border-top-width: 1px !important;
 	border-left: none !important;
 	margin-left: 1px !important;
@@ -778,17 +783,17 @@ input[type="email"]{
 	-moz-box-shadow: none !important;
 }
 .tabs-right .nav-tabs > li.active > a {
-	-webkit-box-shadow: 2px 0 0 $blue;
-	-moz-box-shadow: 2px 0 0 $blue;
-	box-shadow: 2px 0 0 $blue;
+	-webkit-box-shadow: 2px 0 0 colors.$blue;
+	-moz-box-shadow: 2px 0 0 colors.$blue;
+	box-shadow: 2px 0 0 colors.$blue;
 	border-top-width: 1px !important;
 	border-right: none !important;
 	margin-right: 1px !important;
 }
 .tabs-below .nav-tabs > li.active > a {
-	-webkit-box-shadow: 0 2px 0 $blue;
-	-moz-box-shadow: 0 2px 0 $blue;
-	box-shadow: 0 2px 0 $blue;
+	-webkit-box-shadow: 0 2px 0 colors.$blue;
+	-moz-box-shadow: 0 2px 0 colors.$blue;
+	box-shadow: 0 2px 0 colors.$blue;
 	border-bottom-width: 0px !important;
 	border-top: none !important;
 	margin-top: 0px !important;
@@ -807,7 +812,7 @@ input[type="email"]{
 }
 
 .tabs-below > .nav-tabs {
-	border-top: 1px solid darken($gray-lighter, 7%);
+	border-top: 1px solid color.adjust(colors.$gray-lighter, $lightness: -7%);
 }
 
 .tabs-below > .nav-tabs > li {
@@ -830,7 +835,7 @@ input[type="email"]{
 .tabs-left > .nav-tabs, .tabs-left > .nav-pills {
 	float: left;
 	margin-right: 19px;
-	border-right: 1px solid darken($gray-lighter, 7%);
+	border-right: 1px solid color.adjust(colors.$gray-lighter, $lightness: -7%);
 } .tabs-left > .nav-pills {
 	border-right:none;
 }
@@ -840,12 +845,12 @@ input[type="email"]{
 }
 
 .tabs-left > .nav-tabs > li > a:hover, .tabs-left > .nav-tabs > li > a:focus {
-	border-color: $gray-lighter darken($gray-lighter, 10%) $gray-lighter $gray-lighter;
+	border-color: colors.$gray-lighter color.adjust(colors.$gray-lighter, $lightness: -10%) colors.$gray-lighter colors.$gray-lighter;
 }
 
 .tabs-left > .nav-tabs .active > a, .tabs-left > .nav-tabs .active > a:hover, .tabs-left > .nav-tabs .active > a:focus {
-	border-color: darken($gray-lighter, 10%) transparent darken($gray-lighter, 10%) darken($gray-lighter, 7%);
-	*border-right-color: $white;
+	border-color: color.adjust(colors.$gray-lighter, $lightness: -10%) transparent color.adjust(colors.$gray-lighter, $lightness: -10%) color.adjust(colors.$gray-lighter, $lightness: -7%);
+	*border-right-color: colors.$white;
 }
 
 .tabs-left > .tab-content {
@@ -855,7 +860,7 @@ input[type="email"]{
 .tabs-right > .nav-tabs {
 	float: right;
 	margin-left: 19px;
-	border-left: 1px solid darken($gray-lighter, 7%); /* DDD */
+	border-left: 1px solid color.adjust(colors.$gray-lighter, $lightness: -7%); /* DDD */
 }
 
 .tabs-right > .nav-tabs > li > a {
@@ -863,12 +868,12 @@ input[type="email"]{
 }
 
 .tabs-right > .nav-tabs > li > a:hover, .tabs-right > .nav-tabs > li > a:focus {
-	border-color: $gray-lighter $gray-lighter $gray-lighter darken($gray-lighter, 7%);
+	border-color: colors.$gray-lighter colors.$gray-lighter colors.$gray-lighter color.adjust(colors.$gray-lighter, $lightness: -7%);
 }
 
 .tabs-right > .nav-tabs .active > a, .tabs-right > .nav-tabs .active > a:hover, .tabs-right > .nav-tabs .active > a:focus {
-	border-color: darken($gray-lighter, 7%) darken($gray-lighter, 7%) darken($gray-lighter, 7%) transparent;
-	*border-left-color: $white;
+	border-color: color.adjust(colors.$gray-lighter, $lightness: -7%) color.adjust(colors.$gray-lighter, $lightness: -7%) color.adjust(colors.$gray-lighter, $lightness: -7%) transparent;
+	*border-left-color: colors.$white;
 }
 
 .tabs-below > .nav-tabs, .tabs-right > .nav-tabs, .tabs-left > .nav-tabs {
@@ -884,7 +889,7 @@ input[type="email"]{
 }
 
 .tabs-below > .nav-tabs {
-	border-top: 1px solid darken($gray-lighter, 7%);
+	border-top: 1px solid color.adjust(colors.$gray-lighter, $lightness: -7%);
 }
 
 .tabs-below > .nav-tabs > li {
@@ -893,18 +898,18 @@ input[type="email"]{
 }
 
 .tabs-below > .nav-tabs > li > a:hover, .tabs-below > .nav-tabs > li > a:focus {
-	border-top-color: darken($gray-lighter, 7%);
+	border-top-color: color.adjust(colors.$gray-lighter, $lightness: -7%);
 	border-bottom-color: transparent;
 }
 
 .tabs-below > .nav-tabs > .active > a, .tabs-below > .nav-tabs > .active > a:hover, .tabs-below > .nav-tabs > .active > a:focus {
-	border-color: transparent darken($gray-lighter, 7%) darken($gray-lighter, 7%) darken($gray-lighter, 7%); /* tabs */
+	border-color: transparent color.adjust(colors.$gray-lighter, $lightness: -7%) color.adjust(colors.$gray-lighter, $lightness: -7%) color.adjust(colors.$gray-lighter, $lightness: -7%); /* tabs */
 }
 
 /* bordered tabs */
 .nav-tabs.bordered {
-	background:$white;
-	border:1px solid darken($gray-lighter, 7%);
+	background:colors.$white;
+	border:1px solid color.adjust(colors.$gray-lighter, $lightness: -7%);
 }
 
 .nav-tabs.bordered >:first-child a{
@@ -912,7 +917,7 @@ input[type="email"]{
 }
 
 .nav-tabs.bordered + .tab-content {
-	border:1px solid darken($gray-lighter, 7%);
+	border:1px solid color.adjust(colors.$gray-lighter, $lightness: -7%);
 	border-top:none;
 }
 
@@ -965,11 +970,11 @@ input[type="email"]{
 
 	&>a{
 		// keep "hover" effect on parent item when submenu is open
-		background-color: $gray-light;
-		color: $gray-darkest
+		background-color: colors.$gray-light;
+		color: colors.$gray-darkest
 	}
 	a:after{
-		border-left-color: $green;
+		border-left-color: colors.$green;
 	}
 }
 
@@ -985,18 +990,18 @@ input[type="email"]{
 		border-color: transparent;
 		border-style: solid;
 		border-width: 5px 0 5px 5px;
-		border-left-color: $gray-darker;
+		border-left-color: colors.$gray-darker;
 	}
 
 	&:hover{
 		&:after{
-			border-left-color: $gray-lighter;
+			border-left-color: colors.$gray-lighter;
 		}
 	}
 }
 
 .dropdown-submenu.disabled>a:after {
-	border-left-color: $gray-light;
+	border-left-color: colors.$gray-light;
 }
 
 .dropdown-submenu.pull-left {
@@ -1013,24 +1018,24 @@ input[type="email"]{
  */
 
 .pagination > li > a, .pagination > li > span {
-	box-shadow: inset 0 -2px 0 rgba(red($black), green($black), blue($black), 0.05);
-	-moz-box-shadow: inset 0 -2px 0 rgba(red($black), green($black), blue($black), 0.05);
-	-webkit-box-shadow: inset 0 -2px 0 rgba(red($black), green($black), blue($black), 0.05);
+	box-shadow: inset 0 -2px 0 rgba(color.red(colors.$black), color.green(colors.$black), color.blue(colors.$black), 0.05);
+	-moz-box-shadow: inset 0 -2px 0 rgba(color.red(colors.$black), color.green(colors.$black), color.blue(colors.$black), 0.05);
+	-webkit-box-shadow: inset 0 -2px 0 rgba(color.red(colors.$black), color.green(colors.$black), color.blue(colors.$black), 0.05);
 }
 
 .disabled {
 	//color:$white;
 }
 .btn-default.disabled {
-	color: $gray-lighter;
+	color: colors.$gray-lighter;
 }
 
 .btn {
-  font-family: $font-family-bold;
+  font-family: variables.$font-family-bold;
   will-change: background-color, border-color;
-  border-radius: $btn-border-radius-base;
+  border-radius: variables.$btn-border-radius-base;
   //@include transition( all 0.06s linear );
-  @include transition( color 0.18s ease-in-out, background-color 0.18s ease-in-out, border-color 0.18s ease-in-out, box-shadow 0.18s ease-in-out );
+  @include mixins.transition( color 0.18s ease-in-out, background-color 0.18s ease-in-out, border-color 0.18s ease-in-out, box-shadow 0.18s ease-in-out );
   //@include box-shadow(0 1px 3px 0 rgba(red($black), green($black), blue($black), 0.12), 0 1px 2px 0 rgba(red($black), green($black), blue($black), 0.24));
 }
 .btn:active {
@@ -1078,91 +1083,91 @@ input[type="email"]{
  * Panels
  */
 .panel-purple {
-    border-color:$purple;
+    border-color:variables.$purple;
     & > .panel-heading {
-        color: $white;
-        background-color: $purple;
-        border-color: $purple;
+        color: colors.$white;
+        background-color: variables.$purple;
+        border-color: variables.$purple;
     }
 }
 .panel-greenLight {
-    border-color:$greenLight;
+    border-color:variables.$greenLight;
     & > .panel-heading {
-        color: $white;
-        background-color: $greenLight;
-        border-color: $greenLight;
+        color: colors.$white;
+        background-color: variables.$greenLight;
+        border-color: variables.$greenLight;
     }
 }
 .panel-greenDark {
-    border-color:$greenDark;
+    border-color:variables.$greenDark;
     & > .panel-heading {
-        color: $white;
-        background-color: $greenDark;
-        border-color: $greenDark;
+        color: colors.$white;
+        background-color: variables.$greenDark;
+        border-color: variables.$greenDark;
     }
 }
 .panel-darken {
-    border-color:$gray-dark;
+    border-color:colors.$gray-dark;
     & > .panel-heading {
-        color: $white;
+        color: colors.$white;
         background-color: #404040;
         border-color: #404040;
     }
 }
 .panel-green {
-    border-color:$green;
+    border-color:colors.$green;
     & > .panel-heading {
-        color: $white;
-        background-color: $green;
-        border-color: $green;
+        color: colors.$white;
+        background-color: colors.$green;
+        border-color: colors.$green;
     }
 }
 .panel-red {
-    border-color: $red;
+    border-color: colors.$red;
     & > .panel-heading {
-        color: $white;
-        background-color: $red;
-        border-color: $red;
+        color: colors.$white;
+        background-color: colors.$red;
+        border-color: colors.$red;
     }
 }
 .panel-teal {
-    border-color: $teal-lighter;
+    border-color: colors.$teal-lighter;
     & > .panel-heading {
-        color: $white;
-        background-color: $teal-lighter;
-        border-color: $teal-lighter;
+        color: colors.$white;
+        background-color: colors.$teal-lighter;
+        border-color: colors.$teal-lighter;
     }
 }
 .panel-orange {
-    border-color: $orange;
+    border-color: colors.$orange;
     & > .panel-heading {
-        color: $white;
-        background-color: $orange;
-        border-color: $orange;
+        color: colors.$white;
+        background-color: colors.$orange;
+        border-color: colors.$orange;
     }
 }
 .panel-blueDark {
-    border-color: $blueDark;
+    border-color: variables.$blueDark;
     & > .panel-heading {
-        color: $white;
-        background-color: $blueDark;
-        border-color: $blueDark;
+        color: colors.$white;
+        background-color: variables.$blueDark;
+        border-color: variables.$blueDark;
     }
 }
 .panel-magenta {
-    border-color:$magenta;
+    border-color:variables.$magenta;
     & > .panel-heading {
-        color: $white;
-        background-color: $magenta;
-        border-color: $magenta;
+        color: colors.$white;
+        background-color: variables.$magenta;
+        border-color: variables.$magenta;
     }
 }
 .panel-blue {
-    border-color: $blue;
+    border-color: colors.$blue;
     & > .panel-heading {
-        color: $white;
-        background-color: $blue;
-        border-color: $blue;
+        color: colors.$white;
+        background-color: colors.$blue;
+        border-color: colors.$blue;
     }
 }
 
@@ -1190,7 +1195,7 @@ input[type="email"]{
   border-radius: 50%;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
-  @include box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12),0 1px 6px 0 rgba(0, 0, 0, 0.12));
+  @include mixins.box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12),0 1px 6px 0 rgba(0, 0, 0, 0.12));
 }
 .btn-circle.btn-sm {
   width: 22px;
@@ -1233,7 +1238,7 @@ input[type="email"]{
   left: -8px;
   display: inline-block;
   padding: 5px 8px;
-  background: rgba(red($black), green($black), blue($black), 0.15);
+  background: rgba(color.red(colors.$black), color.green(colors.$black), color.blue(colors.$black), 0.15);
   border-radius: 2px 0 0 2px;
 }
 
@@ -1246,7 +1251,7 @@ input[type="email"]{
 .btn-link {
 	box-shadow: none;
 	-webkit-box-shadow: none;
-	font-size: $font-size-base + 1;
+	font-size: variables.$font-size-base + 1;
 }
 
 
@@ -1258,12 +1263,12 @@ input[type="email"]{
     border-radius: 5px;
     padding: 5px;
     color: #666;
-    background: rgba($gray-darkest, 0.85);
+    background: rgba(colors.$gray-darkest, 0.85);
     //border: solid 2px $teal-dark;
     font-family: 'Oxygen Bold';
     font-size: 10px;
     text-align: left;
-    @include box-shadow(0 6px 12px rgba(0,0,0,.4));
+    @include mixins.box-shadow(0 6px 12px rgba(0,0,0,.4));
 
 
   .morris-hover-row-label {
@@ -1277,10 +1282,10 @@ input[type="email"]{
 }
 .morris-hover {
     position: absolute;
-    z-index: $morris-hover;
+    z-index: variables.$morris-hover;
 }
 .fixed-page-footer .morris-hover {
-	 z-index: $fixed-footer-zindex - 1;
+	 z-index: variables.$fixed-footer-zindex - 1;
 }
 
 

@@ -1,9 +1,16 @@
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+@use "../bootstrap/buttons"; // @extend .btn-success
+@use "../library/fontawesome/fontawesome"; // @extend .fa-fw
+@use "animation"; // @extend .pf-animate-rotate
+
 .modal-content, .panel-body {
   // dialog headline ==========================================================
   h2 {
-    font-family: $font-family-sans-serif;
+    font-family: variables.$font-family-sans-serif;
     letter-spacing: 0;
-    font-size: $font-size-h5;
+    font-size: variables.$font-size-h5;
     margin: 20px 0 10px 0;
     line-height: normal;
   }
@@ -25,7 +32,7 @@
 
       &:hover {
         &:after {
-          color: $orange !important;
+          color: colors.$orange !important;
         }
       }
 
@@ -37,7 +44,7 @@
         font-size: 13px;
         padding-right: 10px;
         position: absolute;
-        color: $orange;
+        color: colors.$orange;
         top: 10px;
         right: 6px;
         will-change: transform, color;
@@ -50,8 +57,8 @@
         &:after {
           top: 13px;
           right: 5px;
-          color: $gray-light;
-          @include rotate(90deg);
+          color: colors.$gray-light;
+          @include mixins.rotate(90deg);
         }
       }
     }
@@ -68,13 +75,13 @@
 
   .dataTable, .table{
     font-size: 10px;
-    font-family: $font-family-bold;
+    font-family: variables.$font-family-bold;
   }
 
   // horizontal line ==========================================================
   hr{
     margin: 5px 0 15px 0;
-    border-color: $gray-light;
+    border-color: colors.$gray-light;
   }
 
   // well =====================================================================
@@ -87,7 +94,7 @@
   }
 
   // checkbox list ============================================================
-  @media (min-width: $screen-sm-min) {
+  @media (min-width: variables.$screen-sm-min) {
     .fa-tree-child + .checkbox{
       margin-left: 5px;
       display: inline-block;
@@ -102,7 +109,7 @@
 
     li{
       &:not(:last-child):before{
-        border-top: 1px solid $gray-light;
+        border-top: 1px solid colors.$gray-light;
         content: "";
         display: block;
         font-size: 0;
@@ -116,7 +123,7 @@
 
       &.finished{
           &:before{
-            border-image: linear-gradient(to right, $teal-dark, $teal-dark) 1 1%;
+            border-image: linear-gradient(to right, colors.$teal-dark, colors.$teal-dark) 1 1%;
             border-bottom: 0;
         }
       }
@@ -124,20 +131,20 @@
       &.active{
 
         &:before{
-          border-image: linear-gradient(to right, $brand-success, $gray-light) 1 1%;
+          border-image: linear-gradient(to right, colors.$brand-success, colors.$gray-light) 1 1%;
           border-bottom: 0;
         }
       }
 
       & > h6{
-        color: $gray-light;
+        color: colors.$gray-light;
         font-size: 11px;
         margin: 5px;
       }
 
       a:hover{
         & + h6{
-          color: $gray-lighter;
+          color: colors.$gray-lighter;
         }
       }
 
@@ -145,7 +152,7 @@
         @extend .btn-success;
 
         & + h6{
-          color: $gray-lighter;
+          color: colors.$gray-lighter;
         }
       }
 

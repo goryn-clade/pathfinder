@@ -1,3 +1,11 @@
+@use "sass:color";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+@use "animation";
+@use "../library/fontawesome/fontawesome"; // @extend .fa-*
+@use "../main-colorpallet"; // @extend .txt-color-*
+
 $characterSlideDuration: 500ms;
 
 .pf-animate{
@@ -14,22 +22,22 @@ $characterSlideDuration: 500ms;
   width: 100%;
   height: 3px;
 
-  @include rainbow;
+  @include animation.rainbow;
 
   &.warning{
-    background-image: linear-gradient(to right, $brand-warning, $brand-warning 100%);
+    background-image: linear-gradient(to right, colors.$brand-warning, colors.$brand-warning 100%);
   }
 
   &.danger{
-    background-image: linear-gradient(to right, $brand-danger, $brand-danger 100%);
+    background-image: linear-gradient(to right, colors.$brand-danger, colors.$brand-danger 100%);
   }
 }
 
 .pf-splash{
   position: fixed;
   z-index: 2000;
-  background-color: $gray-darkest;
-  color: $gray-light;
+  background-color: colors.$gray-darkest;
+  color: colors.$gray-light;
   top: 0;
   bottom: 0;
   left: 0;
@@ -66,7 +74,7 @@ $characterSlideDuration: 500ms;
 }
 
 // landing page ========================================================================================
-@media (max-width: $screen-md) {
+@media (max-width: variables.$screen-md) {
   .pf-landing{
 
     #pf-logo-container{
@@ -90,7 +98,7 @@ $characterSlideDuration: 500ms;
 .pf-landing{
 
   section:not(:last-of-type){
-    border-bottom: 1px solid $gray-darker;
+    border-bottom: 1px solid colors.$gray-darker;
   }
 
   section{
@@ -99,9 +107,9 @@ $characterSlideDuration: 500ms;
 
     h4:not(.pf-dynamic-area){
       font-size: 18px;
-      font-family: $font-family-sans-serif;
+      font-family: variables.$font-family-sans-serif;
       margin: 5px 0 10px 0;
-      border-bottom: 1px solid $gray-darker;
+      border-bottom: 1px solid colors.$gray-darker;
       line-height: 34px;
     }
   }
@@ -127,12 +135,12 @@ $characterSlideDuration: 500ms;
       content: '\f06e';
       font-family: 'Font Awesome 5 Free';
       font-size: 20px;
-      color: $orange;
+      color: colors.$orange;
       position: absolute;
       height: 100%;
       width: 100%;
       z-index: 10;
-      @include transition(transform 0.1s ease-out, opacity 0.1s ease-out);
+      @include mixins.transition(transform 0.1s ease-out, opacity 0.1s ease-out);
       will-change: transform, opacity;
       transform: scale(1.3,1.3);
       opacity: 0;
@@ -144,12 +152,12 @@ $characterSlideDuration: 500ms;
 
     &:hover{
       img{
-        border-color: $teal-lightest;
+        border-color: colors.$teal-lightest;
         filter: brightness( 50% );
       }
 
       &:before{
-        @include transition-delay( 0.05s );
+        @include mixins.transition-delay( 0.05s );
         transform: scale(1,1);
         opacity: 1;
       }
@@ -159,12 +167,12 @@ $characterSlideDuration: 500ms;
       border: {
         width: 1px;
         style: solid;
-        color: $gray-darkest
+        color: colors.$gray-darkest
       }
       display: inline-block;
       will-change: all;
       filter: brightness( 100% );
-      @include transition(all 0.2s ease-out);
+      @include mixins.transition(all 0.2s ease-out);
 
 
       &.pf-landing-image-preview-small{
@@ -181,7 +189,7 @@ $characterSlideDuration: 500ms;
   .pf-landing-list{
     li > i{
       @extend .fa-li;
-      @extend .fas;
+      // @extend .fas: in pathfinder.scss
       @extend .fa-fw;
       @extend .fa-angle-right;
       @extend .txt-color;
@@ -198,12 +206,12 @@ $headerHeight: 355px;
   flex-direction: column;
   align-items: center;
   height: $headerHeight - 100px;
-  border-bottom: 1px solid $gray-dark;
+  border-bottom: 1px solid colors.$gray-dark;
   transition: height 0.25s ease-out;
   will-change: height;
   background-color: #050a11; // ~img background color...
 
-  @media (max-width: $screen-xs-max) {
+  @media (max-width: variables.$screen-xs-max) {
     height: $headerHeight - 170px;
 
   }
@@ -221,7 +229,7 @@ $headerHeight: 355px;
     height: inherit;
     width: 400px;
     pointer-events: none;
-    background-image: linear-gradient(to right, transparent, rgba($black, 0.75));
+    background-image: linear-gradient(to right, transparent, rgba(colors.$black, 0.75));
   }
 
   .pf-header-bg{
@@ -235,7 +243,7 @@ $headerHeight: 355px;
     pointer-events: none;
     z-index: 20; // less than character images
 
-    @media (max-width: $screen-xs-max) {
+    @media (max-width: variables.$screen-xs-max) {
       left: initial;
     }
 
@@ -271,7 +279,7 @@ $headerHeight: 355px;
     pointer-events: none;
     margin-bottom: 20px;
 
-    @media (max-width: $screen-xs-max) {
+    @media (max-width: variables.$screen-xs-max) {
       width: 100%;
     }
 
@@ -314,7 +322,7 @@ $headerHeight: 355px;
       width: 100%;
       height: 100%;
       border-radius: 8px 8px 0 0;
-      @include box-shadow(0 4px 10px rgba(0,0,0, 0.4));
+      @include mixins.box-shadow(0 4px 10px rgba(0,0,0, 0.4));
     }
 
     .ribbon-wrapper{
@@ -325,22 +333,22 @@ $headerHeight: 355px;
     .pf-character-image-wrapper{
       opacity: 0;
       width: 128px;
-      border: 2px solid $gray;
+      border: 2px solid colors.$gray;
       border-radius: inherit;
-      @include transition( border-color 0.2s ease-out, box-shadow 0.2s ease-out);
+      @include mixins.transition( border-color 0.2s ease-out, box-shadow 0.2s ease-out);
       transform: translate3d(0, 0, 0);
       will-change: border-color, transition;
       overflow: hidden;
       cursor: pointer;
       display: inline-block;
-      background-color: $gray-darker;
+      background-color: colors.$gray-darker;
       box-sizing: content-box; // because of the borders and the fix img with of 128
 
       &:hover{
-        border-color: $green-dark;
+        border-color: colors.$green-dark;
 
         .pf-character-name{
-          color: $green-dark;
+          color: colors.$green-dark;
         }
 
         .pf-character-image{
@@ -358,7 +366,7 @@ $headerHeight: 355px;
         left: 5px;
         height: 14px;
         width: 14px;
-        color: $green;
+        color: colors.$green;
         font-size: 10px;
         @extend .fa-rotate-180;
       }
@@ -376,8 +384,8 @@ $headerHeight: 355px;
           left: 0;
           width: 0; // trigger by js
           height: 100%;
-          color: $gray-lighter;
-          background: rgba($gray, 0.80);
+          color: colors.$gray-lighter;
+          background: rgba(colors.$gray, 0.80);
           overflow: hidden;
           will-change: width, transition;
           padding: 5px 0;
@@ -395,19 +403,19 @@ $headerHeight: 355px;
       .pf-character-name{
         font-size: 13px;
         line-height: 30px;
-        border-top: 1px solid $gray-dark;
-        color: $gray-lighter;
+        border-top: 1px solid colors.$gray-dark;
+        color: colors.$gray-lighter;
         font-family: "Oxygen Bold", Arial, sans-serif;
         letter-spacing: 0.3px;
         padding: 0 5px;
         text-rendering: geometricPrecision;
-        @include transition( color 0.2s ease-out );
+        @include mixins.transition( color 0.2s ease-out );
       }
 
       .pf-character-image{
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
-        @include transition(all 0.3s ease-out);
+        @include mixins.transition(all 0.3s ease-out);
         filter: grayscale(0%);
       }
     }
@@ -421,7 +429,7 @@ $headerHeight: 355px;
   z-index: 20; // ^^
   padding-top: 60px;
   padding-bottom: 30px;
-  border-top: 1px solid $gray-dark;
+  border-top: 1px solid colors.$gray-dark;
 
   .row{
     margin-bottom: 0;
@@ -432,13 +440,13 @@ $headerHeight: 355px;
     height: 45px;
     margin-top: 10px;
     margin-bottom: 15px;
-    color: $gray-lighter;
+    color: colors.$gray-lighter;
     filter: drop-shadow(0 4px 5px rgba(0,0,0, 0.4));
     transition: color 0.18s ease-out, filter 0.06s ease-out;
     will-change: color, fill;
 
     &:hover {
-      color: $orange;
+      color: colors.$orange;
       filter: drop-shadow(0 1px 3px rgba(0,0,0, 0.4));
     }
 
@@ -455,7 +463,7 @@ $headerHeight: 355px;
 
 // carousel -------------------------------------------------------------------
 #pf-landing-gallery-carousel{
-  background-image: url("#{$base-url}/pf-header-bg.jpg");
+  background-image: url("#{variables.$base-url}/pf-header-bg.jpg");
 
   .slide-content{
     border-radius: 5px;
@@ -476,25 +484,25 @@ $headerHeight: 355px;
 
 .pricing-big{
   position: relative;
-  @include box-shadow(0 4px 10px rgba(0,0,0, 0.4));
+  @include mixins.box-shadow(0 4px 10px rgba(0,0,0, 0.4));
 
   .panel-heading{
-    border-color: $gray;
+    border-color: colors.$gray;
   }
   .the-price {
     padding: 1px 0;
-    background: darken($modal-content-bg, 6%);
+    background: color.adjust(variables.$modal-content-bg, $lightness: -6%);
     text-align: center;
 
     .subscript{
       font-size: 12px;
-      color: $gray-light;
+      color: colors.$gray-light;
     }
   }
 
   .price-features {
-    background: $gray;
-    color: $gray-lighter;
+    background: colors.$gray;
+    color: colors.$gray-lighter;
     padding: 20px 15px;
     line-height: 22px;
 
@@ -513,8 +521,8 @@ $headerHeight: 355px;
   }
 
   .badge{
-    color: $gray-lighter;
-    background-color: $gray-darker;
+    color: colors.$gray-lighter;
+    background-color: colors.$gray-darker;
   }
 
   // table
@@ -545,15 +553,15 @@ $headerHeight: 355px;
     width: 256px;
     height: 256px;
     border: none;
-    @include box-shadow(0 4px 10px rgba(0,0,0, 0.4));
+    @include mixins.box-shadow(0 4px 10px rgba(0,0,0, 0.4));
   }
 }
 
 // footer ---------------------------------------------------------------------
 .pf-landing-footer{
   padding: 30px 0;
-  font-family: $font-family-bold;
-  background-color: darken($gray-darker, 8%) ;
+  font-family: variables.$font-family-bold;
+  background-color: color.adjust(colors.$gray-darker, $lightness: -8%) ;
 
   .row{
     margin-bottom: 0 !important; // overwrite default
@@ -568,7 +576,7 @@ $headerHeight: 355px;
 
       a {
         display: inline-block;
-        background: rgba(red($gray-light), green($gray-light), blue($gray-light), 0.5);
+        background: rgba(color.red(colors.$gray-light), color.green(colors.$gray-light), color.blue(colors.$gray-light), 0.5);
         line-height: 24px;
         text-align: center;
         font-size: 14px;
@@ -600,7 +608,7 @@ $headerHeight: 355px;
 
   }
   .form-horizontal .panel{
-    color: $gray-lighter;
+    color: colors.$gray-lighter;
   }
 }
 
@@ -628,14 +636,14 @@ $headerHeight: 355px;
 
     .container{
       // increase container width (display more data)
-      @media (min-width: $screen-sm-min) {
-        width: $container-sm + 20px;
+      @media (min-width: variables.$screen-sm-min) {
+        width: variables.$container-sm + 20px;
       }
-      @media (min-width: $screen-md-min) {
-        width: $container-md + 80px;
+      @media (min-width: variables.$screen-md-min) {
+        width: variables.$container-md + 80px;
       }
-      @media (min-width: $screen-lg-min) {
-        width: $container-lg + 100px;
+      @media (min-width: variables.$screen-lg-min) {
+        width: variables.$container-lg + 100px;
       }
 
       & > .row{
@@ -665,11 +673,11 @@ $headerHeight: 355px;
 
   .pf-cron-row-active{
     td:not(:last-child){
-      background-color: $teal-darker;
+      background-color: colors.$teal-darker;
     }
 
     td:first-child{
-      background-color: $teal-darkest;
+      background-color: colors.$teal-darkest;
     }
   }
 }

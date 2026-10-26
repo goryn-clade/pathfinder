@@ -1,3 +1,7 @@
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "animation";
+
 .pf-loading-bars-container{
   position: relative;
   z-index: 4;
@@ -21,41 +25,41 @@
     list-style: none;
 
     li{
-      background-color: $green;
+      background-color: colors.$green;
       width: 6px;
       height: 6px;
       float: right;
       margin-right: 3px !important;
-      @include box-shadow(0px 12px 6px rgba(0,0,0,0.2));
+      @include mixins.box-shadow(0px 12px 6px rgba(0,0,0,0.2));
 
       &:first-child{
-        @include animation( cssload-loadbars 1.75s cubic-bezier(0.645,0.045,0.355,1) infinite 0s );
+        @include mixins.animation( cssload-loadbars 1.75s cubic-bezier(0.645,0.045,0.355,1) infinite 0s );
       }
 
       &:nth-child(2){
-        @include animation( cssload-loadbars 1.75s ease-in-out infinite -0.35s );
+        @include mixins.animation( cssload-loadbars 1.75s ease-in-out infinite -0.35s );
       }
 
       &:nth-child(3){
-        @include animation( cssload-loadbars 1.75s ease-in-out infinite -0.7s );
+        @include mixins.animation( cssload-loadbars 1.75s ease-in-out infinite -0.7s );
       }
 
       &:nth-child(4){
-        @include animation( cssload-loadbars 1.75s ease-in-out infinite -1.05s );
+        @include mixins.animation( cssload-loadbars 1.75s ease-in-out infinite -1.05s );
       }
 
       &:nth-child(5){
-        @include animation( cssload-loadbars 1.75s ease-in-out infinite -1.4s );
+        @include mixins.animation( cssload-loadbars 1.75s ease-in-out infinite -1.4s );
       }
 
       &:nth-child(6){
-        @include animation( cssload-loadbars 1.75s ease-in-out infinite -1.75s );
+        @include mixins.animation( cssload-loadbars 1.75s ease-in-out infinite -1.75s );
       }
     }
   }
 }
 
-@include keyframes(cssload-loadbars){
+@include animation.keyframes(cssload-loadbars){
   0%{
     height: 6px;
     margin-top: 16px;
