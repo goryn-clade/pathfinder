@@ -47,7 +47,7 @@
     "bcosca/fatfree-core": "3.9.*",
     "ikkez/f3-cortex": "dev-master#47d2596914776877ef4d87706d1faa812d1398f2",
     "ikkez/f3-sheet": "0.4.*",
-    "xfra35/f3-cron": "1.2.*",
+    "xfra35/f3-cron": "1.3.*",
     "monolog/monolog": "^2.10",
     "league/html-to-markdown": "5.2.*",
     "cache/redis-adapter": "^1.2",

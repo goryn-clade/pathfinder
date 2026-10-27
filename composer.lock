@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab97c3df79328e74f2a3d2c877df5d33",
+    "content-hash": "f04431bf79746c4fcc476468e48d87fa",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -2523,20 +2523,21 @@
         },
         {
             "name": "xfra35/f3-cron",
-            "version": "v1.2.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xfra35/f3-cron.git",
-                "reference": "eba0a5574a8c35623307dd27135a67d76e4da12e"
+                "reference": "f685f48cbba22871f0f84d2cb815229b07e8d52d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xfra35/f3-cron/zipball/eba0a5574a8c35623307dd27135a67d76e4da12e",
-                "reference": "eba0a5574a8c35623307dd27135a67d76e4da12e",
+                "url": "https://api.github.com/repos/xfra35/f3-cron/zipball/f685f48cbba22871f0f84d2cb815229b07e8d52d",
+                "reference": "f685f48cbba22871f0f84d2cb815229b07e8d52d",
                 "shasum": ""
             },
             "require": {
-                "bcosca/fatfree-core": "~3.5"
+                "bcosca/fatfree-core": "~3.5",
+                "php": ">=7.2"
             },
             "type": "library",
             "autoload": {
@@ -2558,9 +2559,9 @@
             ],
             "support": {
                 "issues": "https://github.com/xfra35/f3-cron/issues",
-                "source": "https://github.com/xfra35/f3-cron/tree/v1.2.1"
+                "source": "https://github.com/xfra35/f3-cron/tree/v1.3.0"
             },
-            "time": "2018-06-19T08:29:49+00:00"
+            "time": "2025-08-06T15:04:30+00:00"
         }
     ],
     "packages-dev": [
