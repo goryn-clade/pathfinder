@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Badges
 // --------------------------------------------------
@@ -8,16 +11,16 @@
   display: inline-block;
   min-width: 10px;
   padding: 3px 7px;
-  font-size: $font-size-small;
-  font-weight: $badge-font-weight;
-  color: $badge-color;
-  line-height: $badge-line-height;
+  font-size: variables.$font-size-small;
+  font-weight: variables.$badge-font-weight;
+  color: variables.$badge-color;
+  line-height: variables.$badge-line-height;
   vertical-align: baseline;
   white-space: nowrap;
   text-align: center;
-  background-color: $badge-bg;
+  background-color: variables.$badge-bg;
   text-indent: initial;
-  border-radius: $badge-border-radius;
+  border-radius: variables.$badge-border-radius;
 
 
   // Empty badges collapse automatically (not available in IE8)
@@ -40,7 +43,7 @@
 a.badge {
   &:hover,
   &:focus {
-    color: $badge-link-hover-color;
+    color: variables.$badge-link-hover-color;
     text-decoration: none;
     cursor: pointer;
   }
@@ -49,8 +52,8 @@ a.badge {
 // Account for counters in navs
 a.list-group-item.active > .badge,
 .nav-pills > .active > a > .badge {
-  color: $badge-active-color;
-  background-color: $badge-active-bg;
+  color: variables.$badge-active-color;
+  background-color: variables.$badge-active-bg;
 }
 .nav-pills > li > a > .badge {
   margin-left: 3px;
@@ -60,9 +63,9 @@ a.list-group-item.active > .badge,
 // Contextual variations
 
 .badge-warning {
-  @include badge-variant($badge-warning-bg);
+  @include mixins.badge-variant(variables.$badge-warning-bg);
 }
 
 .badge-danger {
-  @include badge-variant($badge-danger-bg);
+  @include mixins.badge-variant(variables.$badge-danger-bg);
 }

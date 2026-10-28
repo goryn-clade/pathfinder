@@ -31,7 +31,7 @@
                                 <tbody>
 
                                 <repeat group="{{ @corpMember }}" value="{{ @member }}" counter="{{ @memberCount }}">
-                                    <set disableRow = "{{@member->_id}} == {{@character->_id}}"  />
+                                    <set disableRow = "{{ !@character->canKickBan(@member) }}"  />
 
                                     <set roleType="label-default" />
                                     <check if="{{ @member->roleId->_id==2 }}">

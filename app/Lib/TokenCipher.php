@@ -64,6 +64,18 @@ class TokenCipher {
     }
 
     /**
+     * Derive a 32-byte sub-key for another purpose (e.g. an HMAC key) from TOKEN_ENCRYPTION_KEY,
+     * so the encryption key bytes are never reused directly. Use a distinct label per purpose.
+     * @throws \RuntimeException if TOKEN_ENCRYPTION_KEY is missing/malformed.
+     */
+    public static function deriveSubKey(string $label) : string {
+        $key    = self::getKey();
+        $subKey = hash_hmac('sha256', $label, $key, true);
+        sodium_memzero($key);
+        return $subKey;
+    }
+
+    /**
      * Load the 32-byte key from env. Hex-decoded.
      * @throws \RuntimeException
      */

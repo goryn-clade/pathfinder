@@ -56,7 +56,7 @@ class Setup extends Controller\Controller {
         $return = (object) [];
         $return->error = [];
 
-        if($jobName = (string)$postData['job']){
+        if($jobName = (string)($postData['job'] ?? '')){
             $cron = Cron::instance();
             if($job = $cron->getJob($jobName)){
                 if($job->valid()){
@@ -83,7 +83,7 @@ class Setup extends Controller\Controller {
         $return = (object) [];
         $return->error = [];
 
-        if($jobName = (string)$postData['job']){
+        if($jobName = (string)($postData['job'] ?? '')){
             $cron = Cron::instance();
             if($job = $cron->getJob($jobName)){
                 if($job->valid()){

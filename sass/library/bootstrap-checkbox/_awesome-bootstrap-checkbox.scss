@@ -1,10 +1,15 @@
+@use "../../bootstrap/mixins";
+@use "../../colors";
+@use "../../variables" as variables2;
+@use "../fontawesome/variables";
+
 //
 // Checkboxes
 // --------------------------------------------------
 
 
 $font-family-icon: "Font Awesome 5 Free" !default;
-$check-icon: fa-content($fa-var-check) !default;
+$check-icon: variables.fa-content(variables.$fa-var-check) !default;
 
 @mixin checkbox-variant($parent, $color) {
   #{$parent} input[type="checkbox"]:checked + label,
@@ -14,7 +19,7 @@ $check-icon: fa-content($fa-var-check) !default;
       border-color: $color;
     }
     &::after{
-      color: $gray-lightest;
+      color: colors.$gray-lightest;
     }
   }
 }
@@ -51,10 +56,10 @@ $check-icon: fa-content($fa-var-check) !default;
       height: 17px;
       left: 0;
       margin-left: -20px;
-      border: 1px solid $input-border;
+      border: 1px solid variables2.$input-border;
       border-radius: 3px;
-      background-color: $gray-dark;
-      @include transition(border 0.18s ease, color 0.18s ease, background-color 0.18s ease);
+      background-color: colors.$gray-dark;
+      @include mixins.transition(border 0.18s ease, color 0.18s ease, background-color 0.18s ease);
     }
 
     &::after {
@@ -75,7 +80,7 @@ $check-icon: fa-content($fa-var-check) !default;
       padding-left: 3px;
       padding-top: 1px;
       font-size: calc(100% - 1px);
-      color: $input-color;
+      color: variables2.$input-color;
     }
   }
 
@@ -87,7 +92,7 @@ $check-icon: fa-content($fa-var-check) !default;
 
     &:focus + label::before{
       // @include tab-focus(); // no outline frame for Pathfinder
-      border-color: $teal-lighter;
+      border-color: colors.$teal-lighter;
     }
 
     &:checked + label::after{
@@ -115,7 +120,7 @@ $check-icon: fa-content($fa-var-check) !default;
       opacity: 0.65;
 
       &::before{
-        background-color: $input-bg-disabled;
+        background-color: variables2.$input-bg-disabled;
         cursor: not-allowed;
       }
     }
@@ -131,18 +136,18 @@ $check-icon: fa-content($fa-var-check) !default;
   }
 }
 
-@include checkbox-variant('.checkbox-primary', $brand-primary);
-@include checkbox-variant('.checkbox-danger', $brand-danger);
-@include checkbox-variant('.checkbox-info', $brand-info);
-@include checkbox-variant('.checkbox-warning', $brand-warning);
-@include checkbox-variant('.checkbox-success', $brand-success);
+@include checkbox-variant('.checkbox-primary', colors.$brand-primary);
+@include checkbox-variant('.checkbox-danger', colors.$brand-danger);
+@include checkbox-variant('.checkbox-info', colors.$brand-info);
+@include checkbox-variant('.checkbox-warning', colors.$brand-warning);
+@include checkbox-variant('.checkbox-success', colors.$brand-success);
 
 
-@include checkbox-variant-indeterminate('.checkbox-primary', $brand-primary);
-@include checkbox-variant-indeterminate('.checkbox-danger', $brand-danger);
-@include checkbox-variant-indeterminate('.checkbox-info', $brand-info);
-@include checkbox-variant-indeterminate('.checkbox-warning', $brand-warning);
-@include checkbox-variant-indeterminate('.checkbox-success', $brand-success);
+@include checkbox-variant-indeterminate('.checkbox-primary', colors.$brand-primary);
+@include checkbox-variant-indeterminate('.checkbox-danger', colors.$brand-danger);
+@include checkbox-variant-indeterminate('.checkbox-info', colors.$brand-info);
+@include checkbox-variant-indeterminate('.checkbox-warning', colors.$brand-warning);
+@include checkbox-variant-indeterminate('.checkbox-success', colors.$brand-success);
 
 //
 // Radios
@@ -183,10 +188,10 @@ $check-icon: fa-content($fa-var-check) !default;
       height: 17px;
       left: 0;
       margin-left: -20px;
-      border: 1px solid $input-border;
+      border: 1px solid variables2.$input-border;
       border-radius: 50%;
-      background-color: $gray-dark;
-      @include transition(border 0.18s ease, color 0.18s ease);
+      background-color: colors.$gray-dark;
+      @include mixins.transition(border 0.18s ease, color 0.18s ease);
     }
 
     &::after{
@@ -203,10 +208,10 @@ $check-icon: fa-content($fa-var-check) !default;
       will-change: transform, opacity;
       margin-left: -20px;
       border-radius: 50%;
-      background-color: $input-color;
-      @include scale(0, 0);
+      background-color: variables2.$input-color;
+      @include mixins.scale(0, 0);
 
-      @include transition-transform(.18s cubic-bezier(.8,-0.33,.2,1.33));
+      @include mixins.transition-transform(.18s cubic-bezier(.8,-0.33,.2,1.33));
       //curve - http://cubic-bezier.com/#.8,-0.33,.2,1.33
     }
   }
@@ -218,11 +223,11 @@ $check-icon: fa-content($fa-var-check) !default;
 
     &:focus + label::before{
       // @include tab-focus(); // no outline frame for Pathfinder
-      border-color: $teal-lighter;
+      border-color: colors.$teal-lighter;
     }
 
     &:checked + label::after{
-      @include scale(1, 1);
+      @include mixins.scale(1, 1);
       opacity: 1;
     }
 
@@ -241,11 +246,11 @@ $check-icon: fa-content($fa-var-check) !default;
   }
 }
 
-@include radio-variant('.radio-primary', $brand-primary);
-@include radio-variant('.radio-danger', $brand-danger);
-@include radio-variant('.radio-info', $brand-info);
-@include radio-variant('.radio-warning', $brand-warning);
-@include radio-variant('.radio-success', $brand-success);
+@include radio-variant('.radio-primary', colors.$brand-primary);
+@include radio-variant('.radio-danger', colors.$brand-danger);
+@include radio-variant('.radio-info', colors.$brand-info);
+@include radio-variant('.radio-warning', colors.$brand-warning);
+@include radio-variant('.radio-success', colors.$brand-success);
 
 
 input[type="checkbox"],

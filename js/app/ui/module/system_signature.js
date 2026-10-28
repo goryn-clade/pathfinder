@@ -1368,7 +1368,6 @@ define([
          */
         updateSignatureTableByClipboard(tableApi, clipboard, options){
             if(tableApi.hasProcesses('request')){
-                console.info('Update signature table By clipboard locked.');
                 return;
             }
 
@@ -2827,7 +2826,6 @@ define([
             let module = this;
 
             if(tableApi.hasProcesses('lock')){
-                console.info('Signature table locked. Skip table update');
                 return;
             }
 

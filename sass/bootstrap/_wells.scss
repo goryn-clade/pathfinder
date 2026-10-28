@@ -1,3 +1,6 @@
+@use "../colors";
+@use "../variables";
+
 //
 // Wells
 // --------------------------------------------------
@@ -8,27 +11,27 @@
   min-height: 20px;
   padding: 10px;
   margin-bottom: 20px;
-  background-color: $well-bg;
-  border: 1px solid $well-border;
+  background-color: variables.$well-bg;
+  border: 1px solid variables.$well-border;
   border-radius: 5px;
-  color: $gray-darker;
-  font-family: $font-family-bold;
+  color: colors.$gray-darker;
+  font-family: variables.$font-family-bold;
   blockquote {
     border-color: #ddd;
     border-color: rgba(0,0,0,.15);
   }
 
   a {
-    color: $teal-lightest;
+    color: colors.$teal-lightest;
   }
 }
 
 // Sizes
 .well-lg {
   padding: 24px;
-  border-radius: $border-radius-large;
+  border-radius: variables.$border-radius-large;
 }
 .well-sm {
   padding: 7px;
-  border-radius: $border-radius-small;
+  border-radius: variables.$border-radius-small;
 }

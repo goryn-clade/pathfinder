@@ -1,3 +1,6 @@
+@use "../../colors";
+@use "../main"; // @extend .pf-dialog-icon-button
+
 .pf-system-signature-module {
 
   .progress-label-right {
@@ -21,7 +24,7 @@
   // delete signature button
   .pf-sig-table-clear-button {
     will-change: color;
-    color: $red-dark;
+    color: colors.$red-dark;
   }
 
   .pf-sig-table {
@@ -41,7 +44,7 @@
 
     .pf-editable-description {
       width: 100%;
-      background-color: $gray-darker;
+      background-color: colors.$gray-darker;
       max-height: 300px;
       font-size: 11px;
       line-height: 14px;

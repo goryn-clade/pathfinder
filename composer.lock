@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01325144d88df4b5427754fb73f954e3",
+    "content-hash": "f04431bf79746c4fcc476468e48d87fa",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -779,16 +779,16 @@
         },
         {
             "name": "goryn-clade/pathfinder_esi",
-            "version": "v3.0.1",
+            "version": "v3.0.2-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goryn-clade/pathfinder_esi.git",
-                "reference": "332f4f5480e76ea80abd6dfdcf9a191c3f2ca3e1"
+                "reference": "db7f2895eca1a48f429fa1904995926acc8c7b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/332f4f5480e76ea80abd6dfdcf9a191c3f2ca3e1",
-                "reference": "332f4f5480e76ea80abd6dfdcf9a191c3f2ca3e1",
+                "url": "https://api.github.com/repos/goryn-clade/pathfinder_esi/zipball/db7f2895eca1a48f429fa1904995926acc8c7b27",
+                "reference": "db7f2895eca1a48f429fa1904995926acc8c7b27",
                 "shasum": ""
             },
             "require": {
@@ -799,8 +799,9 @@
                 "php-64bit": ">=8.2"
             },
             "require-dev": {
-                "phpstan/phpstan": "^2.1",
-                "rector/rector": "^2.4"
+                "phpstan/phpstan": "^2.3",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "rector/rector": "^2.7"
             },
             "type": "library",
             "autoload": {
@@ -820,10 +821,10 @@
             "description": "ESI API library for Pathfinder",
             "homepage": "https://github.com/goryn-clade/pathfinder_esi",
             "support": {
-                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.2",
+                "source": "https://github.com/goryn-clade/pathfinder_esi/tree/v3.0.2-beta.1",
                 "issues": "https://github.com/goryn-clade/pathfinder_esi/issues"
             },
-            "time": "2026-10-22T00:14:12+00:00"
+            "time": "2026-10-23T18:00:07+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1291,16 +1292,16 @@
         },
         {
             "name": "league/html-to-markdown",
-            "version": "5.0.2",
+            "version": "5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/html-to-markdown.git",
-                "reference": "4d0394e120dc14b0d5c52fd1755fd48656da2ec9"
+                "reference": "905eb9374feee6cedf9b972fc47c7c26a86bbec1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/html-to-markdown/zipball/4d0394e120dc14b0d5c52fd1755fd48656da2ec9",
-                "reference": "4d0394e120dc14b0d5c52fd1755fd48656da2ec9",
+                "url": "https://api.github.com/repos/thephpleague/html-to-markdown/zipball/905eb9374feee6cedf9b972fc47c7c26a86bbec1",
+                "reference": "905eb9374feee6cedf9b972fc47c7c26a86bbec1",
                 "shasum": ""
             },
             "require": {
@@ -1310,11 +1311,12 @@
             },
             "require-dev": {
                 "mikehaertl/php-shellcommand": "^1.1.0",
-                "phpstan/phpstan": "^0.12.82",
-                "phpunit/phpunit": "^8.5 || ^9.2",
+                "phpstan/phpstan": "^1.8.8 || ^2.0",
+                "phpunit/phpunit": "^8.5 || ^9.2 || ^10.5 || ^11.0 || ^12.0 || ^13.0",
                 "scrutinizer/ocular": "^1.6",
-                "unleashedtech/php-coding-standard": "^2.7",
-                "vimeo/psalm": "^4.6"
+                "symfony/process": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+                "unleashedtech/php-coding-standard": "^2.7 || ^3.0",
+                "vimeo/psalm": "^4.22 || ^5.0 || ^6.0"
             },
             "bin": [
                 "bin/html-to-markdown"
@@ -1322,7 +1324,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.1-dev"
+                    "dev-master": "5.3-dev"
                 }
             },
             "autoload": {
@@ -1356,7 +1358,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/html-to-markdown/issues",
-                "source": "https://github.com/thephpleague/html-to-markdown/tree/5.0.2"
+                "source": "https://github.com/thephpleague/html-to-markdown/tree/5.2.3"
             },
             "funding": [
                 {
@@ -1376,7 +1378,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-06T05:38:26+00:00"
+            "time": "2026-10-19T04:13:34+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2521,20 +2523,21 @@
         },
         {
             "name": "xfra35/f3-cron",
-            "version": "v1.2.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xfra35/f3-cron.git",
-                "reference": "eba0a5574a8c35623307dd27135a67d76e4da12e"
+                "reference": "f685f48cbba22871f0f84d2cb815229b07e8d52d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xfra35/f3-cron/zipball/eba0a5574a8c35623307dd27135a67d76e4da12e",
-                "reference": "eba0a5574a8c35623307dd27135a67d76e4da12e",
+                "url": "https://api.github.com/repos/xfra35/f3-cron/zipball/f685f48cbba22871f0f84d2cb815229b07e8d52d",
+                "reference": "f685f48cbba22871f0f84d2cb815229b07e8d52d",
                 "shasum": ""
             },
             "require": {
-                "bcosca/fatfree-core": "~3.5"
+                "bcosca/fatfree-core": "~3.5",
+                "php": ">=7.2"
             },
             "type": "library",
             "autoload": {
@@ -2556,9 +2559,9 @@
             ],
             "support": {
                 "issues": "https://github.com/xfra35/f3-cron/issues",
-                "source": "https://github.com/xfra35/f3-cron/tree/v1.2.1"
+                "source": "https://github.com/xfra35/f3-cron/tree/v1.3.0"
             },
-            "time": "2018-06-19T08:29:49+00:00"
+            "time": "2025-08-06T15:04:30+00:00"
         }
     ],
     "packages-dev": [
@@ -3101,6 +3104,7 @@
     "aliases": [],
     "minimum-stability": "beta",
     "stability-flags": {
+        "goryn-clade/pathfinder_esi": 10,
         "ikkez/f3-cortex": 20,
         "phpcompatibility/php-compatibility": 15
     },

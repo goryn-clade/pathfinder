@@ -1,3 +1,4 @@
+@use "sass:meta";
 .select2-container {
   box-sizing: border-box;
 
@@ -6,11 +7,11 @@
   position: relative;
   vertical-align: middle;
 
-  @import "single";
-  @import "multiple";
+  @include meta.load-css("single");
+  @include meta.load-css("multiple");
 }
 
-@import "dropdown";
+@include meta.load-css("dropdown");
 
 .select2-close-mask {
   border: 0;
@@ -47,4 +48,4 @@
 }
 
 //@import "theme/default/_layout";
-@import "theme/pathfinder/layout";
+@include meta.load-css("theme/pathfinder/layout");

@@ -9,7 +9,7 @@ let ini                 = require('ini');
 
 let gulp                = require('gulp');
 let requirejsOptimize   = require('gulp-requirejs-optimize');
-let filter              = require('gulp-filter');
+let filter              = require('gulp-filter').default;
 let gulpif              = require('gulp-if');
 let jshint              = require('gulp-jshint');
 let zlib                = require('zlib');
@@ -17,7 +17,7 @@ let gzip                = require('gulp-gzip');
 let brotli              = require('gulp-brotli');
 let terser              = require('gulp-terser');
 let sass                = require('gulp-sass')(require('sass'));
-let autoprefixer        = require('gulp-autoprefixer');
+let autoprefixer        = require('gulp-autoprefixer').default;
 let cleanCSS            = require('gulp-clean-css');
 let imageResize         = require('gulp-image-resize');
 let sharp               = require('sharp');
@@ -35,7 +35,7 @@ let log                 = require('fancy-log');
 let colors              = require('ansi-colors');
 let stylish             = require('jshint-stylish');
 let Table               = require('terminal-table');
-let prettyBytes         = require('pretty-bytes');
+let prettyBytes         = require('pretty-bytes').default;
 let del                 = require('promised-del');
 
 let minify = (options) => terser(options);
@@ -259,8 +259,7 @@ let CONF = {
 
 // -- Plugin options ----------------------------------------------------------
 let sassOptions = {
-    errorLogToConsole: true,
-    outputStyle: 'compressed' // nested, expanded, compact, compressed
+    style: 'compressed' // expanded, compressed
 };
 
 let autoprefixerOptions = {
@@ -824,7 +823,7 @@ gulp.task('task:renameJsDest', () => {
 
 /**
  * build CSS rom SASS files
- * -> 1. node-sass
+ * -> 1. sass (Dart Sass, modern API)
  *    2. autoprefixer
  */
 gulp.task('task:sass', () => {

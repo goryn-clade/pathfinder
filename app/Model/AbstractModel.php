@@ -263,34 +263,26 @@ abstract class AbstractModel extends Cortex implements \Stringable {
             $val = trim($val);
         }
 
-        if(
-            !$this->dry() &&
-            $key != 'updated'
-        ){
-            if($this->exists($key)){
-                // get raw column data (no objects)
-                $currentVal = $this->get($key, true);
-
-                if(is_object($val)){
-                    if(
-                        is_subclass_of($val, 'Model\AbstractModel') &&
-                        $val->_id != $currentVal
-                    ){
-                        // relational object changed
-                        $this->touch('updated');
-                    }
-                }elseif($val != $currentVal){
-                    // non object value
-                    $this->touch('updated');
-                }
-            }
+        $currentVal = null;
+        $trackChange = !$this->dry() && $key != 'updated' && $this->exists($key);
+        if($trackChange){
+            // get raw column data (no objects)
+            $currentVal = $this->get($key, true);
         }
 
         if(!$this->validateField($key, $val)){
             $this->throwValidationException($key);
         }
 
-        return parent::set($key, $val);
+        $result = parent::set($key, $val);
+
+        // compare after the custom setter ("set_<field>()") ran,
+        // it may reject the value and keep the current one
+        if($trackChange && $this->get($key, true) != $currentVal){
+            $this->touch('updated');
+        }
+
+        return $result;
     }
 
     /**

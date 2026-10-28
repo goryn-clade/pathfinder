@@ -1,3 +1,6 @@
+@use "../../bootstrap/mixins";
+@use "../../colors";
+
 .pf-system-info-module {
 
   // breadcrumb
@@ -74,7 +77,7 @@
         float: right; // customBtn group should be right
       }
 
-      @include clearfix(); // because of "floating" right button group
+      @include mixins.clearfix(); // because of "floating" right button group
     }
   }
 
@@ -119,14 +122,14 @@
 
     // custom WYSIWYG style
     hr {
-      border-top: 1px solid $gray-dark;
+      border-top: 1px solid colors.$gray-dark;
     }
 
     blockquote {
       padding: 5px 10px;
       margin: 0 0 10px;
       font-size: 13px;
-      border-left: 3px solid $teal;
+      border-left: 3px solid colors.$teal;
     }
 
     ol, ul {

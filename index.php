@@ -24,4 +24,17 @@ Lib\Config::instance($f3);
 // initiate cron-jobs
 Lib\Cron::instance();
 
-$f3->run();
+// generic "/api/@controller/@action" routes: F3 url-decodes the path and @controller matches anything but "/".
+// Allow only plain names of existing Api controllers (e.g. no "Rest%5CSignature"). "/api/rest/..." has its own routes
+if(
+    preg_match('#^/api/([^/]*)/[^/]#', urldecode((string)$f3->get('PATH')), $matches) &&
+    $matches[1] !== 'rest' &&
+    (
+        !preg_match('/^[A-Za-z]+$/', $matches[1]) ||
+        !class_exists(__NAMESPACE__ . '\Controller\Api\\' . $matches[1])
+    )
+){
+    $f3->error(404);
+}else{
+    $f3->run();
+}

@@ -1,12 +1,15 @@
+@use "sass:color";
+@use "../../../colors";
+
 
 // Row colour, when selected
-$table-selected: $teal-darkest !default;
+$table-selected: colors.$teal-darkest !default;
 
 // Colour to use when shading
 $table-shade: black !default;
 
 @function shade( $color, $percent ) {
-	@return mix($table-shade, $color, $percent);
+	@return color.mix($table-shade, $color, $percent);
 }
 
 
@@ -58,7 +61,7 @@ table.dataTable {
 		}
 
 		> tr.even.selected {
-			>.sorting_1 { background-color: darken($teal-darkest, 2%) }
+			>.sorting_1 { background-color: color.adjust(colors.$teal-darkest, $lightness: -2%) }
 			>.sorting_2 { background-color: shade($table-selected, 1.2%); }
 			>.sorting_3 { background-color: shade($table-selected, 0.4%); }
 		}

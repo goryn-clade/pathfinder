@@ -1,4 +1,4 @@
-<a href="{{ link }}?cookie={{ cookieName }}&tabId={{browserTabId}}">
+<a href="{{ link }}" data-method="post" data-cookie="{{ cookieName }}" data-token="{{ token }}">
     {{#authOK}}
         {{#isManager}}
             <div class="ribbon-wrapper fade in"><div class="ribbon ribbon-blue">{{ character.role.label }}</div></div>

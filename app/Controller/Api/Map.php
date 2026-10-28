@@ -10,6 +10,7 @@ namespace Exodus4D\Pathfinder\Controller\Api;
 
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Controller;
+use Exodus4D\Pathfinder\Exception;
 use Exodus4D\Pathfinder\Data\File\FileHandler;
 use Exodus4D\Pathfinder\Model\AbstractModel;
 use Exodus4D\Pathfinder\Model\Pathfinder;
@@ -279,6 +280,7 @@ class Map extends Controller\AccessController {
      */
     public function import(\Base $f3): void {
         $importData = (array)$f3->get('POST');
+        $mapDataList = (array)($importData['mapData'] ?? []);
 
         $return = (object) [];
         $return->error = [];
@@ -286,7 +288,7 @@ class Map extends Controller\AccessController {
 
         if(
             isset($importData['typeId']) &&
-            count($importData['mapData']) > 0
+            count($mapDataList) > 0
         ){
             $activeCharacter = $this->getCharacter();
 
@@ -295,17 +297,18 @@ class Map extends Controller\AccessController {
             }
 
             /**
-             * @var Pathfinder\MapModel $map
-             */
-            $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
-
-            /**
              * @var Pathfinder\MapTypeModel $mapType
              */
             $mapType = Pathfinder\AbstractPathfinderModel::getNew('MapTypeModel');
             $mapType->getById((int)$importData['typeId']);
 
-            if( !$mapType->dry() && !$activeCharacter->hasMapRight($mapType->_id, 'map_import') ){
+            if( !$mapType->dry() && !$activeCharacter->getMapOwner((int)$mapType->_id) ){
+                // corp/alliance map -> character's corp/alliance gets access -> it must exist
+                $missingOwnerError = (object) [];
+                $missingOwnerError->type = 'error';
+                $missingOwnerError->text = 'You need a ' . $mapType->name . ' to import maps of this type';
+                $return->error[] = $missingOwnerError;
+            }elseif( !$mapType->dry() && !$activeCharacter->hasMapRight($mapType->_id, 'map_import') ){
                 $missingRightError = (object) [];
                 $missingRightError->type = 'error';
                 $missingRightError->text = 'You do not have the right to import maps of this type';
@@ -314,7 +317,7 @@ class Map extends Controller\AccessController {
                 $defaultConfig = Config::getMapsDefaultConfig($mapType->name);
                 $freeMapSlots = $activeCharacter->getFreeMapSlots($mapType->name);
 
-                foreach($importData['mapData'] as $mapData){
+                foreach($mapDataList as $mapData){
                     if($freeMapSlots < 1){
                         $maxCountError = (object) [];
                         $maxCountError->type = 'error';
@@ -335,7 +338,7 @@ class Map extends Controller\AccessController {
                          * @var Pathfinder\MapScopeModel $mapScope
                          */
                         $mapScope = Pathfinder\AbstractPathfinderModel::getNew('MapScopeModel');
-                        $mapScope->getById((int)$mapDataConfig['scope']['id']);
+                        $mapScope->getById((int)(((array)($mapDataConfig['scope'] ?? []))['id'] ?? 0));
 
                         if( !$mapScope->dry() ){
                             if(
@@ -347,62 +350,29 @@ class Map extends Controller\AccessController {
                                 $systemCount = count($mapDataSystems);
                                 if($systemCount <= $defaultConfig['max_systems']){
 
-                                    $map->copyfrom($mapDataConfig, ['name', 'icon', 'position', 'locked', 'rallyUpdated', 'rallyPoke']);
-                                    $map->typeId = $mapType;
-                                    $map->scopeId = $mapScope;
-                                    $map->save($activeCharacter);
-                                    $freeMapSlots--;
-
-                                    // new system IDs will be generated
-                                    // therefore we need to temp store a mapping between IDs
-                                    $tempSystemIdMapping = [];
-
-                                    foreach($mapDataSystems as $systemData){
-                                        if(
-                                            ($oldId = (int)$systemData['id']) &&
-                                            ($systemId = (int)$systemData['systemId'])
-                                        ){
-                                            $system = $map->getNewSystem($systemId);
-                                            $system->copyfrom($systemData, ['alias', 'status', 'locked', 'rallyUpdated', 'rallyPoke', 'position']);
-                                            $system = $map->saveSystem($system, $activeCharacter, $system->posX, $system->posY);
-
-                                            $tempSystemIdMapping[$oldId] = $system->_id;
-                                        }
-                                    }
-
+                                    // new model per map -> no validation errors left over from an earlier map
                                     /**
-                                     * @var Pathfinder\ConnectionModel $connection
+                                     * @var Pathfinder\MapModel $map
                                      */
-                                    $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
-                                    $connection->setActivityLogging(false);
-
-                                    foreach($mapDataConnections as $connectionData){
-                                        // check if source and target IDs match with new system ID
-                                        if(
-                                            ($sourceSystemId = $tempSystemIdMapping[(int)$connectionData['source']]) &&
-                                            ($targetSystemId = $tempSystemIdMapping[(int)$connectionData['target']])
-                                        ){
-                                            $connection->source = $sourceSystemId;
-                                            $connection->target = $targetSystemId;
-                                            $connection->copyfrom($connectionData, ['scope', 'type']);
-                                            $map->saveConnection($connection, $activeCharacter);
-
-                                            $connection->reset();
+                                    $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
+                                    try{
+                                        $this->importMap($map, $mapType, $mapScope, $mapDataConfig, $mapDataSystems, $mapDataConnections, $activeCharacter);
+                                    }catch(\Throwable $e){
+                                        $importError = (object) [];
+                                        $importError->type = 'error';
+                                        $importError->text = 'Map not imported: ';
+                                        if($e instanceof Exception\ValidationException){
+                                            $importError->text .= $e->getMessage();
+                                        }else{
+                                            // unexpected error (e.g. TypeError from a bad value) -> log details, keep response generic
+                                            AbstractModel::log('Map import failed: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine(), 'ERROR');
+                                            $importError->text .= 'map data not valid';
                                         }
+                                        $return->error[] = $importError;
+                                        continue;
                                     }
 
-                                    // map access info should not automatically imported
-                                    if($map->isPrivate()){
-                                        $map->setAccess($activeCharacter);
-                                    }elseif($map->isCorporation()){
-                                        if($corporation = $activeCharacter->getCorporation()){
-                                            $map->setAccess($corporation);
-                                        }
-                                    }elseif($map->isAlliance()){
-                                        if($alliance = $activeCharacter->getAlliance()){
-                                            $map->setAccess($alliance);
-                                        }
-                                    }
+                                    $freeMapSlots--;
 
                                     // broadcast map Access -> and send map Data
                                     $this->broadcastMapAccess($map);
@@ -433,8 +403,6 @@ class Map extends Controller\AccessController {
                         $missingConfigError->text = 'Map data not valid (config || data) missing';
                         $return->error[] = $missingConfigError;
                     }
-
-                    $map->reset();
                 }
             }else{
                 $unknownMapType = (object) [];
@@ -451,6 +419,139 @@ class Map extends Controller\AccessController {
         }
 
         echo json_encode($return);
+    }
+
+    /**
+     * write one imported map (map, systems, connections, access) in a single DB transaction
+     * -> on any error nothing of this map is stored and the error is re-thrown
+     * @param Pathfinder\MapModel $map
+     * @param Pathfinder\MapTypeModel $mapType
+     * @param Pathfinder\MapScopeModel $mapScope
+     * @param array<string, mixed> $mapDataConfig
+     * @param array<mixed> $mapDataSystems
+     * @param array<mixed> $mapDataConnections
+     * @param Pathfinder\CharacterModel $activeCharacter
+     * @throws \Throwable
+     */
+    protected function importMap(
+        Pathfinder\MapModel $map,
+        Pathfinder\MapTypeModel $mapType,
+        Pathfinder\MapScopeModel $mapScope,
+        array $mapDataConfig,
+        array $mapDataSystems,
+        array $mapDataConnections,
+        Pathfinder\CharacterModel $activeCharacter
+    ): void {
+        $db = $this->getF3()->DB->getDB('PF');
+
+        $db->begin();
+
+        // F3 turns PHP warnings/notices into a 500 response that cannot be caught
+        // -> throw them instead, so a bad value in the file rolls back this map
+        set_error_handler(function(int $level, string $text, string $file, int $line): bool {
+            if(!($level & error_reporting())){
+                return false;
+            }
+            throw new \ErrorException($text, 0, $level, $file, $line);
+        });
+
+        try{
+            $map->copyfrom($mapDataConfig, ['name', 'icon', 'position', 'locked', 'rallyUpdated', 'rallyPoke']);
+            $map->typeId = $mapType;
+            $map->scopeId = $mapScope;
+            if(!$map->save($activeCharacter) || $map->dry()){
+                $this->throwImportValidationError('map', $map->getErrors(), 'Map not valid');
+            }
+
+            // new system IDs will be generated
+            // therefore we need to temp store a mapping between IDs
+            $tempSystemIdMapping = [];
+            // systems without systemId (e.g. unknown systems) are not imported
+            $skippedSystemIds = [];
+
+            foreach($mapDataSystems as $systemData){
+                $systemData = (array)$systemData;
+                if(
+                    ($oldId = (int)($systemData['id'] ?? 0)) &&
+                    ($systemId = (int)($systemData['systemId'] ?? 0))
+                ){
+                    $system = $map->getNewSystem($systemId);
+                    $system->copyfrom($systemData, ['alias', 'status', 'locked', 'rallyUpdated', 'rallyPoke', 'position']);
+                    if(!$map->saveSystem($system, $activeCharacter, $system->posX, $system->posY)){
+                        $this->throwImportValidationError('systems', $system->getErrors(), 'System ' . $systemId . ' not valid');
+                    }
+
+                    $tempSystemIdMapping[$oldId] = $system->_id;
+                }elseif($oldId){
+                    $skippedSystemIds[] = $oldId;
+                }
+            }
+
+            /**
+             * @var Pathfinder\ConnectionModel $connection
+             */
+            $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
+            $connection->setActivityLogging(false);
+
+            foreach($mapDataConnections as $connectionData){
+                $connectionData = (array)$connectionData;
+                // source and target must be systems of this file
+                $oldSourceId = (int)($connectionData['source'] ?? 0);
+                $oldTargetId = (int)($connectionData['target'] ?? 0);
+                $sourceSystemId = $tempSystemIdMapping[$oldSourceId] ?? null;
+                $targetSystemId = $tempSystemIdMapping[$oldTargetId] ?? null;
+                if(!$sourceSystemId || !$targetSystemId){
+                    $this->throwImportValidationError('connections', [],
+                        array_intersect([$oldSourceId, $oldTargetId], $skippedSystemIds) ?
+                            'Connection refers to a system without systemId (unknown systems cannot be imported)' :
+                            'Connection refers to a system that is not in the map data'
+                    );
+                }
+
+                $connection->source = $sourceSystemId;
+                $connection->target = $targetSystemId;
+                $connection->copyfrom($connectionData, ['scope', 'type']);
+                if(!$map->saveConnection($connection, $activeCharacter)){
+                    $this->throwImportValidationError('connections', $connection->getErrors(), 'Connection not valid');
+                }
+
+                $connection->reset();
+            }
+
+            // map access info should not automatically imported
+            // -> without access rows nobody could see or delete the map
+            $accessObj = match(true){
+                $map->isPrivate()       => $activeCharacter,
+                $map->isCorporation()   => $activeCharacter->getCorporation(),
+                $map->isAlliance()      => $activeCharacter->getAlliance(),
+                default                 => false // other map types get no access rows
+            };
+            if($accessObj !== false && (!$accessObj || !$map->setAccess($accessObj))){
+                $this->throwImportValidationError('access', [], 'Map access could not be set for this map type');
+            }
+
+            $db->commit();
+        }catch(\Throwable $e){
+            $db->rollback();
+            // activity log rows for this map would point to a map that does not exist
+            if($mapId = $map->_id){
+                Controller\LogController::instance()->removeActivities((int)$mapId);
+            }
+            throw $e;
+        }finally{
+            restore_error_handler();
+        }
+    }
+
+    /**
+     * @param string $field
+     * @param array<mixed> $errors validation errors of a model
+     * @param string $default message if $errors is empty
+     * @throws Exception\ValidationException
+     */
+    protected function throwImportValidationError(string $field, array $errors, string $default): never {
+        $error = reset($errors);
+        throw new Exception\ValidationException(is_object($error) && !empty($error->text) ? $error->text : $default, $field);
     }
 
     /**

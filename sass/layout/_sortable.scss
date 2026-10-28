@@ -1,3 +1,5 @@
+@use "../colors";
+
 // 'Sortable' js lib (drag&drop) ======================================================================================
 
 .pf-sortable-handle {
@@ -8,14 +10,14 @@
     cursor: -moz-grab !important;
     cursor: -webkit-grab !important;
     cursor: grab !important;
-    color: $gray-light;
+    color: colors.$gray-light;
     width: 12px;
     transition: color 0.15s ease-out;
   }
 
   &:hover {
     &:before {
-      color: $orange-light;
+      color: colors.$orange-light;
     }
   }
 }
@@ -24,12 +26,12 @@
   opacity: 0.7 !important;
 
   .pf-sortable-handle {
-    color: $orange-light;
+    color: colors.$orange-light;
   }
 }
 
 .pf-sortable-chosen {
-  background: rgba($orange, 0.2);
+  background: rgba(colors.$orange, 0.2);
 }
 
 .pf-sortable-dropzone {
@@ -40,7 +42,7 @@
     align-items: center;
     height: 100%;
     background-color: rgba(40, 51, 67, 0.25);
-    color: $orange-dark;
+    color: colors.$orange-dark;
     font-size: 20px;
     text-transform: uppercase;
     font-weight: bold;
@@ -49,7 +51,7 @@
     left: 0;
     width: 100%;
     pointer-events: none;
-    border: 1px dashed $teal-dark;
+    border: 1px dashed colors.$teal-dark;
     border-radius: 5px;
     border-top-left-radius: 0;
     overflow: hidden;

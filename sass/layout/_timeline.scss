@@ -1,3 +1,6 @@
+@use "../bootstrap/mixins";
+@use "../colors";
+
 .timeline {
   list-style: none;
   position: relative;
@@ -13,7 +16,7 @@
   left: 50%;
   margin-top: 20px;
 
-  background-image: linear-gradient(to bottom, $green-dark, $gray-light 25%);
+  background-image: linear-gradient(to bottom, colors.$green-dark, colors.$gray-light 25%);
 }
 
 .timeline > li {
@@ -22,11 +25,11 @@
 
   &.timeline-first{
     .timeline-title{
-      color: $green-dark;
+      color: colors.$green-dark;
     }
 
     .timeline-badge{
-      background-color: $green-dark;
+      background-color: colors.$green-dark;
     }
   }
 }
@@ -54,12 +57,12 @@
 .timeline > li > .timeline-panel {
   width: 47%;
   float: left;
-  border: 1px solid $gray-dark;
+  border: 1px solid colors.$gray-dark;
   padding: 8px;
   position: relative;
-  background-color: $gray-dark;
+  background-color: colors.$gray-dark;
   font-size: 11px;
-  @include box-shadow(0 4px 10px rgba(0,0,0, 0.4));
+  @include mixins.box-shadow(0 4px 10px rgba(0,0,0, 0.4));
   border-radius: 5px;
 }
 
@@ -70,8 +73,8 @@
   right: -8px;
   display: inline-block;
   border-top: 7px solid transparent;
-  border-left: 7px solid $gray-light;
-  border-right: 0 solid $gray-light;
+  border-left: 7px solid colors.$gray-light;
+  border-right: 0 solid colors.$gray-light;
   border-bottom: 7px solid transparent;
 }
 
@@ -82,13 +85,13 @@
   right: -8px;
   display: inline-block;
   border-top: 7px solid transparent;
-  border-left: 7px solid $gray-light;
-  border-right: 0 solid $gray-light;
+  border-left: 7px solid colors.$gray-light;
+  border-right: 0 solid colors.$gray-light;
   border-bottom: 7px solid transparent;
 }
 
 .timeline > li > .timeline-badge {
-  color: $gray-darker;
+  color: colors.$gray-darker;
   width: 23px;
   height: 23px;
   line-height: 23px;
@@ -97,7 +100,7 @@
   top: 6px;
   left: 50%;
   margin-left: -11px;
-  background-color: $gray-light;
+  background-color: colors.$gray-light;
   z-index: 100;
   border-radius: 50%;
 

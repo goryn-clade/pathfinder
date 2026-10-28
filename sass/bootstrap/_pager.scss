@@ -1,3 +1,6 @@
+@use "../variables";
+@use "mixins";
+
 //
 // Pager pagination
 // --------------------------------------------------
@@ -5,25 +8,25 @@
 
 .pager {
   padding-left: 0;
-  margin: $line-height-computed 0;
+  margin: variables.$line-height-computed 0;
   list-style: none;
   text-align: center;
-  @include clearfix();
+  @include mixins.clearfix();
   li {
     display: inline;
     > a,
     > span {
       display: inline-block;
       padding: 5px 14px;
-      background-color: $pager-bg;
-      border: 1px solid $pager-border;
-      border-radius: $pager-border-radius;
+      background-color: variables.$pager-bg;
+      border: 1px solid variables.$pager-border;
+      border-radius: variables.$pager-border-radius;
     }
 
     > a:hover,
     > a:focus {
       text-decoration: none;
-      background-color: $pager-hover-bg;
+      background-color: variables.$pager-hover-bg;
     }
   }
 
@@ -46,8 +49,8 @@
     > a:hover,
     > a:focus,
     > span {
-      color: $pager-disabled-color;
-      background-color: $pager-bg;
+      color: variables.$pager-disabled-color;
+      background-color: variables.$pager-bg;
       cursor: not-allowed;
     }
   }

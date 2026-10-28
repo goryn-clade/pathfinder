@@ -1,3 +1,12 @@
+@use "sass:color";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+@use "animation";
+@use "../library/fontawesome/fontawesome"; // @extend .fa-*
+@use "../main" as theme; // @extend .fa-lg
+@use "../main-colorpallet"; // @extend .txt-color-*
+
 $endpointBubbleWidth: 18px;
 
 :fullscreen{
@@ -17,23 +26,23 @@ body{
 
 // links ==========================================================================================
 a, .pf-link{
-  color: $teal;
+  color: colors.$teal;
   will-change: color;
   text-decoration: none;
   cursor: pointer;
-  @include transition( color 0.08s ease-out, background-color 0.08s ease-out );
+  @include mixins.transition( color 0.08s ease-out, background-color 0.08s ease-out );
 
   &:hover{
-    color: $teal-lightest;
+    color: colors.$teal-lightest;
     text-decoration: none;
   }
 
   &:focus{
-    color: $teal;
+    color: colors.$teal;
   }
 
   &.disabled{
-    color: $navbar-default-link-color;
+    color: variables.$navbar-default-link-color;
     pointer-events: none;
     cursor: default;
   }
@@ -79,7 +88,7 @@ em,
   @extend .fa-lg;
   @extend .fa-level-up-alt;
   @extend .fa-rotate-90;
-  color: $gray-light;
+  color: colors.$gray-light;
   padding-right: 5px;
 }
 
@@ -137,10 +146,10 @@ html{
 }
 
 ::-webkit-scrollbar-track {
-  background-color: $gray-darker;
-  border-left: 1px solid $gray-dark;
+  background-color: colors.$gray-darker;
+  border-left: 1px solid colors.$gray-dark;
   border-radius: 2px;
-  @include transition( background-color .5s );
+  @include mixins.transition( background-color .5s );
 }
 
 ::-webkit-scrollbar-thumb {
@@ -148,10 +157,10 @@ html{
   border: 5px solid transparent;
   background-clip: padding-box;
   -webkit-border-radius: 8px;
-  background-color: lighten($gray, 30%);
+  background-color: color.adjust(colors.$gray, $lightness: 30%);
 
   &:hover{
-    background-color: lighten($gray, 40%);
+    background-color: color.adjust(colors.$gray, $lightness: 40%);
   }
 }
 
@@ -167,12 +176,12 @@ html{
 
 // text selection =================================================================================
 ::selection{
-  background: $gray-lighter; /* WebKit/Blink Browsers */
-  color: $gray-darkest;
+  background: colors.$gray-lighter; /* WebKit/Blink Browsers */
+  color: colors.$gray-darkest;
 }
 ::-moz-selection{
-  background: $gray-lighter; /* Gecko Browsers */
-  color: $gray-darkest;
+  background: colors.$gray-lighter; /* Gecko Browsers */
+  color: colors.$gray-darkest;
 }
 
 .row{
@@ -225,7 +234,7 @@ html{
 .pf-help-default{
   cursor: help;
   pointer-events: auto;   // enable mouse events even if a parent was set to 'none' (e.g. disabled xEditable cells in sig-reader dialog table)
-  @include transition( color 0.08s ease-out );
+  @include mixins.transition( color 0.08s ease-out );
 
   &:hover{
     @extend .txt-color-blue;
@@ -236,24 +245,24 @@ html{
 .pf-dialog-icon-button{
   cursor: pointer;
   margin-top: 2px;
-  @include transition(color 0.15s ease-out);
+  @include mixins.transition(color 0.15s ease-out);
 
   &:not(.collapsed), &:hover{
-    color: $orange;
+    color: colors.$orange;
   }
 }
 
 .pf-module-icon-button{
   cursor: pointer;
-  color: $gray-light; // overwrite xEditable button style
-  @include transition(color 0.15s ease-out);
+  color: colors.$gray-light; // overwrite xEditable button style
+  @include mixins.transition(color 0.15s ease-out);
 
   &.fas {
     position: relative; // for absolute positioned [data-badge]:after elements
   }
 
   &:hover, &.active{
-    color: $orange !important;
+    color: colors.$orange !important;
   }
 
   &.editable{
@@ -265,7 +274,7 @@ html{
     position: absolute;
     top: -8px;
     left: calc(100% - 5px);
-    color: $orange;
+    color: colors.$orange;
     border-radius: 9px;
     padding: 3px 4px;
     font-size: 11px;
@@ -302,10 +311,10 @@ html{
   outline: 1px solid;
   outline-color: transparent;
   outline-offset: 2px;
-  @include transition(outline-color 0.15s ease-out);
+  @include mixins.transition(outline-color 0.15s ease-out);
 
   &:hover{
-    outline-color: $teal;
+    outline-color: colors.$teal;
   }
 }
 // alert messages =================================================================================
@@ -317,25 +326,25 @@ html{
 .editable-input {
 
   optgroup[label] {
-    background-color: $gray;
-    color: $gray-light;
+    background-color: colors.$gray;
+    color: colors.$gray-light;
 
     option {
-      background-color: $gray-dark;
-      color: $gray-lighter;
-      font-family: $font-family-monospace;
+      background-color: colors.$gray-dark;
+      color: colors.$gray-lighter;
+      font-family: variables.$font-family-monospace;
     }
   }
 
   .editable-checklist {
     > div > label {
-      @extend .checkbox;
+      // @extend .checkbox: in pathfinder.scss
       display: block !important;
       padding-left: 20px !important; // overwrite inline-form styles
-      color: $gray-lighter;
+      color: colors.$gray-lighter;
 
       > span {
-        @extend label;
+        // @extend label: in pathfinder.scss
 
         &:after {
           top: -2px;
@@ -361,7 +370,7 @@ html{
           line-height: 18px;
           margin-bottom: 5px;
           margin-top: 5px;
-          color: lighten($gray-light, 10%);
+          color: color.adjust(colors.$gray-light, $lightness: 10%);
           padding-left: 25px;
         }
 
@@ -372,11 +381,11 @@ html{
     }
 
     .pf-editable-unknown[value='0'] + span {
-      color: $red;
+      color: colors.$red;
     }
 
     .pf-editable-warn + span {
-      color: $orange;
+      color: colors.$orange;
     }
   }
 
@@ -403,18 +412,18 @@ html{
           font-size: 13px;
 
           &:not(.disabled) {
-            color: $gray-darker;
+            color: colors.$gray-darker;
           }
         }
 
         &.active {
-          color: $gray-dark; // overwrite default
-          background-color: $btn-primary-bg;
-          border-color: $btn-primary-border;
+          color: colors.$gray-dark; // overwrite default
+          background-color: variables.$btn-primary-bg;
+          border-color: variables.$btn-primary-border;
         }
 
         &.disabled {
-          color: $gray-dark;
+          color: colors.$gray-dark;
           pointer-events: all; // required for cursor: not-allowed change (bootstrap bug) https://stackoverflow.com/a/50349274/4329969
         }
 
@@ -428,7 +437,7 @@ html{
       > .pf-editable-toggle-svg {
         width: 98px;
         height: 68px;
-        color: $gray-dark; // SVG color
+        color: colors.$gray-dark; // SVG color
         padding: 3px;
         margin: 0 3px;
       }
@@ -504,13 +513,13 @@ select:active, select:hover {
   .pf-table-toolbar-status{
     text-align: center;
     line-height: 22px;
-    color: $gray-light;
+    color: colors.$gray-light;
   }
 
   .dataTables_filter {
     margin-top: 0;  // overwrite default (mobile breakpoint)
 
-    @media (max-width: $screen-xs-max) {
+    @media (max-width: variables.$screen-xs-max) {
       input[type='search'] {
         width: 100px;
       }
@@ -538,14 +547,14 @@ select:active, select:hover {
       }
 
       &.disabled{
-        color: darken($gray-light, 8%)
+        color: color.adjust(colors.$gray-light, $lightness: -8%)
       }
 
       &.processing{
         &:after {
-          border: 2px solid darken($gray-light, 8%);
-          border-left-color: $orange;
-          border-right-color: $orange;
+          border: 2px solid color.adjust(colors.$gray-light, $lightness: -8%);
+          border-left-color: colors.$orange;
+          border-right-color: colors.$orange;
         }
       }
     }
@@ -575,7 +584,7 @@ select:active, select:hover {
       }
       &:hover{
         background: transparent !important;
-        color: $orange !important;
+        color: colors.$orange !important;
       }
     }
   }
@@ -616,7 +625,7 @@ select:active, select:hover {
 
   tr {
     &.group{
-      background-color: rgba($gray-darker, 0.4);
+      background-color: rgba(colors.$gray-darker, 0.4);
     }
   }
 
@@ -636,9 +645,9 @@ select:active, select:hover {
 
     &:focus, &.editable-open, &.cellHighlight {
       // set td as :focus even is td content is focused
-      outline: 1px solid $orange-dark;
+      outline: 1px solid colors.$orange-dark;
       outline-offset: -1px;
-      background-color: rgba($orange-dark, .08);
+      background-color: rgba(colors.$orange-dark, .08);
     }
 
     > .fa-circle{
@@ -657,7 +666,7 @@ select:active, select:hover {
       cursor: pointer;
       @extend .txt-color;
       @extend .txt-color-teal;
-      @include transition( color 0.08s ease-out );
+      @include mixins.transition( color 0.08s ease-out );
 
       &:hover{
         @extend .txt-color-tealLightest;
@@ -675,7 +684,7 @@ select:active, select:hover {
       > .pf-table-action-icon-cell{
         @extend .txt-color;
         @extend .txt-color-gray;
-        @include transition( color 0.08s ease-out );
+        @include mixins.transition( color 0.08s ease-out );
       }
 
       &:hover{
@@ -711,8 +720,8 @@ select:active, select:hover {
       img{
         width: 26px; // smaller image (default 32)
         box-sizing: content-box;
-        border-left: 1px solid $gray;
-        border-right: 1px solid $gray;
+        border-left: 1px solid colors.$gray;
+        border-right: 1px solid colors.$gray;
       }
     }
 
@@ -741,7 +750,7 @@ select:active, select:hover {
     }
 
     &.pf-table-counter-cell{
-      color: $gray-light;
+      color: colors.$gray-light;
 
       .pf-digit-counter-small{
         width: 20px;
@@ -757,7 +766,7 @@ select:active, select:hover {
     }
 
     .pf-table-unknown-cell{
-      color: $red;
+      color: colors.$red;
       font-style: italic;
     }
 
@@ -793,7 +802,7 @@ select:active, select:hover {
   // column separator
   td, th{
     &.separator-right{
-      border-right: 1px solid $gray;
+      border-right: 1px solid colors.$gray;
     }
 
     svg.peity{
@@ -805,23 +814,23 @@ select:active, select:hover {
   // column highlight cell class
   thead{
     th.colHighlight{
-      border-bottom: 1px solid $orange-dark;
+      border-bottom: 1px solid colors.$orange-dark;
     }
   }
 
   tbody{
     td.colHighlight{
-      border-left: 1px solid $orange-dark;
-      border-right: 1px solid $orange-dark;
-      background-color: rgba($orange-dark, .08);
+      border-left: 1px solid colors.$orange-dark;
+      border-right: 1px solid colors.$orange-dark;
+      background-color: rgba(colors.$orange-dark, .08);
     }
 
     tr:first-child td.colHighlight{
-      border-top: 1px solid $orange-dark;
+      border-top: 1px solid colors.$orange-dark;
     }
 
     tr:last-child td.colHighlight{
-      border-bottom: 1px solid $orange-dark;
+      border-bottom: 1px solid colors.$orange-dark;
     }
   }
 
@@ -837,7 +846,7 @@ table{
 
 
   &.collapsing{
-    @include transition( height .01s ease );
+    @include mixins.transition( height .01s ease );
 
   }
 
@@ -847,7 +856,7 @@ table{
 
   tr{
     &.collapsing{
-      @include transition( height .01s ease );
+      @include mixins.transition( height .01s ease );
     }
 
     &.collapse{
@@ -859,7 +868,7 @@ table{
 
   td, th{
     &.separator-right{
-      border-right: 1px solid $gray-dark;
+      border-right: 1px solid colors.$gray-dark;
     }
 
     &.pf-table-cell-10{
@@ -923,7 +932,7 @@ table{
         width: 0; // default if no --width var set
         width: calc(var(--width) * 1%);
         height: 1px;
-        border-top: 1px solid $blue;
+        border-top: 1px solid colors.$blue;
       }
 
       &:after{
@@ -935,7 +944,7 @@ table{
         height: 1px;
         border-width: 0 2px;
         border-style: solid;
-        border-color: $gray-lighter;
+        border-color: colors.$gray-lighter;
       }
     }
   }
@@ -967,7 +976,7 @@ table{
   top: 0;
   left: 0;
   opacity: 0;
-  background: $gray-darker;
+  background: colors.$gray-darker;
   z-index: 1060;
   border-radius: 5px;
 
@@ -999,13 +1008,13 @@ table{
 
 .modal .navbar-nav {
   li {
-    @include pf-navigation-indicator(top);
+    @include animation.pf-navigation-indicator(top);
   }
 }
 
 .navbar-fixed-top .navbar-nav {
   li {
-    @include pf-navigation-indicator(bottom);
+    @include animation.pf-navigation-indicator(bottom);
   }
 }
 
@@ -1015,13 +1024,13 @@ table{
 
 // page menu ======================================================================================
 .pf-site{
-  background-color:  $body-background-color;
+  background-color:  variables.$body-background-color;
   background-repeat: no-repeat;
 }
 
 .pf-menu{
-  color: $gray-light;
-  background-color: $gray-dark;
+  color: colors.$gray-light;
+  background-color: colors.$gray-dark;
   width: 150px;
   transition-duration: 180ms;
   will-change: transform;
@@ -1035,14 +1044,14 @@ table{
 .pf-menu-left{
   .list-group-item{
     cursor: pointer;
-    @include box-shadow(inset -10px 0px 5px -5px rgba(0,0,0,0.4));
+    @include mixins.box-shadow(inset -10px 0px 5px -5px rgba(0,0,0,0.4));
   }
 }
 
 .pf-menu-right{
   .list-group-item{
     cursor: pointer;
-    @include box-shadow(inset 10px 0px 5px -5px rgba(0,0,0,0.4));
+    @include mixins.box-shadow(inset 10px 0px 5px -5px rgba(0,0,0,0.4));
   }
 }
 
@@ -1052,14 +1061,14 @@ table{
       content: '\f023';
       font-family: 'Font Awesome 5 Free';
       font-weight: bold;
-      color: $gray-darker;
+      color: colors.$gray-darker;
       position: absolute;
       right: 8px;
     }
   }
   &.loading{
     pointer-events: none;
-    color: $navbar-default-link-color;
+    color: variables.$navbar-default-link-color;
 
     &:after{
       content: '\f021';
@@ -1102,36 +1111,36 @@ table{
 }
 // map types ======================================================================================
 .pf-map-type-private{
-  color: $indigo;
+  color: colors.$indigo;
 }
 
 .pf-map-type-corporation{
-  color: $green;
+  color: colors.$green;
 }
 
 .pf-map-type-alliance{
-  color: $blue;
+  color: colors.$blue;
 }
 
 .pf-map-type-global{
-  color: $teal-lighter;
+  color: colors.$teal-lighter;
 }
 
 // User status ====================================================================================
 .pf-user-status{
-  color: $red-dark;
+  color: colors.$red-dark;
 }
 
 .pf-user-status-corp{
-  color: $green;
+  color: colors.$green;
 }
 
 .pf-user-status-ally{
-  color: $blue;
+  color: colors.$blue;
 }
 
 .pf-user-status-own{
-  color: $indigo;
+  color: colors.$indigo;
 }
 
 // Connection Endpoint types ======================================================================
@@ -1154,51 +1163,51 @@ table{
 // WH effects =====================================================================================
 .pf-system-effect{
   display: none;      // if effect is active it will be overwritten
-  color: $gray-lighter;
+  color: colors.$gray-lighter;
   cursor: help;
 }
 
 .pf-system-effect-magnetar{
-  color: $wh-color-magnetar;
+  color: colors.$wh-color-magnetar;
   display: inline-block;
 }
 
 .pf-system-effect-redgiant{
-  color: $wh-color-redgiant;
+  color: colors.$wh-color-redgiant;
   display: inline-block;
 }
 
 .pf-system-effect-pulsar{
-  color: $wh-color-pulsar;
+  color: colors.$wh-color-pulsar;
   display: inline-block;
 }
 
 .pf-system-effect-wolfrayet{
-  color: $wh-color-wolfrayet;
+  color: colors.$wh-color-wolfrayet;
   display: inline-block;
 }
 
 .pf-system-effect-cataclysmic{
-  color: $wh-color-cataclysmic;
+  color: colors.$wh-color-cataclysmic;
   display: inline-block;
 }
 
 .pf-system-effect-blackhole{
-  color: $wh-color-blackhole;
+  color: colors.$wh-color-blackhole;
   display: inline-block;
 }
 
 // system info status =============================================================================
 .pf-rally{
-  text-shadow: 1px 1px 2px $gray-darkest; // improve text contrast
-  background-color: $pink-darker;
+  text-shadow: 1px 1px 2px colors.$gray-darkest; // improve text contrast
+  background-color: colors.$pink-darker;
 
   background-image: linear-gradient(-45deg,
-          $purple-dark 25%,
+          colors.$purple-dark 25%,
           transparent 25%,
           transparent 50%,
-          $purple-dark 50%,
-          $purple-dark 75%,
+          colors.$purple-dark 50%,
+          colors.$purple-dark 75%,
           transparent 75%,
           transparent);
   background-size: 25px 25px;
@@ -1214,47 +1223,47 @@ table{
 // system security status =========================================================================
 
 .pf-system-security-0-0{
-  color: $system-color-sec-0-0;
+  color: colors.$system-color-sec-0-0;
 }
 
 .pf-system-security-0-1{
-  color: $system-color-sec-0-1;
+  color: colors.$system-color-sec-0-1;
 }
 
 .pf-system-security-0-2{
-  color: $system-color-sec-0-2;
+  color: colors.$system-color-sec-0-2;
 }
 
 .pf-system-security-0-3{
-  color: $system-color-sec-0-3;
+  color: colors.$system-color-sec-0-3;
 }
 
 .pf-system-security-0-4{
-  color: $system-color-sec-0-4;
+  color: colors.$system-color-sec-0-4;
 }
 
 .pf-system-security-0-5{
-  color: $system-color-sec-0-5;
+  color: colors.$system-color-sec-0-5;
 }
 
 .pf-system-security-0-6{
-  color: $system-color-sec-0-6;
+  color: colors.$system-color-sec-0-6;
 }
 
 .pf-system-security-0-7{
-  color: $system-color-sec-0-7;
+  color: colors.$system-color-sec-0-7;
 }
 
 .pf-system-security-0-8{
-  color: $system-color-sec-0-8;
+  color: colors.$system-color-sec-0-8;
 }
 
 .pf-system-security-0-9{
-  color: $system-color-sec-0-9;
+  color: colors.$system-color-sec-0-9;
 }
 
 .pf-system-security-1-0{
-  color: $system-color-sec-1-0;
+  color: colors.$system-color-sec-1-0;
 }
 
 // system security level ==========================================================================
@@ -1270,101 +1279,101 @@ table{
 }
 
 .pf-system-sec-highSec{
-  color: $green;
+  color: colors.$green;
 }
 
 .pf-system-sec-lowSec{
-  color: $orange;
+  color: colors.$orange;
 }
 
 .pf-system-sec-nullSec{
-  color: $red;
+  color: colors.$red;
 }
 
 .pf-system-sec-triglav{
-  color: $red-dark;
+  color: colors.$red-dark;
 }
 
 .pf-system-sec-high{
-  color: $red;
+  color: colors.$red;
 }
 
 .pf-system-sec-mid{
-  color: $orange;
+  color: colors.$orange;
 }
 
 .pf-system-sec-low{
-  color: $blue;
+  color: colors.$blue;
 }
 
 .pf-system-sec-unknown{
-  color: $indigo;
+  color: colors.$indigo;
 }
 
 .pf-system-sec-abyssal{
-  color: $pink;
+  color: colors.$pink;
 }
 
 .pf-system-sec-special{
-  color: $yellow-dark;
+  color: colors.$yellow-dark;
 }
 
 .pf-system-sec-drifter{
-  color: $aqua;
+  color: colors.$aqua;
 }
 
 // system status ==================================================================================
 
 .pf-system-status-friendly{
-  border-color: $blue !important;
-  color: $blue;
+  border-color: colors.$blue !important;
+  color: colors.$blue;
 }
 
 .pf-system-status-occupied{
-  border-color: $orange !important;
-  color: $orange;
+  border-color: colors.$orange !important;
+  color: colors.$orange;
 }
 
 .pf-system-status-hostile{
-  border-color: $red !important;
-  color: $red;
+  border-color: colors.$red !important;
+  color: colors.$red;
 }
 
 .pf-system-status-empty{
-  border-color: $green !important;
-  color: $green;
+  border-color: colors.$green !important;
+  color: colors.$green;
 }
 
 .pf-system-status-unscanned{
-  border-color: $teal-lighter !important;
-  color: $teal-lighter;
+  border-color: colors.$teal-lighter !important;
+  color: colors.$teal-lighter;
 }
 
 // system status within label
 .pf-system-info-status-label{
-  background-color: $gray-light;
-  color: $black;
+  background-color: colors.$gray-light;
+  color: colors.$black;
   will-change: background-color;
-  @include transition( background-color 0.3s ease-out );
+  @include mixins.transition( background-color 0.3s ease-out );
 
   &.pf-system-status-friendly{
-    background-color: $blue;
+    background-color: colors.$blue;
   }
 
   &.pf-system-status-occupied{
-    background-color: $orange;
+    background-color: colors.$orange;
   }
 
   &.pf-system-status-hostile{
-    background-color: $red;
+    background-color: colors.$red;
   }
 
   &.pf-system-status-empty{
-    background-color: $green;
+    background-color: colors.$green;
   }
 
   &.pf-system-status-unscanned{
-    background-color: $teal-lighter;
+    background-color: colors.$teal-lighter;
   }
 }
 
@@ -1386,39 +1395,39 @@ table{
 
 // planet types ===================================================================================
 .pf-planet-barren{
-  color: $planet-color-barren;
+  color: colors.$planet-color-barren;
 }
 
 .pf-planet-gas{
-  color: $planet-color-gas;
+  color: colors.$planet-color-gas;
 }
 
 .pf-planet-ice{
-  color: $planet-color-ice;
+  color: colors.$planet-color-ice;
 }
 
 .pf-planet-lava{
-  color: $planet-color-lava;
+  color: colors.$planet-color-lava;
 }
 
 .pf-planet-oceanic{
-  color: $planet-color-oceanic;
+  color: colors.$planet-color-oceanic;
 }
 
 .pf-planet-plasma{
-  color: $planet-color-plasma;
+  color: colors.$planet-color-plasma;
 }
 
 .pf-planet-shattered{
-  color: $planet-color-shattered;
+  color: colors.$planet-color-shattered;
 }
 
 .pf-planet-storm{
-  color: $planet-color-storm;
+  color: colors.$planet-color-storm;
 }
 
 .pf-planet-temperate{
-  color: $planet-color-temperate;
+  color: colors.$planet-color-temperate;
 }
 
 // connection size by jump mass ===================================================================
@@ -1445,52 +1454,52 @@ table{
   width: 70px;
   height: 4px;
   max-width: 100%;
-  border-top: 2px solid $gray-light;
-  border-bottom: 2px solid $gray-light;
-  background-color: $gray;
+  border-top: 2px solid colors.$gray-light;
+  border-bottom: 2px solid colors.$gray-light;
+  background-color: colors.$gray;
   position: relative;
   font-size: 10px;
-  font-family: $font-family-sans-serif;
+  font-family: variables.$font-family-sans-serif;
 
   &.pf-map-connection-stargate{
-    background-color: $indigo-darkest;
-    border-color: $gray-light;
+    background-color: colors.$indigo-darkest;
+    border-color: colors.$gray-light;
   }
 
   &.pf-map-connection-jumpbridge{
-    background-color: $teal-lightest;
-    border-color: $gray;
+    background-color: colors.$teal-lightest;
+    border-color: colors.$gray;
     background: repeating-linear-gradient(
         to right,
-        $teal-lightest,
-        $teal-lightest 10px,
-        $gray 10px,
-        $gray 20px
+        colors.$teal-lightest,
+        colors.$teal-lightest 10px,
+        colors.$gray 10px,
+        colors.$gray 20px
     );
   }
 
   &.pf-map-connection-abyssal{
-    background-color: darken($pink-darker, 8%);
-    border-color: $gray;
+    background-color: color.adjust(colors.$pink-darker, $lightness: -8%);
+    border-color: colors.$gray;
     background: repeating-linear-gradient(
                     to right,
-                    darken($pink-darker, 8%),
-                    darken($pink-darker, 8%) 5px,
-                    $gray 5px,
-                    $gray 10px
+                    color.adjust(colors.$pink-darker, $lightness: -8%),
+                    color.adjust(colors.$pink-darker, $lightness: -8%) 5px,
+                    colors.$gray 5px,
+                    colors.$gray 10px
     );
   }
 
   &.pf-map-connection-wh-eol{
-    border-color: $pink-dark;
+    border-color: colors.$pink-dark;
   }
 
   &.pf-map-connection-wh-reduced{
-    background-color: $orange;
+    background-color: colors.$orange;
   }
 
   &.pf-map-connection-wh-critical{
-    background-color: $red-dark;
+    background-color: colors.$red-dark;
   }
 
   &.pf-map-connection-wh-size-s,
@@ -1500,8 +1509,8 @@ table{
   &.pf-map-connection-preserve-mass{
     &:after{
       content: '?';
-      background-color: $gray;
-      color: $gray-lighter;
+      background-color: colors.$gray;
+      color: colors.$gray-lighter;
       padding: 1px 2px;
       position: absolute;
       left: calc(50% - 12px);
@@ -1512,7 +1521,7 @@ table{
       min-width: 14px;
       text-align: center;
       border-radius: 3px;
-      @include box-shadow(0 3px 6px rgba(0,0,0,.3));
+      @include mixins.box-shadow(0 3px 6px rgba(0,0,0,.3));
     }
   }
 
@@ -1550,8 +1559,8 @@ table{
 
     &:after{
       content: 'save mass';
-      background-color: $red-dark;
-      color: $gray-lightest;
+      background-color: colors.$red-dark;
+      color: colors.$gray-lightest;
       left: calc(50% - 28px);
     }
   }
@@ -1561,31 +1570,31 @@ table{
 .pf-fake-connection-text{
   padding: 0 2px;
   border-style: solid;
-  border-color: darken($gray-light, 5%);
+  border-color: color.adjust(colors.$gray-light, $lightness: -5%);
   border-width: 2px;
   border-left: none;
   border-right: none;
 
   &.pf-wh-eol1{
-    border-color: $pink-light;
+    border-color: colors.$pink-light;
   }
 
   &.pf-wh-eol2{
-    border-color: $pink-dark;
+    border-color: colors.$pink-dark;
   }
 
   &.pf-wh-eol3{
-    border-color: $pink-darker;
+    border-color: colors.$pink-darker;
   }
 
   &.pf-wh-reduced{
-    background-color: $orange;
-    color: $black;
+    background-color: colors.$orange;
+    color: colors.$black;
   }
 
   &.pf-wh-critical{
-    background-color: $red-dark;
-    color: $black;
+    background-color: colors.$red-dark;
+    color: colors.$black;
   }
 
   &.pf-wh-frig{
@@ -1596,25 +1605,25 @@ table{
 
 // structure status ===============================================================================
 .pf-structure-status-unknown{
-  color: $teal-lighter;
+  color: colors.$teal-lighter;
 }
 
 .pf-structure-status-online{
-  color: $green;
+  color: colors.$green;
 }
 
 .pf-structure-status-offline{
-  color: $red-dark;
+  color: colors.$red-dark;
 }
 
 // global tooltip settings ========================================================================
 .tooltip-inner{
-  color: $gray-lighter;
-  background-color: $gray;
-  font-family: $font-family-bold;
+  color: colors.$gray-lighter;
+  background-color: colors.$gray;
+  font-family: variables.$font-family-bold;
   padding: 5px 5px;
   border-radius: 3px;
-  @include box-shadow(0 6px 12px rgba(0,0,0,.4));
+  @include mixins.box-shadow(0 6px 12px rgba(0,0,0,.4));
 }
 
 
@@ -1622,35 +1631,35 @@ table{
   // tooltips within modals
   .tooltip{
     // higher z-index
-    z-index: $zindex-modal + 10;
+    z-index: variables.$zindex-modal + 10;
 
     .tooltip-inner{
-      color: $gray-dark;
-      background-color: $gray-lighter;
+      color: colors.$gray-dark;
+      background-color: colors.$gray-lighter;
     }
   }
 }
 
 .tooltip.top .tooltip-arrow{
-  border-top-color: $gray-light;
+  border-top-color: colors.$gray-light;
 }
 
 .tooltip.right .tooltip-arrow{
-  border-right-color: $gray-light;
+  border-right-color: colors.$gray-light;
 }
 
 .tooltip.bottom .tooltip-arrow{
-  border-bottom-color: $gray-light;
+  border-bottom-color: colors.$gray-light;
 }
 
 .tooltip.left .tooltip-arrow{
-  border-left-color: $gray-light;
+  border-left-color: colors.$gray-light;
 }
 
 // elements that are popover "triggers" (root elements) (e.g. open on right click)-----------------
 td.pf-popover-trigger{
   &:hover{
-    color: $teal;
+    color: colors.$teal;
   }
 }
 
@@ -1666,7 +1675,7 @@ td.pf-popover-trigger{
   padding: 10px;
   min-height: 100px;
   position: relative;
-  background-color: $gray-dark;
+  background-color: colors.$gray-dark;
   overflow: hidden;
   border-radius: 5px;
 
@@ -1692,13 +1701,13 @@ td.pf-popover-trigger{
 
     &:hover{
       .pf-resizearea{
-        @include transition-delay(.15s);
+        @include mixins.transition-delay(.15s);
         height: 40px;
         opacity: 1;
       }
 
       .pf-resizebar-bar{
-        border-top: 1px solid $orange !important;
+        border-top: 1px solid colors.$orange !important;
       }
     }
   }
@@ -1712,7 +1721,7 @@ td.pf-popover-trigger{
   .pf-resizearea{
     height: 0;
     opacity: 0;
-    @include transition(height .12s ease-out, opacity .12s ease-out);
+    @include mixins.transition(height .12s ease-out, opacity .12s ease-out);
     will-change: height, opacity;
   }
 
@@ -1721,7 +1730,7 @@ td.pf-popover-trigger{
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: $gray-dark;
+    background-color: colors.$gray-dark;
     padding: 1px 0;
 
     .pf-dynamic-area-resizebar{
@@ -1732,12 +1741,12 @@ td.pf-popover-trigger{
 
       &:hover{
         .pf-resizebar-bar{
-          border-top: 1px solid $orange;
+          border-top: 1px solid colors.$orange;
         }
       }
 
       .pf-resizebar-bar{
-        border-top: 1px solid $gray-light;
+        border-top: 1px solid colors.$gray-light;
         transition: border-top 0.15s ease-out;
         width: 20px;
         margin: 1px auto;
@@ -1748,51 +1757,51 @@ td.pf-popover-trigger{
 
 // code highlighting ==============================================================================
 .pf-code-ObjectBrace {
-  color: lighten($pink-darker, 15%);
+  color: color.adjust(colors.$pink-darker, $lightness: 15%);
   font-weight: bold;
 }
 
 .pf-code-ArrayBrace {
-  color: $teal-lightest;
+  color: colors.$teal-lightest;
   font-weight: bold;
 }
 
 .pf-code-PropertyName {
-  color: lighten($gray-light, 15%);
+  color: color.adjust(colors.$gray-light, $lightness: 15%);
   font-weight: bold;
 }
 
 .pf-code-String {
-  color: $orange;
+  color: colors.$orange;
 }
 
 .pf-code-Number {
-  color: $green;
+  color: colors.$green;
 }
 
 .pf-code-Boolean {
-  color: $indigo;
+  color: colors.$indigo;
   font-weight: bold;
 }
 
 .pf-code-Function {
-  color: lighten($gray-light, 15%);
+  color: color.adjust(colors.$gray-light, $lightness: 15%);
   font-style: italic;
   white-space: pre;
 }
 
 .pf-code-Null {
-  color: $red;
+  color: colors.$red;
   font-weight: bold;
 }
 
 .pf-code-Comma {
-  color: lighten($gray-light, 15%);
+  color: color.adjust(colors.$gray-light, $lightness: 15%);
   font-weight: bold;
 }
 
 .pf-code-Date {
-  color: lighten($gray-light, 15%);
+  color: color.adjust(colors.$gray-light, $lightness: 15%);
   font-style: italic;
 }
 
@@ -1810,7 +1819,7 @@ pre {
 
 code {
   .fas, .far, .fab {
-    color: $gray-light;
+    color: colors.$gray-light;
     cursor: pointer;
     margin: 0 3px;
   }
@@ -1819,7 +1828,7 @@ code {
     border-radius: 5px;
 
     &:not(:last-child) {
-      border-bottom: 1px dashed $gray;
+      border-bottom: 1px dashed colors.$gray;
       padding-bottom: 5px;
     }
   }
@@ -1830,14 +1839,14 @@ code {
   margin-bottom: 0px;
 
   a{
-    @include transition( color 0.15s ease-out );
+    @include mixins.transition( color 0.15s ease-out );
     will-change: color;
 
     &:focus{
-      color: $teal;
+      color: colors.$teal;
 
       img{
-        border-color: $gray;
+        border-color: colors.$gray;
       }
     }
 
@@ -1845,11 +1854,11 @@ code {
       text-decoration: none;
 
       .badge{
-        color: $teal-lightest;
+        color: colors.$teal-lightest;
       }
 
       img{
-        border-color: $teal-lighter;
+        border-color: colors.$teal-lighter;
       }
     }
   }
@@ -1892,7 +1901,7 @@ code {
     display: none; // triggered by js
 
     .badge{
-      @include transition( color 0.3s ease-out );
+      @include mixins.transition( color 0.3s ease-out );
     }
   }
 
@@ -1901,9 +1910,9 @@ code {
     margin-top: -6px;
     margin-bottom: -6px;
     width: 27px;
-    border: 1px solid $gray;
+    border: 1px solid colors.$gray;
     image-rendering: -webkit-optimize-contrast;
-    @include transition( border-color 0.15s ease-out );
+    @include mixins.transition( border-color 0.15s ease-out );
     will-change: border-color;
 
     &.--left{
@@ -1927,18 +1936,18 @@ code {
   // tooltips header
   .tooltip{
     .tooltip-inner{
-      color: $gray-lighter;
+      color: colors.$gray-lighter;
     }
   }
 
 }
 
 .pf-head{
-  @include box-shadow(0 6px 12px rgba(0,0,0,.4));
+  @include mixins.box-shadow(0 6px 12px rgba(0,0,0,.4));
 
   .badge{
-    background-color: $gray;
-    color: $gray-lighter;
+    background-color: colors.$gray;
+    color: colors.$gray-lighter;
 
     &:empty{
       display: none;
@@ -1946,7 +1955,7 @@ code {
   }
 
   small{
-    font-family: $font-family-bold;
+    font-family: variables.$font-family-bold;
   }
 }
 
@@ -1958,15 +1967,15 @@ code {
   left: 0;
   width: 100%;
   margin: 0;
-  background: rgba($gray, 0.3);
+  background: rgba(colors.$gray, 0.3);
   padding: 1px 0;
 
   a{
-    font-family: $font-family-bold;
-    color: $teal-dark;
+    font-family: variables.$font-family-bold;
+    color: colors.$teal-dark;
 
     &:hover{
-      color: $teal;
+      color: colors.$teal;
       text-decoration: none;
     }
   }

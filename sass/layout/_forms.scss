@@ -1,28 +1,33 @@
+@use "sass:color";
+@use "../bootstrap/mixins";
+@use "../colors";
+@use "../variables";
+
 input, select{
-  background-color: $gray-dark;
-  color: $gray-lighter;
-  border: 1px solid $gray-light;
-  font-family: $font-family-bold;
+  background-color: colors.$gray-dark;
+  color: colors.$gray-lighter;
+  border: 1px solid colors.$gray-light;
+  font-family: variables.$font-family-bold;
 
   &:focus{
-    border-color: $teal-lighter;
+    border-color: colors.$teal-lighter;
   }
 
   // Change Autocomplete styles in Chrome
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus, {
-    border: 1px solid $input-border;
-    -webkit-text-fill-color: $input-color;
+    border: 1px solid variables.$input-border;
+    -webkit-text-fill-color: variables.$input-color;
     transition: background-color 5000s ease-in-out 0s;
     font-family: "Oxygen Bold", Arial, sans-serif;
     font-weight: bold;
     font-size: 12px;
-    @include box-shadow(0 0 0 50px $gray-dark inset !important);
+    @include mixins.box-shadow(0 0 0 50px colors.$gray-dark inset !important);
   }
 
   &[disabled]{
-    @include placeholder(transparent);
+    @include mixins.placeholder(transparent);
   }
 
   &.pf-select2{
@@ -45,7 +50,7 @@ input[type='file']{
   &::-webkit-file-upload-button{
     background-color: transparent;
     border: none;
-    color: $gray-light;
+    color: colors.$gray-light;
     outline: none;
   }
 }
@@ -58,14 +63,14 @@ textarea{
 
 fieldset[disabled]{
   .form-control{
-    color: $gray-light;
-    @include placeholder(transparent);
+    color: colors.$gray-light;
+    @include mixins.placeholder(transparent);
   }
 
   .input-icon-left, .input-icon-right{
     .fa-stack{
       i:last-child{
-        color: $gray;
+        color: colors.$gray;
       }
     }
   }
@@ -88,7 +93,7 @@ fieldset[disabled]{
 @supports (-moz-appearance:none) {
   select {
     -moz-appearance: none !important;
-    background: $gray-dark url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAMAAABPT11nAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFiIiIAAAA/v9K/QAAAAJ0Uk5T/wDltzBKAAAAHElEQVR42mJggAFGGMUIZjGCGIwMYIIRCgACDAABOwAVoypkGgAAAABJRU5ErkJggg==') right center no-repeat !important;
+    background: colors.$gray-dark url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAMAAABPT11nAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFiIiIAAAA/v9K/QAAAAJ0Uk5T/wDltzBKAAAAHElEQVR42mJggAFGGMUIZjGCGIwMYIIRCgACDAABOwAVoypkGgAAAABJRU5ErkJggg==') right center no-repeat !important;
     background-position: calc(100% - 5px) center !important;
     padding-right: 16px !important;
   }
@@ -122,11 +127,11 @@ fieldset[disabled]{
     top: 4px;
 
     i:first-child{
-      color: $gray-light;
+      color: colors.$gray-light;
     }
 
     i:last-child{
-      color: $gray-dark;
+      color: colors.$gray-dark;
     }
   }
 }
@@ -139,37 +144,37 @@ fieldset[disabled]{
     position: absolute;
     display: block;
     height: 100%;
-    background-color: rgba($green, .2 );
+    background-color: rgba(colors.$green, .2 );
     max-width: 100%;
     width: 0;
     top: 0;
     left: 0;
     overflow: hidden;
     line-height: 30px;
-    color: $orange-light;
+    color: colors.$orange-light;
     font-size: 10px;
     text-align: left;
-    @include transition( width 0.1s linear);
+    @include mixins.transition( width 0.1s linear);
   }
 }
 
 
 // drag&drop zone
 .pf-form-dropzone{
-  border: 2px dashed $gray-darker;
+  border: 2px dashed colors.$gray-darker;
   height: 100px;
-  background-color: darken($gray, 3%);
+  background-color: color.adjust(colors.$gray, $lightness: -3%);
   text-align: center;
   font-size: 20px;
   line-height: 100px;
   margin: 15px 0;
-  color: $gray-darker;
+  color: colors.$gray-darker;
   border-radius: 10px;
-  @include transition( color 0.18s ease-out, border-color 0.18s ease-out);
+  @include mixins.transition( color 0.18s ease-out, border-color 0.18s ease-out);
 
   &:hover{
-    color: $teal-lighter;
-    border-color: $teal-lighter;
+    color: colors.$teal-lighter;
+    border-color: colors.$teal-lighter;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;

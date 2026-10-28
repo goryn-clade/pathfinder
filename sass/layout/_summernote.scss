@@ -1,8 +1,11 @@
+@use "../bootstrap/mixins";
+@use "../colors";
+
 // custom styles for Summernote WYSIWYG editor
 
 .panel-heading{
   &.note-toolbar{
-    background-color: $gray-dark;
+    background-color: colors.$gray-dark;
 
     .dropdown-toggle>i+span{
       margin-left: 3px; // some more spacing (sugar)
@@ -24,32 +27,32 @@
 
     .note-editing-area{
       .note-editable{
-        color: $gray-light;
+        color: colors.$gray-light;
         background-color: transparent;
         will-change: height;
         border: 1px solid transparent; // overwrite form-control default
 
         &.has-error{
-          border-color: $red;
+          border-color: colors.$red;
         }
       }
     }
 
     .note-statusbar{
-      background-color: $gray-dark;
+      background-color: colors.$gray-dark;
       padding: 1px 0;
       border-top: 0;
 
       .note-resizebar{
         &:hover{
           .note-icon-bar{
-            border-top: 1px solid $orange;
+            border-top: 1px solid colors.$orange;
           }
         }
 
         .note-icon-bar{
-          border-top: 1px solid $gray-light;
-          @include transition(border-top 0.15s ease-out);
+          border-top: 1px solid colors.$gray-light;
+          @include mixins.transition(border-top 0.15s ease-out);
         }
       }
     }

@@ -3,8 +3,9 @@
 // Load core variables and mixins
 // --------------------------------------------------
 
-@import "variables";
-@import "mixins";
+@use "sass:color";
+@use "variables";
+@use "mixins";
 
 
 
@@ -21,32 +22,32 @@
 .btn-danger {
   text-shadow: 0 -1px 0 rgba(0,0,0,.2);
   $shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 1px rgba(0,0,0,.075);
-  @include box-shadow($shadow);
+  @include mixins.box-shadow($shadow);
 
   // Reset the shadow
   &:active,
   &.active {
-    @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+    @include mixins.box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
   }
 }
 
 // Mixin for generating new styles
 @mixin btn-styles($btn-color: #555) {
-  @include gradient-vertical($start-color: $btn-color, $end-color: darken($btn-color, 12%));
-  @include reset-filter(); // Disable gradients for IE9 because filter bleeds through rounded corners
+  @include mixins.gradient-vertical($start-color: $btn-color, $end-color: color.adjust($btn-color, $lightness: -12%));
+  @include mixins.reset-filter(); // Disable gradients for IE9 because filter bleeds through rounded corners
   background-repeat: repeat-x;
-  border-color: darken($btn-color, 14%);
+  border-color: color.adjust($btn-color, $lightness: -14%);
 
   &:hover,
   &:focus  {
-    background-color: darken($btn-color, 12%);
+    background-color: color.adjust($btn-color, $lightness: -12%);
     background-position: 0 -15px;
   }
 
   &:active,
   &.active {
-    background-color: darken($btn-color, 12%);
-    border-color: darken($btn-color, 14%);
+    background-color: color.adjust($btn-color, $lightness: -12%);
+    border-color: color.adjust($btn-color, $lightness: -14%);
   }
 }
 
@@ -60,12 +61,12 @@
 }
 
 // Apply the mixin to the buttons
-.btn-default { @include btn-styles($btn-default-bg); text-shadow: 0 1px 0 #fff; border-color: #ccc; }
-.btn-primary { @include btn-styles($btn-primary-bg); }
-.btn-success { @include btn-styles($btn-success-bg); }
-.btn-info    { @include btn-styles($btn-info-bg); }
-.btn-warning { @include btn-styles($btn-warning-bg); }
-.btn-danger  { @include btn-styles($btn-danger-bg); }
+.btn-default { @include btn-styles(variables.$btn-default-bg); text-shadow: 0 1px 0 #fff; border-color: #ccc; }
+.btn-primary { @include btn-styles(variables.$btn-primary-bg); }
+.btn-success { @include btn-styles(variables.$btn-success-bg); }
+.btn-info    { @include btn-styles(variables.$btn-info-bg); }
+.btn-warning { @include btn-styles(variables.$btn-warning-bg); }
+.btn-danger  { @include btn-styles(variables.$btn-danger-bg); }
 
 
 
@@ -75,7 +76,7 @@
 
 .thumbnail,
 .img-thumbnail {
-  @include box-shadow(0 1px 2px rgba(0,0,0,.075));
+  @include mixins.box-shadow(0 1px 2px rgba(0,0,0,.075));
 }
 
 
@@ -86,14 +87,14 @@
 
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
-  @include gradient-vertical($start-color: $dropdown-link-hover-bg, $end-color: darken($dropdown-link-hover-bg, 5%));
-  background-color: darken($dropdown-link-hover-bg, 5%);
+  @include mixins.gradient-vertical($start-color: variables.$dropdown-link-hover-bg, $end-color: color.adjust(variables.$dropdown-link-hover-bg, $lightness: -5%));
+  background-color: color.adjust(variables.$dropdown-link-hover-bg, $lightness: -5%);
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
-  @include gradient-vertical($start-color: $dropdown-link-active-bg, $end-color: darken($dropdown-link-active-bg, 5%));
-  background-color: darken($dropdown-link-active-bg, 5%);
+  @include mixins.gradient-vertical($start-color: variables.$dropdown-link-active-bg, $end-color: color.adjust(variables.$dropdown-link-active-bg, $lightness: -5%));
+  background-color: color.adjust(variables.$dropdown-link-active-bg, $lightness: -5%);
 }
 
 
@@ -104,15 +105,15 @@
 
 // Default navbar
 .navbar-default {
-  @include gradient-vertical($start-color: lighten($navbar-default-bg, 10%), $end-color: $navbar-default-bg);
-  @include reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
-  border-radius: $navbar-border-radius;
+  @include mixins.gradient-vertical($start-color: color.adjust(variables.$navbar-default-bg, $lightness: 10%), $end-color: variables.$navbar-default-bg);
+  @include mixins.reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
+  border-radius: variables.$navbar-border-radius;
   $shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 5px rgba(0,0,0,.075);
-  @include box-shadow($shadow);
+  @include mixins.box-shadow($shadow);
 
   .navbar-nav > .active > a {
-    @include gradient-vertical($start-color: darken($navbar-default-bg, 5%), $end-color: darken($navbar-default-bg, 2%));
-    @include box-shadow(inset 0 3px 9px rgba(0,0,0,.075));
+    @include mixins.gradient-vertical($start-color: color.adjust(variables.$navbar-default-bg, $lightness: -5%), $end-color: color.adjust(variables.$navbar-default-bg, $lightness: -2%));
+    @include mixins.box-shadow(inset 0 3px 9px rgba(0,0,0,.075));
   }
 }
 .navbar-brand,
@@ -122,12 +123,12 @@
 
 // Inverted navbar
 .navbar-inverse {
-  @include gradient-vertical($start-color: lighten($navbar-inverse-bg, 10%), $end-color: $navbar-inverse-bg);
-  @include reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
+  @include mixins.gradient-vertical($start-color: color.adjust(variables.$navbar-inverse-bg, $lightness: 10%), $end-color: variables.$navbar-inverse-bg);
+  @include mixins.reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
 
   .navbar-nav > .active > a {
-    @include gradient-vertical($start-color: $navbar-inverse-bg, $end-color: lighten($navbar-inverse-bg, 2.5%));
-    @include box-shadow(inset 0 3px 9px rgba(0,0,0,.25));
+    @include mixins.gradient-vertical($start-color: variables.$navbar-inverse-bg, $end-color: color.adjust(variables.$navbar-inverse-bg, $lightness: 2.5%));
+    @include mixins.box-shadow(inset 0 3px 9px rgba(0,0,0,.25));
   }
 
   .navbar-brand,
@@ -153,20 +154,20 @@
 .alert {
   text-shadow: 0 1px 0 rgba(255,255,255,.2);
   $shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 1px 2px rgba(0,0,0,.05);
-  @include box-shadow($shadow);
+  @include mixins.box-shadow($shadow);
 }
 
 // Mixin for generating new styles
 @mixin alert-styles($color) {
-  @include gradient-vertical($start-color: $color, $end-color: darken($color, 7.5%));
-  border-color: darken($color, 15%);
+  @include mixins.gradient-vertical($start-color: $color, $end-color: color.adjust($color, $lightness: -7.5%));
+  border-color: color.adjust($color, $lightness: -15%);
 }
 
 // Apply the mixin to the alerts
-.alert-success    { @include alert-styles($alert-success-bg); }
-.alert-info       { @include alert-styles($alert-info-bg); }
-.alert-warning    { @include alert-styles($alert-warning-bg); }
-.alert-danger     { @include alert-styles($alert-danger-bg); }
+.alert-success    { @include alert-styles(variables.$alert-success-bg); }
+.alert-info       { @include alert-styles(variables.$alert-info-bg); }
+.alert-warning    { @include alert-styles(variables.$alert-warning-bg); }
+.alert-danger     { @include alert-styles(variables.$alert-danger-bg); }
 
 
 
@@ -176,20 +177,20 @@
 
 // Give the progress background some depth
 .progress {
-  @include gradient-vertical($start-color: darken($progress-bg, 4%), $end-color: $progress-bg)
+  @include mixins.gradient-vertical($start-color: color.adjust(variables.$progress-bg, $lightness: -4%), $end-color: variables.$progress-bg)
 }
 
 // Mixin for generating new styles
 @mixin progress-bar-styles($color) {
-  @include gradient-vertical($start-color: $color, $end-color: darken($color, 10%));
+  @include mixins.gradient-vertical($start-color: $color, $end-color: color.adjust($color, $lightness: -10%));
 }
 
 // Apply the mixin to the progress bars
-.progress-bar            { @include progress-bar-styles($progress-bar-bg); }
-.progress-bar-success    { @include progress-bar-styles($progress-bar-success-bg); }
-.progress-bar-info       { @include progress-bar-styles($progress-bar-info-bg); }
-.progress-bar-warning    { @include progress-bar-styles($progress-bar-warning-bg); }
-.progress-bar-danger     { @include progress-bar-styles($progress-bar-danger-bg); }
+.progress-bar            { @include progress-bar-styles(variables.$progress-bar-bg); }
+.progress-bar-success    { @include progress-bar-styles(variables.$progress-bar-success-bg); }
+.progress-bar-info       { @include progress-bar-styles(variables.$progress-bar-info-bg); }
+.progress-bar-warning    { @include progress-bar-styles(variables.$progress-bar-warning-bg); }
+.progress-bar-danger     { @include progress-bar-styles(variables.$progress-bar-danger-bg); }
 
 
 
@@ -198,15 +199,15 @@
 // --------------------------------------------------
 
 .list-group {
-  border-radius: $border-radius-base;
-  @include box-shadow(0 1px 2px rgba(0,0,0,.075));
+  border-radius: variables.$border-radius-base;
+  @include mixins.box-shadow(0 1px 2px rgba(0,0,0,.075));
 }
 .list-group-item.active,
 .list-group-item.active:hover,
 .list-group-item.active:focus {
-  text-shadow: 0 -1px 0 darken($list-group-active-bg, 10%);
-  @include gradient-vertical($start-color: $list-group-active-bg, $end-color: darken($list-group-active-bg, 7.5%));
-  border-color: darken($list-group-active-border, 7.5%);
+  text-shadow: 0 -1px 0 color.adjust(variables.$list-group-active-bg, $lightness: -10%);
+  @include mixins.gradient-vertical($start-color: variables.$list-group-active-bg, $end-color: color.adjust(variables.$list-group-active-bg, $lightness: -7.5%));
+  border-color: color.adjust(variables.$list-group-active-border, $lightness: -7.5%);
 }
 
 
@@ -217,21 +218,21 @@
 
 // Common styles
 .panel {
-  @include box-shadow(0 1px 2px rgba(0,0,0,.05));
+  @include mixins.box-shadow(0 1px 2px rgba(0,0,0,.05));
 }
 
 // Mixin for generating new styles
 @mixin panel-heading-styles($color) {
-  @include gradient-vertical($start-color: $color, $end-color: darken($color, 5%));
+  @include mixins.gradient-vertical($start-color: $color, $end-color: color.adjust($color, $lightness: -5%));
 }
 
 // Apply the mixin to the panel headings only
-.panel-default > .panel-heading   { @include panel-heading-styles($panel-default-heading-bg); }
-.panel-primary > .panel-heading   { @include panel-heading-styles($panel-primary-heading-bg); }
-.panel-success > .panel-heading   { @include panel-heading-styles($panel-success-heading-bg); }
-.panel-info > .panel-heading      { @include panel-heading-styles($panel-info-heading-bg); }
-.panel-warning > .panel-heading   { @include panel-heading-styles($panel-warning-heading-bg); }
-.panel-danger > .panel-heading    { @include panel-heading-styles($panel-danger-heading-bg); }
+.panel-default > .panel-heading   { @include panel-heading-styles(variables.$panel-default-heading-bg); }
+.panel-primary > .panel-heading   { @include panel-heading-styles(variables.$panel-primary-heading-bg); }
+.panel-success > .panel-heading   { @include panel-heading-styles(variables.$panel-success-heading-bg); }
+.panel-info > .panel-heading      { @include panel-heading-styles(variables.$panel-info-heading-bg); }
+.panel-warning > .panel-heading   { @include panel-heading-styles(variables.$panel-warning-heading-bg); }
+.panel-danger > .panel-heading    { @include panel-heading-styles(variables.$panel-danger-heading-bg); }
 
 
 
@@ -240,8 +241,8 @@
 // --------------------------------------------------
 
 .well {
-  @include gradient-vertical($start-color: darken($well-bg, 5%), $end-color: $well-bg);
-  border-color: darken($well-bg, 10%);
+  @include mixins.gradient-vertical($start-color: color.adjust(variables.$well-bg, $lightness: -5%), $end-color: variables.$well-bg);
+  border-color: color.adjust(variables.$well-bg, $lightness: -10%);
   $shadow: inset 0 1px 3px rgba(0,0,0,.05), 0 1px 0 rgba(255,255,255,.1);
-  @include box-shadow($shadow);
+  @include mixins.box-shadow($shadow);
 }
