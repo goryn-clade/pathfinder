@@ -83,7 +83,16 @@ class Sso extends Api\User{
      * @throws \Exception
      */
     public function requestAuthorization(\Base $f3) : void {
-        $params = $f3->get('GET');
+        // character switch changes the logged in character -> POST with session token only (CSRF)
+        // -> GET (e.g. "new character", characterId=-1) only redirects to CCP SSO
+        if($f3->get('VERB') === 'POST' && !self::isValidCsrfPost($f3)){
+            // missing or stale token (e.g. a map tab older than the last switch) -> back to map with an error
+            $f3->set(self::SESSION_KEY_SSO_ERROR, self::ERROR_COOKIE_LOGIN_TOKEN);
+            $f3->reroute(['map', ['*' => '']]);
+            return;
+        }
+        $isSwitch = $f3->get('VERB') === 'POST';
+        $params = $f3->get($isSwitch ? 'POST' : 'GET');
 
         if(
             isset($params['characterId']) &&
@@ -91,16 +100,19 @@ class Sso extends Api\User{
         ){
             // authentication restricted to a characterId -------------------------------------------------------------
             // restrict login to this characterId e.g. for character switch on map page
-            $characterId = (int)trim((string)$params['characterId']);
+            $characterId = is_string($params['characterId']) ? (int)trim($params['characterId']) : 0;
 
             /**
              * @var Pathfinder\CharacterModel $character
              */
             $character = Pathfinder\AbstractPathfinderModel::getNew('CharacterModel');
-            $character->getById($characterId, 0);
+            if($isSwitch){
+                $character->getById($characterId, 0);
+            }
 
             // check if character is valid and exists
             if(
+                $isSwitch &&
                 $character->valid() &&
                 $character->hasUserCharacter() &&
                 ($activeCharacter->getUser()->_id === $character->getUser()->_id)
@@ -121,7 +133,12 @@ class Sso extends Api\User{
                         $character->hasUserCharacter() &&
                         ($character->isAuthorized() === 'OK')
                     ){
+                        // keep the CSRF token: other map tabs of this session still hold it
+                        // (loginByCharacter() replaces it because the login page prints it)
+                        $csrfToken = $f3->get(self::SESSION_KEY_CSRF_TOKEN);
                         if($this->loginByCharacter($character)){
+                            $f3->set(self::SESSION_KEY_CSRF_TOKEN, $csrfToken);
+
                             // set "login" cookie
                             $this->setLoginCookie($character);
 

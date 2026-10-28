@@ -697,6 +697,25 @@ define([
                                 $('body').removeData('characterSwitch');
                             }, 500);
                         });
+
+                        // character switch -> send as POST with characterId + token (server refuses GET)
+                        popoverElement.on('click', '.btn[data-method="post"]', function(e){
+                            e.preventDefault();
+                            let form = $('<form>', {
+                                method: 'post',
+                                action: this.getAttribute('href'),
+                                target: this.getAttribute('target') || '_self',
+                                rel: 'noopener'
+                            })
+                                .append($('<input>', {type: 'hidden', name: 'characterId', value: this.dataset.characterId}))
+                                .append($('<input>', {type: 'hidden', name: 'token', value: document.body.dataset.token || ''}));
+                            if(this.dataset.tabId){
+                                form.append($('<input>', {type: 'hidden', name: 'tabId', value: this.dataset.tabId}));
+                            }
+                            form.appendTo('body')[0].submit();
+                            // "new tab" keeps this page -> remove the form again
+                            setTimeout(() => form.remove(), 0);
+                        });
                     }else{
                         popoverElement = button.data('bs.popover').tip();
                         if(popoverElement.is(':visible')){
