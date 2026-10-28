@@ -1843,7 +1843,7 @@ parameters:
 			path: app/Lib/Logging/AbstractLog.php
 
 		-
-			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:toMonologLevel\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', string given\.$#'
+			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:toMonologLevel\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning''\|Monolog\\Level, string given\.$#'
 			identifier: argument.type
 			count: 3
 			path: app/Lib/Logging/AbstractLog.php
@@ -1861,7 +1861,7 @@ parameters:
 			path: app/Lib/Logging/Handler/AbstractWebhookHandler.php
 
 		-
-			message: '#^Parameter \#1 \$level of method Monolog\\Handler\\AbstractHandler\:\:__construct\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', int given\.$#'
+			message: '#^Parameter \#1 \$level of method Monolog\\Handler\\AbstractHandler\:\:__construct\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning''\|Monolog\\Level, int\|Monolog\\Level\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Lib/Logging/Handler/AbstractWebhookHandler.php
@@ -1879,31 +1879,7 @@ parameters:
 			path: app/Lib/Logging/Handler/DiscordMapWebhookHandler.php
 
 		-
-			message: '#^Parameter \#1 \$record of method Monolog\\Formatter\\FormatterInterface\:\:format\(\) expects array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}, array\{task\: ''logData'', load\: array\{meta\: array\<string, mixed\>, log\: array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}\}\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Lib/Logging/Handler/SocketHandler.php
-
-		-
-			message: '#^Parameter \#1 \$record of method Monolog\\Handler\\AbstractHandler\:\:isHandling\(\) expects array\{level\: 100\|200\|250\|300\|400\|500\|550\|600\}, array\<string, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Lib/Logging/Handler/SocketHandler.php
-
-		-
-			message: '#^Parameter \#1 \$record of method Monolog\\Handler\\AbstractProcessingHandler\:\:processRecord\(\) expects array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}, array\<string, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Lib/Logging/Handler/SocketHandler.php
-
-		-
-			message: '#^Parameter \#1 \$record of method Monolog\\Handler\\SocketHandler\:\:write\(\) expects array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>, formatted\: mixed\}, array\{task\: ''logData'', load\: array\{meta\: array\<string, mixed\>, log\: array\{message\: string, context\: array\<mixed\>, level\: 100\|200\|250\|300\|400\|500\|550\|600, level_name\: ''ALERT''\|''CRITICAL''\|''DEBUG''\|''EMERGENCY''\|''ERROR''\|''INFO''\|''NOTICE''\|''WARNING'', channel\: string, datetime\: DateTimeImmutable, extra\: array\<mixed\>\}\}, formatted\: mixed\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Lib/Logging/Handler/SocketHandler.php
-
-		-
-			message: '#^Parameter \#2 \$level of method Monolog\\Handler\\SocketHandler\:\:__construct\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', int given\.$#'
+			message: '#^Parameter \#2 \$level of method Monolog\\Handler\\SocketHandler\:\:__construct\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning''\|Monolog\\Level, int\|Monolog\\Level\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Lib/Logging/Handler/SocketHandler.php
@@ -1963,7 +1939,7 @@ parameters:
 			path: app/Lib/Monolog.php
 
 		-
-			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:toMonologLevel\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', string given\.$#'
+			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:toMonologLevel\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning''\|Monolog\\Level, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Lib/Monolog.php

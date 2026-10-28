@@ -11,6 +11,7 @@ namespace Exodus4D\Pathfinder\Lib\Logging;
 
 use Exodus4D\Pathfinder\Lib\Monolog;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 abstract class AbstractLog implements LogInterface {
 
@@ -151,18 +152,16 @@ abstract class AbstractLog implements LogInterface {
 
         // add custom log processor callback -> add "extra" (meta) data
         $f3 = $this->f3;
-        $processorExtraData = function($record) use (&$f3){
-            $record['extra'] = [
+        $processorExtraData = function(LogRecord $record) use (&$f3): LogRecord{
+            return $record->with(extra: [
                 'path' => $f3->get('PATH'),
                 'ip' => $f3->get('IP')
-            ];
-            return $record;
+            ]);
         };
 
         // add log processor -> remove §tempData from log
-        $processorClearTempData = function($record){
-            $record['context'] = array_diff_key($record['context'], $this->getTempData());
-            return $record;
+        $processorClearTempData = function(LogRecord $record): LogRecord{
+            return $record->with(context: array_diff_key($record->context, $this->getTempData()));
         };
 
         // init processorConfig. IMPORTANT: first processor gets executed at the end!

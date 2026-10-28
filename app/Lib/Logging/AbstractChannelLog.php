@@ -8,6 +8,7 @@
 
 namespace Exodus4D\Pathfinder\Lib\Logging;
 
+use Monolog\LogRecord;
 
 abstract class AbstractChannelLog extends AbstractLog {
 
@@ -26,9 +27,8 @@ abstract class AbstractChannelLog extends AbstractLog {
         $this->setChannelData($channelData);
 
         // add log processor -> remove $channelData from log
-        $processorClearChannelData = function($record){
-            $record['context'] = array_diff_key($record['context'], $this->getChannelData());
-            return $record;
+        $processorClearChannelData = function(LogRecord $record): LogRecord{
+            return $record->with(context: array_diff_key($record->context, $this->getChannelData()));
         };
 
         // init processorConfig. IMPORTANT: first processor gets executed at the end!
