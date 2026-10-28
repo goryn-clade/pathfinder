@@ -83,16 +83,22 @@ class Sso extends Api\User{
      * @throws \Exception
      */
     public function requestAuthorization(\Base $f3) : void {
-        // character switch changes the logged in character -> POST with session token only (CSRF)
-        // -> GET (e.g. "new character", characterId=-1) only redirects to CCP SSO
-        if($f3->get('VERB') === 'POST' && !self::isValidCsrfPost($f3)){
+        // character switch changes the logged in character (CSRF) -> only for:
+        // -> POST with session token (click on "switch" / "new tab")
+        // -> GET navigation the browser marks as same-origin (Fetch Metadata), e.g. "open link in new tab"
+        // -> any other GET (e.g. "new character", characterId=-1, cross-site links) only redirects to CCP SSO
+        $isPost = $f3->get('VERB') === 'POST';
+        if($isPost && !self::isValidCsrfPost($f3)){
             // missing or stale token (e.g. a map tab older than the last switch) -> back to map with an error
             $f3->set(self::SESSION_KEY_SSO_ERROR, self::ERROR_COOKIE_LOGIN_TOKEN);
             $f3->reroute(['map', ['*' => '']]);
             return;
         }
-        $isSwitch = $f3->get('VERB') === 'POST';
-        $params = $f3->get($isSwitch ? 'POST' : 'GET');
+        $isSwitch = $isPost || (
+            $f3->get('HEADERS.Sec-Fetch-Site') === 'same-origin' &&
+            $f3->get('HEADERS.Sec-Fetch-Mode') === 'navigate'
+        );
+        $params = $f3->get($isPost ? 'POST' : 'GET');
 
         if(
             isset($params['characterId']) &&
