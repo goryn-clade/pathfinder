@@ -2882,6 +2882,15 @@ define([
         pendingCreatedMaps.set(mapData.config.id, {mapData: mapData, expiresAt: Date.now() + PENDING_CREATED_TTL_MS});
     };
 
+    /**
+     * check whether a map was created on this client and is still protected by addPendingCreatedMap()
+     * @param mapId
+     * @returns {boolean}
+     */
+    let isPendingCreatedMap = mapId => {
+        return pendingCreatedMaps.has(mapId);
+    };
+
     let isRecentlyDeleted = mapId => {
         let expiresAt = recentlyDeletedMapIds.get(mapId);
         if(expiresAt && expiresAt > Date.now()) return true;
@@ -3800,6 +3809,7 @@ define([
         updateCurrentMapData: updateCurrentMapData,
         deleteCurrentMapData: deleteCurrentMapData,
         addPendingCreatedMap: addPendingCreatedMap,
+        isPendingCreatedMap: isPendingCreatedMap,
         setCurrentUserData: setCurrentUserData,
         getCurrentUserData: getCurrentUserData,
         getCurrentCharacter: getCurrentCharacter,

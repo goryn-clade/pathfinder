@@ -1414,7 +1414,9 @@ define([
                         Util.showNotify({title: 'Map removed', text: payload.data.mapName + ' deleted', type: 'warning'});
                     };
 
-                    let tabAddCallback = payload => {
+                    let tabAddCallback = (payload, silent) => {
+                        // a map created on this client already got the "Create map" notice from the map settings dialog
+                        if(silent) return;
                         Util.showNotify({title: 'Map added', text: payload.data.mapName + ' added', type: 'success'});
                     };
 
@@ -1450,7 +1452,8 @@ define([
                     for(let data of tempMapData){
                         if(activeMapIds.indexOf(data.config.id) === -1){
                             // add new map tab
-                            promisesAddTab.push(addTab(tabEl, data.config).then(tabAddCallback));
+                            let createdHere = Util.isPendingCreatedMap(data.config.id);
+                            promisesAddTab.push(addTab(tabEl, data.config).then(payload => tabAddCallback(payload, createdHere)));
                         }
                     }
 
