@@ -10,19 +10,20 @@ namespace Exodus4D\Pathfinder\Lib\Logging\Formatter;
 
 use Exodus4D\Pathfinder\Lib\Config;
 use Monolog\Formatter;
+use Monolog\LogRecord;
 
 class MailFormatter implements Formatter\FormatterInterface {
 
     /**
-     * @param array<string, mixed> $record
+     * @param LogRecord $record
      * @return mixed|string
      */
-    public function format(array $record){
+    public function format(LogRecord $record){
 
         $tplDefaultData = [
-            'tplPretext' => $record['message'],
+            'tplPretext' => $record->message,
             // escape HTML first: message holds free text (e.g. map name) and is printed with | raw
-            'tplGreeting' => \Markdown::instance()->convert(htmlspecialchars(str_replace('*', '', $record['message']), ENT_NOQUOTES)),
+            'tplGreeting' => \Markdown::instance()->convert(htmlspecialchars(str_replace('*', '', $record->message), ENT_NOQUOTES)),
             'message' => false,
             'tplText2' => false,
             'tplClosing' => 'Fly save!',
@@ -34,7 +35,7 @@ class MailFormatter implements Formatter\FormatterInterface {
             'appMail' => Config::getPathfinderData('email'),
         ];
 
-        $tplData = array_replace_recursive($tplDefaultData, (array)$record['context']['data']['main']);
+        $tplData = array_replace_recursive($tplDefaultData, (array)$record->context['data']['main']);
 
         // user message (e.g. rally poke) is printed with nl2br() | raw
         if(is_string($tplData['message'])){
@@ -45,7 +46,7 @@ class MailFormatter implements Formatter\FormatterInterface {
     }
 
     /**
-     * @param array<string, mixed> $records
+     * @param array<int, LogRecord> $records
      * @return mixed|string
      */
     public function formatBatch(array $records){

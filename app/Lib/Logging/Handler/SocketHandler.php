@@ -10,18 +10,20 @@ namespace Exodus4D\Pathfinder\Lib\Logging\Handler;
 
 
 use Exodus4D\Pathfinder\Lib\Config;
-use Monolog\Logger;
+use Exodus4D\Pathfinder\Lib\Logging\Formatter\SocketPayloadFormatter;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 class SocketHandler extends \Monolog\Handler\SocketHandler {
 
     /**
      * SocketHandler constructor.
      * @param $connectionString
-     * @param int $level
+     * @param int|string|Level $level
      * @param bool $bubble
      * @param array<string, mixed> $metaData
      */
-    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true, /**
+    public function __construct($connectionString, $level = Level::Debug, $bubble = true, /**
      * some meta data (additional processing information)
      */
     protected $metaData = []){
@@ -34,26 +36,26 @@ class SocketHandler extends \Monolog\Handler\SocketHandler {
     /**
      * overwrite default handle()
      * -> change data structure after processor() calls and before formatter() calls
-     * @param array<string, mixed> $record
+     * -> the envelope is not a LogRecord, so SocketPayloadFormatter builds the JSON
+     *    (the formatter set by Monolog::log() is not used for the socket payload)
+     * @param LogRecord $record
      * @return bool
      */
     #[\Override]
-    public function handle(array $record) : bool {
+    public function handle(LogRecord $record) : bool {
         if (!$this->isHandling($record)) {
             return false;
         }
 
         $record = $this->processRecord($record);
 
-        $record = [
+        $record->formatted = (new SocketPayloadFormatter())->formatPayload([
             'task' => 'logData',
             'load' => [
                 'meta' => $this->metaData,
-                'log' => $record
+                'log' => $record->toArray()
             ]
-        ];
-
-        $record['formatted'] = $this->getFormatter()->format($record);
+        ]);
 
         try {
             $this->write($record);

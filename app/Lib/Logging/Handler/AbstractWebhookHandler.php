@@ -10,7 +10,8 @@ namespace Exodus4D\Pathfinder\Lib\Logging\Handler;
 
 use Exodus4D\Pathfinder\Lib\Config;
 use Monolog\Handler;
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler {
 
@@ -34,7 +35,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
      * @param  string|null $iconEmoji              The emoji name to use (or null)
      * @param  bool        $includeContext         Whether the context data added to Slack as attachments are in a short style
      * @param  bool        $includeExtra           Whether the extra data added to Slack as attachments are in a short style
-     * @param  int         $level                  The minimum logging level at which this handler will be triggered
+     * @param  int|string|Level $level               The minimum logging level at which this handler will be triggered
      * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param   $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      * @param array<string, mixed> $excludeFields
@@ -54,7 +55,7 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     protected $includeContext = true, /**
      * Whether the attachment should include extra
      */
-    protected $includeExtra = false, $level = Logger::CRITICAL, $bubble = true, /**
+    protected $includeExtra = false, $level = Level::Critical, $bubble = true, /**
      * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
     private readonly array $excludeFields = []){
@@ -123,9 +124,10 @@ abstract class AbstractWebhookHandler extends Handler\AbstractProcessingHandler 
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record): void {
-        $record   = $this->excludeFields($record);
-        $postData = $this->getPostData($record);
+    protected function write(LogRecord $record): void {
+        // subclasses and field exclusion work on the plain array form of the record
+        $data     = $this->excludeFields($record->toArray());
+        $postData = $this->getPostData($data);
 
         // Slack-format attachment cap; skip for native Discord embed payloads
         if (isset($postData['attachments'])) {

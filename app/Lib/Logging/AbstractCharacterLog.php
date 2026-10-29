@@ -10,6 +10,7 @@ namespace Exodus4D\Pathfinder\Lib\Logging;
 
 use Exodus4D\Pathfinder\Lib\Config;
 use Exodus4D\Pathfinder\Model\Pathfinder\CharacterModel;
+use Monolog\LogRecord;
 
 abstract class AbstractCharacterLog extends AbstractChannelLog {
 
@@ -27,9 +28,10 @@ abstract class AbstractCharacterLog extends AbstractChannelLog {
         parent::__construct($action, $objectData);
 
         // add log processor -> remove $channelData from log
-        $processorAddThumbData = function($record){
-            $record['extra']['thumb']['url'] = $this->getThumbUrl();
-            return $record;
+        $processorAddThumbData = function(LogRecord $record): LogRecord{
+            $extra = $record->extra;
+            $extra['thumb']['url'] = $this->getThumbUrl();
+            return $record->with(extra: $extra);
         };
 
         // init processorConfig. IMPORTANT: first processor gets executed at the end!
