@@ -1,5 +1,5 @@
 # HTTPS over SSL version
-# Information: https://github.com/goryn-clade/pathfinder/wiki/Apache
+# Information: https://github.com/exodus4d/pathfinder/wiki/Apache
 
 # Enable rewrite engine and route requests to framework ===========================================
 RewriteEngine On
