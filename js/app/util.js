@@ -2901,6 +2901,59 @@ define([
         pendingCreatedMaps.set(mapData.config.id, {mapData: mapData, expiresAt: Date.now() + PENDING_CREATED_TTL_MS});
     };
 
+    /**
+     * check whether a map was created on this client and is still protected by addPendingCreatedMap()
+     * @param mapId
+     * @returns {boolean}
+     */
+    let isPendingCreatedMap = mapId => {
+        return pendingCreatedMaps.has(mapId);
+    };
+
+    // The server broadcasts a new map over the WebSocket before it answers the create request,
+    // so the creating client can add the tab before it knows the map is its own.
+    // While a create request runs, "Map added" notices wait for its response.
+    let mapCreatesRunning = 0;
+    let heldMapAddedNotices = new Map(); // id -> mapName
+
+    let showMapAddedNotify = (mapId, mapName) => {
+        showNotify({title: 'Map added', text: mapName + ' added', type: 'success'});
+    };
+
+    /**
+     * show "Map added" for a map from another client, or hold it while a create request runs
+     * @param mapId
+     * @param mapName
+     */
+    let notifyMapAdded = (mapId, mapName) => {
+        if(mapCreatesRunning > 0){
+            heldMapAddedNotices.set(mapId, mapName);
+        }else{
+            showMapAddedNotify(mapId, mapName);
+        }
+    };
+
+    /**
+     * call before a map create request is sent
+     */
+    let startMapCreate = () => {
+        mapCreatesRunning++;
+    };
+
+    /**
+     * call when a map create request is done
+     * -> drop the held notice for the created map, show the others once no create runs
+     * @param createdMapId (0 if the create failed)
+     */
+    let endMapCreate = createdMapId => {
+        mapCreatesRunning = Math.max(0, mapCreatesRunning - 1);
+        heldMapAddedNotices.delete(createdMapId);
+        if(mapCreatesRunning === 0){
+            heldMapAddedNotices.forEach((mapName, mapId) => showMapAddedNotify(mapId, mapName));
+            heldMapAddedNotices.clear();
+        }
+    };
+
     let isRecentlyDeleted = mapId => {
         let expiresAt = recentlyDeletedMapIds.get(mapId);
         if(expiresAt && expiresAt > Date.now()) return true;
@@ -3819,6 +3872,10 @@ define([
         updateCurrentMapData: updateCurrentMapData,
         deleteCurrentMapData: deleteCurrentMapData,
         addPendingCreatedMap: addPendingCreatedMap,
+        isPendingCreatedMap: isPendingCreatedMap,
+        notifyMapAdded: notifyMapAdded,
+        startMapCreate: startMapCreate,
+        endMapCreate: endMapCreate,
         setCurrentUserData: setCurrentUserData,
         getCurrentUserData: getCurrentUserData,
         getCurrentCharacter: getCurrentCharacter,
