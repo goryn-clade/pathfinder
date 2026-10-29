@@ -28,6 +28,11 @@ class Sso extends Api\User{
     const SSO_TIMEOUT                               = 4;
 
     /**
+     * timeout (seconds) for the "refresh_token" revoke request on logout
+     */
+    const SSO_REVOKE_TIMEOUT                        = 3;
+
+    /**
      * SSO endpoints are pre-authentication by definition — skip the Api\User auth guard.
      */
     #[\Override]
@@ -61,6 +66,7 @@ class Sso extends Api\User{
     const ERROR_COOKIE_LOGIN_TOKEN                  = 'Character switch failed (request expired). Please try again';
     const ERROR_CCP_JWK_CLAIM                       = 'Invalid "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_JWK_CLAIM" url. %s';
     const ERROR_TOKEN_VERIFICATION                  = 'Could not validate the authenticity of the Access Token';
+    const ERROR_REVOKE_TOKEN                        = 'Warning: revoke of "refresh_token" failed for character #%s (logout continues): %s';
     const WARNING_JWKS_CACHE_HMAC                   = 'Warning: cached CCP JWKS has a missing or invalid HMAC (tampered, or cached by an older version). Discarded and refetched. %s';
 
     /**
@@ -438,6 +444,43 @@ class Sso extends Api\User{
         ];
 
         return $this->requestAccessData($requestParams);
+    }
+
+    /**
+     * ask CCP SSO to revoke the character's "refresh_token" (logout)
+     * -> best effort: short timeout, any failure is logged once and ignored
+     * -> the stored (encrypted) token is kept, a new SSO login overwrites it
+     * @param Pathfinder\CharacterModel $character
+     */
+    public function revokeRefreshToken(Pathfinder\CharacterModel $character) : void {
+        try{
+            $refreshToken = Lib\TokenCipher::decrypt((string)$character->get('esiRefreshToken'));
+            if($refreshToken === ''){
+                return;
+            }
+
+            [$clientId, $secretKey] = $this->getAuthorizationData();
+            $ssoUrl = self::getEnvironmentData('CCP_SSO_URL');
+            $client = new \GuzzleHttp\Client([
+                'timeout'           => self::SSO_REVOKE_TIMEOUT,
+                'connect_timeout'   => self::SSO_REVOKE_TIMEOUT
+            ]);
+            $client->post(rtrim(is_string($ssoUrl) ? $ssoUrl : '', '/') . '/v2/oauth/revoke', [
+                'auth'          => [$clientId, $secretKey],
+                'headers'       => ['User-Agent' => $this->getUserAgent()],
+                'form_params'   => ['token_type_hint' => 'refresh_token', 'token' => $refreshToken]
+            ]);
+        }catch(\Throwable $e){
+            // log no request data (token, credentials): status code or connection error only
+            if($e instanceof \GuzzleHttp\Exception\RequestException && ($response = $e->getResponse())){
+                $reason = 'HTTP ' . $response->getStatusCode();
+            }elseif($e instanceof \GuzzleHttp\Exception\ConnectException){
+                $reason = $e->getMessage();
+            }else{
+                $reason = $e::class;
+            }
+            self::getSSOLogger()->write(sprintf(self::ERROR_REVOKE_TOKEN, $character->_id, $reason));
+        }
     }
 
     /**
