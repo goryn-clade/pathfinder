@@ -28,6 +28,11 @@ class Sso extends Api\User{
     const SSO_TIMEOUT                               = 4;
 
     /**
+     * timeout (seconds) for the "refresh_token" revoke request on logout
+     */
+    const SSO_REVOKE_TIMEOUT                        = 3;
+
+    /**
      * SSO endpoints are pre-authentication by definition — skip the Api\User auth guard.
      */
     #[\Override]
@@ -61,6 +66,7 @@ class Sso extends Api\User{
     const ERROR_COOKIE_LOGIN_TOKEN                  = 'Character switch failed (request expired). Please try again';
     const ERROR_CCP_JWK_CLAIM                       = 'Invalid "ENVIRONMENT.[ENVIRONMENT].CCP_SSO_JWK_CLAIM" url. %s';
     const ERROR_TOKEN_VERIFICATION                  = 'Could not validate the authenticity of the Access Token';
+    const ERROR_REVOKE_TOKEN                        = 'Warning: revoke of "refresh_token" failed for character #%s (logout continues): %s';
     const WARNING_JWKS_CACHE_HMAC                   = 'Warning: cached CCP JWKS has a missing or invalid HMAC (tampered, or cached by an older version). Discarded and refetched. %s';
 
     /**
@@ -83,7 +89,22 @@ class Sso extends Api\User{
      * @throws \Exception
      */
     public function requestAuthorization(\Base $f3) : void {
-        $params = $f3->get('GET');
+        // character switch changes the logged in character (CSRF) -> only for:
+        // -> POST with session token (click on "switch" / "new tab")
+        // -> GET navigation the browser marks as same-origin (Fetch Metadata), e.g. "open link in new tab"
+        // -> any other GET (e.g. "new character", characterId=-1, cross-site links) only redirects to CCP SSO
+        $isPost = $f3->get('VERB') === 'POST';
+        if($isPost && !self::isValidCsrfPost($f3)){
+            // missing or stale token (e.g. a map tab older than the last switch) -> back to map with an error
+            $f3->set(self::SESSION_KEY_SSO_ERROR, self::ERROR_COOKIE_LOGIN_TOKEN);
+            $f3->reroute(['map', ['*' => '']]);
+            return;
+        }
+        $isSwitch = $isPost || (
+            $f3->get('HEADERS.Sec-Fetch-Site') === 'same-origin' &&
+            $f3->get('HEADERS.Sec-Fetch-Mode') === 'navigate'
+        );
+        $params = $f3->get($isPost ? 'POST' : 'GET');
 
         if(
             isset($params['characterId']) &&
@@ -91,16 +112,19 @@ class Sso extends Api\User{
         ){
             // authentication restricted to a characterId -------------------------------------------------------------
             // restrict login to this characterId e.g. for character switch on map page
-            $characterId = (int)trim((string)$params['characterId']);
+            $characterId = is_string($params['characterId']) ? (int)trim($params['characterId']) : 0;
 
             /**
              * @var Pathfinder\CharacterModel $character
              */
             $character = Pathfinder\AbstractPathfinderModel::getNew('CharacterModel');
-            $character->getById($characterId, 0);
+            if($isSwitch){
+                $character->getById($characterId, 0);
+            }
 
             // check if character is valid and exists
             if(
+                $isSwitch &&
                 $character->valid() &&
                 $character->hasUserCharacter() &&
                 ($activeCharacter->getUser()->_id === $character->getUser()->_id)
@@ -121,7 +145,12 @@ class Sso extends Api\User{
                         $character->hasUserCharacter() &&
                         ($character->isAuthorized() === 'OK')
                     ){
+                        // keep the CSRF token: other map tabs of this session still hold it
+                        // (loginByCharacter() replaces it because the login page prints it)
+                        $csrfToken = $f3->get(self::SESSION_KEY_CSRF_TOKEN);
                         if($this->loginByCharacter($character)){
+                            $f3->set(self::SESSION_KEY_CSRF_TOKEN, $csrfToken);
+
                             // set "login" cookie
                             $this->setLoginCookie($character);
 
@@ -438,6 +467,43 @@ class Sso extends Api\User{
         ];
 
         return $this->requestAccessData($requestParams);
+    }
+
+    /**
+     * ask CCP SSO to revoke the character's "refresh_token" (logout)
+     * -> best effort: short timeout, any failure is logged once and ignored
+     * -> the stored (encrypted) token is kept, a new SSO login overwrites it
+     * @param Pathfinder\CharacterModel $character
+     */
+    public function revokeRefreshToken(Pathfinder\CharacterModel $character) : void {
+        try{
+            $refreshToken = Lib\TokenCipher::decrypt((string)$character->get('esiRefreshToken'));
+            if($refreshToken === ''){
+                return;
+            }
+
+            [$clientId, $secretKey] = $this->getAuthorizationData();
+            $ssoUrl = self::getEnvironmentData('CCP_SSO_URL');
+            $client = new \GuzzleHttp\Client([
+                'timeout'           => self::SSO_REVOKE_TIMEOUT,
+                'connect_timeout'   => self::SSO_REVOKE_TIMEOUT
+            ]);
+            $client->post(rtrim(is_string($ssoUrl) ? $ssoUrl : '', '/') . '/v2/oauth/revoke', [
+                'auth'          => [$clientId, $secretKey],
+                'headers'       => ['User-Agent' => $this->getUserAgent()],
+                'form_params'   => ['token_type_hint' => 'refresh_token', 'token' => $refreshToken]
+            ]);
+        }catch(\Throwable $e){
+            // log no request data (token, credentials): status code or connection error only
+            if($e instanceof \GuzzleHttp\Exception\RequestException && ($response = $e->getResponse())){
+                $reason = 'HTTP ' . $response->getStatusCode();
+            }elseif($e instanceof \GuzzleHttp\Exception\ConnectException){
+                $reason = $e->getMessage();
+            }else{
+                $reason = $e::class;
+            }
+            self::getSSOLogger()->write(sprintf(self::ERROR_REVOKE_TOKEN, $character->_id, $reason));
+        }
     }
 
     /**

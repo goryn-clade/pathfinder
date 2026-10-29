@@ -73,10 +73,16 @@ class User extends Controller\Controller{
             // -> If there is already a logged in user! (e.g. multi character use)
             $currentUser = $this->getUser();
 
-            // new session id before any SESSION.* write (getUser() above has started the session)
-            session_regenerate_id(true);
-            // new CSRF token too: the old one was printed on the (public) login page
-            $this->getF3()->clear(self::SESSION_KEY_CSRF_TOKEN);
+            if(
+                is_null($currentUser) ||
+                $currentUser->_id !== $user->_id
+            ){
+                // new session id before any SESSION.* write (getUser() above has started the session)
+                // -> not on a character switch of the same user: other map tabs still send the old id
+                session_regenerate_id(true);
+                // new CSRF token too: the old one was printed on the (public) login page
+                $this->getF3()->clear(self::SESSION_KEY_CSRF_TOKEN);
+            }
 
             $timezone = $this->getF3()->get('getTimeZone')();
 
@@ -222,6 +228,12 @@ class User extends Controller\Controller{
     public function logout(\Base $f3): void{
         $data = $f3->get('POST');
         $deleteCookie = (bool)($data['deleteCookie'] ?? false);
+
+        // logout also ends cookie login -> ask CCP to revoke the ESI "refresh_token" (best effort)
+        // -> no SQL cache (ttl 0): the token may have rotated seconds ago
+        if($deleteCookie && ($activeCharacter = $this->getCharacter(0))){
+            (new Controller\Ccp\Sso())->revokeRefreshToken($activeCharacter);
+        }
 
         $this->logoutCharacter($f3, false, true, true, $deleteCookie, 200);
     }

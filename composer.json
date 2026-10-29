@@ -1,8 +1,8 @@
 {
-  "name": "exodus4d/pathfinder",
+  "name": "goryn-clade/pathfinder",
   "description": "Mapping tool for EVE ONLINE",
   "type": "project",
-  "homepage": "https://github.com/exodus4d/pathfinder",
+  "homepage": "https://github.com/goryn-clade/pathfinder",
   "minimum-stability": "beta",
   "prefer-stable": true,
   "license": "MIT",

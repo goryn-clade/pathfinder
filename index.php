@@ -24,14 +24,22 @@ Lib\Config::instance($f3);
 // initiate cron-jobs
 Lib\Cron::instance();
 
-// generic "/api/@controller/@action" routes: F3 url-decodes the path and @controller matches anything but "/".
-// Allow only plain names of existing Api controllers (e.g. no "Rest%5CSignature"). "/api/rest/..." has its own routes
+// "/api/@controller/@action" and "/api/rest/@controller*": F3 url-decodes the path and @controller matches anything but "/".
+// Allow only plain names of Api (or Api\Rest) controllers that exist and can be instantiated
+// (no "Rest%5CSignature", no abstract classes). Everything else is a 404 before F3 runs
+$controllerClass = null;
+if(preg_match('#^/api/rest/([^/]*)#i', $path = urldecode((string)$f3->get('PATH')), $matches)){
+    $controllerClass = __NAMESPACE__ . '\\Controller\\Api\\Rest\\' . $matches[1];
+}elseif(preg_match('#^/api/([^/]*)/[^/]#', $path, $matches)){
+    $controllerClass = __NAMESPACE__ . '\\Controller\\Api\\' . $matches[1];
+}
+
 if(
-    preg_match('#^/api/([^/]*)/[^/]#', urldecode((string)$f3->get('PATH')), $matches) &&
-    $matches[1] !== 'rest' &&
+    $controllerClass &&
     (
         !preg_match('/^[A-Za-z]+$/', $matches[1]) ||
-        !class_exists(__NAMESPACE__ . '\Controller\Api\\' . $matches[1])
+        !class_exists($controllerClass) ||
+        !(new \ReflectionClass($controllerClass))->isInstantiable()
     )
 ){
     $f3->error(404);

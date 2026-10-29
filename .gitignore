@@ -49,7 +49,6 @@ Temporary Items
 .idea
 .usage
 *.gz
-composer-dev.lock
 /conf/
 /node_modules/
 /public/js/vX.X.X/

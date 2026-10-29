@@ -390,12 +390,29 @@ define([
 
                                     let method = formData.id ? 'PATCH' : 'PUT';
 
+                                    if(method === 'PUT'){
+                                        Util.startMapCreate();
+                                    }
+
                                     Util.request(method, 'Map', formData.id, formData, {
                                         formElement: form // for error form messages
                                     }, context => {
                                         // always do
                                         dialogContent.hideLoadingAnimation();
                                     }).then(
+                                        payload => {
+                                            if(method === 'PUT'){
+                                                Util.endMapCreate(Util.getObjVal(payload, 'data.mapData.id') || 0);
+                                            }
+                                            return payload;
+                                        },
+                                        error => {
+                                            if(method === 'PUT'){
+                                                Util.endMapCreate(0);
+                                            }
+                                            throw error;
+                                        }
+                                    ).then(
                                         payload => {
                                             let mapData = Util.getObjVal(payload, 'data.mapData');
                                             Util.showNotify({title: dialogTitle, text: `Map: ${Util.getObjVal(mapData, 'name')}`, type: 'success'});
@@ -520,7 +537,7 @@ define([
                                 for(let i = 0, f; !!(f = files[i]); i++){
                                     output.push(( i + 1 ) + '. file: ' + f.name + ' - ' +
                                         f.size + ' bytes; last modified: ' +
-                                        f.lastModifiedDate.toLocaleDateString() );
+                                        new Date(f.lastModified).toLocaleDateString() );
                                 }
 
                                 if(output.length > 0){
