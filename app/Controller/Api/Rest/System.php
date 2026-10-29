@@ -193,6 +193,10 @@ class System extends AbstractRestController {
         }
 
         $system->setData($systemData);
+
+        // save() returns true for an unchanged record too -> check before saving
+        $isChanged = $system->dry() || $system->changed();
+
         $system->save($activeCharacter);
 
         // get data from "fresh" model (e.g. some relational data has changed: "statusId")
@@ -207,8 +211,10 @@ class System extends AbstractRestController {
         }
         $newSystem->clearCacheData();
 
-        // broadcast map changes
-        $this->broadcastMap($newSystem->mapId);
+        // broadcast map changes (only if something changed)
+        if($isChanged){
+            $this->broadcastMap($newSystem->mapId);
+        }
 
         return $newSystem;
     }
