@@ -520,7 +520,7 @@ define([
                                 for(let i = 0, f; !!(f = files[i]); i++){
                                     output.push(( i + 1 ) + '. file: ' + f.name + ' - ' +
                                         f.size + ' bytes; last modified: ' +
-                                        f.lastModifiedDate.toLocaleDateString() );
+                                        new Date(f.lastModified).toLocaleDateString() );
                                 }
 
                                 if(output.length > 0){
