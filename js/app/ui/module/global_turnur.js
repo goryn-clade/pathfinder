@@ -266,10 +266,8 @@ define([
                                     let wormholeData = BaseModule.Util.getObjVal(Init, `wormholes.${cellData}`);
                                     let security = BaseModule.Util.getObjVal(wormholeData, `security`);
                                     let typeNodes = FormElement.formatSignatureTypeSelectionData({text: `${cellData} - ${security}`}, undefined, {showWhSizeLabel: false});
-                                    return [...typeNodes].reduce((acc, node) => {
-                                        acc += node.outerHTML;
-                                        return acc;
-                                    }, '');
+                                    // wrapper element: top-level text nodes (label suffix) have no outerHTML
+                                    return $('<div>').append(typeNodes).html();
                                 }
                             }
                         }
