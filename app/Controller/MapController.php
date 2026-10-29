@@ -27,6 +27,9 @@ class MapController extends AccessController {
         // characterId
         $f3->set('tplCharacterId', $character->id);
 
+        // CSRF token for the character switch (POST)
+        $f3->set('tplCsrfToken', self::getCsrfToken($f3));
+
         // page title
         $f3->set('tplPageTitle', $character->name . ' | ' .  Config::getPathfinderData('name'));
 
