@@ -1,5 +1,5 @@
 # HTTP version
-# Information: https://github.com/exodus4d/pathfinder/wiki/Apache
+# Information: https://github.com/goryn-clade/pathfinder/wiki/Apache
 
 # Enable rewrite engine and route requests to framework ===========================================
 RewriteEngine On
@@ -37,7 +37,7 @@ php_value suhosin.request.max_vars 5000
 
 # Activate PHP error log ==========================================================================
 php_flag log_errors on
-php_value error_log "/www/htdocs/w0128162/www.pathfinder-dev.exodus4d.de/logs/php_errors.log"
+# php_value error_log "/path/to/logs/php_errors.log"
 
 # Cache Header ====================================================================================
 # You should not change anything in here!
