@@ -292,6 +292,48 @@ define([
         }
 
         /**
+         * pair mapped rows (primary) with EVE Scout rows (secondary). Each row gets paired at most once
+         * 1. match by first 3 letters of a signature name (Thera/Turnur side first, then the other side)
+         * 2. fallback: system pair, only if exactly one unpaired secondary row is left for it
+         * @param tableDataPrimary
+         * @param tableDataSecondary
+         * @returns {Array} [primaryRowData, secondaryRowData] pairs
+         */
+        static pairTableRows(tableDataPrimary, tableDataSecondary){
+            let pairs = [];
+            let paired = new Set();
+            let unpaired = rowData => !paired.has(rowData);
+            let prefix = name => String(name || '').trim().substring(0, 3).toLowerCase();
+            let prefixes = (rowData, key) => String(BaseModule.Util.getObjVal(rowData, `${key}.name`) || '')
+                .split(',').map(prefix).filter(Boolean);
+            let pair = (primary, secondary) => {
+                paired.add(primary).add(secondary);
+                pairs.push([primary, secondary]);
+            };
+
+            for(let primary of tableDataPrimary){
+                for(let key of ['sourceSignature', 'targetSignature']){
+                    let names = prefixes(primary, key);
+                    let secondary = names.length ? tableDataSecondary.find(
+                        row => unpaired(row) && names.includes(prefix(BaseModule.Util.getObjVal(row, `${key}.name`)))
+                    ) : null;
+                    if(secondary){
+                        pair(primary, secondary);
+                        break;
+                    }
+                }
+            }
+
+            for(let primary of tableDataPrimary.filter(unpaired)){
+                let candidates = tableDataSecondary.filter(row => unpaired(row) && row.hash === primary.hash);
+                if(candidates.length === 1){
+                    pair(primary, candidates[0]);
+                }
+            }
+            return pairs;
+        }
+
+        /**
          * get a connectionsData object that holds all connections for given mapIds (used as cache for route search)
          * @param mapIds
          * @returns {{}}
@@ -320,14 +362,18 @@ define([
          * get a connectionsData object for all connections
          * @param mapId
          * @param connections
+         * @param perConnection     true: one entry for each connection (key by connection id), false: skip double connections between same systems
          * @returns {{}}
          */
-        static getConnectionsDataFromConnections(mapId = 0, connections = []){
+        static getConnectionsDataFromConnections(mapId = 0, connections = [], perConnection = false){
             let data = {};
             if(connections.length){
                 let connectionsData = MapUtil.getDataByConnections(connections);
                 for(let connectionData of connectionsData){
                     let connectionDataCacheKey = BaseModule.getConnectionDataCacheKey(connectionData.sourceName, connectionData.targetName);
+                    if(perConnection && connectionDataCacheKey && connectionData.id){
+                        connectionDataCacheKey = `con_id_${connectionData.id}`;
+                    }
 
                     // skip double connections between same systems
                     if(connectionDataCacheKey && !Object.keys(data).includes(connectionDataCacheKey)){

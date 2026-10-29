@@ -721,14 +721,14 @@ define([
                 if(systemThera){
                     systemTheraFound = true;
                     let currentConnections = MapUtil.searchConnectionsBySystems(map, [systemThera], '*');
-                    currentConnectionsData = BaseModule.getConnectionsDataFromConnections(this._mapId, currentConnections);
+                    currentConnectionsData = BaseModule.getConnectionsDataFromConnections(this._mapId, currentConnections, true);
                 }else{
                     let systemDataThera = MapUtil.getSystemData(this._mapId, TheraModule.systemIdThera, 'systemId');
                     if(systemDataThera){
                         systemTheraFound = true;
                         let systemIdThera = MapUtil.getSystemId(this._mapId, systemDataThera.id);
                         let currentConnections = MapUtil.searchConnectionsBySystems(map, [systemIdThera], '*');
-                        currentConnectionsData = BaseModule.getConnectionsDataFromConnections(this._mapId, currentConnections);
+                        currentConnectionsData = BaseModule.getConnectionsDataFromConnections(this._mapId, currentConnections, true);
                     }
                 }
 
@@ -803,7 +803,7 @@ define([
                     }
 
                     let rowData = {
-                        id: getGroupedRowId(groupDataMap, connectionHash),
+                        id: getGroupedRowId(groupDataMap, connectionId ? `con_id_${connectionId}` : connectionHash),
                         hash: connectionHash,
                         scope: BaseModule.Util.getObjVal(currentConnectionData, 'connection.scope'),
                         type: BaseModule.Util.getObjVal(currentConnectionData, 'connection.type'),
@@ -855,7 +855,7 @@ define([
                     let connectionType = [...rowData.type, massType];
 
                     // overwrite eveScout id with new id (hash)
-                    rowData.id = getGroupedRowId(groupDataEveScout, connectionHash);
+                    rowData.id = getGroupedRowId(groupDataEveScout, `es_${rowData.id}`);
                     rowData.hash = connectionHash;
                     rowData.wormholeLabel = whLabel;
                     rowData.syncStatus = null;
@@ -873,28 +873,22 @@ define([
                 }
 
                 // + Merge Primary + Secondary table data -------------------------------------------------------------
-                for(let primaryRowData of tableDataPrimary){
-                    let secondaryIndex = tableDataSecondary.findIndex(equalPropVal(primaryRowData.hash, 'hash'));
-                    if(secondaryIndex !== -1){
-                        // get a new hash key from both 'updated' values (primary + secondary) tableData
-                        // -> if a signature gets updated on map, table row should be updated, too
-                        // -> so we can check it later on if either prim. or sec. data has changed...
-                        let updatedHash = [
-                            primaryRowData.updatedHash,
-                            tableDataSecondary[secondaryIndex].updatedHash
-                        ].join().hashCode();
+                for(let [primaryRowData, secondaryRowData] of BaseModule.pairTableRows(tableDataPrimary, tableDataSecondary)){
+                    // get a new hash key from both 'updated' values (primary + secondary) tableData
+                    // -> if a signature gets updated on map, table row should be updated, too
+                    // -> so we can check it later on if either prim. or sec. data has changed...
+                    let updatedHash = [
+                        primaryRowData.updatedHash,
+                        secondaryRowData.updatedHash
+                    ].join().hashCode();
 
-                        primaryRowData.syncStatus = 'success';
-                        primaryRowData.relRowId = tableDataSecondary[secondaryIndex].id;
-                        primaryRowData.updatedHash = updatedHash;
+                    primaryRowData.syncStatus = 'success';
+                    primaryRowData.relRowId = secondaryRowData.id;
+                    primaryRowData.updatedHash = updatedHash;
 
-                        // remove from secondary table data -> no duplicated rows
-                        //tableDataSecondary.splice(secondaryIndex, 1);
-
-                        tableDataSecondary[secondaryIndex].syncStatus = 'hint';
-                        tableDataSecondary[secondaryIndex].relRowId = primaryRowData.id;
-                        tableDataSecondary[secondaryIndex].updatedHash = updatedHash;
-                    }
+                    secondaryRowData.syncStatus = 'hint';
+                    secondaryRowData.relRowId = primaryRowData.id;
+                    secondaryRowData.updatedHash = updatedHash;
                 }
 
                 let tableData = [...tableDataPrimary, ...tableDataSecondary];
