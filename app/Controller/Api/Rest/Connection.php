@@ -110,11 +110,16 @@ class Connection extends AbstractRestController {
                         $connection->setAutoScopeAndType();
                     }
 
+                    // save() returns true for an unchanged record too -> check before saving
+                    $isChanged = $connection->dry() || $connection->changed();
+
                     if($connection->save($activeCharacter)){
                         $connectionData = $connection->getData();
 
-                        // broadcast map changes
-                        $this->broadcastMap($connection->mapId);
+                        // broadcast map changes (only if something changed)
+                        if($isChanged){
+                            $this->broadcastMap($connection->mapId);
+                        }
                     }
                 }
             }
