@@ -73,10 +73,16 @@ class User extends Controller\Controller{
             // -> If there is already a logged in user! (e.g. multi character use)
             $currentUser = $this->getUser();
 
-            // new session id before any SESSION.* write (getUser() above has started the session)
-            session_regenerate_id(true);
-            // new CSRF token too: the old one was printed on the (public) login page
-            $this->getF3()->clear(self::SESSION_KEY_CSRF_TOKEN);
+            if(
+                is_null($currentUser) ||
+                $currentUser->_id !== $user->_id
+            ){
+                // new session id before any SESSION.* write (getUser() above has started the session)
+                // -> not on a character switch of the same user: other map tabs still send the old id
+                session_regenerate_id(true);
+                // new CSRF token too: the old one was printed on the (public) login page
+                $this->getF3()->clear(self::SESSION_KEY_CSRF_TOKEN);
+            }
 
             $timezone = $this->getF3()->get('getTimeZone')();
 
