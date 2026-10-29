@@ -1372,12 +1372,6 @@
                         init(eventToBind, true, true, window, null, sl[0], sl[1],
                             cl[0], cl[1], false, false, false, false,
                             touchList, touchList, touchList, 1, 0);
-                    },
-                    "MouseEvents": function (evt) {
-                        evt.initMouseEvent(eventToBind, true, true, window, 0,
-                            sl[0], sl[1],
-                            cl[0], cl[1],
-                            false, false, false, false, 1, _el);
                     }
                 };
 
@@ -1386,8 +1380,31 @@
                     var ite = !bindingAMouseEvent && !originalIsMouse && (isTouchDevice && touchMap[event]),
                         evtName = ite ? "TouchEvent" : "MouseEvents";
 
-                    evt = document.createEvent(evtName);
-                    eventGenerators[evtName](evt);
+                    if (evtName === "MouseEvents") {
+                        // LOCAL PATCH (Pathfinder): use the MouseEvent constructor, initMouseEvent() is deprecated
+                        // (all supported browsers have the constructor, so no fallback is kept).
+                        // Same values as the old initMouseEvent() call.
+                        evt = new MouseEvent(eventToBind, {
+                            bubbles: true,
+                            cancelable: true,
+                            view: window,
+                            detail: 0,
+                            screenX: sl[0],
+                            screenY: sl[1],
+                            clientX: cl[0],
+                            clientY: cl[1],
+                            ctrlKey: false,
+                            altKey: false,
+                            shiftKey: false,
+                            metaKey: false,
+                            button: 1,
+                            relatedTarget: _el
+                        });
+                    }
+                    else {
+                        evt = document.createEvent(evtName);
+                        eventGenerators[evtName](evt);
+                    }
                     _decorate(evt);
                     _el.dispatchEvent(evt);
                 }
