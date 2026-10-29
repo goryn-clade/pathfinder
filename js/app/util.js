@@ -861,6 +861,11 @@ define([
      * @returns {void|*|undefined}
      */
     $.fn.pulseBackgroundColor = function(status, keepVisible = false, clear = false){
+        // nothing to animate (e.g. table redraw while a row animation is still running)
+        if(!status){
+            return this;
+        }
+
         let animationClass = config.animationPulseClassPrefix;
         switch(status){
             case 'added': animationClass += 'success'; break;

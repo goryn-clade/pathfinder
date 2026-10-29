@@ -295,6 +295,9 @@ define([
 
                     for(let i = 0; i < animationRows.length; i++){
                         let animationRow = $(animationRows[i]);
+                        if(!animationRow.data('animationStatus')){
+                            continue;
+                        }
                         animationRow.pulseBackgroundColor(animationRow.data('animationStatus'));
                         animationRow.removeData('animationStatus');
                     }
