@@ -1060,6 +1060,9 @@ define([
                         });
 
                         for(let i = 0; i < animationRows.length; i++){
+                            if(!$(animationRows[i]).data('animationStatus')){
+                                continue;
+                            }
                             $(animationRows[i]).pulseBackgroundColor($(animationRows[i]).data('animationStatus'));
                             $(animationRows[i]).removeData('animationStatus');
                         }
