@@ -426,7 +426,6 @@ let mergeConf = (confUser, confDefault) => {
 let printHelp = () => {
     log(`
             ${colors.divider('help')}
-                ${colors.bold('docs:')}                 ${colors.info('https://github.com/goryn-clade/pathfinder/wiki/GulpJs')}
                 ${colors.bold('command:')}              ${colors.magenta('$ npm run gulp')} ${colors.primary.italic('[task]')} ${colors.yellow.italic('-- [--options] …')}
                 ${colors.bold('tasks:')}
                     ${colors.primary('help')}              This view
