@@ -1414,10 +1414,10 @@ define([
                         Util.showNotify({title: 'Map removed', text: payload.data.mapName + ' deleted', type: 'warning'});
                     };
 
-                    let tabAddCallback = (payload, silent) => {
-                        // a map created on this client already got the "Create map" notice from the map settings dialog
-                        if(silent) return;
-                        Util.showNotify({title: 'Map added', text: payload.data.mapName + ' added', type: 'success'});
+                    let tabAddCallback = (payload, createdHere) => {
+                        // a map created on this client already got its notice from the map settings dialog
+                        if(createdHere) return;
+                        Util.notifyMapAdded(payload.data.mapId, payload.data.mapName);
                     };
 
                     // tab element already exists
