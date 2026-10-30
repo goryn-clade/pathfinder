@@ -373,26 +373,6 @@ input[type="email"]{
 		padding-left:29px;
 	}
 
-	input[type="text"].ui-autocomplete-loading,
-	input[type="password"].ui-autocomplete-loading,
-	input[type="datetime"].ui-autocomplete-loading,
-	input[type="datetime-local"].ui-autocomplete-loading,
-	input[type="date"].ui-autocomplete-loading,
-	input[type="month"].ui-autocomplete-loading,
-	input[type="time"].ui-autocomplete-loading,
-	input[type="week"].ui-autocomplete-loading,
-	input[type="number"].ui-autocomplete-loading,
-	input[type="email"].ui-autocomplete-loading,
-	input[type="url"].ui-autocomplete-loading,
-	input[type="search"].ui-autocomplete-loading,
-	input[type="tel"].ui-autocomplete-loading,
-	input[type="color"].ui-autocomplete-loading {
-		background-image: url("#{variables.$base-url}/select2-spinner.gif") !important;
-		background-repeat: no-repeat;
-		background-position: 99% 50%;
-		padding-right:27px
-	}
-
 	.input-group-addon .checkbox, .input-group-addon .radio {
 		min-height: 0px;
 		margin-right:0px !important;
