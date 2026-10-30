@@ -125,13 +125,13 @@ class MapModel extends AbstractMapTrackingModel {
         'allowUnknownSystems' => [
             'type' => Schema::DT_BOOL,
             'nullable' => false,
-            'default' => 0,
+            'default' => 1,
             'activity-log' => true
         ],
         'granularK162' => [
             'type' => Schema::DT_BOOL,
             'nullable' => false,
-            'default' => 0,
+            'default' => 1,
             'activity-log' => true
         ],
         'allowGroups' => [
