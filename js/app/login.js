@@ -6,7 +6,6 @@ define([
     'jquery',
     'app/init',
     'app/util',
-    'app/render',
     'blueImpGallery',
     'layout/header_login',
     'lazyload',
@@ -16,8 +15,9 @@ define([
     'dialog/manual',
     'dialog/changelog',
     'dialog/credit',
-    'dialog/api_status'
-], ($, Init, Util, Render, Gallery, HeaderLogin, LazyLoad, bootbox) => {
+    'dialog/api_status',
+    'mustache'                                                                  // bundled here: dialogs and Util load it with requirejs()
+], ($, Init, Util, Gallery, HeaderLogin, LazyLoad, bootbox) => {
 
     'use strict';
 
@@ -27,13 +27,6 @@ define([
         // header
         headerId: 'pf-landing-top',                                             // id for header
         headerContainerId: 'pf-header-container',                               // id for header container
-        headHeaderMapId: 'pf-header-map',                                       // id for header image (svg animation)
-
-        // map bg
-        headMapBgId: 'pf-header-map-bg',                                        // id for header background container
-        mapNeocomId: 'pf-map-neocom',                                           // id for map "neocom" image
-        mapBrowserId: 'pf-map-browser',                                         // id for "browser" image
-        mapBgImageId: 'pf-map-bg-image',                                        // id for "background" map image
 
         // navigation
         navigationElementId: 'pf-navbar',                                       // id for navbar element
@@ -58,7 +51,6 @@ define([
         galleryId: 'pf-gallery',                                                // id for gallery container
         galleryThumbImageClass: 'pf-landing-image-preview',                     // class for gallery thumb images
         galleryThumbContainerId: 'pf-landing-gallery-thumb-container',          // id for gallery thumb images
-        galleryCarouselId: 'pf-landing-gallery-carousel',                       // id for "carousel" element
 
         // notification panel
         notificationPanelId: 'pf-notification-panel',                           // id for "notification panel" (e.g. last update information)
@@ -197,127 +189,6 @@ define([
 
         // initial show some tooltips
         tooltipElements.filter('[data-show="1"]').tooltip('show');
-    };
-
-    /**
-     * init image carousel
-     */
-    let initCarousel = () => {
-
-        // check if carousel exists
-        if($('#' + config.galleryCarouselId).length === 0){
-            return;
-        }
-
-        // extent "blueimp" gallery for a textFactory method to show HTML templates
-        Gallery.prototype.textFactory = function(obj, callback){
-            let newSlideContent = $('<div>')
-                .addClass('text-content')
-                .attr('imgTitle', obj.title);
-
-            // render HTML file (template)
-            let moduleData = {
-                id: config.headHeaderMapId,
-                bgId: config.headMapBgId,
-                neocomId: config.mapNeocomId,
-                browserId: config.mapBrowserId,
-                mapBgImageId: config.mapBgImageId
-            };
-
-            Render.render(obj.href, moduleData)
-                .then(payload => newSlideContent.append(payload))
-                .then(payload => callback({type: 'complete', target: payload[0]}));
-
-            return newSlideContent[0];
-        };
-
-        // initialize carousel ------------------------------------------------
-        let carousel = new Gallery([
-            {
-                imgTitle: 'Browser',
-                href: 'ui/map',
-                type: 'text/html'
-            },
-            {
-                href: 'public/img/landing/responsive.jpg',
-                imgTitle: 'Responsive layout',
-                type: 'image/jpg',
-                thumbnail: ''
-            },
-            {
-                href: 'public/img/landing/pathfinder_1.jpg',
-                imgTitle: 'Map view',
-                type: 'image/jpg',
-                thumbnail: ''
-            },
-            {
-                href: 'public/img/landing/pathfinder_3.jpg',
-                imgTitle: 'Map information',
-                type: 'image/jpg',
-                thumbnail: ''
-            },
-            {
-                href: 'public/img/landing/pathfinder_2.jpg',
-                imgTitle: 'System information',
-                type: 'image/jpg',
-                thumbnail: ''
-            }
-        ], {
-            container: '#' + config.galleryCarouselId,
-            carousel: true,
-            startSlideshow: false,
-            titleProperty: 'imgTitle',
-            transitionSpeed: 600,
-            slideshowInterval: 5000,
-            preloadRange: 1,
-            onopened: function(){
-                // Callback function executed when the Gallery has been initialized
-                // and the initialization transition has been completed.
-                // -> show "demo" map
-
-                // set title for first slide
-                $(this.options.container).find(this.options.titleElement).text('Browser view');
-
-                $('#' + config.headHeaderMapId).drawDemoMap(function(){
-
-                    // zoom map SVGs
-                    $('#' + config.headHeaderMapId + ' svg').velocity({
-                        scaleX: 0.66,
-                        scaleY: 0.66
-                    }, {
-                        duration: 360
-                    });
-
-                    // position map container
-                    $('#' + config.headHeaderMapId).velocity({
-                        marginTop: '130px',
-                        marginLeft: '-50px'
-                    }, {
-                        duration: 360,
-                        complete: function(){
-                            // show browser
-                            $('#' +  config.mapBrowserId).velocity('transition.slideUpBigIn', {
-                                duration: 360,
-                                complete: function(){
-                                    // show neocom
-                                    $('#' +  config.mapNeocomId).velocity('transition.slideLeftIn', {
-                                        duration: 180
-                                    });
-
-                                    // show background
-                                    $('#' +  config.mapBgImageId).velocity('transition.shrinkIn', {
-                                        duration: 360
-                                    });
-
-                                    // when map is shown -> start carousel looping
-                                    carousel.play();
-                                }
-                            });
-                        }
-                    });
-                });
-            }
-        });
     };
 
     /**
@@ -806,11 +677,7 @@ define([
         // init page observer
         setPageObserver();
 
-        // init carousel
-        initCarousel();
-
         // init scrollSpy
-        // -> after "Carousel"! required for correct "viewport" calculation (Gallery)!
         initScrollSpy();
 
         // init youtube videos

@@ -461,22 +461,6 @@ $headerHeight: 355px;
   }
 }
 
-// carousel -------------------------------------------------------------------
-#pf-landing-gallery-carousel{
-  background-image: url("#{variables.$base-url}/pf-header-bg.jpg");
-
-  .slide-content{
-    border-radius: 5px;
-    pointer-events: none; // hide show "title" attr on hover
-  }
-
-  // title style
-  h3{
-    width: 100%;
-    text-align: left;
-  }
-}
-
 // pricing --------------------------------------------------------------------
 .pf-landing-pricing-panel{
   margin-top: 20px;

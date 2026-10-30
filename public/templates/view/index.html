@@ -20,6 +20,7 @@
     <link rel="icon" type="image/png" href="/{{ @tplResource->getPath('favicon') }}favicon-16x16.png" sizes="16x16">
     <link rel="icon" type="image/png" href="/{{ @tplResource->getPath('favicon') }}favicon-32x32.png" sizes="32x32">
     <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-config" content="/{{ @tplResource->getPath('favicon') }}browserconfig.xml">
     <meta name="msapplication-TileImage" content="/{{ @tplResource->getPath('favicon') }}mstile-144x144.png">
 
     <meta http-equiv="Cache-Control" content="max-age=86400">
@@ -34,7 +35,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ @PATHFINDER.NAME }}">
     <meta property="og:site_name" content="EVE ONLINE">
-    <meta property="og:image" content="{{ @URL }}/public/img/logo.png">
+    <meta property="og:image" content="{{ @URL }}{{ @tplResource->getPath('image') }}/misc/logo.png">
     <meta property="og:url" content="{{ @URL }}">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="de_DE">

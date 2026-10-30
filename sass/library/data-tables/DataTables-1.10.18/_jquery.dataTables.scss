@@ -45,21 +45,6 @@ table.dataTable thead .sorting_desc_disabled {
   background-repeat: no-repeat;
   background-position: center right;
 }
-table.dataTable thead .sorting {
-  background-image: url("../img/data-tables/sort_both.png");
-}
-table.dataTable thead .sorting_asc {
-  background-image: url("../img/data-tables/sort_asc.png");
-}
-table.dataTable thead .sorting_desc {
-  background-image: url("../img/data-tables/sort_desc.png");
-}
-table.dataTable thead .sorting_asc_disabled {
-  background-image: url("../img/data-tables/sort_asc_disabled.png");
-}
-table.dataTable thead .sorting_desc_disabled {
-  background-image: url("../img/data-tables/sort_desc_disabled.png");
-}
 table.dataTable tbody tr {
   background-color: color.adjust(colors.$gray-darker, $lightness: -4%);
 }

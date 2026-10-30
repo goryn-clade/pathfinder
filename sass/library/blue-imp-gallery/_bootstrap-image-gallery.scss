@@ -67,13 +67,6 @@
 	top: 50%;
 	margin: -32px 0 0 -32px;
 }
-.blueimp-gallery .modal-body .video-loading a {
-	background: url(../img/loading.gif) center no-repeat;
-	background-size: 64px 64px;
-}
-.blueimp-gallery .modal-body .video-loading a:after {
-	content: none;
-}
 
 @media screen and (min-width: 768px) {
   .blueimp-gallery .modal-dialog {

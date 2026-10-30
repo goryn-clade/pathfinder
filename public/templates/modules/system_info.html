@@ -75,10 +75,10 @@
                         {{^showInModuleHead}}
                         <th class="pf-table-cell-bg-image" rowspan="2">
                             {{#url}}
-                            <a class="pf-table-cell-bg-image-wrapper smaller" style="--bg-image: url('/public/img/icons/logo_{{page}}.png');"  title="{{ title }}" href="{{ url }}" target="_blank" rel="noopener"></a>
+                            <a class="pf-table-cell-bg-image-wrapper smaller" style="--bg-image: url('{{imgRoot}}icons/logo_{{page}}.png');"  title="{{ title }}" href="{{ url }}" target="_blank" rel="noopener"></a>
                             {{/url}}
                             {{^url}}
-                            <span class="pf-table-cell-bg-image-wrapper smaller pf-link" style="--bg-image: url('/public/img/icons/logo_{{page}}.png');" title="{{ title }}" data-link="{{page}}"></span>
+                            <span class="pf-table-cell-bg-image-wrapper smaller pf-link" style="--bg-image: url('{{imgRoot}}icons/logo_{{page}}.png');" title="{{ title }}" data-link="{{page}}"></span>
                             {{/url}}
                         </th>
                         {{/showInModuleHead}}
