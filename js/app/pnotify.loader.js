@@ -44,7 +44,8 @@ define([
 
         PNotify.defaults.stack = stackConfig.bottomRight.stack;
 
-        PNotify.modules.Desktop.defaults.icon = '/public/img/notifications/logo.png';
+        // same image as Util.showNotify(); version read from <body>, because 'app/util' loads this module
+        PNotify.modules.Desktop.defaults.icon = `/public/img/${document.body.dataset.version}/misc/notification.png`;
     };
 
     /**

@@ -250,7 +250,8 @@ define([
                         return acc;
                     }, []),
                     systemShatteredClass: Util.getSecurityClassForSystem('SH'),
-                    popoverTriggerClass: Util.config.popoverTriggerClass
+                    popoverTriggerClass: Util.config.popoverTriggerClass,
+                    imgRoot: Util.imgRoot()
                 };
                 parentEl.innerHTML = SystemInfoModule.Mustache.render(template, data);
 
