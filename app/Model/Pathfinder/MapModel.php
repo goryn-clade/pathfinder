@@ -1496,15 +1496,6 @@ class MapModel extends AbstractMapTrackingModel {
         // get data of characters which have with map access
         $activeUserCharactersData = $this->getCharactersData(['hasLog' => true]);
 
-        // sort characters by "active" status
-        $sortByActiveLog = function($a, $b){
-            if($a->log->active == $b->log->active){
-                return 0;
-            }else{
-                return ($a->log->active && !$b->log->active) ? 0 : 1;
-            }
-        };
-
         $mapUserData = (object)[];
         $mapUserData->config = (object)[];
         $mapUserData->config->id = $this->id;
@@ -1535,7 +1526,6 @@ class MapModel extends AbstractMapTrackingModel {
 
             // add system if active users were found
             if(count($systemUserData->user) > 0){
-                usort($systemUserData->user, $sortByActiveLog);
                 $mapUserData->data->systems[] = $systemUserData;
             }
         }
