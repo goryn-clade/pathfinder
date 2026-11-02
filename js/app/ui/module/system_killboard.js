@@ -878,6 +878,16 @@ define([
         }
 
         /**
+         * check if a response means the session has ended (401/403)
+         * polling must stop then; the normal logout flow takes over
+         * @param resp
+         * @returns {boolean}
+         */
+        static isSessionEnded(resp){
+            return resp.status === 401 || resp.status === 403;
+        }
+
+        /**
          * single iteration of the R2Z2 poll loop
          */
         static async pollNext(){
@@ -904,6 +914,10 @@ define([
                                 const stid = setTimeout(() => sc.abort(), 10000);
                                 let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
                                 clearTimeout(stid);
+                                if(SystemKillboardModule.isSessionEnded(seqResp)){
+                                    SystemKillboardModule.stopPoller();
+                                    return;
+                                }
                                 if(seqResp.ok){
                                     let seqData = await seqResp.json();
                                     SystemKillboardModule.pollSequenceId = seqData.sequence;
@@ -939,6 +953,11 @@ define([
                         const stid = setTimeout(() => sc.abort(), 10000);
                         try {
                             let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
+                            if(SystemKillboardModule.isSessionEnded(seqResp)){
+                                SystemKillboardModule.pollInFlight = false;
+                                SystemKillboardModule.stopPoller();
+                                return;
+                            }
                             if(seqResp.ok){
                                 let seqData = await seqResp.json();
                                 if(seqData.sequence > SystemKillboardModule.pollSequenceId){
@@ -949,6 +968,13 @@ define([
                     }
                     SystemKillboardModule.pollInFlight = false;
                     SystemKillboardModule.pollTimer = setTimeout(() => SystemKillboardModule.pollNext(), 10000);
+                    return;
+                }
+
+                if(SystemKillboardModule.isSessionEnded(resp)){
+                    // session ended: stop polling, the normal logout flow handles the rest
+                    SystemKillboardModule.pollInFlight = false;
+                    SystemKillboardModule.stopPoller();
                     return;
                 }
 
@@ -991,6 +1017,10 @@ define([
                         const stid = setTimeout(() => sc.abort(), 10000);
                         let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
                         clearTimeout(stid);
+                        if(SystemKillboardModule.isSessionEnded(seqResp)){
+                            SystemKillboardModule.stopPoller();
+                            return;
+                        }
                         if(seqResp.ok){
                             let seqData = await seqResp.json();
                             if(seqData.sequence > SystemKillboardModule.pollSequenceId){
@@ -1028,6 +1058,11 @@ define([
                 const stid = setTimeout(() => sc.abort(), 10000);
                 let seqResp = await fetch('/api/Killboard/sequence', {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: sc.signal});
                 clearTimeout(stid);
+                if(SystemKillboardModule.isSessionEnded(seqResp)){
+                    // session ended: do not retry
+                    SystemKillboardModule.stopPoller();
+                    return;
+                }
                 if(!seqResp.ok){
                     throw new Error(`sequence.json: ${seqResp.status}`);
                 }
