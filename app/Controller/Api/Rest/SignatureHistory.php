@@ -84,7 +84,7 @@ class SignatureHistory extends AbstractRestController {
                             'id'            => (int)$signatureData->id,
                             'groupId'       => (int)$signatureData->groupId,
                             'typeId'        => (int)$signatureData->typeId,
-                            'connectionId'  => (int)$signatureData->connectionId,
+                            'connectionId'  => (int)($signatureData->connection->id ?? 0),
                             'name'          => (string)$signatureData->name,
                             'description'   => (string)$signatureData->description,
                         ];
