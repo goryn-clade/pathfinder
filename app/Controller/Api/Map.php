@@ -355,6 +355,8 @@ class Map extends Controller\AccessController {
                                      * @var Pathfinder\MapModel $map
                                      */
                                     $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
+                                    // SQL inserts take the DB column default, which older installs created as 0 -> use the MapModel default
+                                    $map->resetFields(['allowUnknownSystems', 'granularK162']);
                                     try{
                                         $this->importMap($map, $mapType, $mapScope, $mapDataConfig, $mapDataSystems, $mapDataConnections, $activeCharacter);
                                     }catch(\Throwable $e){

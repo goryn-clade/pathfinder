@@ -98,6 +98,8 @@ class Map extends AbstractRestController {
          * @var Pathfinder\MapModel $map
          */
         $map = Pathfinder\AbstractPathfinderModel::getNew('MapModel');
+        // SQL inserts take the DB column default, which older installs created as 0 -> use the MapModel default
+        $map->resetFields(['allowUnknownSystems', 'granularK162']);
         if(!$map = $this->update($map, $requestData, true)){
             $this->errorOwner($f3);
             return;
