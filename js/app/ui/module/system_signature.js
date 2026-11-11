@@ -343,6 +343,12 @@ define([
                                     }
                                 });
 
+                                // the "StatusTable" feature ("S" in dom) registers the process API (newProcess(), endProcess() ...)
+                                // after "Buttons" ("B") created the `tableApi` passed to init().
+                                // On the first table after page load, that instance has no process API.
+                                // -> create a fresh API instance for the same table when needed
+                                const getProcessApi = () => new $.fn.dataTable.Api(tableApi.settings()[0]);
+
                                 let processLockPromise = null;
 
                                 node.editable({
@@ -353,8 +359,15 @@ define([
                                         dataType: 'json', //assuming json response
                                         contentType: 'application/json',
                                         beforeSend: function(xhr, settings){
-                                            processLockPromise = tableApi.newProcess('lock');
+                                            processLockPromise = getProcessApi().newProcess('lock');
                                         },
+                                        complete: function(){
+                                            // always release the lock, also if the request failed
+                                            if(processLockPromise){
+                                                getProcessApi().endProcess(processLockPromise);
+                                                processLockPromise = null;
+                                            }
+                                        }
                                     },
                                     params: function(params){
                                         return JSON.stringify({
@@ -381,10 +394,14 @@ define([
                                         $(this).html('<i class="fas fa-undo"></i>undo');
                                     },
                                     success: (response, newValue) => {
-                                        // update signature table
-                                        tableApi.endProcess(processLockPromise);
+                                        // release lock first, updateSignatureTable() locks the table itself
+                                        if(processLockPromise){
+                                            getProcessApi().endProcess(processLockPromise);
+                                            processLockPromise = null;
+                                        }
 
-                                        module.updateSignatureTable(tableApi, response, true);
+                                        // update signature table
+                                        module.updateSignatureTable(getProcessApi(), response, true);
                                     },
                                     error: function(errors){
                                         let errorAll = [];
