@@ -1412,14 +1412,36 @@ class MapModel extends AbstractMapTrackingModel {
      * @param CharacterModel $character
      * @param int $posX
      * @param int $posY
-     * @return false|ConnectionModel
+     * @param bool $reuseOnDuplicate map tracking: another request may insert the same system between the existence check
+     *                               and this save. The unique (mapId, systemId) index rejects the second insert.
+     *                               Return the saved row then, instead of throwing
+     * @return false|SystemModel
+     * @throws \PDOException
      */
-    public function saveSystem(SystemModel $system, CharacterModel $character, $posX = 10, $posY = 0){
+    public function saveSystem(SystemModel $system, CharacterModel $character, $posX = 10, $posY = 0, bool $reuseOnDuplicate = false){
+        $systemId = $system->systemId;
         $system->setActive(true);
         $system->mapId = $this->id;
         $system->posX = $posX;
         $system->posY = $posY;
-        return $system->save($character);
+
+        try{
+            /**
+             * @var false|SystemModel $saved
+             */
+            $saved = $system->save($character);
+            return $saved;
+        }catch(\PDOException $e){
+            // 1062: duplicate entry. Only the (mapId, systemId) key is handled
+            $isDuplicate = (int)($e->errorInfo[1] ?? 0) === 1062 && str_contains($e->getMessage(), 'system___mapId__systemId');
+            $existing = ($reuseOnDuplicate && $isDuplicate && $systemId) ? $this->getSystemByCCPId((int)$systemId, [self::getFilter('active', true)]) : null;
+
+            if(!$existing){
+                throw $e;
+            }
+
+            return $existing;
+        }
     }
 
     /**
