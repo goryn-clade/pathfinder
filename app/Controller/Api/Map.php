@@ -1026,7 +1026,7 @@ class Map extends Controller\AccessController {
                         $sourceSystem &&
                         !$sourceExists
                     ){
-                        $sourceSystem = $map->saveSystem($sourceSystem, $character, $systemPosX, $systemPosY);
+                        $sourceSystem = $map->saveSystem($sourceSystem, $character, $systemPosX, $systemPosY, true);
                         // get updated maps object
                         if($sourceSystem){
                             $map = $sourceSystem->mapId;
@@ -1050,7 +1050,7 @@ class Map extends Controller\AccessController {
                         $targetSystem &&
                         !$targetExists
                     ){
-                        $targetSystem = $map->saveSystem($targetSystem, $character, $systemPosX, $systemPosY);
+                        $targetSystem = $map->saveSystem($targetSystem, $character, $systemPosX, $systemPosY, true);
                         // get updated maps object
                         if($targetSystem){
                             $map = $targetSystem->mapId;

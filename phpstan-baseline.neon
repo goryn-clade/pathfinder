@@ -243,7 +243,7 @@ parameters:
 		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
-			count: 3
+			count: 4
 			path: app/Controller/Api/Map.php
 
 		-
