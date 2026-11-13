@@ -301,16 +301,17 @@ class User extends Controller\Controller{
 
                     // sharing config ---------------------------------------------------------------------------------
                     if(isset($formData['share'])){
-                        $privateSharing = (int)$formData['privateSharing'];
-                        $corporationSharing = (int)$formData['corporationSharing'];
-                        $allianceSharing = (int)$formData['allianceSharing'];
+                        // a missing key means the checkbox was not rendered (no alliance / no share right) -> no change
+                        $privateSharing = isset($formData['privateSharing']) ? (int)$formData['privateSharing'] : null;
+                        $corporationSharing = isset($formData['corporationSharing']) ? (int)$formData['corporationSharing'] : null;
+                        $allianceSharing = isset($formData['allianceSharing']) ? (int)$formData['allianceSharing'] : null;
 
                         // update private/corp/ally
                         $corporation = $activeCharacter->getCorporation();
                         $alliance = $activeCharacter->getAlliance();
 
                         // corp/alliance flags apply to every member -> need a right/role to change them
-                        if(is_object($corporation) && (int)$corporation->shared !== $corporationSharing){
+                        if($corporationSharing !== null && is_object($corporation) && (int)$corporation->shared !== $corporationSharing){
                             if($activeCharacter->hasMapRight(3, 'map_share')){
                                 $corporation->shared = $corporationSharing;
                                 $corporation->save();
@@ -319,7 +320,7 @@ class User extends Controller\Controller{
                             }
                         }
 
-                        if(is_object($alliance) && (int)$alliance->shared !== $allianceSharing){
+                        if($allianceSharing !== null && is_object($alliance) && (int)$alliance->shared !== $allianceSharing){
                             if(
                                 $activeCharacter->get('roleId', true) &&
                                 in_array($activeCharacter->roleId->name, ['SUPER', 'CORPORATION'], true)
@@ -331,8 +332,10 @@ class User extends Controller\Controller{
                             }
                         }
 
-                        $activeCharacter->shared = $privateSharing;
-                        $activeCharacter->save();
+                        if($privateSharing !== null){
+                            $activeCharacter->shared = $privateSharing;
+                            $activeCharacter->save();
+                        }
                     }
 
                     // character config -------------------------------------------------------------------------------
