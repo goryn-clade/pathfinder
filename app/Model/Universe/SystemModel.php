@@ -18,6 +18,19 @@ class SystemModel extends AbstractUniverseModel {
     protected $table = 'system';
 
     /**
+     * J-codes of the drifter wormhole systems, by system id
+     * -> ESI names them (e.g. "Sentinel MZ"); mappers know them by J-code
+     * -> only used as a search key, names stay as ESI delivers them
+     */
+    const DRIFTER_J_CODES = [
+        31000001 => 'J055520',
+        31000002 => 'J110145',
+        31000003 => 'J164710',
+        31000004 => 'J200727',
+        31000006 => 'J174618'
+    ];
+
+    /**
      * @var array<string, mixed>
      */
     protected $fieldConf = [

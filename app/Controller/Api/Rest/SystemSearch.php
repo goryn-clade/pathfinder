@@ -54,6 +54,16 @@ class SystemSearch extends AbstractRestController {
                 ':id'   => $search . '%',           // -> match first
                 ':name' => '%' . $search . '%'      // -> match between
             ];
+
+            // drifter systems are also found by their J-code (search key only)
+            $plainSearch = (string)$params['id'];
+            $drifterIds = array_keys(array_filter(
+                Model\Universe\SystemModel::DRIFTER_J_CODES,
+                fn(string $jCode) => stripos($jCode, $plainSearch) !== false
+            ));
+            if($drifterIds){
+                $filter[0] .= ' OR id IN (' . implode(',', $drifterIds) . ')';
+            }
             $options = [
                 'order' => 'name',
                 'offset' => $offset,
