@@ -9,9 +9,44 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Without this, only the packages named in composer.json are updated. Part of
+    # what the server runs on (Guzzle, PSR-7) is an indirect dependency.
+    allow:
+      - dependency-type: "all"
+    # One PR a week for minor and patch updates. A major update gets its own PR,
+    # so one that needs code changes does not hold back the rest. Also left out
+    # of the group:
+    # - ikkez/f3-sheet: 0.x, where a "minor" can break.
+    # - bcosca/fatfree-core: pathfinder.Dockerfile in pathfinder-containers
+    #   patches its source, so an update can break the image build.
+    # - goryn-clade/pathfinder_esi: our own library, released with this app.
+    groups:
+      composer:
+        patterns: ["*"]
+        exclude-patterns:
+          - "ikkez/f3-sheet"
+          - "bcosca/fatfree-core"
+          - "goryn-clade/pathfinder_esi"
+        update-types: ["minor", "patch"]
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     ignore:
       - dependency-name: "gulp-imagemin*"
+    # Grouped like Composer, with the 0.x packages left out.
+    groups:
+      npm:
+        patterns: ["*"]
+        exclude-patterns: ["sharp", "gulp-image-resize", "terminal-table"]
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
