@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels its run still in progress.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # One job, so branch protection needs only one required check: "ci".
+  ci:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # Same PHP minor as ARG PHP_VERSION in pathfinder-containers'
+      # pathfinder.Dockerfile. Third-party action: pinned to the commit of tag 2.40.0.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: curl, ctype, gd, json, mbstring, openssl, pdo, sodium
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      # Checks every tracked PHP file (app/, index.php, export/tools/, stubs/),
+      # and lists each parse error, not just the first.
+      - name: Check PHP syntax
+        run: |
+          files="$RUNNER_TEMP/php-files"
+          git ls-files -z '*.php' > "$files"
+          echo "Checking $(tr -cd '\0' < "$files" | wc -c) files"
+          status=0
+          while IFS= read -r -d '' file; do
+            php -d display_errors=stderr -l "$file" > /dev/null || status=1
+          done < "$files"
+          exit "$status"
+
+      # Runs against phpstan-baseline.neon: only errors not in the baseline fail.
+      # In CI, a baseline entry that no longer matches (the PR fixed or removed
+      # that code) is not an error either. Locally, phpstan.neon still reports it.
+      - name: Run PHPStan
+        run: |
+          config="$RUNNER_TEMP/phpstan-ci.neon"
+          printf 'includes:\n    - %s/phpstan.neon\nparameters:\n    reportUnmatchedIgnoredErrors: false\n' "$PWD" > "$config"
+          composer phpstan -- --no-progress --configuration="$config"
+
+      # Keeps the advisory ignored in composer.json (config.audit.ignore).
+      - name: Audit PHP dependencies
+        run: composer audit
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install Node.js dependencies
+        run: npm ci --no-audit --no-fund
+
+      # Same tool, config and files as "gulp task:hintJS", which only reports and
+      # never fails. The existing code has jshint warnings (W codes), so only
+      # errors (E codes) fail the step. Every syntax error is an E code.
+      # jshint exits 2 when it reports anything, 1 when it cannot run at all.
+      - name: Lint JavaScript (jshint)
+        run: |
+          report="$RUNNER_TEMP/jshint.txt"
+          status=0
+          npx --no-install jshint --config .jshintrc --exclude 'js/lib/**' --verbose js > "$report" || status=$?
+          cat "$report"
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            echo "::error::jshint did not run (exit $status)"
+            exit 1
+          fi
+          if grep -qE '\(E[0-9]+\)$' "$report"; then
+            echo "::error::jshint found errors (E codes) above"
+            exit 1
+          fi
